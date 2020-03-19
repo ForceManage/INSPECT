@@ -283,7 +283,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Store values from MySQL on server to local SQLite
-    public void updateFromServer( ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes ) {
+    public void updateFromServer( ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes, ActionItemAttributes actionItemAttributes ) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PROJECT_ID, projectAttributes.getProjectId());
         values.put(COLUMN_ADDRESS_NUMBER, projectAttributes.getAddressNumber());
@@ -447,18 +447,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //start inspection (clone previous inspection and put status "p": in progress)
-    public void createNewInspection(int propertyId,int jobId) {
+    public void createNewInspection(int projectId,int inspectionId) {
         // Open a database for reading and writing
         SQLiteDatabase database = this.getWritableDatabase();
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-        String jobStatus = " ";
-        int prevJobId = 0;
+        String inspectionStatus = "n";
         String testmessage = "Start";
 
         // SELECT * FROM `ESMInspection` WHERE JobId = 1067
-        selectQuery= "SELECT "+COLUMN_ESM_INSPECTION_STATUS+", "+COLUMN_PREV_JOB_ID
+        selectQuery= "SELECT "+COLUMN_INSPECTION_STATUS+", "+COLUMN_PREV_JOB_ID
                 +" FROM "+TABLE_ESM_INSPECTION
                 +" WHERE "+COLUMN_JOB_ID+" = "+jobId;
 
@@ -507,27 +506,27 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updatePropPhoto(String propertyId, String photo) {
+    public void updatePropPhoto(String projectId, String photo) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        values.put(COLUMN_PROPERTY_PHOTO, photo);
-        db.update(TABLE_PROPERTY_INFO, values, COLUMN_PROPERTY_ID + " = " + propertyId, null);
+        values.put(COLUMN_PROJECT_PHOTO, photo);
+        db.update(TABLE_PROJECT_INFO, values, COLUMN_PROJECT_ID + " = " + projectId, null);
 
     }
 
-    public void updateStatus(String jobId, String status, String date) {
+    public void updateStatus(String inspectionId, String status, String date) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        values.put(COLUMN_ESM_INSPECTION_STATUS, status);
-        values.put(COLUMN_ESM_JOB_DATE, date);
+        values.put(COLUMN_INSPECTION_STATUS, status);
+        values.put(COLUMN_INSPECTION_DATE, date);
 
-        db.update(TABLE_ESM_INSPECTION, values, COLUMN_JOB_ID + " = " + jobId, null);
+        db.update(TABLE_INSPECTION, values, COLUMN_INSPECTION_ID + " = " + inspectionId, null);
 
     }
 

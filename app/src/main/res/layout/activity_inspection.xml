@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_inspection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    tools:context="com.forcemanage.inspect.InspectionActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        tools:layout_height="match_parent">
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:paddingLeft="3dp"
+            android:orientation="vertical">
+
+
+
+
+            <LinearLayout
+                android:id="@+id/nav_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical"
+                android:paddingRight="2dp">
+
+
+                <TextView
+                    android:id="@+id/RecordCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Record Count"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold" />
+
+
+                <TextView
+                    android:id="@+id/SubLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="6dp"
+                    android:padding="2dp"
+                    android:paddingStart="2dp"
+                    android:text="SITE  MAP"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold" />
+
+
+
+                <LinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/fragment_container"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+
+                    <fragment
+                        android:id="@+id/tree_fragment"
+                        android:name="au.com.forcemanage.www.ESMApp.TreeViewFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="1" />
+
+                    <fragment
+                        android:id="@+id/detail_text"
+                        android:name="au.com.forcemanage.www.ESMApp.DetailFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        />
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <Button
+                        android:id="@+id/button_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="#82a1b0"
+                        android:drawableLeft="@android:drawable/ic_input_get"
+                        android:enabled="true"
+                        android:text=" EDIT "
+                        android:textColor="@android:color/white" />
+
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="#82a1b0"
+                        android:drawableLeft="@android:drawable/ic_menu_add"
+                        android:enabled="true"
+                        android:text=" ADD "
+                        android:textColor="@android:color/white" />
+
+                    <Button
+                        android:id="@+id/button4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="#82a1b0"
+                        android:drawableLeft="@android:drawable/ic_menu_delete"
+                        android:text="DELETE"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnViewReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:backgroundTint="#b3a962"
+                    android:drawableLeft="@android:drawable/sym_contact_card"
+                    android:text="VIEW REPORT"
+                    android:textColor="@android:color/white" />
+
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark" />
+
+
+        <LinearLayout
+
+            android:id="@+id/mainfragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:weightSum="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+
+                        <ScrollView
+
+                            android:id="@+id/scroll_view1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.05"
+                            android:fillViewport="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_weight="0.2">
+
+
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <EditText
+                                        android:id="@+id/textServicedBy"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@android:color/transparent"
+                                        android:gravity="top"
+                                        android:paddingStart="130dp"
+                                        android:paddingTop="10dp"
+                                        android:textSize="14sp"
+                                        android:textStyle="normal">
+
+                                    </EditText>
+
+                                    <Spinner
+                                        android:id="@+id/spinnerContractor"
+                                        android:layout_width="150dp"
+                                        android:layout_height="wrap_content"
+                                        android:dropDownWidth="400dp"
+                                        android:gravity="bottom" />
+
+
+                                </FrameLayout>
+
+                                <Spinner
+                                    android:id="@+id/spinnerObservation"
+                                    android:layout_width="190dp"
+
+                                    android:layout_height="wrap_content" />
+
+                                <EditText
+                                    android:id="@+id/Observation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="10dp"
+                                    android:background="@android:color/transparent"
+                                    android:text="Observation"
+                                    android:textSize="16sp" />
+
+
+
+                                <Spinner
+                                    android:id="@+id/spinnerRecommendation"
+                                    android:layout_width="246dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:dropDownWidth="700dp" />
+
+                                <EditText
+                                    android:id="@+id/Recommendation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+
+                                    android:paddingLeft="10dp"
+                                    android:textSize="16sp" />
+
+
+                                <TextView
+                                    android:id="@+id/notetitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="top"
+                                    android:paddingTop="6dp"
+                                    android:paddingLeft="10dp"
+                                    android:text="NOTE:  "
+                                    android:textColor="@android:color/black"
+                                    android:textStyle="normal|bold" />
+
+                                <EditText
+                                    android:id="@+id/note"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="6dp"
+                                    android:textSize="16sp">
+
+                                </EditText>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:background="@color/colorPrimaryDark" />
+
+                                <CheckBox
+                                    android:id="@+id/sign_checkBox"
+                                    android:layout_marginLeft="10dp"
+                                    android:paddingLeft="10dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:checked="false"
+                                    android:text="Certified Sign-off. Checking signifies the Item has been inspected and commentary varified" />
+
+
+                            </LinearLayout>
+
+                        </ScrollView>
+
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_gravity="bottom">
+
+                            <Button
+                                android:id="@+id/testReport"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:backgroundTint="#b3a962"
+                                android:drawableLeft="@android:drawable/sym_contact_card"
+                                android:text="VIEW REPORT"
+                                android:textColor="@android:color/white" />
+                        </FrameLayout>
+
+
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:background="@color/colorPrimaryDark" />
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+
+                        android:orientation="vertical"
+                        android:paddingLeft="3dp"
+                        >
+
+
+                        <TextView
+                            android:id="@+id/Zone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:text="ZONE:  "
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:textStyle="normal|bold" />
+
+                        <TextView
+                            android:id="@+id/Position"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="6dp"
+                            android:text="Position:  "
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:textStyle="normal|bold" />
+
+                        <TextView
+                            android:id="@+id/ESM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="30dp"
+                            android:text="ESM:  "
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:textStyle="normal|bold" />
+
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/colorPrimaryDark" />
+
+
+
+                        <ScrollView
+
+                            android:id="@+id/scroll_view"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:fillViewport="true">
+
+                            <LinearLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+
+                                    <ImageView
+                                        android:id="@+id/imageView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:adjustViewBounds="true"
+                                        android:cropToPadding="false"
+                                        android:paddingLeft="5dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingRight="5dp"
+                                        android:paddingBottom="5dp"
+                                        app:srcCompat="@mipmap/ic_camera" />
+
+
+
+                                    <ImageView
+                                        android:id="@+id/imageView_file"
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_gravity="bottom|left"
+                                        android:layout_marginBottom="10dp"
+                                        android:foreground="@android:drawable/ic_menu_gallery" />
+
+                                    <ImageView
+                                        android:id="@+id/imageView_draw"
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="bottom|center"
+                                        android:visibility="visible"
+                                        android:layout_marginBottom="10dp"
+                                        android:foreground="@android:drawable/ic_menu_edit" />
+
+                                    <ImageView
+                                        android:id="@+id/imageView_cam"
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_gravity="bottom|right"
+                                        android:layout_marginBottom="10dp"
+                                        android:saveEnabled="false"
+                                        android:foreground="@android:drawable/ic_menu_camera" />
+
+                                    <TextView
+                                        android:id="@+id/textView16"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:text="TextView"
+                                        android:textAlignment="center"
+                                        android:textAppearance="@style/TextAppearance.AppCompat"
+                                        android:textColor="#ffff00"
+                                        android:textSize="16sp" />
+
+
+
+                                </FrameLayout>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/colorPrimaryDark" />
+
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <ImageView
+                                        android:id="@+id/imageView2"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:adjustViewBounds="true"
+                                        android:baselineAlignBottom="false"
+                                        android:cropToPadding="false"
+                                        android:padding="5dp"
+                                        app:srcCompat="@mipmap/ic_camera">
+
+                                    </ImageView>
+
+                                     <ImageView
+                                        android:id="@+id/imageView2_del"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:layout_gravity="bottom|left"
+                                        android:layout_marginBottom="5dp"
+                                        android:foreground="@android:drawable/ic_menu_delete" />
+
+                                     <ImageView
+                                        android:id="@+id/imageView2_file"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:layout_gravity="bottom|right"
+                                        android:layout_marginBottom="5dp"
+                                        android:foreground="@android:drawable/ic_menu_gallery" />
+
+                                     <TextView
+                                        android:id="@+id/textView17"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="bottom"
+                                        android:paddingBottom="5dp"
+                                        android:text="TextView"
+                                        android:textAlignment="center"
+                                        android:textAppearance="@style/TextAppearance.AppCompat"
+                                        android:textColor="#ffff00"
+                                        android:textSize="16sp" />
+
+
+
+                                 </FrameLayout>
+
+
+                                <FrameLayout
+
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    >
+
+                                    <ImageView
+                                        android:id="@+id/imageView3"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:adjustViewBounds="true"
+                                        android:baselineAlignBottom="true"
+                                        android:cropToPadding="false"
+                                        android:padding="2dp"
+                                        app:srcCompat="@mipmap/ic_camera"></ImageView>
+
+
+                                    <ImageView
+                                        android:id="@+id/imageView3_del"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:layout_gravity="bottom|left"
+                                        android:layout_marginBottom="5dp"
+                                        android:foreground="@android:drawable/ic_menu_delete" />
+
+                                    <ImageView
+                                        android:id="@+id/imageView3_file"
+                                        android:layout_width="72dp"
+                                        android:layout_height="67dp"
+                                        android:layout_gravity="bottom|right"
+                                        android:layout_marginBottom="5dp"
+                                        android:foreground="@android:drawable/ic_menu_gallery" />
+
+                                    <TextView
+                                        android:id="@+id/textView18"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="bottom"
+                                        android:paddingBottom="5dp"
+                                        android:text="TextView"
+                                        android:textAlignment="center"
+                                        android:textAppearance="@style/TextAppearance.AppCompat"
+                                        android:textColor="#ffff00"
+                                        android:textSize="16sp" />
+
+
+                                 </FrameLayout>
+
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    >
+
+                                    <ImageView
+                                        android:id="@+id/imageView4"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:adjustViewBounds="true"
+                                        android:baselineAlignBottom="true"
+                                        android:cropToPadding="false"
+                                        android:padding="5dp"
+                                        app:srcCompat="@mipmap/ic_camera"></ImageView>
+
+                                    <ImageView
+                                        android:id="@+id/imageView4_del"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:layout_gravity="bottom|left"
+                                        android:layout_marginBottom="5dp"
+                                        android:foreground="@android:drawable/ic_menu_delete" />
+
+
+                                    <TextView
+                                        android:id="@+id/textView19"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="bottom"
+                                        android:paddingBottom="5dp"
+                                        android:text="TextView"
+                                        android:textAlignment="center"
+                                        android:textAppearance="@style/TextAppearance.AppCompat"
+                                        android:textColor="#ffff00"
+                                        android:textSize="16sp" />
+                                 </FrameLayout>
+
+
+                                <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <ImageView
+                                            android:id="@+id/imageView5"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:adjustViewBounds="true"
+                                            android:baselineAlignBottom="true"
+                                            android:cropToPadding="false"
+                                            android:padding="5dp"
+                                            app:srcCompat="@mipmap/ic_camera"></ImageView>
+
+                                        <ImageView
+                                            android:id="@+id/imageView5_del"
+                                            android:layout_width="66dp"
+                                            android:layout_height="77dp"
+                                            android:layout_gravity="bottom|left"
+                                            android:layout_marginBottom="5dp"
+                                            android:foreground="@android:drawable/ic_menu_delete" />
+
+                                        <TextView
+                                            android:id="@+id/textView20"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="20dp"
+                                            android:layout_gravity="bottom"
+                                            android:paddingBottom="5dp"
+                                            android:text="TextView"
+                                            android:textAlignment="center"
+                                            android:textAppearance="@style/TextAppearance.AppCompat"
+                                            android:textColor="#ffff00"
+                                            android:textSize="16sp" />
+
+                                 </FrameLayout>
+
+
+
+
+
+
+                             </LinearLayout>
+
+                         </ScrollView>
+
+                     </LinearLayout>
+
+
+             </LinearLayout>
+
+
+
+
+
+         </LinearLayout>
+
+
+     </LinearLayout>
+
+
+</RelativeLayout>

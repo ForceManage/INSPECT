@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (nInfo != null && nInfo.isConnected()) {
                 getJSON();
                 getAdditionalJSON();
-                getCategoryJSON();
+         //       getCategoryJSON();
                 get_AOR_JSON();
                 get_BOR_JSON();
                 //    get_OR_JSON("TABLE_B_OR");
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Get the property information for all the properties to inspect
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> list = dbHandler.getAllProperties();
+            ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
             //Get a list of all the images for the properties to inspect
             DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
             ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
@@ -630,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        final ArrayList<HashMap<String, String>> list = dbHandler.getAllProperties();
+        final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
         DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
