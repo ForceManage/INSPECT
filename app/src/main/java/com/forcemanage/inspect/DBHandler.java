@@ -413,33 +413,41 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public  void updateInspection(int jId, int aId, int rId, String nextServiceDate, String inspectionObservation, String inspectionRecommendation, String ServiceLevel
-            , String ServicedBy, String tag, String Img1, String Img2, String Img3, String Img4, String Img5, String ItemStatus, String Notes){
-        String jobId = String.valueOf(jId);
-        String assetId = String.valueOf(aId);
-        String recommendId = String.valueOf(rId);
+    public  void updateInspection(int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+            , String reportImage, String Img1, String com1, String Img2, String com2, String Img3, String com3, String Img4, String com4,
+                                  String Img5, String com5, String Img6, String com6, String Img7, String com7, String ItemStatus, String Notes){
 
-
+        String inspectionId = String.valueOf(iId);
+        String a_Id = String.valueOf(aId);
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_NEXT_DATE_SERVICE, nextServiceDate);
-        contentValues.put(COLUMN_ESM_INSPECTION_OBSERVATION, inspectionObservation);
-        contentValues.put(COLUMN_ESM_RECOMMENDATION, inspectionRecommendation);
+        contentValues.put(COLUMN_DATE, date);
+        contentValues.put(COLUMN_OVERVIEW, overview);
+        contentValues.put(COLUMN_RELEVANT_INFO, relevantInfo);
         contentValues.put(COLUMN_SERVICE_LEVEL, ServiceLevel);
-        contentValues.put(COLUMN_SERVICED_BY, ServicedBy);
-        contentValues.put(COLUMN_REPORT_IMAGE,tag);
+        contentValues.put(COLUMN_SERVICED_BY, servicedBy);
+        contentValues.put(COLUMN_REPORT_IMAGE,reportImage);
         contentValues.put(COLUMN_IMG1,Img1);
+        contentValues.put(COLUMN_COM1,com1);
         contentValues.put(COLUMN_IMG2,Img2);
+        contentValues.put(COLUMN_COM2,com1);
         contentValues.put(COLUMN_IMG3,Img3);
+        contentValues.put(COLUMN_COM3,com1);
         contentValues.put(COLUMN_IMG4,Img4);
+        contentValues.put(COLUMN_COM4,com1);
         contentValues.put(COLUMN_IMG5,Img5);
+        contentValues.put(COLUMN_COM5,com1);
+        contentValues.put(COLUMN_IMG6,Img5);
+        contentValues.put(COLUMN_COM6,com1);
+        contentValues.put(COLUMN_IMG7,Img5);
+        contentValues.put(COLUMN_COM7,com1);
         contentValues.put(COLUMN_ITEM_STATUS,ItemStatus);
         contentValues.put(COLUMN_NOTES,Notes);
 
 
 
-        db.update(TABLE_ESM_INSPECTION_ITEM, contentValues, COLUMN_JOB_ID + " = ? AND "+COLUMN_ASSET_ID + " = ? AND "+COLUMN_RECOMMEND_NO + " = ?", new String[]{jobId, assetId, recommendId});
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_INSPECTION_ID + " = ? AND "+COLUMN_A_ID , new String[]{inspectionId, a_Id});
         db.close();
 
     }
@@ -449,6 +457,8 @@ public class DBHandler extends SQLiteOpenHelper {
     //start inspection (clone previous inspection and put status "p": in progress)
     public void createNewInspection(int projectId,int inspectionId) {
         // Open a database for reading and writing
+
+        /*
         SQLiteDatabase database = this.getWritableDatabase();
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
@@ -457,9 +467,9 @@ public class DBHandler extends SQLiteOpenHelper {
         String testmessage = "Start";
 
         // SELECT * FROM `ESMInspection` WHERE JobId = 1067
-        selectQuery= "SELECT "+COLUMN_INSPECTION_STATUS+", "+COLUMN_PREV_JOB_ID
-                +" FROM "+TABLE_ESM_INSPECTION
-                +" WHERE "+COLUMN_JOB_ID+" = "+jobId;
+        selectQuery= "SELECT "+COLUMN_INSPECTION_STATUS
+                +" FROM "+TABLE_INSPECTION
+                +" WHERE "+COLUMN_PROJECT_ID+" = "+projectId;
 
         cursor = database.rawQuery(selectQuery, null);
 
@@ -503,6 +513,8 @@ public class DBHandler extends SQLiteOpenHelper {
             db.close();
             database.close();
         }
+
+         */
     }
 
 
@@ -536,6 +548,8 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+
+        /*
 
         // values.put(COLUMN_PROPERTY_ID, propId);
         // values.put(COLUMN_ASSET_ID, aId);
@@ -577,12 +591,16 @@ public class DBHandler extends SQLiteOpenHelper {
                     COLUMN_ASSET_ID + " = " + aid + " AND " +
                     COLUMN_RECOMMEND_NO + " = " + rid, null);
         }
+
+         */
     }
 
     public void deleteInspectionItem(Integer jId, Integer aId, Integer rId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        /*
 
         Cursor cursor;
         String selectQuery = "SELECT "+COLUMN_RECOMMEND_NO+" FROM "
@@ -627,6 +645,8 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+
                 COLUMN_ASSET_ID+" = "+aId ,null);
 
+
+         */
     }
 
 
@@ -656,24 +676,29 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-        selectQuery = "UPDATE "+TABLE_ESM_INSPECTION_ITEM+" SET "
+        selectQuery = "UPDATE "+TABLE_INSPECTION_ITEM+" SET "
                 +column
-                +" = '' WHERE "+ COLUMN_JOB_ID+" = "+jId+"  AND "+COLUMN_ASSET_ID+" = "+aId
-                +"  AND "+COLUMN_RECOMMEND_NO+" = "+rId;
+                +" = '' WHERE "+ COLUMN_INSPECTION_ID+" = "+jId+"  AND "+COLUMN_A_ID+" = "+aId
+                ;
 
         cursor = db.rawQuery(selectQuery, null);
     }
 
     //Get the current max AssetID Number for the property
+
+
     public int sublocationitems(int propId, String locationId, String sublocatioId) {
         // Open a database for reading and writing
+
         SQLiteDatabase db = this.getWritableDatabase();
 
+
+/*
         String selectQuery;
         Cursor cursor;
         int maxrecNo = 0;
 
-        selectQuery = "SELECT MAX("+COLUMN_ASSET_ID+") FROM "
+        selectQuery = "SELECT MAX("+COLUMN_A_ID+") FROM "
                 +TABLE_ASSET_REGISTER
                 +" WHERE "+ COLUMN_PROPERTY_ID+" = "+propId+"  AND "+COLUMN_LOCATION_ID+" = "+locationId
                 +"  AND "+COLUMN_SUB_LOCATION_ID+" = "+sublocatioId;
@@ -683,13 +708,18 @@ public class DBHandler extends SQLiteOpenHelper {
             maxrecNo = cursor.getInt(0);
 
         }
-        return maxrecNo;
+
+      */
+        return 1;
+
+
     }
 
     public String zone(int propId, String locationId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
+        /*
         String selectQuery;
         Cursor cursor;
         String propZone = "Zone not registered";
@@ -706,14 +736,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
         if (propZone.equals(null)) propZone = "Zone not registered for this location";
+*/
+        return "1";
 
-        return propZone;
+
     }
 
 
 
     public String addPrimlocation(String propId, String locationDesc) {
         // Open a database for reading and writing
+
+        /*
 
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
@@ -739,8 +773,10 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LOCATION_DESCRIPTION, locationDesc);
 
         db.insert(TABLE_PROPERTY_LOCATIONS,null,values);
+*/
+        return Integer.toString(2);
 
-        return Integer.toString(maxlocation);
+
 
     }
 
@@ -751,7 +787,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-
+/*
 
 
         // if an ESM category exists (1,1   1,2 )
@@ -818,6 +854,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         }
+
+
+ */
     }
     //Add sublocation to the location
     public void addSublocation(String propId, String locationId,  String sublocationId, String locationDesc, Boolean add ) {
@@ -827,6 +866,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
+        /*
 
         if(add == true) {
             ContentValues values = new ContentValues();
@@ -878,15 +918,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
 
-        return maxAssetId;
 
+
+        return 2;
+*/
     }
 
 
 
     public Integer addObservationItem(String PropId, String jobId, int assetId, String item) {
         // Open a database for reading and writing
-
+/*
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
@@ -929,6 +971,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return maxRecommendNo;
 
+ */
+        return 1;
     }
 
 
@@ -1648,15 +1692,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 +" ORDER BY A."+COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
-        int i = 1;
-        int ya =1;
-        int yb =1;
-        int yc =1;
-        int yd =1;
-        int ye =1;
-        int yf =1;
-        int n = 1;
-        // Move to the first row
+
         if (cursor.moveToFirst()) {
             do {
                 SiteMap = new HashMap<String, String>();
@@ -1670,119 +1706,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(6));
                 SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
 
-                if(cursor.getInt(1)==0){
-                    i = cursor.getPosition()+1;
-                    locationItemMap.put("parent","-1");
-                    locationItemMap.put("level","0");}
-                else {
-                    switch (cursor.getString(5)){
 
-                        case "A":
-
-                            if (cursor.getString(6).equals("z")) {
-                                ya = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(ya));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-
-                            break;
-                        case "B":
-                            if (cursor.getString(6).equals("z")) {
-                                yb = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(yb));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-                            break;
-                        case "C":
-                            if (cursor.getString(6).equals("z")) {
-                                yc = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(yc));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-                            break;
-                        case "D":
-                            if (cursor.getString(6).equals("z")) {
-                                yd = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(yd));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-                            break;
-                        case "E":
-                            if (cursor.getString(6).equals("z")) {
-                                ye = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(ye));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-                            break;
-                        case "F":
-                            if (cursor.getString(6).equals("z")) {
-                                yf = cursor.getPosition() + 1;
-                                locationItemMap.put("parent", String.valueOf(i));
-                                locationItemMap.put("level", "1");
-                            } else {
-                                if (cursor.getInt(2) > 1) {
-                                    locationItemMap.put("parent", String.valueOf(n + 1 - cursor.getInt(2)));
-                                    locationItemMap.put("level", "3");
-                                } else {
-                                    locationItemMap.put("parent", Integer.toString(yf));
-                                    locationItemMap.put("level", "2");
-                                }
-                            }
-                            break;
-                    }
-                }
-                n=n+1;
-                locationArrayList.add(locationItemMap);
+                SiteMapArrayList.add(SiteMap);
             } while (cursor.moveToNext());
         }
 
-
-
-
-
         dtabase.close();
 
-        return locationArrayList;
+        return SiteMapArrayList;
 
     }
 
@@ -1795,8 +1726,6 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> locationList;
 
         locationList = new ArrayList<HashMap<String, String>>();
-
-
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 

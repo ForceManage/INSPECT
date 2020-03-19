@@ -1,6 +1,7 @@
 package com.forcemanage.inspect;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -14,8 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,19 +56,18 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private Button buttonDelete;
     private Button btnViewReport;
     private Button buttonEdit;
-    private String propertyId;
-    private String jobId;
+    private String projectId;
+    private String inspectionId;
     private String locationId;
     private String sublocationId;
-    private int propId;
-    private int jId;
+    private int projId;
+    private int iId;
     private int aId = 1;
-    private int rId = 1;
     private String seq = "cur";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;
-        private ImageView photoA;
+    private ImageView photoA;
     private ImageView photoB;
     private ImageView photoC;
     private ImageView photoD;
@@ -120,7 +120,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private String[] esm_asset;
     private String [] esm_cat;
     private String editing = "NO";
-    private String esmcatId;
+    private int catId;
     private String esmsubcatId;
     private int inspArrayPosition;
     private  String[] assetIdlist;
@@ -135,7 +135,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private MapListAdapter treeListAdapter;
     private List<MapViewData> listItems;
     public static  int[] level;
-    public static  String[] locationdesc;
+    public static  String[] text;
     public static   String[] id;
     public static  String[] parent;
     private boolean Edited = false;
@@ -152,8 +152,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         ESMdb = new DBHandler(this, null, null, 1);
         setContentView(R.layout.activity_inspection);
         cameraSnap = "0";
-        propertyId = getIntent().getExtras().getString("PROPERTY_ID");
-        jobId = getIntent().getExtras().getString("JOB_ID");
+        projectId = getIntent().getExtras().getString("PROJECT_ID");
+  //      inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
         buttonInsert = (Button) findViewById(R.id.button2);
         buttonInsert.setOnClickListener(this);
         btnViewReport = (Button) findViewById(R.id.btnViewReport);
@@ -163,19 +163,19 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         buttonEdit = (Button) findViewById(R.id.button_edit);
         buttonEdit.setOnClickListener(this);
         zone = 0;
-        propId = Integer.parseInt(propertyId);
-        jId = Integer.parseInt(jobId);
+        projId = Integer.parseInt(projectId);
+        iId = Integer.parseInt(inspectionId);
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
         //Get number of items for the inspection
-        ArrayList<HashMap<String, String>> itemNumbers = dbHandlerA.getInspectedItems(jobId, propertyId);
+        ArrayList<HashMap<String, String>> itemNumbers = dbHandlerA.getInspectedItems(inspectionId, projectId);
         ItemNumbers = (TextView) findViewById(R.id.RecordCount);
         ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
         sublocationId = "0";
         inspArrayPosition = 0;
         getinspectionArray();
-        displayInspectionItem(propId, jId, seq);
+        displayInspectionItem(projId, iId, seq);
 
 
 
@@ -239,34 +239,23 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         recommendations = new String[]{"Recommendation"};
 
 
-        ArrayList<HashMap<String, String>> zoneListB = dbHandlerA.getLocations(propertyId);
+        ArrayList<HashMap<String, String>> zoneListB = dbHandlerA.getMap(projectId);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
 
         level = new int[zoneListB.size()];
-        locationdesc = new String[zoneListB.size()];
+        text = new String[zoneListB.size()];
         id = new String[zoneListB.size()];
         parent = new String[zoneListB.size()];
         String Label = null;
         for (int i = 0; i < (zoneListB.size()); i++){
 
-            int tagLevel = Integer.parseInt(zoneListB.get(i).get("level"));
-            switch (tagLevel){
-
-                case 0: Label = zoneListB.get(i).get(MyConfig.TAG_LOCATION_DESC); break;
-                case 1: Label = zoneListB.get(i).get(MyConfig.TAG_ASSET_DESCRIPTION); break;
-                case 2: Label = zoneListB.get(i).get(MyConfig.TAG_ASSET_DESCRIPTION); break;
-                case 3: Label = zoneListB.get(i).get(MyConfig.TAG_ITEM_NAME); break;
-
-
-            }
-
-            listItem = new TreeViewData(
-                    level[i] = Integer.parseInt(zoneListB.get(i).get("level")),
-                    locationdesc[i] = Label,
-                    id[i] = String.valueOf(i+1),
-                    parent[i] = zoneListB.get(i).get("parent")
+             listItem = new MapViewData(
+                    level[i] = Integer.parseInt(zoneListB.get(i).get("Level")),
+                    text[i] = zoneListB.get(i).get("Label"),
+                    id[i] = zoneListB.get(i).get("aId"),
+                    parent[i] = zoneListB.get(i).get("Parent")
 
             );
             listItems.add(listItem);
@@ -274,11 +263,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-        ArrayList<TreeViewData> data = new ArrayList<TreeViewData>();
+        ArrayList<MapViewData> data = new ArrayList<MapViewData>();
 
         for (int i = 0; i < zoneListB.size(); i++) {
 
-            data.add(new TreeViewData(level[i], locationdesc[i], id[i], parent[i]));
+            data.add(new MapViewData(level[i], text[i], id[i], parent[i]));
 
         }
 
@@ -502,133 +491,47 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> zoneListB = dbHandler.getLocations(propertyId);
+        ArrayList<HashMap<String, String>> zoneListB = dbHandler.getMap(projectId);
 
 
 
         listItems = new ArrayList<>();
-        MapViewData listItem ;
+        MapViewData listItem;
+
         level = new int[zoneListB.size()];
-        locationdesc = new String[zoneListB.size()];
+        text = new String[zoneListB.size()];
         id = new String[zoneListB.size()];
         parent = new String[zoneListB.size()];
-
         String Label = null;
         for (int i = 0; i < (zoneListB.size()); i++){
 
-            int tagLevel = Integer.parseInt(zoneListB.get(i).get("level"));
-            switch (tagLevel){
-
-                case 0: Label = zoneListB.get(i).get(MyConfig.TAG_LOCATION_DESC); break;
-                case 1: Label = zoneListB.get(i).get(MyConfig.TAG_ASSET_DESCRIPTION); break;
-                case 2: Label = zoneListB.get(i).get(MyConfig.TAG_ASSET_DESCRIPTION); break;
-                case 3: Label = zoneListB.get(i).get(MyConfig.TAG_ITEM_NAME); break;
-                    
-            }
-                
-              listItem = new MapViewData(
-                    level[i] = Integer.parseInt(zoneListB.get(i).get("level")),
-                    locationdesc[i] = Label,
-                    id[i] = String.valueOf(i+1),
-                    parent[i] = zoneListB.get(i).get("parent")
+            listItem = new MapViewData(
+                    level[i] = Integer.parseInt(zoneListB.get(i).get("Level")),
+                    text[i] = zoneListB.get(i).get("Label"),
+                    id[i] = zoneListB.get(i).get("aId"),
+                    parent[i] = zoneListB.get(i).get("Parent")
 
             );
             listItems.add(listItem);
-
         }
 
 
-  //      DetailFragment detailFragment = (DetailFragment) getFragmentManager()
-  //              .findFragmentById(R.id.detail_text);
 
+        ArrayList<MapViewData> data = new ArrayList<MapViewData>();
+
+        for (int i = 0; i < zoneListB.size(); i++) {
+
+            data.add(new MapViewData(level[i], text[i], id[i], parent[i]));
+
+        }
+
+        GlobalVariables.dataList = data;
 
        GlobalVariables.modified = true;
        OnSelectionChanged(0);
 
 
 
-   
-/*
-        ArrayList<TreeViewData> data = new ArrayList<TreeViewData>();
-
-        for (int i = 0; i < zoneListB.size(); i++) {
-            data.add(new TreeViewData(level[i], locationdesc[i], id[i], parent[i]));
-        }
-
-        GlobalVariables.dataList = data;
-      //  GlobalVariables.dataList = TreeViewLists.LoadInitialData();
-        GlobalVariables.nodes = TreeViewLists.LoadInitialNodes(GlobalVariables.dataList);
-
-        TreeViewLists.LoadDisplayList();
-
-
-        DetailFragment detailFragment = (DetailFragment) getFragmentManager()
-                .findFragmentById(R.id.detail_text);
-        int DF = detailFragment.getId();
-
-           TreeViewFragment newDetailFragment = new TreeViewFragment();
-           Bundle args = new Bundle();
-
-
-            args.putInt(DetailFragment.KEY_POSITION, 0);
-        //args.putInt(DetailFragment.KEY_POSITION,GlobalVariables.pos);
-            newDetailFragment.setArguments(args);
-
-
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-          //  fragmentTransaction.remove(detailFragment);
-
-
-            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-
-            fragmentTransaction.addToBackStack(DetailFragment.KEY_POSITION);
-            fragmentTransaction.commit();
-
-            FragmentManager fm = getFragmentManager();
-        //    fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-            fm.popBackStack(DF,0);
-
-       //     int count = fm.getBackStackEntryCount();
-       //     while (count>1){
-        //        fm.popBackStackImmediate();
-        //       count --;
-        //    }
-
-
-
-
-
-
-
-        detailFragment.mCurrentPosition = 0;
-
-       // detailFragment.setDetail(0);
-
-        int rec = 0;
-        for (int i = 0; i < locationdesc.length; i++)
-            if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
-                rec = i;
-
-        //  System.out.println(GlobalVariables.dataList.get(rec).getName());
-
-
-
-        // getinspectionArray(); //Loads the inspection items for the selected zone
-
-        //     location.setText("Zone "+Integer.toString(zone)+" - "+locationsArr[zone+1]);
-
-        seq = "cur";
-        inspArrayPosition = rec;
-        saveInspectionItem(jId,aId,rId);
-        displayInspectionItem(propId, jId, seq);
-        if(esmcatId.equals("A")) getORArray(esmcatId,esmsubcatId);
-
-*/
     }
 
 @Override
@@ -693,11 +596,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-        int rec = 0;
-        for (int i = 0; i < locationdesc.length; i++)
-            if (detailFragment.Name != null)
-            if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
-                rec = i;
+   //     int rec = 0;
+   //     for (int i = 0; i < locationdesc.length; i++)
+  //          if (detailFragment.Name != null)
+   //         if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
+  //              rec = i;
 
       //  System.out.println(GlobalVariables.dataList.get(rec).getName());
 
@@ -709,25 +612,27 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         seq = "cur";
         inspArrayPosition = rec;
-        if(Edited == true) saveInspectionItem(jId,aId,rId);
-        displayInspectionItem(propId, jId, seq);
-        switch (esmcatId){
+        if(Edited == true) saveInspectionItem(iId,aId);
+        displayInspectionItem(projId, iId, seq);
+  /*      switch (catId){
          case "A":
-                getORArray(esmcatId,esmsubcatId);
+                getORArray(catId,esmsubcatId);
             break;
          case "B":
-                getORArray(esmcatId,esmsubcatId);
+                getORArray(catId,esmsubcatId);
                 break;
          case "C":
-                getORArray(esmcatId,esmsubcatId);
+                getORArray(catId,esmsubcatId);
                 break;
          case "D":
-                getORArray(esmcatId,esmsubcatId);
+                getORArray(catId,esmsubcatId);
                 break;
          case "E":
-                getORArray(esmcatId,esmsubcatId);
+                getORArray(catId,esmsubcatId);
                 break;
     }
+
+   */
        // if(esmcatId.equals("A")) getORArray(esmcatId,esmsubcatId);
        // getORArray(esmcatId,esmsubcatId);
     }
@@ -825,12 +730,12 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-        String status =  dbHandler.getStatus(jobId, propertyId);
+        String status =  dbHandler.getStatus(inspectionId, projectId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date_  = Calendar.getInstance().getTime();
 
-        dbHandler.updateStatus(jobId, status, dateFormat.format(date_));
+        dbHandler.updateStatus(inspectionId, status, dateFormat.format(date_));
 
         Edited = false;
 
@@ -842,7 +747,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-
+/*
         if (!sublocationId.equals("0")) {
 
             if (rId >1 ){
@@ -887,12 +792,13 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                    Toast.makeText(this, "Cannot delete a primary Zone", Toast.LENGTH_SHORT).show();
                 }
 
-
+*/
      }
 
 
 
     private void getinspectionArray(){
+        /*
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         ArrayList<HashMap<String, String>> inspectionitems = dbHandler.getinspectionitemlist(propId, jId, zone);
@@ -908,9 +814,13 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             sublocationIdlist[i] = inspectionitems.get(i).get(MyConfig.TAG_SUB_LOCATION_ID);
             recitemlist[i] = inspectionitems.get(i).get(MyConfig.TAG_RECOMMEND_NO);
     }
+
+         */
     }
 
     public void getZonesArray(){
+
+        /*
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -939,13 +849,15 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         }
 
 
+
+         */
     }
 
 
     private void addObservation(String item){
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
+/*
         if (sublocationId.equals("0")){
             Toast.makeText(this, "Select the relevant ESM category",Toast.LENGTH_SHORT).show();
              }
@@ -976,6 +888,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
                loadLocations();
            }
+
+           */
+
     }
 
 
@@ -983,7 +898,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
     private void addPrimLocation(String Description){
 
-        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+  /*      DBHandler dbHandler = new DBHandler(this, null, null, 1);
         locationId =  dbHandler.addPrimlocation(propertyId, Description);
         aId = dbHandler.addItem(propertyId,locationId,"0","Z","z",esmcatId);
 
@@ -1026,12 +941,16 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
         loadLocations();
+
+
+   */
     }
 
 
 
     private void addsubLocation(String location){
 
+        /*
         String esmcat = "A";
 
         switch (esmcatId){
@@ -1055,7 +974,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         }
 
 
-        EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
         dbHandler.addESM(propertyId, jobId, locationId, sublocationId, location, esmcat, esmcatId, esmsubcatId);  //this is the ESM category
 
         ArrayList<HashMap<String, String>> sublocationList = dbHandler.getsubLocations(propertyId, locationId);
@@ -1081,18 +1000,23 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
       //  addItem(); // Adds another inspection item
 
 
+         */
+
     }
 
     private void editLocation(String location){
+        /*
 
         if(sublocationId.equals('1'))
           Toast.makeText(this, "Cannot edit ESM catergory", Toast.LENGTH_SHORT).show();
         else {
-            EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.updatelocations(propertyId, locationId, sublocationId, location, aId, rId);
             loadLocations();
             displayInspectionItem(propId, jId, "cur");
              }
+
+         */
      }
 
 
@@ -1110,7 +1034,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             }
 
             ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId+",  rec id : "+ rId);
-            EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
             HashMap<String, String> list = dbHandler.getInspection(propId, jobId, aId,locationId, sublocationId, rId);
 
             esmcatId = list.get(MyConfig.TAG_CATEGORY_ID);
