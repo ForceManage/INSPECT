@@ -47,7 +47,7 @@ public class MapViewLists
 
         for (int i = 0; i < InspectionActivity.level.length; i++) {
 
-            data.add(new MapViewData(InspectionActivity.level[i], InspectionActivity.locationdesc[i], InspectionActivity.id[i], InspectionActivity.parent[i]));
+            data.add(new MapViewData(InspectionActivity.level[i], InspectionActivity.id[i], InspectionActivity.id[i], InspectionActivity.parent[i]));
         }
 
      //   TreeViewLists.LoadDisplayList();

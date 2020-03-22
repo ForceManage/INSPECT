@@ -11,12 +11,12 @@ public class InspectionAttributes {
     private int _projectId;
     private String _inspectionDate;
     private String _inspector;
-    private String _startDateTime;
-    private String _endDateTime;
+ //   private int _startDateTime;
+ //   private int _endDateTime;
 
     public InspectionAttributes() {
     }
-    public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate, String inspector, String startDateTime, String endDateTime) {
+    public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate, String inspector) {
         this._inspectionId = inspectionId;
         this._inspectionType = inspectionType;
         this._inspectionStatus = inspectionStatus;
@@ -24,8 +24,8 @@ public class InspectionAttributes {
         this._inspectionType = inspectionType;
         this._inspectionDate = inspectionDate;
         this._inspector = inspector;
-        this._startDateTime = startDateTime;
-        this._endDateTime = endDateTime;
+//        this._startDateTime = startDateTime;
+//        this._endDateTime = endDateTime;
      }
 
 
@@ -47,10 +47,10 @@ public class InspectionAttributes {
     public String getinspectionDate() {return this._inspectionDate; }
     public void setinspector(String inspector) {this._inspector = inspector; }
     public String getinspector() {return this._inspector; }
-    public void setstartDateTime (String startDateTime) {this._startDateTime = startDateTime; }
-    public String getstartDateTime() {return this._startDateTime; }
-    public void setendDateTime (String endDateTime) {this._endDateTime = endDateTime; }
-    public String getendDateTime() {return this._endDateTime;}
+ //   public void setstartDateTime (int startDateTime) {this._startDateTime = startDateTime; }
+ //   public int getstartDateTime() {return this._startDateTime; }
+ //   public void setendDateTime (int endDateTime) {this._endDateTime = endDateTime; }
+ //   public int getendDateTime() {return this._endDateTime;}
 
 
 }

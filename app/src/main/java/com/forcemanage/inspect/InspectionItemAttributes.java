@@ -12,12 +12,12 @@ public class InspectionItemAttributes {
         private int _inspectionId;
         private int _projectId;
         private int _aId;
-        private String _date;
+        private String _dateInspected;
         private String _overview;
         private String _servicedBy;
         private String _relevantInfo;
         private int _serviceLevel;
-        private int _reportImage;
+        private String _reportImage;
         private String _image1;
         private String _com1;
         private String _image2;
@@ -38,14 +38,14 @@ public class InspectionItemAttributes {
         public InspectionItemAttributes() {
         }
 
-        public InspectionItemAttributes(int inspectionId, int projectId, int aId, String date, String overview, String servicedBy, String relevantInfo, int serviceLevel, int reportImage, String image1
+        public InspectionItemAttributes(int inspectionId, int projectId, int aId, String dateInspected, String overview, String servicedBy, String relevantInfo, int serviceLevel, String reportImage, String image1
                 , String com1, String image2,String com2, String image3, String com3, String image4, String com4, String image5, String com5, String image6, String com6, String image7, String com7
                 ,String itemStatus, String notes) {
 
             this._inspectionId = inspectionId;
             this._projectId = projectId;
             this._aId = aId;
-            this._date = date;
+            this._dateInspected = dateInspected;
             this._overview = overview;
             this._servicedBy = servicedBy;
             this._relevantInfo = relevantInfo;
@@ -79,9 +79,9 @@ public class InspectionItemAttributes {
         }
         public void setaId(int aId) {this._aId = aId; }
         public int getaId() {return this._aId; }
-        public void setdate(String date) {this._date = date; }
-        public String getdate() {
-            return this._date;
+        public void setdateInspected(String dateInspected) {this._dateInspected = dateInspected; }
+        public String getdateInspected() {
+            return this._dateInspected;
         }
         public void setoverview(String overview){this._overview = overview; }
         public String getoverview() {return this._overview; }
@@ -91,8 +91,8 @@ public class InspectionItemAttributes {
         public String getrelevantInfo() {return this._relevantInfo; }
         public void setserviceLevel (int serviceLevel) {this._serviceLevel = serviceLevel; }
         public int getserviceLevel() {return this._serviceLevel;}
-        public void setReportImage(int reportImage) {this._reportImage = reportImage; }
-        public int getReportImage() {return this._reportImage; }
+        public void setReportImage(String reportImage) {this._reportImage = reportImage; }
+        public String getReportImage() {return this._reportImage; }
         public void setImage1(String image1) {this._image1 = image1; }
         public String getimage1() {return this._image1; }
         public void setcom1(String com1) {this._com1 = com1; }

@@ -17,7 +17,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter1;
-    private List<Projectlistdata> jobList;
+    private List<Projectlistdata> projectList;
     private Context context;
     public int listposition;
     private projectchangelistener projectchangelistener;
@@ -25,7 +25,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
     public ProjectListAdapter(List<Projectlistdata> projectList, projectchangelistener mjobchangelistener) {
 
-        this.jobList = jobList;
+        this.projectList = projectList;
         this.context = context;
         projectchangelistener = mjobchangelistener;
 
@@ -41,8 +41,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        holder.address.setText(jobList.get(position).getpropNo()+"  "+jobList.get(position).getaddress()+", "+jobList.get(position).getsuburb()+" ("+jobList.get(position).getpropId()+" )");
-        holder.type.setText(jobList.get(position).gettype());
+        holder.address.setText(projectList.get(position).getprojectId()+"  "+projectList.get(position).getaddress()+", "+projectList.get(position).getsuburb()+" ("+projectList.get(position).getaddressNo()+" )");
+        holder.type.setText(projectList.get(position).gettype());
 
 
         if(position == listposition){
@@ -51,16 +51,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
         else
             holder.linearLayout.setBackgroundColor(Color.TRANSPARENT);
 
-        if(jobList.get(position).getstatus().equals("n") ) holder.progress.setImageResource(R.drawable.ic_alpha_f_circle);
-        if(jobList.get(position).getstatus().equals("p") ) holder.progress.setImageResource(R.drawable.ic_y_circle);
-        if(jobList.get(position).getstatus().equals("c") ) holder.progress.setImageResource(R.drawable.ic_g_circle);
+        if(projectList.get(position).getstatus().equals("n") ) holder.progress.setImageResource(R.drawable.ic_alpha_f_circle);
+        if(projectList.get(position).getstatus().equals("p") ) holder.progress.setImageResource(R.drawable.ic_y_circle);
+        if(projectList.get(position).getstatus().equals("c") ) holder.progress.setImageResource(R.drawable.ic_g_circle);
     }
 
 
 
     @Override
     public int getItemCount() {
-        return jobList.size();
+        return projectList.size();
     }
 
 

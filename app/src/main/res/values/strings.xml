@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">INSPECT</string>
+    <string name="title_activity_report_scrolling">ReportScrollingActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="str_spr_observations">Observations</string>
+    <string name="str_spr_recommendations">Recommmendations</string>
+    <string name="download_jobs">DOWNLOAD JOBS</string>
+    <string name="clear_tablet_data">Clear Tablet Data</string>
+    <string name="download_photos">DOWNLOAD PHOTOS</string>
+    <string name="download_comments">DOWNLOAD COMMENTS</string>
+    <string name="upload_photos">UPLOAD PHOTOS</string>
+    <string name="upload_data">UPLOAD DATA</string>
 </resources>

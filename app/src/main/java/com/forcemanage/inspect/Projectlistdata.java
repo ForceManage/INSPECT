@@ -4,7 +4,7 @@ public class Projectlistdata {
 
     private String address;
     private String projectId;
-    private String projectNo;
+    private String addressNo;
     private String status;
     private String type;
     private String suburb;
@@ -13,11 +13,11 @@ public class Projectlistdata {
     public Projectlistdata() {
     }
 
-    public Projectlistdata(String address, String projectId, String projNo, String status, String type, String suburb) {
+    public Projectlistdata(String address, String projectId, String addressNo, String status, String type, String suburb) {
 
         this.address = address;
         this.projectId = projectId;
-        this.projectNo = projectNo;
+        this.addressNo = addressNo;
         this.status = status;
         this.type = type;
         this.suburb = suburb;
@@ -25,7 +25,7 @@ public class Projectlistdata {
 
 
 
-    public String getpropId() {
+    public String getprojectId() {
         return projectId;
     }
 
@@ -41,8 +41,8 @@ public class Projectlistdata {
         return status;
     }
 
-    public String getpropNo() {
-        return projectNo;
+    public String getaddressNo() {
+        return addressNo;
     }
 
     public String getsuburb() {

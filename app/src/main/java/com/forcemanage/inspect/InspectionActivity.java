@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -596,7 +597,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-   //     int rec = 0;
+        int rec = 0;
    //     for (int i = 0; i < locationdesc.length; i++)
   //          if (detailFragment.Name != null)
    //         if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
@@ -668,7 +669,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-    private void saveInspectionItem(int jId, int aId, int rId){
+    private void saveInspectionItem(int iId, int aId){
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
        // String serviceDate = inspectionDate.getText().toString();
@@ -725,8 +726,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         String Notes = Note.getText().toString();
 
 
-        dbHandler.updateInspection(jId, aId, rId, nextServiceDate, inspectionObservation, inspectionRecommendation, ServiceLevel, ServicedBy
-                                   ,tag , Img1, Img2, Img3, Img4, Img5, ItemStatus, Notes);
+  //      dbHandler.updateInspection(iId, aId, nextServiceDate, inspectionObservation, inspectionRecommendation, ServiceLevel, ServicedBy
+  //                                 ,tag , Img1, Img2, Img3, Img4, Img5, ItemStatus, Notes);
 
 
 
@@ -1029,16 +1030,16 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                     aId = Integer.parseInt(assetIdlist[inspArrayPosition]);
                     locationId = locationIdlist[inspArrayPosition];
                     sublocationId = sublocationIdlist[inspArrayPosition];
-                    rId = Integer.parseInt(recitemlist[inspArrayPosition]);
+  //                  rId = Integer.parseInt(recitemlist[inspArrayPosition]);
                     break;
             }
 
-            ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId+",  rec id : "+ rId);
+            ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            HashMap<String, String> list = dbHandler.getInspection(propId, jobId, aId,locationId, sublocationId, rId);
+            HashMap<String, String> list = dbHandler.getInspection(propId, jobId, aId,locationId, sublocationId);
 
-            esmcatId = list.get(MyConfig.TAG_CATEGORY_ID);
-            esmsubcatId = list.get(MyConfig.TAG_SUB_CATEGORY_ID);
+  //          catId = list.get(MyConfig.TAG_CAT_ID);
+   //         esmsubcatId = list.get(MyConfig.TAG_SUB_CATEGORY_ID);
 
         //    TextView Asset = (TextView) findViewById(R.id.esmasset);
             TextView observationTextView = (TextView) findViewById(R.id.Observation);
@@ -1063,6 +1064,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             }else {
                 checkBox.setChecked(false);
             }
+            /*
             String assetText = list.get(MyConfig.TAG_ASSET_DESCRIPTION);
             String observationText = list.get(MyConfig.TAG_INSPECTION_OBSERVATION);
             String servicedByText = list.get(MyConfig.TAG_SERVICED_BY);
@@ -1070,12 +1072,14 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             String categoryText = list.get(MyConfig.TAG_CATEGORY_NAME);
             String subCategoryText = list.get(MyConfig.TAG_SUB_CATEGORY_NAME);
             String Notes = list.get(MyConfig.TAG_NOTES);
-            if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
-               else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
+
+             */
+   //         if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
+   //            else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
             String zoneText = dbHandler.zone(propId, locationId);
             ZONE.setText("Zone: "+ zoneText);
             Position.setText("Position: "+ itemlocation);
-            ESM.setText("Safety Measure: "+ subCategoryText);
+       //     ESM.setText("Safety Measure: "+ subCategoryText);
        //     String assetIdText = list.get(MyConfig.TAG_ASSET_ID);
       //     location.setText(zoneText);
       //      String recommendIdText = list.get(MyConfig.TAG_RECOMMEND_NO);
@@ -1093,11 +1097,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
           // EsmDBHandler dbHandler1 = new EsmDBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> sublocationList = dbHandler.getsubLocations(propertyId, Integer.toString(aId) );
+            ArrayList<HashMap<String, String>> sublocationList = dbHandler.getsubLocations(projectId, Integer.toString(aId) );
 
             final String  sublocations[] = new String[sublocationList.size()];
             for (int i = 0; i < sublocationList.size(); i++) {
-                sublocations[i] = sublocationList.get(i).get(MyConfig.TAG_ASSET_DESCRIPTION);
+                sublocations[i] = sublocationList.get(i).get(MyConfig.TAG_LABEL);
             }
 
 
@@ -1109,10 +1113,10 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
           //  esm_cat.setText("ESM :   "+categoryText);
           //  Asset.setText("Measure:   "+subCategoryText);
-            observationTextView.setText(observationText);
-            servicedTextView.setText(servicedByText);
-            notes.setText(Notes);
-            recommendationTextView.setText(recommendationText);
+      //      observationTextView.setText(observationText);
+      //      servicedTextView.setText(servicedByText);
+      //      notes.setText(Notes);
+     //       recommendationTextView.setText(recommendationText);
 
 
           //  String[] photos = {Img1, Img2, Img3, Img4, Img5};
@@ -1288,7 +1292,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
         if (v == buttonInsert){
-
+/*
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose an action");
@@ -1488,7 +1492,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                                    //     editing = "YES";
                                           switch (position) {
 
-
+/*
                                             case (1):
                                                 esmsubcatId = "a";
                                                 if(esmcatId.equals("A")) ESMtxt = "Paths of travel to exits";
@@ -1598,6 +1602,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                                     }
 
 
+
+
                                 }
 
                                 @Override
@@ -1610,7 +1616,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-                            sprasset.setOnItemSelectedListener(assettSelectedListener);
+      //                      sprasset.setOnItemSelectedListener(assettSelectedListener);
                             sprESM_category.setOnItemSelectedListener(ESM_catSelectedListener);
 
                                             alertDialogBuilder.setCancelable(false)
@@ -1678,12 +1684,14 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             AlertDialog dialog = builder.create();
 
             dialog.show();
+
+    */
         }
 
         if (v == buttonDelete){
 
 
-
+/*
             // setup the alert builder
 
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
@@ -1701,7 +1709,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                         case 1: {deleteInspectionItem(); break;} //
                         case 2:{
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                         LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
@@ -1745,6 +1753,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
+
+*/
         }
 
 
@@ -1961,12 +1971,12 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             takeImageFromCamera(null);
         }
         if (v == btnViewReport) {
-            saveInspectionItem(jId, aId, rId);
+            saveInspectionItem(iId, aId);
 
-            Intent intent = new Intent(this, ViewReportActivity.class);
-            intent.putExtra("jobId",jobId);
-            intent.putExtra("propId", propertyId);
-            startActivity(intent);
+ //           Intent intent = new Intent(this, ViewReportActivity.class);
+ //           intent.putExtra("jobId",jobId);
+ //           intent.putExtra("propId", propertyId);
+ //           startActivity(intent);
         //    finish();
         }
      }
@@ -2018,7 +2028,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
             Uri selectedImage = data.getData();
 
-   /*          Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
+             Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
 
            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             returnCursor.moveToFirst();
@@ -2028,7 +2038,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             TextView f_name = (TextView) findViewById(R.id.textView16);
             f_name.setText(name);
 
-*/
+
 
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             // Get the cursor
@@ -2067,7 +2077,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
             fname = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            fname = propertyId+"_"+fname;
+            fname = projectId+"_"+fname;
 
             String root = Environment.getExternalStorageDirectory().toString();
             String SD = root + "/ESM_"+dirName+"/";
@@ -2126,7 +2136,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 cameraSnap = "1";
                 TextView imageName1 = (TextView) findViewById(R.id.textView16);
                 imageName1.setText("UPDATED");
-                saveInspectionItem(jId,aId,rId);
+                saveInspectionItem(iId,aId);
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
             } catch (IOException e) {
@@ -2172,7 +2182,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         fname = new SimpleDateFormat("yyyyMMddHH").format(new Date());
         dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        fname = propertyId+"_"+fname;
+        fname = projectId+"_"+fname;
         String root = Environment.getExternalStorageDirectory().toString();
         File storageDirectory = new File(root + "/ESM_"+dirName+"/");
         // Toast.makeText(this, "should have made directory",Toast.LENGTH_SHORT).show();
@@ -2332,7 +2342,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         super.onDestroy();
 
-        if(Edited == true )saveInspectionItem(jId, aId, rId);
+        if(Edited == true )saveInspectionItem(iId, aId);
 
 
 

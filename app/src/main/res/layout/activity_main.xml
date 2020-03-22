@@ -219,16 +219,10 @@
                             android:background="@color/colorPrimaryDark" />
 
 
-
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/reportView"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            >
-
-                        </android.support.v7.widget.RecyclerView>
-
+                            android:layout_height="match_parent" />
 
 
                     </LinearLayout>
@@ -312,7 +306,8 @@
                             android:layout_marginTop="20dp"
                             android:background="@drawable/image_border"
                             android:padding="3dp"
-                            app:srcCompat="@mipmap/ic_camera"></ImageView>
+                            app:srcCompat="@mipmap/ic_camera"
+                            android:contentDescription="TODO"></ImageView>
 
                         <ImageView
                             android:id="@+id/imageView_info"

@@ -17,7 +17,14 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name="com.forcemanage.inspect.InspectionActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="sensorLandscape" />
+
+        <activity android:name="com.forcemanage.inspect.MainActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

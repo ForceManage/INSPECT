@@ -17,10 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
-//import android.support.v4.content.FileProvider;
-//import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.widget.LinearLayoutManager;
-//import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -132,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String file_name;
     EditText prop_name;
 
-
-    private View view;
+       private View view;
     private int index;
 
     @Override
@@ -141,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ESMdb = new DBHandler(this, null, null, 1);
-        TextMessage = (EditText) findViewById(R.id.editText6);
+
         //prop_name = (textView) findViewById(R.id.textView4);
 // Spinner element
         Spinner spinInspector = (Spinner) findViewById(R.id.spinnerInspectorID);
@@ -254,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getAdditionalJSON();
          //       getCategoryJSON();
                 get_AOR_JSON();
-                get_BOR_JSON();
+             //   get_BOR_JSON();
                 //    get_OR_JSON("TABLE_B_OR");
             } else {
                 buttonUpdatePropInfo.setEnabled(false);
@@ -272,10 +267,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             NetworkInfo nInfo = cManager.getActiveNetworkInfo();
             if (nInfo != null && nInfo.isConnected()) {
                 get_AOR_JSON();
-                get_BOR_JSON();
-                get_COR_JSON();
-                get_DOR_JSON();
-                get_EOR_JSON();
+               // get_BOR_JSON();
+               // get_COR_JSON();
+               // get_DOR_JSON();
+               // get_EOR_JSON();
 
             } else {
                 buttonLoadNotes.setEnabled(false);
@@ -750,10 +745,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < result.length(); i++) {
                 // testing only -
-                String imsg = Integer.toString(i);
-                String rmsg = Integer.toString(result.length());
-                //String msg = "Testing Loop "+imsg+" result no "+rmsg;
-                //editTextMessage.setText(msg);
+              //  String imsg = Integer.toString(i);
+              //  String rmsg = Integer.toString(result.length());
+              //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
+              //  TextMessage.setText(msg);
 
                 JSONObject jo = result.getJSONObject(i);
                 String id = jo.getString(MyConfig.TAG_PROJECT_ID);
@@ -775,15 +770,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String inspectionDate = jo.getString(MyConfig.TAG_INSPECTION_DATE);
                 String inspector = jo.getString(MyConfig.TAG_INSPECTOR);
                 String inspectionStatus = jo.getString(MyConfig.TAG_INSPECTION_STATUS);
-                String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
-                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
-                String date = jo.getString(MyConfig.TAG_DATE);
+//               String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
+//                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
+                String dateInspected = jo.getString(MyConfig.TAG_DATE_INSPECTED);
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
                 String serviceBy = jo.getString(MyConfig.TAG_SERVICED_BY);
                 String relevantInfo = jo.getString(MyConfig.TAG_RELEVANT_INFO);
                 String aId = jo.getString(MyConfig.TAG_A_ID);
                 String serviceLevel = jo.getString(MyConfig.TAG_SERVICE_LEVEL);
-                String reportImage = jo.getString(MyConfig.TAG_REPORT_IMAGE);
+                String reportImg = jo.getString(MyConfig.TAG_REPORT_IMAGE);
                 String image1 = jo.getString(MyConfig.TAG_IMAGE1);
                 String com1 = jo.getString(MyConfig.TAG_COM1);
                 String image2 = jo.getString(MyConfig.TAG_IMAGE2);
@@ -809,7 +804,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int InspectionId = parseInt(inspectionId);
                 int noLevels = parseInt(nmbrLevels);
                 int a_Id = parseInt(aId);
-                int rImage = parseInt(reportImage);
+//                int startDateTime_ = parseInt(startDateTime);
+//                int endDateTime_ = parseInt(endDateTime);
                 int ServiceLevel = parseInt(serviceLevel);
 
                 ProjectAttributes projectrow =
@@ -817,19 +813,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // editTextMessage.setText("Test 1");
 
 
-                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime);
+                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector);
 
                 // editTextMessage.setText("Test 2");
 
 
-                InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, date, overview, serviceBy, relevantInfo, ServiceLevel, rImage, image1, com1, image2, com2
+                InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, serviceBy, relevantInfo, ServiceLevel, reportImg, image1, com1, image2, com2
                                                       , image3, com3, image4, com4, image5, com5, image6, com6, image7, com7, itemStatus, notes);
 
                 //editTextMessage.setText("Test 5");
 
-                ActionItemAttributes actionrow = new ActionItemAttributes( InspectionId, projId, a_Id, date, overview, serviceBy, relevantInfo, ServiceLevel, rImage, image1, com1,itemStatus, notes);
+               ActionItemAttributes actionrow = new ActionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, serviceBy, relevantInfo, ServiceLevel, reportImg, image1, com1,itemStatus, notes);
+
+
 
                 dbHandler.updateFromServer(projectrow, inspectionRow, itemRow, actionrow);
+
 
                 // testing only -
                 // editTextMessage.setText("Test end");
@@ -844,6 +843,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // testing only -
         // editTextMessage.setText("Test 4");
         updatePropList();
+
     }
 
     //Update the SQLite db with additional from MySQL db
@@ -966,7 +966,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
-        // cat = CAT;
+        cat = "a";
         //editTextMessage.setText("Print String: " + JSON_STRING);
         //editTextMessage.setText("Test");
         try {
@@ -985,7 +985,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String num = jo.getString(MyConfig.TAG_NUM);
                 String subCat = jo.getString(MyConfig.TAG_SUBCAT);
                 String type = jo.getString(MyConfig.TAG_TYPE);
-                String note = jo.getString(MyConfig.TAG_NOTES);
+                String note = jo.getString(MyConfig.TAG_NOTE);
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1042,7 +1042,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING = s;
-                // testing only - editTextMessage.setText("JSON_STRING " + s);
+               TextMessage.setText("JSON_STRING " + s);
 
                 updatePropInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -1316,7 +1316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String tempString = "";
 
         //  EditText propertyPhoto;
-        //  propertyPhoto = (EditText) findViewById(R.id.editText6);
+
         //  propertyPhoto.setText(inspList);
 
         JSONObject json;
@@ -1386,7 +1386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonItem.put(MyConfig.TAG_INSPECTION_ID, inspItemList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     jsonItem.put(MyConfig.TAG_PROJECT_ID, inspItemList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     jsonItem.put(MyConfig.TAG_A_ID, inspItemList.get(i).get(MyConfig.TAG_A_ID));
-                    jsonItem.put(MyConfig.TAG_DATE, inspItemList.get(i).get(MyConfig.TAG_DATE));
+                    jsonItem.put(MyConfig.TAG_DATE_INSPECTED, inspItemList.get(i).get(MyConfig.TAG_DATE_INSPECTED));
                     jsonItem.put(MyConfig.TAG_OVERVIEW, inspItemList.get(i).get(MyConfig.TAG_OVERVIEW));
                     jsonItem.put(MyConfig.TAG_SERVICED_BY, inspItemList.get(i).get(MyConfig.TAG_SERVICED_BY));
                     jsonItem.put(MyConfig.TAG_RELEVANT_INFO, inspItemList.get(i).get(MyConfig.TAG_RELEVANT_INFO));
@@ -1476,7 +1476,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
-            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_ASSET_TO_SERVER, jsonString);
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
 //                res = jsonString;
         }
         return res;
@@ -1521,7 +1521,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
-            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_PROPERTY_TO_SERVER, jsonString);
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_PROJECT_TO_SERVER, jsonString);
 //                res = jsonString;
 
         }
@@ -1536,7 +1536,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, String> actionItemList = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> ActionList = dbHandler.getAllLocations();
+        ArrayList<HashMap<String, String>> ActionList = dbHandler.getActions();
         String testString = "";
         String tempString = "";
 
@@ -1559,7 +1559,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     json.put(MyConfig.TAG_INSPECTION_ID, ActionList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     json.put(MyConfig.TAG_PROJECT_ID, ActionList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_A_ID, ActionList.get(i).get(MyConfig.TAG_A_ID));
-                    json.put(MyConfig.TAG_DATE, ActionList.get(i).get(MyConfig.TAG_DATE));
+                    json.put(MyConfig.TAG_DATE_INSPECTED, ActionList.get(i).get(MyConfig.TAG_DATE_INSPECTED));
                     json.put(MyConfig.TAG_OVERVIEW, ActionList.get(i).get(MyConfig.TAG_OVERVIEW));
                     json.put(MyConfig.TAG_SERVICED_BY, ActionList.get(i).get(MyConfig.TAG_SERVICED_BY));
                     json.put(MyConfig.TAG_RELEVANT_INFO, ActionList.get(i).get(MyConfig.TAG_RELEVANT_INFO));
@@ -1579,7 +1579,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
-            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_LOCATIONS_TO_SERVER, jsonString);
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_ACTIONS_TO_SERVER, jsonString);
 //                res = jsonString;
         }
         return res;

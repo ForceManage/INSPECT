@@ -15,7 +15,7 @@ public class ActionItemAttributes {
     private String _servicedBy;
     private String _relevantInfo;
     private int _serviceLevel;
-    private int _reportImage;
+    private String _reportImage;
     private String _image1;
     private String _com1;
     private String _itemStatus;
@@ -24,7 +24,7 @@ public class ActionItemAttributes {
     public ActionItemAttributes() {
     }
 
-    public ActionItemAttributes(int inspectionId, int projectId, int aId, String date, String overview, String servicedBy, String relevantInfo, int serviceLevel, int reportImage, String image1
+    public ActionItemAttributes(int inspectionId, int projectId, int aId, String date, String overview, String servicedBy, String relevantInfo, int serviceLevel, String reportImage, String image1
             , String com1, String itemStatus, String notes) {
 
         this._inspectionId = inspectionId;
@@ -64,8 +64,8 @@ public class ActionItemAttributes {
     public String getrelevantInfo() {return this._relevantInfo; }
     public void setserviceLevel (int serviceLevel) {this._serviceLevel = serviceLevel; }
     public int getserviceLevel() {return this._serviceLevel;}
-    public void setReportImage(int reportImage) {this._reportImage = reportImage; }
-    public int getReportImage() {return this._reportImage; }
+    public void setReportImage(String reportImage) {this._reportImage = reportImage; }
+    public String getReportImage() {return this._reportImage; }
     public void setImage1(String image1) {this._image1 = image1; }
     public String getimage1() {return this._image1; }
     public void setcom1(String com1) {this._com1 = com1; }

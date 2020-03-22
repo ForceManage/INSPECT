@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -46,7 +46,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_INSPECTION_ID = "InspectionId";
     public static final String COLUMN_INSPECTION_DATE = "InspectionDate";
     public static final String COLUMN_INSPECTOR = "Inspector";
-    public static final String COLUMN_INSPECTION_STATUS = "ESMInspectionStatus";
+    public static final String COLUMN_INSPECTION_STATUS = "InspectionStatus";
     public static final String COLUMN_INSPECTION_TYPE = "InspectionType";
 
     public static final String TABLE_INSPECTION_ITEM = "InspectionItem";
@@ -54,9 +54,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public static final String COLUMN_DATE_TIME_START = "DateTimeStart";
     public static final String COLUMN_DATE_TIME_FINISH = "DateTimeFinish";
-    public static final String COLUMN_DATE = "Date";
-    public static final String COLUMN_OVERVIEW = "ESMInspectionObservation";
-    public static final String COLUMN_RELEVANT_INFO = "ESMRecommendation";
+    public static final String COLUMN_DATE_INSPECTED = "DateInspected";
+    public static final String COLUMN_OVERVIEW = "Overview";
+    public static final String COLUMN_RELEVANT_INFO = "RelevantInfo";
     public static final String COLUMN_SERVICE_LEVEL = "ServiceLevel";
     public static final String COLUMN_SERVICED_BY = "ServicedBy";
     public static final String COLUMN_REPORT_IMAGE = "ReportImage";
@@ -120,6 +120,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_ADDRESS_NUMBER + " TEXT,"
                 + COLUMN_PROJECT_ADDRESS + " TEXT,"
                 + COLUMN_PROJECT_SUBURB + " TEXT,"
+                + COLUMN_KEY_REQUIRED + " TEXT,"
+                + COLUMN_NO_LEVELS + " INTEGER,"
+                + COLUMN_ROOF_TYPE + " TEXT,"
+                + COLUMN_WALL_TYPE + " TEXT,"
+                + COLUMN_FLOOR_TYPE + " TEXT,"
                 + COLUMN_PROJECT_PHOTO + " TEXT" + ")";
         db.execSQL(CREATE_PROJECT_INFO_TABLE);
 
@@ -156,9 +161,10 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INSPECTION_ID + " INTEGER,"
                 + COLUMN_PROJECT_ID + " INTEGER,"
                 + COLUMN_A_ID + " INTEGER,"
-                + COLUMN_DATE + " TEXT,"
+                + COLUMN_DATE_INSPECTED + " TEXT,"
                 + COLUMN_OVERVIEW + " TEXT,"
                 + COLUMN_RELEVANT_INFO + " TEXT,"
+                + COLUMN_SERVICED_BY + " TEXT,"
                 + COLUMN_SERVICE_LEVEL + " TEXT,"
                 + COLUMN_REPORT_IMAGE + " TEXT,"
                 + COLUMN_IMG1 + " TEXT,"
@@ -187,7 +193,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INSPECTION_ID + " INTEGER,"
                 + COLUMN_PROJECT_ID + " INTEGER,"
                 + COLUMN_A_ID + " INTEGER,"
-                + COLUMN_DATE + " TEXT,"
+                + COLUMN_DATE_INSPECTED + " TEXT,"
                 + COLUMN_OVERVIEW + " TEXT,"
                 + COLUMN_RELEVANT_INFO + " TEXT,"
                 + COLUMN_SERVICE_LEVEL + " TEXT,"
@@ -253,7 +259,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTION_ITEM);
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION_ITEM);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_A_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_B_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_C_OR);
@@ -285,6 +291,7 @@ public class DBHandler extends SQLiteOpenHelper {
     //Store values from MySQL on server to local SQLite
     public void updateFromServer( ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes, ActionItemAttributes actionItemAttributes ) {
         ContentValues values = new ContentValues();
+
         values.put(COLUMN_PROJECT_ID, projectAttributes.getProjectId());
         values.put(COLUMN_ADDRESS_NUMBER, projectAttributes.getAddressNumber());
         values.put(COLUMN_PROJECT_ADDRESS, projectAttributes.getprojectAddress());
@@ -318,8 +325,8 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesInspect.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
         valuesInspect.put(COLUMN_INSPECTION_DATE, inspectionAttributes.getinspectionDate());
         valuesInspect.put(COLUMN_INSPECTOR, inspectionAttributes.getinspector());
-        valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
-        valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
+ //       valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
+ //       valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
 
         db.replace(TABLE_INSPECTION, null, valuesInspect);
 
@@ -329,7 +336,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesItem.put(COLUMN_INSPECTION_ID, inspectionAttributes.getinspectionId());
         valuesItem.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
         valuesItem.put(COLUMN_A_ID, inspectionItemAttributes.getaId());
-        valuesItem.put(COLUMN_DATE, inspectionItemAttributes.getdate());
+        valuesItem.put(COLUMN_DATE_INSPECTED, inspectionItemAttributes.getdateInspected());
         valuesItem.put(COLUMN_OVERVIEW, inspectionItemAttributes.getoverview());
         valuesItem.put(COLUMN_SERVICED_BY, inspectionItemAttributes.getservicedBy());
         valuesItem.put(COLUMN_RELEVANT_INFO, inspectionItemAttributes.getrelevantInfo());
@@ -396,7 +403,7 @@ public class DBHandler extends SQLiteOpenHelper {
             case "A":
                 db.replace(TABLE_A_OR, null, values);
                 break;
-            case "B":
+ /*           case "B":
                 db.replace(TABLE_B_OR, null, values);
                 break;
             case "C":
@@ -408,6 +415,8 @@ public class DBHandler extends SQLiteOpenHelper {
             case "E":
                 db.replace(TABLE_E_OR, null, values);
                 break;
+
+  */
         }
         db.close();
     }
@@ -422,7 +431,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_DATE, date);
+        contentValues.put(COLUMN_DATE_INSPECTED, date);
         contentValues.put(COLUMN_OVERVIEW, overview);
         contentValues.put(COLUMN_RELEVANT_INFO, relevantInfo);
         contentValues.put(COLUMN_SERVICE_LEVEL, ServiceLevel);
@@ -977,7 +986,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Check if a location contains any sublocations
-    public int itemNum(String propId, int assetId) {
+    public int itemNum(String propId, int aId) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -987,8 +996,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         selectQuery = "SELECT * FROM "
-                +TABLE_ESM_INSPECTION_ITEM+" I"
-                +" WHERE I."+ COLUMN_PROPERTY_ID+" = "+propId+" AND I."+COLUMN_ASSET_ID+" = "+assetId;
+                +TABLE_INSPECTION_ITEM+" I"
+                +" WHERE I."+ COLUMN_PROJECT_ID+" = "+propId+" AND I."+COLUMN_INSPECTION_ID+" = "+aId;
 
         cursor = db.rawQuery(selectQuery, null);
 
@@ -1008,7 +1017,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-
+/*
 
         selectQuery = "SELECT I."+COLUMN_PROPERTY_ID+", I."+COLUMN_ASSET_ID
                 +" FROM "+TABLE_ESM_INSPECTION_ITEM+" I"
@@ -1042,19 +1051,20 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
 
 
+ */
 
+        return "n";
 
     }
 
 
     // Retrieve individual current inspection
-    public HashMap <String, String> getInspection(int propertyId, int jobId, int assetId, String locationId, String sublocationId, int rId ) {
+    public HashMap <String, String> getInspection(int propertyId, int jobId, int assetId, String locationId, String sublocationId) {
         // Open a database for reading and writing
         SQLiteDatabase database = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-
-
+/*
         selectQuery = "SELECT P."+COLUMN_PROPERTY_ID+", E."+COLUMN_CATEGORY_ID+", E."+COLUMN_CATEGORY_NAME+", E."+COLUMN_SUB_CATEGORY_ID+", E."+COLUMN_SUB_CATEGORY_NAME+", PL."+COLUMN_LOCATION_DESCRIPTION
                 +", I."+COLUMN_NOTES+", I."+COLUMN_ESM_INSPECTION_OBSERVATION+", I."+COLUMN_ESM_RECOMMENDATION+", I."+COLUMN_RECOMMEND_NO+", I."+COLUMN_SERVICED_BY
                 +", I."+COLUMN_IMG1+", I."+COLUMN_IMG2+", I."+COLUMN_IMG3+", I."+COLUMN_IMG4+", I."+COLUMN_IMG5
@@ -1113,6 +1123,11 @@ public class DBHandler extends SQLiteOpenHelper {
         // return inspection data for propertyid, Jobid, inspection id
         database.close();
         return inspectionItemMap;
+
+ */
+
+        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
+        return  inspectionItemMap;
     }
 
 
@@ -1125,7 +1140,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor;
         int maxRecommendNo = 1;
         int maxAssetId = 1;
-
+/*
         // Cursor provides read and write access for the
         // data returned from a database query
         // rawQuery executes the query and returns the result as a Cursor
@@ -1253,6 +1268,12 @@ public class DBHandler extends SQLiteOpenHelper {
         // return inspection data for propertyid, Jobid, inspection id
         database.close();
         return inspectionItemMap;
+
+
+ */
+
+        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
+        return inspectionItemMap;
     }
 
 
@@ -1297,14 +1318,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 // Access the Cursor data by index that is in the same order
                 // as query
 
-                propertyMap.put(MyConfig.TAG_PROPERTY_ID, (String.valueOf(cursor.getInt(0))));
+                propertyMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
                 propertyMap.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(1));
-                propertyMap.put(MyConfig.TAG_PROPERTY_ADDRESS, cursor.getString(2));
-                propertyMap.put(MyConfig.TAG_PROPERTY_SUBURB, cursor.getString(3));
-                propertyMap.put(MyConfig.TAG_JOB_ID, cursor.getString(4));
-                propertyMap.put(MyConfig.TAG_JOB_TYPE, cursor.getString(5));
-                propertyMap.put(MyConfig.TAG_PROPERTY_PHOTO, cursor.getString(6));
-                propertyMap.put(MyConfig.TAG_JOB_STATUS, cursor.getString(7));
+                propertyMap.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(2));
+                propertyMap.put(MyConfig.TAG_PROJECT_SUBURB, cursor.getString(3));
+                propertyMap.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(4));
+                propertyMap.put(MyConfig.TAG_INSPECTION_TYPE, cursor.getString(5));
+                propertyMap.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(6));
+                propertyMap.put(MyConfig.TAG_INSPECTION_STATUS, cursor.getString(7));
 
                 propertyArrayList.add(propertyMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
@@ -1328,8 +1349,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT I."+
                 COLUMN_IMG1+", I."+COLUMN_IMG2+", I."+COLUMN_IMG3+", I."+COLUMN_IMG4+", I."+COLUMN_IMG5
-                +" FROM "+TABLE_ESM_INSPECTION_ITEM+" I JOIN "+TABLE_ESM_INSPECTION+" E ON E."+COLUMN_JOB_ID+" = I."+COLUMN_JOB_ID
-                +" WHERE "+COLUMN_ESM_INSPECTION_STATUS+" = 'c' OR "+COLUMN_ESM_INSPECTION_STATUS+" = 'p'";
+                +" FROM "+TABLE_INSPECTION_ITEM+" I JOIN "+TABLE_INSPECTION+" E ON E."+COLUMN_INSPECTION_ID+" = I."+COLUMN_INSPECTION_ID
+                +" WHERE "+COLUMN_INSPECTION_STATUS+" = 'c' OR "+COLUMN_INSPECTION_STATUS+" = 'p'";
 
    /*     String selectQuery = "SELECT "+
                 TABLE_ESM_INSPECTION+"."+COLUMN_JOB_ID+", "+COLUMN_IMG1+", "+
@@ -1389,7 +1410,7 @@ public class DBHandler extends SQLiteOpenHelper {
         inspectedItemsList = new ArrayList<HashMap<String, String>>();
 
 
-
+/*
 
         //First query sets out the zones and the related esential measures in those zones
 
@@ -1498,7 +1519,7 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursorB.moveToNext()); // Move Cursor to the next row
         }
 
-
+*/
         // return contact list
         return inspectedItemsList;
     }
@@ -1521,8 +1542,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionsMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
                 inspectionsMap.put (MyConfig.TAG_INSPECTION_DATE, cursor.getString(1));
                 inspectionsMap.put (MyConfig.TAG_INSPECTION_STATUS, cursor.getString(2));
-                inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
-                inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
+         //       inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
+        //        inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
                 inspectionArrayList.add(inspectionsMap);
 
             } while (cursor.moveToNext());
@@ -1530,6 +1551,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         dtabase.close();
         return inspectionArrayList;
+
 
     }
 
@@ -1578,7 +1600,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT E1."+COLUMN_INSPECTION_ID+", E1."+COLUMN_A_ID+", E1."+COLUMN_INSPECTION_DATE+", E1."
+        String selectQuery = "SELECT E1."+COLUMN_INSPECTION_ID+", E1."+COLUMN_A_ID+", E1."+COLUMN_DATE_INSPECTED+", E1."
                 +COLUMN_OVERVIEW+", E1."+COLUMN_RELEVANT_INFO+", E1."+ COLUMN_SERVICE_LEVEL+", E1."
                 +COLUMN_SERVICED_BY+", E1."+COLUMN_IMG1+",E1."+COLUMN_COM1+", E1."+COLUMN_IMG2+",E1."+COLUMN_COM2+", E1."+COLUMN_IMG3
                 +",E1."+COLUMN_COM3+", E1."+COLUMN_IMG4+", E1."+COLUMN_COM4+",E1."+ COLUMN_IMG5+",E1."+COLUMN_COM5+", E1."+COLUMN_IMG6
@@ -1586,7 +1608,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 +", E2."+COLUMN_INSPECTION_STATUS+", E1."+COLUMN_REPORT_IMAGE
                 +" FROM "+TABLE_INSPECTION_ITEM+" E1"
                 +" JOIN "+TABLE_INSPECTION+" E2"
-                +" ON E1."+COLUMN_PROJECT_ID+" = E2."+COLUMN_INSPECTION_ID
+                +" ON E1."+COLUMN_PROJECT_ID+" = E2."+COLUMN_PROJECT_ID
                 +" ORDER BY E1."+COLUMN_INSPECTION_ID;
 
         // +" JOIN "+TABLE_ASSET_REGISTER+" A"
@@ -1602,7 +1624,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItemMap = new HashMap<String, String>();
                 inspectionItemMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
                 inspectionItemMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(1))));
-                inspectionItemMap.put (MyConfig.TAG_INSPECTION_DATE, cursor.getString(2));
+                inspectionItemMap.put (MyConfig.TAG_DATE_INSPECTED, cursor.getString(2));
                 inspectionItemMap.put (MyConfig.TAG_OVERVIEW, cursor.getString(3));
                 inspectionItemMap.put (MyConfig.TAG_RELEVANT_INFO, cursor.getString(4));
                 inspectionItemMap.put (MyConfig.TAG_SERVICE_LEVEL, cursor.getString(5));
@@ -1644,7 +1666,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> sublocationArrayList;
 
         sublocationArrayList = new ArrayList<HashMap<String, String>>();
-
+/*
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT "+COLUMN_ASSET_DESCRIPTION//+", "+COLUMN_LOCATION_DESCRIPTION
@@ -1664,6 +1686,8 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         dtabase.close();
+
+ */
 
         return sublocationArrayList;
 
@@ -1719,10 +1743,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of locations to upload to server
-    public ArrayList<HashMap<String, String>> getAllLocations(){
+    public ArrayList<HashMap<String, String>> getActions(){
 
 
-        HashMap<String, String> locationItemMap;
+        HashMap<String, String> ActionItemMap;
         ArrayList<HashMap<String, String>> locationList;
 
         locationList = new ArrayList<HashMap<String, String>>();
@@ -1730,25 +1754,27 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT * "
-                +" FROM "+TABLE_PROPERTY_LOCATIONS
-                +" ORDER BY "+COLUMN_PROPERTY_ID;
+                +" FROM "+TABLE_ACTION_ITEM
+                +" ORDER BY "+COLUMN_A_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
         // Move to the first row
         if (cursor.moveToFirst()) {
             do {
-                locationItemMap = new HashMap<String, String>();
-                locationItemMap.put(MyConfig.TAG_PROPERTY_ID, (String.valueOf(cursor.getInt(0))));
-                locationItemMap.put (MyConfig.TAG_LOCATION_ID, (String.valueOf(cursor.getInt(1))));
-                locationItemMap.put (MyConfig.TAG_SUB_LOCATION_ID, (String.valueOf(cursor.getInt(2))));
-                locationItemMap.put (MyConfig.TAG_LOCATION_DESC,cursor.getString(3));
+                ActionItemMap = new HashMap<String, String>();
+                ActionItemMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
+                ActionItemMap.put (MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                ActionItemMap.put (MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(2))));
+                ActionItemMap.put (MyConfig.TAG_DATE_INSPECTED,cursor.getString(3));
 
-                locationList.add(locationItemMap);
+                locationList.add(ActionItemMap);
             } while (cursor.moveToNext());
         }
 
         dtabase.close();
+
+
 
         return locationList;
 
@@ -1766,7 +1792,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
         inspectionitemsArrayList = new ArrayList<HashMap<String, String>>();
-
+/*
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT A."+COLUMN_ASSET_ID+", A."+COLUMN_LOCATION_ID+", A."+COLUMN_SUB_LOCATION_ID+", I."+COLUMN_RECOMMEND_NO
@@ -1796,6 +1822,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         dtabase.close();
 
+
+ */
         return inspectionitemsArrayList;
 
     }
@@ -1847,7 +1875,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         locationArrayList = new ArrayList<HashMap<String, String>>();
 
-
+/*
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
@@ -1872,6 +1900,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         dtabase.close();
 
+
+ */
         return locationArrayList;
 
     }
