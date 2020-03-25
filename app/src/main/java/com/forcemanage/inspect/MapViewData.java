@@ -1,64 +1,91 @@
 package com.forcemanage.inspect;
 
 /**
- * Created by cindyoakes on 9/23/16.
+ * Created by AP on 3/23/20
  */
 public class MapViewData
 {
 
-    private int _level;
-    private String _name;
-    private String _id;
-    private String _parentId;
+    private int level;
+    private int catId;
+    private String label;
+    private int aid;
+    private int parent;
+    private String image1;
+    private String notes;
 
     public MapViewData() {}
 
-    public MapViewData(int level, String name, String id, String parentId)
+    public MapViewData(int Level, int CatID, String Label, int aID, int Parent, String Image1, String Notes)
     {
-        this._level = level;
-        this._name = name;
-        this._id = id;
-        this._parentId = parentId;
+        this.level= Level;
+        this.catId = CatID;
+        this.label = Label;
+        this.aid = aID;
+        this.parent = Parent;
+        this.image1 = Image1;
+        this.notes = Notes;
+
     }
 
     public int getLevel()
     {
-        return _level;
+        return level;
     }
 
-    public void setLevel(int level)
+    public void setLevel(int Level)
     {
-        this._level = level;
+        this.level = Level;
     }
 
-    public String getName()
+    public int getCatID()
     {
-        return _name;
+        return catId;
     }
 
-    public void setName(String name)
+    public void setCatID(int CatID)
     {
-        this._name = name;
+        this.catId = CatID;
     }
 
-    public String getID()
+    public String getLabel()
     {
-        return _id;
+        return label;
     }
 
-    public void setID(String id)
+    public void setLabel(String Label) {this.label = Label; }
+
+    public int getaID()
     {
-        this._id = id;
+        return aid;
     }
 
-    public String getParentID()
+    public void setaID(int aID)
     {
-        return _parentId;
+        this.aid = aID;
     }
 
-    public void setParentID(String parentId)
+    public int getParent()
     {
-        this._parentId = parentId;
+        return parent;
     }
 
+    public void setParent(int Parent)
+    {
+        this.parent = Parent;
+    }
+
+    public String getimage1()
+    {
+        return image1;
+    }
+
+    public void setimage1(String Image1) {this.image1 = Image1; }
+
+    public String getNotes()
+    {
+        return notes;
+    }
+
+    public void setNotes(String Notes) {this.notes = Notes; }
 }

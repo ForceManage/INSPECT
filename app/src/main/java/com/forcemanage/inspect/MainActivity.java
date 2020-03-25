@@ -859,10 +859,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < result.length(); i++) {
                 // testing only -
-                String imsg = Integer.toString(i);
-                String rmsg = Integer.toString(result.length());
-                String msg = "Testing Loop additional " + imsg + " result no " + rmsg;
-                //     editTextMessage.setText(msg);
+              //  String imsg = Integer.toString(i);
+             //   String rmsg = Integer.toString(result.length());
+             //   String msg = "Testing Loop additional " + imsg + " result no " + rmsg;
+             //     editTextMessage.setText(msg);
 
                 JSONObject jo = result.getJSONObject(i);
                 String projId = jo.getString(MyConfig.TAG_PROJECT_ID);
@@ -886,10 +886,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int child = parseInt(Child);
 
 
-
-
-                MAPattributes mapRow =
-                        new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, Photo, Note);
+                MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, Photo, Note);
                 // editTextMessage.setText("Additional Test 1");
 
                       //editTextMessage.setText("Test 5");
@@ -1042,7 +1039,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING = s;
-               TextMessage.setText("JSON_STRING " + s);
+           //    TextMessage.setText("JSON_STRING " + s);
 
                 updatePropInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -1052,7 +1049,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_JOB_INFO, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECT_INFO, ServicePerson);
                 return s;
             }
 
@@ -1080,7 +1077,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING_ADDITIONAL = s;
-                // testing only - editTextMessage.setText("JSON_STRING " + s);
+                TextMessage.setText("JSON_STRING " + s);
 
                 updateAdditionalInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -1339,8 +1336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "2019-06-01");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
                     json.put(MyConfig.TAG_INSPECTION_STATUS, inspList.get(i).get(MyConfig.TAG_INSPECTION_STATUS));
-                    json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
-                    json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
+                 //   json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
+                 //   json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
 
                     jsonArray.put(json);
                     j = j + 1;
@@ -1511,6 +1508,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_PROJECT_ID, propList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_PROJECT_PHOTO, propList.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
+
                     jsonArray.put(json);
                     j = j + 1;
 

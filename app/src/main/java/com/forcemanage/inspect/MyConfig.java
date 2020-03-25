@@ -3,7 +3,7 @@ package com.forcemanage.inspect;
 public class MyConfig {
 
 
-    public static final String URL_GET_JOB_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getInspectionInfo.php?InspectorId=";
+    public static final String URL_GET_PROJECT_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getInspectionInfo.php?InspectorId=";
     public static final String URL_GET_ADDITIONAL_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getAdditionalInfo.php?InspectorId=";
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
@@ -67,7 +67,7 @@ public class MyConfig {
 
 
     //Map
-    public static final String TAG_CAT_ID = "CatId";
+    public static final String TAG_CAT_ID = "CatID";
     public static final String TAG_LEVEL = "Level";
     public static final String TAG_PARENT = "Parent";
     public static final String TAG_LABEL = "Label";

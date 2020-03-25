@@ -76,7 +76,7 @@
 
                     <fragment
                         android:id="@+id/tree_fragment"
-                        android:name="au.com.forcemanage.www.ESMApp.TreeViewFragment"
+                        android:name="com.forcemanage.inspect.MapViewFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
@@ -84,7 +84,7 @@
 
                     <fragment
                         android:id="@+id/detail_text"
-                        android:name="au.com.forcemanage.www.ESMApp.DetailFragment"
+                        android:name="com.forcemanage.inspect.DetailFragment"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         />

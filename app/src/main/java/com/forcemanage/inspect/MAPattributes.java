@@ -16,73 +16,71 @@ public class MAPattributes {
         private String _image1;
         private String _note;
 
-        public MAPattributes(int _projectId, int _catId, int _level, int _parent, String _label, int _child, int _aId, String _image1, String _note) {
+        public MAPattributes(int ProjectID, int CatID, int Level, int Parent, String Label, int Child, int aID, String image1, String Notes) {
 
-            this._projectId = _projectId;
-            this._catID = _catId;
-            this._level = _level;
-            this._parent = _parent;
-            this._label = _label;
-            this._child = _child;
-            this._aId = _aId;
-            this._image1 = _image1;
-            this._note = _note;
+            this._projectId = ProjectID;
+            this._catID = CatID;
+            this._level = Level;
+            this._parent = Parent;
+            this._label = Label;
+            this._child = Child;
+            this._aId = aID;
+            this._image1= image1;
+            this._note = Notes;
 
 
         }
 
 
 
-        public int get_projectId() {
+        public int getprojectId() {
             return _projectId;
         }
 
-        public int get_catId() {
+        public int getcatId() {
             return _catID;
         }
-        public int get_level() {
+        public int getlevel() {
         return _level;
     }
 
-        public int get_parent() {
+        public int getparent() {
             return _parent;
         }
 
-        public String get_label() {return _label; }
+        public String getlabel() {return _label; }
 
-        public int get_child() {return _child; }
+        public int getchild() {return _child; }
 
-        public int get_aId() {return _aId; }
+        public int getaId() {return _aId; }
 
-        public String get__image1() {return _image1; }
+        public String getimage1() {return _image1; }
 
-        public String get_note() {return _note; }
+        public String getnote() {return _note; }
 
 
-        public void set_projectId(int _projectId) {
-            this._projectId = _projectId;
-        }
+        public void setprojectId(int _projectId) {this._projectId = _projectId;  }
 
-        public void set_catId(int _catId) {
+        public void setcatId(int _catId) {
             this._catID = _catID;
         }
 
-        public void set_level(int _catId) {
+        public void setlevel(int _catId) {
         this._level = _level;
     }
-        public void set_parent(int _parent) {
+        public void setparent(int _parent) {
             this._parent = _parent;
         }
 
-        public void set_label(String _label) {
+        public void setlabel(String _label) {
         this._label = _label;
     }
 
-        public void set_child(int _child) {
+        public void setchild(int _child) {
         this._child = _child;
     }
 
-        public void set_aId(int _aId) {
+        public void setaId(int _aId) {
         this._aId = _aId;
     }
 

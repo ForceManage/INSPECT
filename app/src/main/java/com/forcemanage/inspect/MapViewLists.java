@@ -4,6 +4,7 @@ package com.forcemanage.inspect;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -45,13 +46,12 @@ public class MapViewLists
 */
 
 
-        for (int i = 0; i < InspectionActivity.level.length; i++) {
 
-            data.add(new MapViewData(InspectionActivity.level[i], InspectionActivity.id[i], InspectionActivity.id[i], InspectionActivity.parent[i]));
-        }
+
+
 
      //   TreeViewLists.LoadDisplayList();
-        return data;
+        return GlobalVariables.dataList;
 
         // return GlobalVariables.dataList;
 
@@ -72,15 +72,15 @@ public class MapViewLists
             MapViewData data = dataList.get(i);
             if (data.getLevel() != 0) continue;
 
-            Log.v("LoadInitialNodes", data.getName());
+            Log.v("LoadInitialNodes", data.getLabel());
 
             MapViewNode node = new MapViewNode();
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
-            node.setNodeName(data.getName());
+            node.setNodeName(data.getLabel());
             int newLevel = data.getLevel() + 1;
             node.setNodeChildern(null);
-            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getID());
+            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
             //node.setNodeChildern(LoadChildrenNodes(dataList, newLevel, data.getID()));
             //if (node.getNodeChildren().size() == 0)
             if (children.size() == 0)
@@ -100,24 +100,24 @@ public class MapViewLists
         return nodes;
     }
 
-    private static ArrayList<MapViewNode> LoadChildrenNodes(ArrayList<MapViewData> dataList, int level, String parentID)
+    private static ArrayList<MapViewNode> LoadChildrenNodes(ArrayList<MapViewData> dataList, int level, int parentID)
     {
         ArrayList<MapViewNode> nodes = new ArrayList<MapViewNode>();
 
         for(int i = 0; i < dataList.size(); i++)
         {
             MapViewData data = dataList.get(i);
-            if ((data.getLevel() != level) || (data.getParentID() != parentID)) continue;
+            if ((data.getLevel() != level) || (data.getParent() != parentID)) continue;
 
 
 
             MapViewNode node = new MapViewNode();
             node.setNodeLevel(data.getLevel());
-            node.setNodeName(data.getName());
+            node.setNodeName(data.getLabel());
             node.setIsExpanded(GlobalVariables.FALSE);
             int newLevel = level + 1;
             node.setNodeChildern(null);
-            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getID());
+            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
            // node.setNodeChildern(LoadChildrenNodes(dataList, newLevel, data.getID()));
             if (children.size() == 0)
             {
@@ -130,7 +130,7 @@ public class MapViewLists
 
             nodes.add(node);
 
-            Log.v("LoadChildrenNodes", String.format("%s %d",data.getName(), children.size()));
+            Log.v("LoadChildrenNodes", String.format("%s %d",data.getLabel(), children.size()));
         }
 
 

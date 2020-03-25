@@ -135,10 +135,13 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private ArrayAdapter<MapViewNode> aAdapter;
     private MapListAdapter treeListAdapter;
     private List<MapViewData> listItems;
-    public static  int[] level;
-    public static  String[] text;
-    public static   String[] id;
-    public static  String[] parent;
+    public static  int[] Level;
+    public  static int[] CatID;
+    public static  String[] Label;
+    public static   int[] aID;
+    public static  int[] Parent;
+    public static  String[] MapImage1;
+    public static  String[] MapNotes;
     private boolean Edited = false;
 
 
@@ -154,7 +157,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         setContentView(R.layout.activity_inspection);
         cameraSnap = "0";
         projectId = getIntent().getExtras().getString("PROJECT_ID");
-  //      inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
+        inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
         buttonInsert = (Button) findViewById(R.id.button2);
         buttonInsert.setOnClickListener(this);
         btnViewReport = (Button) findViewById(R.id.btnViewReport);
@@ -176,7 +179,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         sublocationId = "0";
         inspArrayPosition = 0;
         getinspectionArray();
-        displayInspectionItem(projId, iId, seq);
+    //    displayInspectionItem(projId, iId, seq);
 
 
 
@@ -231,7 +234,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
          Note = (EditText) findViewById(R.id.note);
 
-         getZonesArray();  //Load the zone spinner dropdown
+     //    getZonesArray();  //Load the zone spinner dropdown
 
         // An array containing list of observations
 
@@ -240,39 +243,30 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         recommendations = new String[]{"Recommendation"};
 
 
-        ArrayList<HashMap<String, String>> zoneListB = dbHandlerA.getMap(projectId);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projectId);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
 
-        level = new int[zoneListB.size()];
-        text = new String[zoneListB.size()];
-        id = new String[zoneListB.size()];
-        parent = new String[zoneListB.size()];
-        String Label = null;
-        for (int i = 0; i < (zoneListB.size()); i++){
+        for (int i = 0; i < (SiteMapData.size()); i++){
 
              listItem = new MapViewData(
-                    level[i] = Integer.parseInt(zoneListB.get(i).get("Level")),
-                    text[i] = zoneListB.get(i).get("Label"),
-                    id[i] = zoneListB.get(i).get("aId"),
-                    parent[i] = zoneListB.get(i).get("Parent")
-
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                     SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                     SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                     SiteMapData.get(i).get(MyConfig.TAG_NOTES)
             );
             listItems.add(listItem);
         }
 
 
 
-        ArrayList<MapViewData> data = new ArrayList<MapViewData>();
 
-        for (int i = 0; i < zoneListB.size(); i++) {
 
-            data.add(new MapViewData(level[i], text[i], id[i], parent[i]));
-
-        }
-
-        GlobalVariables.dataList = data;
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
    //     TreeViewLists.LoadDisplayList();
 
 
@@ -491,42 +485,35 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     public void loadLocations()  {
 
 
+
+
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> zoneListB = dbHandler.getMap(projectId);
-
-
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projectId);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
 
-        level = new int[zoneListB.size()];
-        text = new String[zoneListB.size()];
-        id = new String[zoneListB.size()];
-        parent = new String[zoneListB.size()];
-        String Label = null;
-        for (int i = 0; i < (zoneListB.size()); i++){
+        for (int i = 0; i < (SiteMapData.size()); i++){
 
             listItem = new MapViewData(
-                    level[i] = Integer.parseInt(zoneListB.get(i).get("Level")),
-                    text[i] = zoneListB.get(i).get("Label"),
-                    id[i] = zoneListB.get(i).get("aId"),
-                    parent[i] = zoneListB.get(i).get("Parent")
-
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
             );
             listItems.add(listItem);
         }
 
 
 
-        ArrayList<MapViewData> data = new ArrayList<MapViewData>();
 
-        for (int i = 0; i < zoneListB.size(); i++) {
 
-            data.add(new MapViewData(level[i], text[i], id[i], parent[i]));
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
 
-        }
 
-        GlobalVariables.dataList = data;
 
        GlobalVariables.modified = true;
        OnSelectionChanged(0);
@@ -610,7 +597,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         // getinspectionArray(); //Loads the inspection items for the selected zone
 
         //     location.setText("Zone "+Integer.toString(zone)+" - "+locationsArr[zone+1]);
-
+/*
         seq = "cur";
         inspArrayPosition = rec;
         if(Edited == true) saveInspectionItem(iId,aId);
@@ -796,28 +783,20 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 */
      }
 
-
-
     private void getinspectionArray(){
-        /*
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-        ArrayList<HashMap<String, String>> inspectionitems = dbHandler.getinspectionitemlist(propId, jId, zone);
+        ArrayList<HashMap<String, String>> inspectionitems = dbHandler.getinspectionitemlist(projId, iId,aId);
 
         assetIdlist = new String[inspectionitems.size()];
         locationIdlist = new String[inspectionitems.size()];
         sublocationIdlist = new String[inspectionitems.size()];
         recitemlist = new String[inspectionitems.size()];
 
-        for (int i = 0; i < inspectionitems.size(); i++) {
-            assetIdlist[i] = inspectionitems.get(i).get(MyConfig.TAG_ASSET_ID);
-            locationIdlist[i] = inspectionitems.get(i).get(MyConfig.TAG_LOCATION_ID);
-            sublocationIdlist[i] = inspectionitems.get(i).get(MyConfig.TAG_SUB_LOCATION_ID);
-            recitemlist[i] = inspectionitems.get(i).get(MyConfig.TAG_RECOMMEND_NO);
+
     }
 
-         */
-    }
+
 
     public void getZonesArray(){
 
@@ -1021,7 +1000,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
      }
 
 
-    private void displayInspectionItem(int propId, int jobId, String sequence){
+    private void displayInspectionItem(int propId, int iId, String sequence){
 
             switch (sequence) {
 
@@ -1036,7 +1015,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
             ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            HashMap<String, String> list = dbHandler.getInspection(propId, jobId, aId,locationId, sublocationId);
+            HashMap<String, String> list = dbHandler.getInspection(projId, iId);
 
   //          catId = list.get(MyConfig.TAG_CAT_ID);
    //         esmsubcatId = list.get(MyConfig.TAG_SUB_CATEGORY_ID);
