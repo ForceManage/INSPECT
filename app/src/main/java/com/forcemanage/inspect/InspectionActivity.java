@@ -138,7 +138,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     public static  int[] Level;
     public  static int[] CatID;
     public static  String[] Label;
-    public static   int[] aID;
+    public int aID;
     public static  int[] Parent;
     public static  String[] MapImage1;
     public static  String[] MapNotes;
@@ -533,6 +533,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             // If description is available, we are in two pane layout
             // so we call the method in DescriptionFragment to update its content
             detailFragment.setDetail(treeNameIndex);
+            aID = detailFragment.aID;
+            displayInspectionItem();
+            Toast.makeText(this, "Selected ID = "+ aID,Toast.LENGTH_SHORT).show();
         } else {
             DetailFragment newDetailFragment = new DetailFragment();
             Bundle args = new Bundle();
@@ -540,7 +543,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
             newDetailFragment.setArguments(args);
 
-
+            aID = detailFragment.aID;
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
@@ -549,6 +552,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the backStack so the User can navigate back
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+
           //  fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
@@ -584,7 +588,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-        int rec = 0;
+    //    int rec = 0;
    //     for (int i = 0; i < locationdesc.length; i++)
   //          if (detailFragment.Name != null)
    //         if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
@@ -699,8 +703,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         }
 
-        String inspectionObservation = Observation.getText().toString();
-        String inspectionRecommendation = Recommendation.getText().toString();
+        String overview = Observation.getText().toString();
+        String relevantInfo = Recommendation.getText().toString();
+
         String ServiceLevel = "1";
         String ServicedBy = ServiceCont.getText().toString();
         String tag = cameraSnap;
@@ -713,8 +718,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         String Notes = Note.getText().toString();
 
 
-  //      dbHandler.updateInspection(iId, aId, nextServiceDate, inspectionObservation, inspectionRecommendation, ServiceLevel, ServicedBy
-  //                                 ,tag , Img1, Img2, Img3, Img4, Img5, ItemStatus, Notes);
+        dbHandler.updateInspection(1, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
+                    , "reportImage", Img1, "com1", Img2, "com2", Img3, "com3", Img4, "com4",
+                                          Img5,  "com5",  "Img6", " com6", "Img7",  "com7", ItemStatus, Notes);
+
+
 
 
 
@@ -1000,22 +1008,13 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
      }
 
 
-    private void displayInspectionItem(int propId, int iId, String sequence){
+    private void displayInspectionItem(){
 
-            switch (sequence) {
 
-                case "cur":
 
-                    aId = Integer.parseInt(assetIdlist[inspArrayPosition]);
-                    locationId = locationIdlist[inspArrayPosition];
-                    sublocationId = sublocationIdlist[inspArrayPosition];
-  //                  rId = Integer.parseInt(recitemlist[inspArrayPosition]);
-                    break;
-            }
-
-            ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
+  //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            HashMap<String, String> list = dbHandler.getInspection(projId, iId);
+            HashMap<String, String> list = dbHandler.getInspection(projId, aID);
 
   //          catId = list.get(MyConfig.TAG_CAT_ID);
    //         esmsubcatId = list.get(MyConfig.TAG_SUB_CATEGORY_ID);
@@ -1052,10 +1051,10 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             String subCategoryText = list.get(MyConfig.TAG_SUB_CATEGORY_NAME);
             String Notes = list.get(MyConfig.TAG_NOTES);
 
-             */
+
    //         if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
    //            else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
-            String zoneText = dbHandler.zone(propId, locationId);
+            String zoneText = dbHandler.zone(projId, locationId);
             ZONE.setText("Zone: "+ zoneText);
             Position.setText("Position: "+ itemlocation);
        //     ESM.setText("Safety Measure: "+ subCategoryText);
@@ -1063,7 +1062,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
       //     location.setText(zoneText);
       //      String recommendIdText = list.get(MyConfig.TAG_RECOMMEND_NO);
       //      String serviceDate = list.get(MyConfig.TAG_JOB_ACTUAL_DATE);
-
+*/
             photos [0] = list.get(MyConfig.TAG_IMAGE1);
             photos [1] = list.get(MyConfig.TAG_IMAGE2);
             photos [2] = list.get(MyConfig.TAG_IMAGE3);
@@ -1071,36 +1070,25 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             photos [4] = list.get(MyConfig.TAG_IMAGE5);
 
       //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-            String tag = list.get(MyConfig.TAG_REPORT_IMAGE);
+            String tag = list.get(MyConfig.TAG_IMAGE1);
 
 
 
-          // EsmDBHandler dbHandler1 = new EsmDBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> sublocationList = dbHandler.getsubLocations(projectId, Integer.toString(aId) );
 
-            final String  sublocations[] = new String[sublocationList.size()];
-            for (int i = 0; i < sublocationList.size(); i++) {
-                sublocations[i] = sublocationList.get(i).get(MyConfig.TAG_LABEL);
-            }
-
-
-            sublocationsArr = Arrays.copyOf(sublocations, sublocations.length);
-
+            int itemNos = dbHandler.getSubItemMap(projId, aID );
 
 
 
 
           //  esm_cat.setText("ESM :   "+categoryText);
           //  Asset.setText("Measure:   "+subCategoryText);
-      //      observationTextView.setText(observationText);
+      //      observationTextView.setText(i);
       //      servicedTextView.setText(servicedByText);
-      //      notes.setText(Notes);
+              notes.setText(Integer.toString(itemNos));
      //       recommendationTextView.setText(recommendationText);
 
 
-          //  String[] photos = {Img1, Img2, Img3, Img4, Img5};
-
-
+      
             for(int i=0; i < 5; i++  ) {
                 if (photos[i] == null) {
                     photos[i] = "";

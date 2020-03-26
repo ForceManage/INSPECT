@@ -78,6 +78,7 @@ public class MapViewLists
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
             node.setNodeName(data.getLabel());
+            node.setaID(data.getaID());
             int newLevel = data.getLevel() + 1;
             node.setNodeChildern(null);
             ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
@@ -114,6 +115,7 @@ public class MapViewLists
             MapViewNode node = new MapViewNode();
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
+            node.setaID(data.getaID());
             node.setIsExpanded(GlobalVariables.FALSE);
             int newLevel = level + 1;
             node.setNodeChildern(null);

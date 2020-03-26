@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * Created by DAP on 12/03/2020.
@@ -458,7 +459,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_INSPECTION_ID + " = ? AND "+COLUMN_A_ID , new String[]{inspectionId, a_Id});
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_INSPECTION_ID + " = ? AND "+COLUMN_A_ID+ " = ? " , new String[]{inspectionId, a_Id});
         db.close();
 
     }
@@ -1063,10 +1064,15 @@ public class DBHandler extends SQLiteOpenHelper {
     // Retrieve individual current inspection
     public HashMap <String, String> getInspection(int projId, int aId) {
         // Open a database for reading and writing
+
+        HashMap<String, String> inspectionItem = new HashMap<String, String>();
+
+        ArrayList<HashMap<String, String>> inspectionItemList;
+        inspectionItemList = new ArrayList<HashMap<String, String>>();
+
         SQLiteDatabase database = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-/*
+
+
             String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
                 +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
                 +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
@@ -1076,7 +1082,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         //add additional fields: status,  notes, print flag
-        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+        Cursor cursor = database.rawQuery(selectQuery, null);
 
         // Move to the first row
         if (cursor.moveToFirst()) {
@@ -1101,19 +1107,17 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_COM7, cursor.getString(16));
                 inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
                 inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
-                inspectionItemsList.add(inspectionItem);
+                inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());
         }
 
 
         // return inspection data for propertyid, Jobid, inspection id
         database.close();
-        return inspectionItemMap;
+        return inspectionItem;
 
- */
 
-        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
-        return  inspectionItemMap;
+
     }
 
 
@@ -1630,36 +1634,47 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getsubLocations(String propId, String aId){
+    public int getSubItemMap(int projId, int aId){
 
-        HashMap<String, String> sublocationItemMap;
-        ArrayList<HashMap<String, String>> sublocationArrayList;
+        HashMap<String, String> subItemMap;
+        ArrayList<HashMap<String, String>> subItemArrayList;
 
-        sublocationArrayList = new ArrayList<HashMap<String, String>>();
-/*
+        subItemArrayList = new ArrayList<HashMap<String, String>>();
+
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT "+COLUMN_ASSET_DESCRIPTION//+", "+COLUMN_LOCATION_DESCRIPTION
-                +" FROM "+TABLE_ASSET_REGISTER
-                +" WHERE "+COLUMN_PROPERTY_ID+" = "+ propId+" AND "+COLUMN_ASSET_ID+" = "+aId;
+        String selectQuery = "SELECT "+COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
+                +" FROM "+TABLE_MAP
+                +" WHERE "+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
-        // Move to the first row
+        int Level = 0;
         if (cursor.moveToFirst()) {
-            do {
-                sublocationItemMap = new HashMap<String, String>();
-                sublocationItemMap.put(MyConfig.TAG_ASSET_DESCRIPTION, cursor.getString(0));
-                sublocationArrayList.add(sublocationItemMap);
-            } while (cursor.moveToNext());
+             Level = cursor.getInt(0);
         }
+        // Move to the first row
+        cursor.close();
 
         dtabase.close();
 
- */
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        return sublocationArrayList;
+
+        String selectQuery1 = "SELECT "+COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
+                +" FROM "+TABLE_MAP
+                +" WHERE "+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_LEVEL+" = "+ Level;
+
+
+
+        cursor = db.rawQuery(selectQuery1, null);
+
+        int count = cursor.getCount();
+
+
+
+        return count;
 
     }
 

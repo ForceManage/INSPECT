@@ -474,6 +474,18 @@
                                 </FrameLayout>
 
 
+                                <EditText
+                                    android:id="@+id/com1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="6dp"
+                                    android:textSize="16sp">
+
+                                </EditText>
+
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
