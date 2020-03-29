@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
     android:paddingTop="5dp"
     tools:context="com.forcemanage.inspect.InspectionActivity">
 
@@ -37,7 +37,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
+                android:paddingLeft="8dp"
                 android:orientation="vertical"
+                android:background="@drawable/image_border"
                 android:paddingRight="2dp">
 
 
@@ -93,17 +95,12 @@
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.7" />
-
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/image_border"
                 android:orientation="vertical">
 
 
@@ -165,11 +162,6 @@
         </LinearLayout>
 
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark" />
-
 
         <LinearLayout
 
@@ -177,6 +169,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.75"
+            android:paddingLeft="6dp"
             android:orientation="vertical">
 
 
@@ -193,6 +186,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:background="@drawable/image_border"
                         android:orientation="vertical">
 
 
@@ -251,7 +245,7 @@
                                     android:layout_height="wrap_content"
                                     android:paddingLeft="10dp"
                                     android:background="@android:color/transparent"
-                                    android:text="Observation"
+                                    android:text="Overview:"
                                     android:textSize="16sp" />
 
 
@@ -298,7 +292,7 @@
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="20dp"
-                                    android:background="@color/colorPrimaryDark" />
+                                    />
 
                                 <CheckBox
                                     android:id="@+id/sign_checkBox"
@@ -308,6 +302,10 @@
                                     android:layout_height="wrap_content"
                                     android:checked="false"
                                     android:text="Certified Sign-off. Checking signifies the Item has been inspected and commentary varified" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"/>
 
 
                             </LinearLayout>
@@ -336,13 +334,7 @@
                     </LinearLayout>
 
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:background="@color/colorPrimaryDark" />
-
-                    <LinearLayout
+                <LinearLayout
 
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -351,51 +343,6 @@
                         android:orientation="vertical"
                         android:paddingLeft="3dp"
                         >
-
-
-                        <TextView
-                            android:id="@+id/Zone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="10dp"
-                            android:text="ZONE:  "
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"
-                            android:textStyle="normal|bold" />
-
-                        <TextView
-                            android:id="@+id/Position"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="3dp"
-                            android:paddingBottom="6dp"
-                            android:text="Position:  "
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"
-                            android:textStyle="normal|bold" />
-
-                        <TextView
-                            android:id="@+id/ESM"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="6dp"
-                            android:paddingBottom="30dp"
-                            android:text="ESM:  "
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"
-                            android:textStyle="normal|bold" />
-
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_gravity="bottom"
-                            android:background="@color/colorPrimaryDark" />
-
 
 
                         <ScrollView
@@ -422,6 +369,7 @@
                                         android:id="@+id/imageView"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
+                                        android:background="@drawable/image_border"
                                         android:adjustViewBounds="true"
                                         android:cropToPadding="false"
                                         android:paddingLeft="5dp"
@@ -478,23 +426,25 @@
                                     android:id="@+id/com1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
-
+                                    android:background="@drawable/image_border"
                                     android:paddingLeft="10dp"
-                                    android:paddingTop="6dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
                                     android:textSize="16sp">
 
                                 </EditText>
 
-                                <View
+
+                                   <View
                                     android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:background="@color/colorPrimaryDark" />
+                                    android:layout_height="10dp"
+                                    />
 
 
                                 <FrameLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/image_border">
 
                                     <ImageView
                                         android:id="@+id/imageView2"
@@ -540,11 +490,28 @@
 
                                  </FrameLayout>
 
+                                <EditText
+                                    android:id="@+id/com2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/image_border"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textSize="16sp">
 
+                                </EditText>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="10dp"
+                                    />
                                 <FrameLayout
 
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@drawable/image_border">
                                     >
 
                                     <ImageView
@@ -589,11 +556,27 @@
 
                                  </FrameLayout>
 
+                                <EditText
+                                    android:id="@+id/com3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/image_border"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textSize="16sp">
 
+                                </EditText>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="10dp"
+                                    />
                                 <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    >
+                                    android:background="@drawable/image_border">
 
                                     <ImageView
                                         android:id="@+id/imageView4"
@@ -627,11 +610,27 @@
                                         android:textSize="16sp" />
                                  </FrameLayout>
 
+                                <EditText
+                                    android:id="@+id/com4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/image_border"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textSize="16sp">
 
+                                </EditText>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="10dp"
+                                    />
                                 <FrameLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        >
+                                        android:background="@drawable/image_border">
 
                                         <ImageView
                                             android:id="@+id/imageView5"
@@ -664,7 +663,23 @@
                                             android:textSize="16sp" />
 
                                  </FrameLayout>
+                                <EditText
+                                    android:id="@+id/com5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/image_border"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
+                                    android:textSize="16sp">
 
+                                </EditText>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="10dp"
+                                    />
 
 
 

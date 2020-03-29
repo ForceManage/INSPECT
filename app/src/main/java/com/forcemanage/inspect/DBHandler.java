@@ -443,17 +443,17 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IMG1,Img1);
         contentValues.put(COLUMN_COM1,com1);
         contentValues.put(COLUMN_IMG2,Img2);
-        contentValues.put(COLUMN_COM2,com1);
+        contentValues.put(COLUMN_COM2,com2);
         contentValues.put(COLUMN_IMG3,Img3);
-        contentValues.put(COLUMN_COM3,com1);
+        contentValues.put(COLUMN_COM3,com3);
         contentValues.put(COLUMN_IMG4,Img4);
-        contentValues.put(COLUMN_COM4,com1);
+        contentValues.put(COLUMN_COM4,com4);
         contentValues.put(COLUMN_IMG5,Img5);
-        contentValues.put(COLUMN_COM5,com1);
-        contentValues.put(COLUMN_IMG6,Img5);
-        contentValues.put(COLUMN_COM6,com1);
-        contentValues.put(COLUMN_IMG7,Img5);
-        contentValues.put(COLUMN_COM7,com1);
+        contentValues.put(COLUMN_COM5,com5);
+        contentValues.put(COLUMN_IMG6,Img6);
+        contentValues.put(COLUMN_COM6,com6);
+        contentValues.put(COLUMN_IMG7,Img7);
+        contentValues.put(COLUMN_COM7,com7);
         contentValues.put(COLUMN_ITEM_STATUS,ItemStatus);
         contentValues.put(COLUMN_NOTES,Notes);
 
@@ -554,30 +554,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateassetreg(String propId, int aId, String locId, String sublocId, String catId, String subcatId, String adesc,
-                               String reg, String freq) {
+    public void updateBranchLabel(int projId, int aId, String label) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        /*
 
-        // values.put(COLUMN_PROPERTY_ID, propId);
-        // values.put(COLUMN_ASSET_ID, aId);
-        // values.put(COLUMN_LOCATION_ID, locId);
-        values.put(COLUMN_SUB_LOCATION_ID, sublocId);
-        values.put(COLUMN_CATEGORY_ID, catId);
-        values.put(COLUMN_SUB_CATEGORY_ID, subcatId);
-        values.put(COLUMN_ASSET_DESCRIPTION, adesc);
-        values.put(COLUMN_REGULATION, reg);
-        values.put(COLUMN_FREQUENCY, freq);
+        values.put(COLUMN_LABEL, label);
 
-        // db.update(TABLE_ASSET_REGISTER, values, COLUMN_PROPERTY_ID + " = " + propId+" AND "+
-        //                  COLUMN_ASSET_ID+" = "+aId,null);
 
-        db.update(TABLE_ASSET_REGISTER, values, COLUMN_PROPERTY_ID + " = " + propId+" AND "+
-                COLUMN_ASSET_ID+" = "+aId+" AND "+COLUMN_LOCATION_ID+" = "+locId, null);
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
+                COLUMN_A_ID+" = "+aId , null);
 
     }
 
@@ -587,7 +575,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
-        // values.put(COLUMN_PROPERTY_ID, propId);
+    /*    // values.put(COLUMN_PROPERTY_ID, propId);
         // values.put(COLUMN_ASSET_ID, aId);
         // values.put(COLUMN_LOCATION_ID, locId);
         // values.put(COLUMN_SUB_LOCATION_ID, sublocId);
@@ -607,15 +595,16 @@ public class DBHandler extends SQLiteOpenHelper {
          */
     }
 
-    public void deleteInspectionItem(Integer jId, Integer aId, Integer rId) {
+    public void deleteInspectionItem(Integer jId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        /*
+
 
         Cursor cursor;
-        String selectQuery = "SELECT "+COLUMN_RECOMMEND_NO+" FROM "
+
+ /*       String selectQuery = "SELECT "+COLUMN_RECOMMEND_NO+" FROM "
                 +TABLE_ESM_INSPECTION_ITEM
                 +" WHERE "+COLUMN_JOB_ID+" = "+jId+" AND "+COLUMN_ASSET_ID+" = "+aId+" AND "+ COLUMN_RECOMMEND_NO+" > "+rId;
 
@@ -633,19 +622,19 @@ public class DBHandler extends SQLiteOpenHelper {
             }
 
         }
-
-        if(rId == 1) db.delete(TABLE_ESM_INSPECTION_ITEM,COLUMN_JOB_ID+" = "+ jId +" AND "+COLUMN_ASSET_ID+" = "+ aId, null);
+*/
+        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ jId +" AND "+COLUMN_A_ID+" = "+ aId, null);
         db.close();
 
 
     }
 
-    public void deleteLocation(Integer propId, String locationId) {
+    public void deleteMapBranch(int projId, int aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_PROPERTY_LOCATIONS,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+COLUMN_LOCATION_ID+" = "+ locationId,null);
-        db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+COLUMN_LOCATION_ID+" = "+ locationId,null);
+        db.delete(TABLE_MAP,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId,null);
+   //     db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+COLUMN_LOCATION_ID+" = "+ locationId,null);
 
 
     }
@@ -654,11 +643,11 @@ public class DBHandler extends SQLiteOpenHelper {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+
-                COLUMN_ASSET_ID+" = "+aId ,null);
+ //       db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+
+ //               COLUMN_ASSET_ID+" = "+aId ,null);
 
 
-         */
+
     }
 
 
@@ -871,69 +860,71 @@ public class DBHandler extends SQLiteOpenHelper {
  */
     }
     //Add sublocation to the location
-    public void addSublocation(String propId, String locationId,  String sublocationId, String locationDesc, Boolean add ) {
+    public int addLevel(int projID, int CatID,  int Level, int parent, String Label ) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-
-        /*
-
-        if(add == true) {
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_PROPERTY_ID, propId);
-            values.put(COLUMN_LOCATION_ID, locationId);
-            values.put(COLUMN_SUB_LOCATION_ID, sublocationId);
-            values.put(COLUMN_LOCATION_DESCRIPTION, locationDesc);
-            db.insert(TABLE_PROPERTY_LOCATIONS, null, values);
-            db.close();
-        }
+        int maxAId = 1;
+        int maxcatID = 1;
 
 
-
-    }
-
-    // creates an AssetID for a new inspection item
-    public int addItem(String propId, String locationId, String sublocationId, String esmId, String esmsubId, String esmcat) {
-        // Open a database for reading and writing
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-        int maxAssetId =1;
-
-
-        selectQuery = "SELECT MAX(E2."+COLUMN_ASSET_ID+") FROM "
-                +TABLE_ASSET_REGISTER+" E2"
-                +" WHERE E2."+ COLUMN_PROPERTY_ID+" = "+propId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            maxAssetId = cursor.getInt(0);
-            maxAssetId = maxAssetId+1;
+            maxAId = cursor.getInt(0);
+            maxcatID = cursor.getInt(1);
+            maxAId = maxAId + 1;
+            maxcatID = maxcatID + 1;
         }
 
-        ContentValues assetvalues = new ContentValues();
-
-        assetvalues.put(COLUMN_PROPERTY_ID, propId);
-        assetvalues.put(COLUMN_ASSET_ID, maxAssetId);
-        assetvalues.put(COLUMN_LOCATION_ID, locationId);
-        assetvalues.put(COLUMN_SUB_LOCATION_ID, sublocationId);
-        assetvalues.put(COLUMN_CATEGORY_ID, esmId);
-        assetvalues.put(COLUMN_SUB_CATEGORY_ID, esmsubId);
-        assetvalues.put(COLUMN_ASSET_DESCRIPTION, esmcat);
-
-        db.insert(TABLE_ASSET_REGISTER,null,assetvalues);
-
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PROJECT_ID, projID);
+        if (Level == 0) {
+            values.put(COLUMN_CAT_ID, maxcatID);
+            values.put(COLUMN_PARENT, -1);
+        } else {
+            values.put(COLUMN_CAT_ID, CatID);
+            values.put(COLUMN_PARENT, parent);
+        }
+        values.put(COLUMN_LABEL, Label);
+        values.put(COLUMN_LEVEL, Level);
+        values.put(COLUMN_A_ID, maxAId);
+        db.insert(TABLE_MAP, null, values);
         db.close();
+
 
         //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
 
+        return maxAId;
+
+    }
 
 
-        return 2;
-*/
+    public String getMapBranchTitle(int projID, int CatID ) {
+        // Open a database for reading and writing
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String label = "Branch Title";
+
+        selectQuery = "SELECT M." + COLUMN_LABEL + " FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND M."+COLUMN_CAT_ID+" = "+CatID;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+             label = cursor.getString(0);
+        }
+
+        return label;
+
     }
 
 
@@ -1121,150 +1112,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    //retrieve individual last inspection
-    public HashMap<String, String> getLastInspection(int propertyId,int jobId, int assetId, int recommendNo, String Sequence){
-
-        // Open a database for reading and writing
-        SQLiteDatabase database = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-        int maxRecommendNo = 1;
-        int maxAssetId = 1;
-/*
-        // Cursor provides read and write access for the
-        // data returned from a database query
-        // rawQuery executes the query and returns the result as a Cursor
-
-        if(Sequence == "prev"){
-            if (recommendNo > 1){
-                recommendNo = recommendNo - 1;
-            }
-            else if(assetId > 1) {
-                assetId = assetId - 1;
-            }
-            else if (recommendNo == 1 && assetId == 1){
-                //find highests assetId and within that the highest recomendNo
-                selectQuery= "SELECT MAX(E2."+COLUMN_ASSET_ID+")"
-                        +" FROM "+TABLE_ESM_INSPECTION_ITEM+" E2"
-                        +" JOIN "+TABLE_ESM_INSPECTION+" E1"
-                        +" ON E1."+COLUMN_PREV_JOB_ID+" = E2."+COLUMN_JOB_ID
-                        +" WHERE E1."+COLUMN_JOB_ID+" = "+jobId;
-
-                cursor = database.rawQuery(selectQuery, null);
-
-                if (cursor.moveToFirst()){
-                    assetId = cursor.getInt(0);
-
-
-
-                    selectQuery = "SELECT MAX(E2."+COLUMN_RECOMMEND_NO+") FROM "
-                            +TABLE_ESM_INSPECTION_ITEM+" E2"
-                            +" JOIN "+TABLE_ESM_INSPECTION+" E1"
-                            +" ON E1."+COLUMN_PREV_JOB_ID+" = E2."+COLUMN_JOB_ID
-                            +" WHERE E1."+ COLUMN_JOB_ID+" = "+jobId+" AND E2."+COLUMN_ASSET_ID+" = "+assetId;
-
-                    cursor = database.rawQuery(selectQuery, null);
-                    if (cursor.moveToFirst()) {
-                        recommendNo = cursor.getInt(0);
-                    }
-                }
-            }
-        }else if(Sequence == "next"){
-            selectQuery = "SELECT MAX(E2."+COLUMN_RECOMMEND_NO+") FROM "
-                    +TABLE_ESM_INSPECTION_ITEM+" E2"
-                    +" JOIN "+TABLE_ESM_INSPECTION+" E1"
-                    +" ON E1."+COLUMN_PREV_JOB_ID+" = E2."+COLUMN_JOB_ID
-                    +" WHERE E1."+ COLUMN_JOB_ID+" = "+jobId+" AND E2."+COLUMN_ASSET_ID+" = "+assetId;
-
-            cursor = database.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
-                maxRecommendNo = cursor.getInt(0);
-            }
-            if (recommendNo < maxRecommendNo){
-                recommendNo = recommendNo +1;
-            }
-            else if(recommendNo == maxRecommendNo) {
-                //check if there are more assets otherwise go to beginning
-                selectQuery= "SELECT MAX(E2."+COLUMN_ASSET_ID+")"
-                        +" FROM "+TABLE_ESM_INSPECTION_ITEM+" E2"
-                        +" JOIN "+TABLE_ESM_INSPECTION+" E1"
-                        +" ON E1."+COLUMN_PREV_JOB_ID+" = E2."+COLUMN_JOB_ID
-                        +" WHERE E1."+COLUMN_JOB_ID+" = "+jobId;
-
-                cursor = database.rawQuery(selectQuery, null);
-
-                if (cursor.moveToFirst()){
-                    maxAssetId = cursor.getInt(0);
-                }
-                if (assetId < maxAssetId)
-                    //go to next assetId
-                    assetId = assetId +1;
-                else {
-                    assetId = 1;
-                    recommendNo = 1;
-                }
-            }
-        }
-
-
-
-
-//use (current)jobId to get previous job information by joining two rows of the inspection item table
-        selectQuery = "SELECT P."+COLUMN_PROPERTY_ID+", P."+COLUMN_ADDRESS_NUMBER+", P."+COLUMN_PROPERTY_ADDRESS+", P."+
-                COLUMN_PROPERTY_SUBURB+", P."+COLUMN_PROPERTY_NOTE+", E2."+COLUMN_ESM_INSPECTION_OBSERVATION+", E2."+COLUMN_SERVICED_BY+", E2."+COLUMN_ESM_RECOMMENDATION
-                +", A."+COLUMN_ASSET_DESCRIPTION+", EC."+COLUMN_CATEGORY_NAME+", EC."+COLUMN_SUB_CATEGORY_NAME+", PL."+COLUMN_LOCATION_DESCRIPTION+", PL."+COLUMN_LOCATION_ID
-                +", E2."+COLUMN_ASSET_ID+", E2."+COLUMN_RECOMMEND_NO
-                +" FROM "+TABLE_PROPERTY_INFO+" P"
-                +" JOIN "+TABLE_ESM_INSPECTION+" E1"
-                +" ON P."+COLUMN_PROPERTY_ID+" = E1."+COLUMN_PROPERTY_ID
-                +" JOIN "+TABLE_ESM_INSPECTION_ITEM+" E2"
-                +" ON E1."+COLUMN_PREV_JOB_ID+" = E2."+COLUMN_JOB_ID
-                +" JOIN "+TABLE_ASSET_REGISTER+" A"
-                +" ON P."+COLUMN_PROPERTY_ID+" = A."+COLUMN_PROPERTY_ID+" AND A."+COLUMN_ASSET_ID+" = E2."+COLUMN_ASSET_ID
-                +" JOIN "+TABLE_ESM_CATEGORIES+" EC ON EC."+COLUMN_CATEGORY_ID+" = A."+COLUMN_CATEGORY_ID+" AND EC."+COLUMN_SUB_CATEGORY_ID+" = A."+COLUMN_SUB_CATEGORY_ID
-                +" JOIN "+TABLE_PROPERTY_LOCATIONS+" PL ON PL."+COLUMN_LOCATION_ID+" = A."+COLUMN_LOCATION_ID+" AND PL."+COLUMN_SUB_LOCATION_ID+" = A."+COLUMN_SUB_LOCATION_ID
-                +" AND PL."+COLUMN_PROPERTY_ID+" = P."+COLUMN_PROPERTY_ID
-                +" WHERE P."+COLUMN_PROPERTY_ID+" = "+propertyId+" AND E1."+COLUMN_JOB_ID+" = "+jobId+" AND E2."+COLUMN_ASSET_ID+" = "+assetId+" AND E2."+COLUMN_RECOMMEND_NO+" = "+recommendNo;
-
-        cursor = database.rawQuery(selectQuery, null);
-
-        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
-
-        // Move to the first row
-
-        if (cursor.moveToFirst()) {
-            // Store the key / value pairs in a HashMap
-            // Access the Cursor data by index that is in the same order
-            // as query
-
-            inspectionItemMap.put(MyConfig.TAG_PROPERTY_ID, (String.valueOf(cursor.getInt(0))));
-            inspectionItemMap.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(1));
-            inspectionItemMap.put(MyConfig.TAG_PROPERTY_ADDRESS, cursor.getString(2));
-            inspectionItemMap.put(MyConfig.TAG_PROPERTY_SUBURB, cursor.getString(3));
-            inspectionItemMap.put(MyConfig.TAG_PROPERTY_NOTE, cursor.getString(4));
-            inspectionItemMap.put(MyConfig.TAG_INSPECTION_OBSERVATION, cursor.getString(5));
-            inspectionItemMap.put(MyConfig.TAG_SERVICED_BY, cursor.getString(6));
-            inspectionItemMap.put(MyConfig.TAG_INSPECTION_RECOMMENDATION, cursor.getString(7));
-            inspectionItemMap.put(MyConfig.TAG_ASSET_DESCRIPTION, cursor.getString(8));
-            inspectionItemMap.put(MyConfig.TAG_CATEGORY_NAME, cursor.getString(9));
-            inspectionItemMap.put(MyConfig.TAG_SUB_CATEGORY_NAME, cursor.getString(10));
-            inspectionItemMap.put(MyConfig.TAG_LOCATION_DESC, cursor.getString(11));
-            inspectionItemMap.put(MyConfig.TAG_LOCATION_ID, (String.valueOf(cursor.getInt((12)))));
-            inspectionItemMap.put(MyConfig.TAG_ASSET_ID, (String.valueOf(cursor.getInt((13)))));
-            inspectionItemMap.put(MyConfig.TAG_RECOMMEND_NO, (String.valueOf(cursor.getInt(14))));
-
-        }
-
-        // return inspection data for propertyid, Jobid, inspection id
-        database.close();
-        return inspectionItemMap;
-
-
- */
-
-        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
-        return inspectionItemMap;
-    }
 
 
     public ArrayList<HashMap<String, String>> getAllProjects() {
@@ -1566,8 +1413,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 SiteMap.put (MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
                 SiteMap.put (MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
                 SiteMap.put (MyConfig.TAG_LABEL, cursor.getString(4));
-                SiteMap.put (MyConfig.TAG_CHILD, cursor.getString(5));
-                SiteMap.put (MyConfig.TAG_A_ID, cursor.getString(6));
+                SiteMap.put (MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
+                SiteMap.put (MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
                 SiteMap.put (MyConfig.TAG_IMAGE1, cursor.getString(7));
                 SiteMap.put (MyConfig.TAG_NOTES, cursor.getString(8));
                 AssArrayList.add(SiteMap);
@@ -1680,7 +1527,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getMap(String projectId){
+    public ArrayList<HashMap<String, String>> getMap(int projID){
 
 
         HashMap<String, String> SiteMap;
@@ -1697,7 +1544,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 +" FROM "+TABLE_MAP+" M"
 
-                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projectId//+" AND (A."+COLUMN_CATEGORY_ID+" = 'A' OR A."+COLUMN_CATEGORY_ID+" = 'Z')"
+                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID//+" AND (A."+COLUMN_CATEGORY_ID+" = 'A' OR A."+COLUMN_CATEGORY_ID+" = 'Z')"
                 +" ORDER BY M."+COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -1725,6 +1572,56 @@ public class DBHandler extends SQLiteOpenHelper {
         return SiteMapArrayList;
 
     }
+
+
+
+    public HashMap<String, String> getMapItem(int projID, int aId){
+
+
+        HashMap<String, String> SiteMap = new HashMap<String, String>();
+        ArrayList<HashMap<String, String>> SiteMapArrayList;
+
+        SiteMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQuery = "SELECT M."+COLUMN_CAT_ID+", M."+COLUMN_LEVEL+", M."+COLUMN_PARENT+", M."+COLUMN_LABEL
+                +", M."+COLUMN_CHILD+", M."+COLUMN_A_ID+", M."+COLUMN_IMG1+", M."+COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+
+                +" FROM "+TABLE_MAP+" M"
+
+                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID+" = "+aId;
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SiteMap = new HashMap<String, String>();
+
+                SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(0))));
+                SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
+                SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(2))));
+                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(3));
+                SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(4))));
+                SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(5))));
+                SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(6));
+                SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
+
+
+                SiteMapArrayList.add(SiteMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return SiteMap;
+
+    }
+
+
 
 
     //Get a list of locations to upload to server

@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,9 +62,6 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private String inspectionId;
     private String locationId;
     private String sublocationId;
-    private int projId;
-    private int iId;
-    private int aId = 1;
     private String seq = "cur";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int ACTIVITY_GET_FILE = 1;
@@ -98,7 +96,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private File photo;
     private Spinner sprObservation;
     private Spinner sprRecommendation;
-    private Spinner sprESM_category;
+    private Spinner sprTitle;
     private Spinner sprbuildcat;
     private Spinner sprasset;
     private Spinner sprContractor;
@@ -118,7 +116,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private String itemlocation;
     private String[] locationsArr;
     private String[] sublocationsArr;
-    private String[] esm_asset;
+    private String[] iTitle;
     private String [] esm_cat;
     private String editing = "NO";
     private int catId;
@@ -135,13 +133,14 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private ArrayAdapter<MapViewNode> aAdapter;
     private MapListAdapter treeListAdapter;
     private List<MapViewData> listItems;
-    public static  int[] Level;
-    public  static int[] CatID;
-    public static  String[] Label;
+    private int projId;
     public int aID;
-    public static  int[] Parent;
-    public static  String[] MapImage1;
-    public static  String[] MapNotes;
+    public  int Level;
+    public int Parent;
+    public int Child;
+    public int iID = 1;
+    public String branchLabel;
+
     private boolean Edited = false;
 
 
@@ -168,7 +167,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         buttonEdit.setOnClickListener(this);
         zone = 0;
         projId = Integer.parseInt(projectId);
-        iId = Integer.parseInt(inspectionId);
+        iID = Integer.parseInt(inspectionId);
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
@@ -178,7 +177,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
         sublocationId = "0";
         inspArrayPosition = 0;
-        getinspectionArray();
+
     //    displayInspectionItem(projId, iId, seq);
 
 
@@ -243,7 +242,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         recommendations = new String[]{"Recommendation"};
 
 
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projectId);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -313,16 +312,12 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 "Division 1, Subdivision 1 (From May 2004.  Post 1994 )",
          };
 
-        esm_asset = new String[]{
-                "Measure",
-                "Path of travel to exit",
-                "Discharge from the exits (including paths of travel from open spaces to the public roads to which they are connected)",
-                "Exits (including fire-isolated stairways and ramps, stair treads, balustrades and handrails associated with exits, and " +
-                        "fire isolated passageways)",
-                "Smoke lobbies to fire isolated exits",
-                "Open access ramps or balconies for fire isolated exits",
-                "Doors (other than smoke or fire doors) in a required exit, forming part of a required exit or in a path of travel to a " +
-                        "required exit, and associated self-closing, automatic closing and latching mechanisms"
+        iTitle = new String[]{
+                "Branch Title",
+                "Existing Building",
+                "Movement and Cracking",
+                "Framing",
+                "Reinforcement"
         };
 
         final String[] contractor = new String[]{
@@ -484,11 +479,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
     public void loadLocations()  {
 
-
-
-
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projectId);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -524,110 +516,70 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 @Override
     public void OnSelectionChanged(int treeNameIndex) {
-        DetailFragment detailFragment = (DetailFragment) getFragmentManager()
-                .findFragmentById(R.id.detail_text);
+    DetailFragment detailFragment = (DetailFragment) getFragmentManager()
+            .findFragmentById(R.id.detail_text);
 
 
+    if (detailFragment != null) {
+        // If description is available, we are in two pane layout
+        // so we call the method in DescriptionFragment to update its content
+        detailFragment.setDetail(treeNameIndex);
+        aID = detailFragment.aID;
+        displayInspectionItem();
+        Toast.makeText(this, "Selected ID = " + aID, Toast.LENGTH_SHORT).show();
+    } else {
+        DetailFragment newDetailFragment = new DetailFragment();
+        Bundle args = new Bundle();
 
-          if (detailFragment != null) {
-            // If description is available, we are in two pane layout
-            // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(treeNameIndex);
-            aID = detailFragment.aID;
-            displayInspectionItem();
-            Toast.makeText(this, "Selected ID = "+ aID,Toast.LENGTH_SHORT).show();
-        } else {
-            DetailFragment newDetailFragment = new DetailFragment();
-            Bundle args = new Bundle();
+        args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+        newDetailFragment.setArguments(args);
 
-            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-            newDetailFragment.setArguments(args);
+        aID = detailFragment.aID;
 
-            aID = detailFragment.aID;
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
 
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the backStack so the User can navigate back
+        fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
 
-          //  fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+        //  fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
-        }
-
-        if (GlobalVariables.modified ==true){
-            MapViewFragment newDetailFragment = new MapViewFragment();
-            Bundle args = new Bundle();
-            detailFragment.mCurrentPosition = -1;
-
-            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-            newDetailFragment.setArguments(args);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            FragmentManager fm = getFragmentManager();
-
-
-            //fm.popBackStack(DF,0);
-           if (getFragmentManager().getBackStackEntryCount() > 0) {
-                getFragmentManager().popBackStackImmediate();
-            }
-
-           // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            GlobalVariables.modified = false;
-            OnSelectionChanged(0);
-
-        }
-
-
-
-    //    int rec = 0;
-   //     for (int i = 0; i < locationdesc.length; i++)
-  //          if (detailFragment.Name != null)
-   //         if (locationdesc[i] == detailFragment.Name)//detailFragment.Name
-  //              rec = i;
-
-      //  System.out.println(GlobalVariables.dataList.get(rec).getName());
-
-
-
-        // getinspectionArray(); //Loads the inspection items for the selected zone
-
-        //     location.setText("Zone "+Integer.toString(zone)+" - "+locationsArr[zone+1]);
-/*
-        seq = "cur";
-        inspArrayPosition = rec;
-        if(Edited == true) saveInspectionItem(iId,aId);
-        displayInspectionItem(projId, iId, seq);
-  /*      switch (catId){
-         case "A":
-                getORArray(catId,esmsubcatId);
-            break;
-         case "B":
-                getORArray(catId,esmsubcatId);
-                break;
-         case "C":
-                getORArray(catId,esmsubcatId);
-                break;
-         case "D":
-                getORArray(catId,esmsubcatId);
-                break;
-         case "E":
-                getORArray(catId,esmsubcatId);
-                break;
     }
 
-   */
-       // if(esmcatId.equals("A")) getORArray(esmcatId,esmsubcatId);
-       // getORArray(esmcatId,esmsubcatId);
+    if (GlobalVariables.modified == true) {
+        MapViewFragment newDetailFragment = new MapViewFragment();
+        Bundle args = new Bundle();
+        detailFragment.mCurrentPosition = -1;
+
+        args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+        newDetailFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the backStack so the User can navigate back
+        fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        FragmentManager fm = getFragmentManager();
+
+
+        //fm.popBackStack(DF,0);
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+        }
+
+        // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        GlobalVariables.modified = false;
+        OnSelectionChanged(0);
+
     }
+
+
+    displayInspectionItem();
+
+}
 
 
     private void getORArray(String Cat_Table, String subCat){
@@ -718,7 +670,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         String Notes = Note.getText().toString();
 
 
-        dbHandler.updateInspection(1, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
+        dbHandler.updateInspection(iID, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
                     , "reportImage", Img1, "com1", Img2, "com2", Img3, "com3", Img4, "com4",
                                           Img5,  "com5",  "Img6", " com6", "Img7",  "com7", ItemStatus, Notes);
 
@@ -743,66 +695,38 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-/*
-        if (!sublocationId.equals("0")) {
 
-            if (rId >1 ){
+        if (Level > 0) {
 
-                dbHandler.deleteInspectionItem(jId, aId, rId);
-                getinspectionArray();
-                inspArrayPosition = inspArrayPosition - 1;
-
+                dbHandler.deleteInspectionItem(projId, aID);
                 loadLocations();
 
-
-                }
-
-                else {
-
-                    dbHandler.deleteInspectionItem(jId, aId, rId);
-                    dbHandler.deleteAsset(propId, aId);
-                    seq = "cur";
-
-                    getinspectionArray();
-                    if (inspArrayPosition > 0) inspArrayPosition = inspArrayPosition - 1;
-                    displayInspectionItem(propId, jId, seq);
-
-                    //Get number of items for the inspection
-
-                   loadLocations();
-
-                }
-
-
-
-
-
-       //     if (inspArrayPosition > 0) inspArrayPosition = inspArrayPosition-1;
             }
 
-
                else {
-                        dbHandler.deleteInspectionItem(jId, aId, rId);
-                        dbHandler.deleteAsset(propId, aId);
-                        dbHandler.deleteLocation(propId,locationId);
-                   Toast.makeText(this, "Cannot delete a primary Zone", Toast.LENGTH_SHORT).show();
+                      Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
                 }
-
-*/
      }
 
-    private void getinspectionArray(){
+
+    public void deleteMapBranch(){
+
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-        ArrayList<HashMap<String, String>> inspectionitems = dbHandler.getinspectionitemlist(projId, iId,aId);
 
-        assetIdlist = new String[inspectionitems.size()];
-        locationIdlist = new String[inspectionitems.size()];
-        sublocationIdlist = new String[inspectionitems.size()];
-        recitemlist = new String[inspectionitems.size()];
+        if (Level > 0) {
 
+            dbHandler.deleteMapBranch(projId, aID);
+            loadLocations();
 
+        }
+
+        else {
+            Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
 
 
 
@@ -936,75 +860,26 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-    private void addsubLocation(String location){
-
-        /*
-        String esmcat = "A";
-
-        switch (esmcatId){
-
-            case "A":
-            esmcat = esm_cat[1]; //esmcat is the title of the ESM category A- esmcat = Means of egress
-            break;
-            case "B":
-                esmcat = esm_cat[2];
-                break;
-            case "C":
-                esmcat = esm_cat[3];
-                break;
-            case "D":
-                esmcat = esm_cat[4];
-                break;
-            case "E":
-                esmcat = esm_cat[5];
-                break;
-
-        }
+    private void addLevel(int Level, String levelName){
 
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        dbHandler.addESM(propertyId, jobId, locationId, sublocationId, location, esmcat, esmcatId, esmsubcatId);  //this is the ESM category
-
-        ArrayList<HashMap<String, String>> sublocationList = dbHandler.getsubLocations(propertyId, locationId);
-
-        final String  sublocations[] = new String[sublocationList.size()+1];
-        sublocations[0] = "("+sublocationList.size()+")"+" Sub-locations";
-        for (int i = 0; i < sublocationList.size(); i++) {
-            sublocations[i+1] = sublocationList.get(i).get(MyConfig.TAG_LOCATION_DESC);
-        }
-      //  SubLocation.setText("Position: "+location);
-
-        seq = "cur";
-
-
-        sublocationsArr = Arrays.copyOf(sublocations, sublocations.length);
-        getinspectionArray();
-        inspArrayPosition = inspArrayPosition + 1;
-
-
-
+        dbHandler.addLevel(projId, catId, Level, aID, levelName);  //this is the ESM category
         loadLocations();
 
-      //  addItem(); // Adds another inspection item
-
-
-         */
 
     }
 
-    private void editLocation(String location){
-        /*
+    private void editLocation(String branchLabel){
 
-        if(sublocationId.equals('1'))
-          Toast.makeText(this, "Cannot edit ESM catergory", Toast.LENGTH_SHORT).show();
-        else {
+
+
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            dbHandler.updatelocations(propertyId, locationId, sublocationId, location, aId, rId);
+            dbHandler.updateBranchLabel(projId, aID, branchLabel);
             loadLocations();
-            displayInspectionItem(propId, jId, "cur");
-             }
 
-         */
+
+
      }
 
 
@@ -1014,34 +889,44 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
   //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID);
+
+           catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
+           Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
+           Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
+           branchLabel = mapItem.get(MyConfig.TAG_LABEL);
+
+
+
+        Toast.makeText(InspectionActivity.this, "Level: "+Level , Toast.LENGTH_SHORT).show();
+
             HashMap<String, String> list = dbHandler.getInspection(projId, aID);
 
-  //          catId = list.get(MyConfig.TAG_CAT_ID);
-   //         esmsubcatId = list.get(MyConfig.TAG_SUB_CATEGORY_ID);
+            if(!list.isEmpty()) {
 
-        //    TextView Asset = (TextView) findViewById(R.id.esmasset);
-            TextView observationTextView = (TextView) findViewById(R.id.Observation);
-            EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
-            EditText recommendationTextView = (EditText) findViewById(R.id.Recommendation);
-        //    TextView  esm_cat = (TextView) findViewById(R.id.ESM_category);
-        //    TextView location =(TextView) findViewById(R.id.Location);
-         //   TextView sublocation =(TextView) findViewById(R.id.SubLocation);
-            TextView notes = (TextView) findViewById(R.id.note);
-            TextView  imageName1 = (TextView) findViewById(R.id.textView16);
-            TextView  imageName2 = (TextView) findViewById(R.id.textView17);
-            TextView  imageName3 = (TextView) findViewById(R.id.textView18);
-            TextView  imageName4 = (TextView) findViewById(R.id.textView19);
-            TextView  imageName5 = (TextView) findViewById(R.id.textView20);
-            TextView ZONE = (TextView) findViewById(R.id.Zone);
-            TextView Position = (TextView) findViewById(R.id.Position);
-            TextView ESM = (TextView) findViewById(R.id.ESM);
-            String sign = list.get(MyConfig.TAG_ITEM_STATUS);
-            final CheckBox checkBox = (CheckBox)findViewById(R.id.sign_checkBox);
-            if(sign.equals("i")  ){
-               checkBox.setChecked(true);
-            }else {
-                checkBox.setChecked(false);
-            }
+
+
+                //    TextView Asset = (TextView) findViewById(R.id.esmasset);
+                TextView observationTextView = (TextView) findViewById(R.id.Observation);
+                EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
+                EditText recommendationTextView = (EditText) findViewById(R.id.Recommendation);
+                //    TextView  esm_cat = (TextView) findViewById(R.id.ESM_category);
+                //    TextView location =(TextView) findViewById(R.id.Location);
+                //   TextView sublocation =(TextView) findViewById(R.id.SubLocation);
+                TextView notes = (TextView) findViewById(R.id.note);
+                TextView imageName1 = (TextView) findViewById(R.id.textView16);
+                TextView imageName2 = (TextView) findViewById(R.id.textView17);
+                TextView imageName3 = (TextView) findViewById(R.id.textView18);
+                TextView imageName4 = (TextView) findViewById(R.id.textView19);
+                TextView imageName5 = (TextView) findViewById(R.id.textView20);
+                String sign = list.get(MyConfig.TAG_ITEM_STATUS);
+                //         final CheckBox checkBox = (CheckBox)findViewById(R.id.sign_checkBox);
+                //        if(sign.equals("i")  ){
+                //            checkBox.setChecked(true);
+                //         }else {
+                //            checkBox.setChecked(false);
+                //         }
             /*
             String assetText = list.get(MyConfig.TAG_ASSET_DESCRIPTION);
             String observationText = list.get(MyConfig.TAG_INSPECTION_OBSERVATION);
@@ -1063,79 +948,74 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
       //      String recommendIdText = list.get(MyConfig.TAG_RECOMMEND_NO);
       //      String serviceDate = list.get(MyConfig.TAG_JOB_ACTUAL_DATE);
 */
-            photos [0] = list.get(MyConfig.TAG_IMAGE1);
-            photos [1] = list.get(MyConfig.TAG_IMAGE2);
-            photos [2] = list.get(MyConfig.TAG_IMAGE3);
-            photos [3] = list.get(MyConfig.TAG_IMAGE4);
-            photos [4] = list.get(MyConfig.TAG_IMAGE5);
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                photos[4] = list.get(MyConfig.TAG_IMAGE5);
 
-      //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-            String tag = list.get(MyConfig.TAG_IMAGE1);
-
-
+                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                String tag = list.get(MyConfig.TAG_IMAGE1);
 
 
-            int itemNos = dbHandler.getSubItemMap(projId, aID );
+                int itemNos = dbHandler.getSubItemMap(projId, aID);
 
 
+                //  esm_cat.setText("ESM :   "+categoryText);
+                //  Asset.setText("Measure:   "+subCategoryText);
+                //      observationTextView.setText(i);
+                //      servicedTextView.setText(servicedByText);
+                notes.setText(Integer.toString(itemNos));
+                //       recommendationTextView.setText(recommendationText);
 
 
-          //  esm_cat.setText("ESM :   "+categoryText);
-          //  Asset.setText("Measure:   "+subCategoryText);
-      //      observationTextView.setText(i);
-      //      servicedTextView.setText(servicedByText);
-              notes.setText(Integer.toString(itemNos));
-     //       recommendationTextView.setText(recommendationText);
+                for (int i = 0; i < 5; i++) {
+                    if (photos[i] == null) {
+                        photos[i] = "";
+                        //    cameraSnap = photos[i];
+                    }
 
 
-      
-            for(int i=0; i < 5; i++  ) {
-                if (photos[i] == null) {
-                    photos[i] = "";
-                //    cameraSnap = photos[i];
-                }
+                    if (photos[i].length() > 12) {
+                        dirName = photos[i].substring(6, 14);
+                        String root = Environment.getExternalStorageDirectory().toString();
+                        File Image = new File(root + "/ESM_" + dirName + "/" + photos[i]);
+                        Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
+
+                        switch (i) {
+                            case 0:
+                                mPhotoImageView = (ImageView) findViewById(R.id.imageView);
+                                mPhotoImageView.setImageBitmap(myBitmap);
+                                break;
+
+                            case 1:
+                                mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
+                                mPhotoImageView.setImageBitmap(myBitmap);
+                                imageName2.setText(dirName);
+                                break;
+
+                            case 2:
+                                mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
+                                mPhotoImageView.setImageBitmap(myBitmap);
+                                imageName3.setText(dirName);
+                                break;
+
+                            case 3:
+                                mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
+                                mPhotoImageView.setImageBitmap(myBitmap);
+                                imageName4.setText(dirName);
+                                break;
+
+                            case 4:
+                                mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                                mPhotoImageView.setImageBitmap(myBitmap);
+                                imageName5.setText(dirName);
+                                break;
 
 
-                if (photos[i].length() > 12) {
-                    dirName = photos[i].substring(6, 14);
-                    String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/" + photos[i]);
-                    Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
-
-                    switch (i) {
-                        case 0:
-                            mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                            break;
-
-                        case 1:
-                            mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                            imageName2.setText(dirName);
-                            break;
-
-                        case 2:
-                            mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                            imageName3.setText(dirName);
-                            break;
-
-                        case 3:
-                            mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                            imageName4.setText(dirName);
-                            break;
-
-                        case 4:
-                            mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                            imageName5.setText(dirName);
-                            break;
-
-
-                    } //End of switch
-                } //End if there is an image file
-                    else{
+                        } //End of switch
+                    } //End if there is an image file
+                    else {
 
                         switch (i) {
 
@@ -1172,23 +1052,23 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                         }//End of switch
                     }//End of else
 
-        }//End of loop
+                }//End of loop
 
-            photo1 = photos[0];
-            photo2 = photos[1];
-            photo3 = photos[2];
-            photo4 = photos[3];
-            photo5 = photos[4];
+                photo1 = photos[0];
+                photo2 = photos[1];
+                photo3 = photos[2];
+                photo4 = photos[3];
+                photo5 = photos[4];
 
-            if (tag.equals("1")) {
-                imageName1.setText("UPDATED");
-            } else {
-                imageName1.setText("REQUIRES UPDATING");
-            }
+                if (tag.equals("1")) {
+                    imageName1.setText("UPDATED");
+                } else {
+                    imageName1.setText("REQUIRES UPDATING");
+                }
 
-            cameraSnap = tag;
+                cameraSnap = tag;
 
-
+            } //list is not empty
 
 
     }
@@ -1198,7 +1078,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         if (v == buttonEdit){
 
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
 
             // setup the alert builder
 
@@ -1219,10 +1101,12 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
-                            TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-
-                            locationText.setText("Current description: " + itemlocation);
+                              final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                              itemTitle.setText("Branch Head Title: "+ branchTitle);//Integer.parseInt(locationId)
+                              final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                              locationText.setText("Current label : "+ branchLabel );//Integer.parseInt(locationId)
                             final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                              LocationText.setText(branchLabel);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -1259,14 +1143,17 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
         if (v == buttonInsert){
-/*
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose an action");
             // add a list
-            String[] actions = {"Add safety measure inspection item.",
-                                "Add ESM category for the current Zone",
-                                "Create a new zone for the property.",
+            String[] actions = {"Create New Principal Branch Item",
+                                "Add a New branch",
                                 "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1275,20 +1162,62 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                     switch (which) {
 
                         case 0: {
-                            if(sublocationId.equals("2") == true){
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Branch below : "+ branchLabel );//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            addLevel(0,branchText.getText().toString());
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+                            break;
+
+                        }
+
+
+                        case 1: {
+
+
+
+
 
                                 LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                                 View promptView = layoutInflater.inflate(R.layout.add_location, null);
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                                 alertDialogBuilder.setView(promptView);
-                                TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Safety measure : " + sublocationsArr[0]);//Integer.parseInt(locationId)
-                                final EditText sublocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("Branch below : "+ branchLabel );//Integer.parseInt(locationId)
+                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                 // setup a dialog window
                                 alertDialogBuilder.setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                addObservation(sublocationText.getText().toString());
+                                                addLevel((Level+1),branchText.getText().toString());
 
 
                                             }
@@ -1303,369 +1232,41 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                                 // create an alert dialog
                                 AlertDialog alert = alertDialogBuilder.create();
                                 alert.show();
-                            }
-                            else {
-                                Toast.makeText(InspectionActivity.this, "Select the relevant Safety Measure", Toast.LENGTH_SHORT).show();
-                            }
+
                             break;
 
                         }
 
-
-                        case 1: {
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_esm, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Zone in property: " + locationsArr[Integer.parseInt(locationId)-1]);//location.getText().toString());
-                            sprESM_category = (Spinner) promptView.findViewById(R.id.esm);
+                        case 2: {
 
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_cat );
-                            adapter.setDropDownViewResource(R.layout.my_spinner);
-                            sprESM_category.setAdapter(adapter);
-
-                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset );
-                            adapter5.setDropDownViewResource(R.layout.my_spinner);
-                            sprasset = (Spinner) promptView.findViewById(R.id.measure);
-
-                            final TextView esmtxt = (TextView) promptView.findViewById(R.id.textView3);
-
-                            OnItemSelectedListener ESM_catSelectedListener = new OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                                           int position, long id) {
-
-
-                                    switch (position) {
-                                        case (1):
-                                            esmcatId = "A";
-                                            esm_asset = new String[]{
-                                                    "Measure",
-                                                    "Path of travel to exit",
-                                                    "Discharge from the exits (including paths of travel from open spaces to the public roads to which they are connected)",
-                                                    "Exits (including fire-isolated stairways and ramps, stair treads, balustrades and handrails associated with exits, and " +
-                                                            "fire isolated passageways)",
-                                                    "Smoke lobbies to fire isolated exits",
-                                                    "Open access ramps or balconies for fire isolated exits",
-                                                    "Doors (other than smoke or fire doors) in a required exit, forming part of a required exit or in a path of travel to a " +
-                                                            "required exit, and associated self-closing, automatic closing and latching mechanisms"
-                                            };
-                                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset);
-                                            sprasset.setAdapter(adapter5);
-
-                                            break;
-                                        case (2):
-                                            esmcatId = "B";
-
-                                            esm_asset = new String[]{
-                                                    "Measure",
-                                                    "Fire hydrant system (including on site pump set and fire service booster connection)",
-                                                    "Fire hose reel system",
-                                                    "Sprinkler system",
-                                                    "Portable fire extinguishers",
-                                                    "Fire control centres (or rooms)"
-
-                                            };
-                                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset);
-                                            sprasset.setAdapter(adapter5);
-
-                                            break;
-                                        case (3):
-                                            esmcatId = "C";
-                                            esm_asset = new String[]{
-                                                    "Measure",
-                                                    "Exit signs (including direction signs)",
-                                                    "Signs warning against the use of lifts in the event of fire",
-                                                    "Warning signs on sliding fire doors and doors to non required stairways, ramps and escalators",
-                                                    "Signs, intercommunication systems, or alarm systems on doors of fire isolated exits stating that re entry to a storey is available",
-                                                    "Signs alerting persons that the operation of doors must not be impaired",
-                                                    "Signs required on doors, in alpine areas, alerting people that they open inwards",
-                                                    "Fire order notices required in alpine areas"
-
-                                            };
-                                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset);
-                                            sprasset.setAdapter(adapter5);
-                                            break;
-                                        case (4):
-                                            esmcatId = "D";
-                                            esm_asset = new String[]{
-                                                    "Measure",
-                                                    "Emergency Lighting"
-
-                                            };
-                                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset);
-                                            sprasset.setAdapter(adapter5);
-                                            break;
-                                        case (5):
-                                            esmcatId = "E";
-
-                                            esm_asset = new String[]{
-                                                    "Measure",
-                                                    "Building elements required to satisfy prescribed fire resistance levels",
-                                                    "Materials and assemblies required to have fire hazard properties",
-                                                    "Elements required to be non combustible, provide fire protection, compartmentation or separation",
-                                                    "Wall-wetting sprinklers (including doors and windows required in conjunction with wall wetting sprinklers)",
-                                                    "Fire doors (including sliding fire doors and their associated warning systems) and associated self closing, automatic closing and latching mechanisms",
-                                                    "Fire windows (including windows that are automatic or permanently fixed in the closed position)",
-                                                    "Fire shutters",
-                                                    "Solid core doors and associated self closing, automatic closing and latching mechanisms",
-                                                    "Fire-protection at service penetrations through elements required to be fire resisting with respect to integrity or insulation, or to have a resistance to the incipient spread of fire",
-                                                    "Fire protection associated with construction joints, spaces and the like in and between building elements required to be fire-resisting with respect to integrity and insulation",
-                                                    "Smoke doors and associated self closing, automatic closing and latching mechanisms",
-                                                    "Proscenium walls (including proscenium curtains)"
-                                            };
-                                            adapter5 = new ArrayAdapter<String>(InspectionActivity.this, R.layout.my_spinner, esm_asset);
-                                            sprasset.setAdapter(adapter5);
-
-
-
-
-                                            break;
-
-                                        case (6):
-                                            esmcatId = "F";
-                                            break;
-                                        case (7):
-                                            esmcatId = "G";
-                                            break;
-                                    }
-
-                                }
-
-
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> arg0) {
-                                // TODO Auto-generated method stub
-                            }
-
-                            // setup a dialog window
-
-                        };
-
-                            sprESM_category.setSelection(0);
-
-
-                        OnItemSelectedListener assettSelectedListener = new OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                                           int position, long id) {
-
-
-                                    if (position !=0) {
-                                    //    Asset =("Measure: "+ esm_asset[position]);
-                                   //     editing = "YES";
-                                          switch (position) {
-
-/*
-                                            case (1):
-                                                esmsubcatId = "a";
-                                                if(esmcatId.equals("A")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("B")) ESMtxt = "Fire hydrant system (including on site pump";
-                                                if(esmcatId.equals("C")) ESMtxt = "Exit signs (including direction signs)";
-                                                if(esmcatId.equals("D")) ESMtxt = "Emergency Lighting";
-                                                if(esmcatId.equals("E")) ESMtxt = "Building elements required to satisfy ";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (2):
-                                                esmsubcatId = "b";
-                                                if(esmcatId.equals("A")) ESMtxt = "Discharge from exits to roadway";
-                                                if(esmcatId.equals("B")) ESMtxt = "Fire hose reel system";
-                                                if(esmcatId.equals("C")) ESMtxt = "Signs warning against the use of lifts";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Materials and assemblies required to have";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (3):
-                                                esmsubcatId = "c";
-                                                if(esmcatId.equals("A")) ESMtxt = "Exits-stairwells/passageways - assoc. items";
-                                                if(esmcatId.equals("B")) ESMtxt = "Sprinkler system";
-                                                if(esmcatId.equals("C")) ESMtxt = "Warning signs on sliding fire doors and doors";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Elements required to be non combustible,";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (4):
-
-                                                esmsubcatId = "d";
-                                                if(esmcatId.equals("A")) ESMtxt = "Smoke lobbies to fire isolated exits";
-                                                if(esmcatId.equals("B")) ESMtxt = "Portable fire extinguishers";
-                                                if(esmcatId.equals("C")) ESMtxt = "Signs, intercommunication systems, or alarm ";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Wall-wetting sprinklers (including doors ";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (5):
-                                                esmsubcatId = "e";
-                                                if(esmcatId.equals("A")) ESMtxt = "Open access ramps or balconies for fire ";
-                                                if(esmcatId.equals("B")) ESMtxt = "Fire control centres (or rooms)";
-                                                if(esmcatId.equals("C")) ESMtxt = "Signs alerting persons that the operation ";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Fire doors (including sliding fire doors and ";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (6):
-                                                esmsubcatId = "f";
-                                                if(esmcatId.equals("A")) ESMtxt = "Doors (other than smoke or fire doors) in ";
-                                                if(esmcatId.equals("B")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("C")) ESMtxt = "Signs required on doors, in alpine areas, ";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Fire windows (including windows that are auto";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (7):
-                                                esmsubcatId = "g";
-                                                if(esmcatId.equals("A")) ESMtxt = "Smoke lobbies to fire isolated exits";
-                                                if(esmcatId.equals("B")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("C")) ESMtxt = "Fire order notices required in alpine areas";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Fire Shutters";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (8):
-                                                esmsubcatId = "h";
-                                                if(esmcatId.equals("B")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("C")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("D")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("E")) ESMtxt = "Solid core doors and associated self closing,";
-                                                if(esmcatId.equals("F")) ESMtxt = "Paths of travel to exits";
-                                                if(esmcatId.equals("G")) ESMtxt = "Paths of travel to exits";
-                                                break;
-                                            case (9):
-                                                esmsubcatId = "i";
-                                                if(esmcatId.equals("E")) ESMtxt = "Fire-protection at service penetrations";
-
-                                                break;
-                                            case (10):
-                                                esmsubcatId = "j";
-                                                if(esmcatId.equals("E")) ESMtxt = "Fire protection associated with construc ";
-                                                break;
-                                            case (11):
-                                                esmsubcatId = "k";
-                                                if(esmcatId.equals("E")) ESMtxt = "Smoke doors and associated self closing, ";
-                                                break;
-                                              case (12):
-                                                esmsubcatId = "l";
-                                                if(esmcatId.equals("E")) ESMtxt ="Proscenium walls (including proscenium";
-
-
-                                        }
-
-
-                                          esmtxt.setText("Description:  "+ESMtxt);
-
-                                     //   sprasset.setSelection(0);
-                                     //   getORArray(esmcatId,esmsubcatId);
-
-                                    }
-
-
-
-
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> arg0) {
-                                    // TODO Auto-generated method stub
-                                }
-
-                            };
-
-
-
-
-      //                      sprasset.setOnItemSelectedListener(assettSelectedListener);
-                            sprESM_category.setOnItemSelectedListener(ESM_catSelectedListener);
-
-                                            alertDialogBuilder.setCancelable(false)
-                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            addsubLocation(ESMtxt);
-
-
-
-
-
-
-
-                                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
                             break;
                         }
+                       }
+                     }
+                    });
 
-                        case 2:{
+                    AlertDialog dialog = builder.create();
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Eg: DRIVEWAY ENTRANCE GATE/ENTRANCE DOOR TO LOBBY, ETC....");
-                            final EditText locationDesc = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            addPrimLocation(locationDesc.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-                            break;
-                        }
+                        dialog.show();
 
 
                     }
-                }
-            });
 
-            AlertDialog dialog = builder.create();
 
-            dialog.show();
 
-    */
-        }
 
         if (v == buttonDelete){
 
 
-/*
+
             // setup the alert builder
 
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
             builder.setTitle("Choose an action");
             // add a list
             String[] actions = {"Delete the current inspection item.",
-                    "Delete this ESM category.",
+                    "Delete this Branch",
                     "Delete the current Zone.",
                     "Cancel this operation."};
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1673,10 +1274,10 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case 0: {deleteInspectionItem(); break;}
-                        case 1: {deleteInspectionItem(); break;} //
+                        case 1: {deleteMapBranch(); break;} //
                         case 2:{
 
-                         LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
@@ -1705,6 +1306,8 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                             AlertDialog alert = alertDialogBuilder.create();
                             alert.show();
 
+
+                */
                             break;
                         }
                         case 3: //
@@ -1719,9 +1322,6 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             dialog.show();
 
 
-
-
-*/
         }
 
 
@@ -1938,7 +1538,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             takeImageFromCamera(null);
         }
         if (v == btnViewReport) {
-            saveInspectionItem(iId, aId);
+            saveInspectionItem(iID, aID);
 
  //           Intent intent = new Intent(this, ViewReportActivity.class);
  //           intent.putExtra("jobId",jobId);
@@ -2103,7 +1703,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 cameraSnap = "1";
                 TextView imageName1 = (TextView) findViewById(R.id.textView16);
                 imageName1.setText("UPDATED");
-                saveInspectionItem(iId,aId);
+                saveInspectionItem(iID,aID);
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
             } catch (IOException e) {
@@ -2309,7 +1909,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         super.onDestroy();
 
-        if(Edited == true )saveInspectionItem(iId, aId);
+        if(Edited == true )saveInspectionItem(iID, aID);
 
 
 

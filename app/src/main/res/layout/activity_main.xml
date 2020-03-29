@@ -30,6 +30,7 @@
             android:layout_width="0dp"
             android:orientation="vertical"
             android:layout_height="match_parent"
+            android:background="@drawable/image_border"
             android:layout_weight="0.25"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -154,14 +155,12 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark" />
+
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:paddingLeft="6dp"
             android:orientation="vertical"
             android:layout_weight="0.35">
 
@@ -170,6 +169,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:background="@drawable/image_border"
                 android:layout_weight="0.65"
                 android:layout_gravity="bottom"
                 >
@@ -187,19 +188,24 @@
                     android:layout_height="159dp"
                     android:layout_marginLeft="0dp"
                     android:text="INFO"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
+                    android:background="@android:color/transparent"/>
 
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                />
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
+                        android:background="@drawable/image_border"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="5dp"
                         android:layout_weight="0.35"
                         android:layout_gravity="bottom"
                         >
@@ -208,15 +214,11 @@
                             android:id="@+id/textView3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="JOBS:"
+                            android:text="Inspections:"
                             android:paddingBottom="12dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/cardview_dark_background" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/colorPrimaryDark" />
 
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -226,21 +228,16 @@
 
 
                     </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
+
 
             </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark" />
+
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
             android:layout_weight="0.4"
             android:baselineAligned="false">
 
@@ -255,6 +252,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/image_border"
                         android:orientation="horizontal">
 
 
@@ -263,30 +261,15 @@
                             android:id="@+id/btnInspection"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                           android:layout_margin="5dp"
                             android:backgroundTint="@android:color/tertiary_text_light"
                             android:drawableLeft="@android:drawable/ic_media_ff"
-                            android:layout_gravity="right"
                             android:text="INSPECTION"
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
             </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3">
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="10dp"
-                    android:text="Property Address"
-                    android:textSize="18sp"
-                    android:textStyle="normal" />
 
-            </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -296,14 +279,14 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="20dp">
+                        >
 
                         <ImageView
                             android:id="@+id/imageView6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:adjustViewBounds="true"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="10dp"
                             android:background="@drawable/image_border"
                             android:padding="3dp"
                             app:srcCompat="@mipmap/ic_camera"
@@ -340,10 +323,29 @@
                             android:textColor="#ffff00"
                             android:textSize="16sp" />
 
+
+
                     </FrameLayout>
 
-            </LinearLayout>
+              </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Project Address"
+                        android:textSize="18sp"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

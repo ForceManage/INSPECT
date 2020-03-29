@@ -7,16 +7,25 @@
     android:padding="10dp">
 
     <TextView
+        android:id="@+id/textItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Branch Title : "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="ESM Category:  "
+        android:text="Parent Title:  "
         android:id="@+id/textView" />
 
     <EditText
         android:id="@+id/locationtext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Describe the item...location ....etc"
+        android:hint="Describe the item's location...Basement, West side of building ....etc"
         android:padding="10dp" />
 </LinearLayout>
