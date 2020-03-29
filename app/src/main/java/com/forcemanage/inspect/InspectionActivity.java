@@ -808,56 +808,6 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-    private void addPrimLocation(String Description){
-
-  /*      DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        locationId =  dbHandler.addPrimlocation(propertyId, Description);
-        aId = dbHandler.addItem(propertyId,locationId,"0","Z","z",esmcatId);
-
-
-        sublocationId = "0";
-        rId = dbHandler.addObservationItem(propertyId,jobId,aId,"Primary Zone");
-
-
-      //  aId = dbHandler.addItem(propertyId, jobId, aId, locationId, sublocationId); // adds new asset item to asset register table
-      //  rId = dbHandler.addObservationItem(propertyId, jobId, aId,""); //add new item to the inspectionitem table under the new asset label
-
-      //  editing = "YES";
-
-       // location.setEnabled(true);
-       // location.setFocusable(true);
-
-
-     //   location.setText(Description);
-      //  SubLocation.setText("");
-    //    Asset.setText("");
-        Note.setText("");
-        Observation.setText("");
-        Recommendation.setText("");
-        photoA.setImageResource(R.mipmap.ic_camera);
-        photoB.setImageResource(R.mipmap.ic_camera);
-        photoC.setImageResource(R.mipmap.ic_camera);
-        photoD.setImageResource(R.mipmap.ic_camera);
-        photoE.setImageResource(R.mipmap.ic_camera);
-        photo1="";
-        photo2="";
-        photo3="";
-        photo4="";
-        photo5="";
-
-    //    inspArrayPosition = inspArrayPosition+1;
-        getZonesArray();
-        getinspectionArray();
-
-        inspArrayPosition = inspArrayPosition + 1;
-
-
-        loadLocations();
-
-
-   */
-    }
-
 
 
     private void addLevel(int Level, String levelName){
