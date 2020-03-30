@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,7 +33,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,6 +48,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,7 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends Activity  implements OnVerseNameSelectionChangeListener,  View.OnClickListener  {
+public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, View.OnClickListener  {
 
     DBHandler ESMdb;
     private Button buttonInsert;
@@ -76,7 +82,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
-    private ImageView mPhotoImageView;
+    public ImageView mPhotoImageView;
     private ImageView del_img2;
     private ImageView del_img3;
     private ImageView del_img4;
@@ -92,7 +98,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private String dirName;
     private View view;
     private Integer filephoto;
-    private int photoframe;
+    public int photoframe;
     private File photo;
     private Spinner sprObservation;
     private Spinner sprRecommendation;
@@ -101,8 +107,13 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private Spinner sprasset;
     private Spinner sprContractor;
     private EditText Recommendation;
-    private EditText Observation;
+    private EditText Overview;
     private EditText ServiceCont;
+    private EditText com1Text;
+    private EditText com2Text;
+    private EditText com3Text;
+    private EditText com4Text;
+    private EditText com5Text;
     private TextView Buildcat;
     private TextView imageName1;
 //    private TextView Asset;
@@ -144,7 +155,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     private boolean Edited = false;
 
 
+    private BranchNodeAdapter mBranchNodeAdapter;
 
+    private ViewPager mViewPager;
 
 
 
@@ -226,9 +239,14 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         sprRecommendation = (Spinner) findViewById(R.id.spinnerRecommendation);
         sprContractor = (Spinner) findViewById(R.id.spinnerContractor);
 
-         Observation = (EditText) findViewById(R.id.Observation);
+         Overview = (EditText) findViewById(R.id.Overview);
          Recommendation = (EditText) findViewById(R.id.Recommendation);
          ServiceCont = (EditText) findViewById(R.id.textServicedBy);
+         com1Text  = (EditText) findViewById(R.id.com1);
+         com2Text = (EditText) findViewById(R.id.com2);
+         com3Text  = (EditText) findViewById(R.id.com3);
+         com4Text  = (EditText) findViewById(R.id.com4);
+         com5Text  = (EditText) findViewById(R.id.com5);
          final CheckBox checkBox = (CheckBox) findViewById(R.id.sign_checkBox);
 
          Note = (EditText) findViewById(R.id.note);
@@ -237,6 +255,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         // An array containing list of observations
 
+
+
+        mBranchNodeAdapter = new BranchNodeAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        setupViewPager(mViewPager);
 
         observations = new String[]{"Observation"};
         recommendations = new String[]{"Recommendation"};
@@ -368,14 +391,19 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             });
 
 
-            Observation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            Overview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus) Edited = true;
+                    if(hasFocus) Edited = true;
                 }
             });
 
-
+        com1Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
+            }
+        });
 
         Recommendation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -426,7 +454,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                                        int position, long id) {
 
                 if (position !=0)
-                    Observation.setText(observations[position]);
+                    Overview.setText(observations[position]);
                     Edited = true;
 
                      sprObservation.setSelection(0);
@@ -475,7 +503,22 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
     }
 
+    private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.mainfragment_container,fragment,tag);
+        if(addToBackStack){
+            transaction.addToBackStack(tag);
+            transaction.commit();
+        }
 
+    }
+
+    private void setupViewPager(ViewPager viewPager){
+        BranchNodeAdapter adapter = new BranchNodeAdapter(getSupportFragmentManager());
+        adapter.addFragment(new BaseFragment(),"BaseFragment");
+        viewPager.setAdapter(adapter);
+
+    }
 
     public void loadLocations()  {
 
@@ -516,6 +559,9 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 @Override
     public void OnSelectionChanged(int treeNameIndex) {
+
+    if(Edited == true) saveInspectionItem();
+
     DetailFragment detailFragment = (DetailFragment) getFragmentManager()
             .findFragmentById(R.id.detail_text);
 
@@ -525,8 +571,6 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         // so we call the method in DescriptionFragment to update its content
         detailFragment.setDetail(treeNameIndex);
         aID = detailFragment.aID;
-        displayInspectionItem();
-        Toast.makeText(this, "Selected ID = " + aID, Toast.LENGTH_SHORT).show();
     } else {
         DetailFragment newDetailFragment = new DetailFragment();
         Bundle args = new Bundle();
@@ -535,8 +579,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         newDetailFragment.setArguments(args);
 
         aID = detailFragment.aID;
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -577,8 +620,10 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
     }
 
 
-    displayInspectionItem();
 
+
+    displayInspectionItem();
+ //   saveInspectionItem();
 }
 
 
@@ -611,8 +656,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-
-    private void saveInspectionItem(int iId, int aId){
+    private void saveInspectionItem(){
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
        // String serviceDate = inspectionDate.getText().toString();
@@ -620,10 +664,14 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
 
 
-        String nextServiceDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+     //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+        String nextServiceDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         Integer year = Integer.parseInt(nextServiceDate.substring(0,4));
         String date;
-        date = nextServiceDate.substring(4,6);
+       // date = nextServiceDate.substring(4,6);
+        date = nextServiceDate;
+
 
 
         switch (date){
@@ -655,7 +703,11 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         }
 
-        String overview = Observation.getText().toString();
+
+
+
+
+        String overview = Overview.getText().toString();
         String relevantInfo = Recommendation.getText().toString();
 
         String ServiceLevel = "1";
@@ -666,19 +718,24 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
         String Img3 = photo3;
         String Img4 = photo4;
         String Img5 = photo5;
+        String com1 = com1Text.getText().toString();
+        String com2 = com2Text.getText().toString();
+        String com3 = com3Text.getText().toString();
+        String com4 = com4Text.getText().toString();
+        String com5 = com5Text.getText().toString();
         String ItemStatus = "i";
         String Notes = Note.getText().toString();
 
 
-        dbHandler.updateInspection(iID, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
-                    , "reportImage", Img1, "com1", Img2, "com2", Img3, "com3", Img4, "com4",
-                                          Img5,  "com5",  "Img6", " com6", "Img7",  "com7", ItemStatus, Notes);
+        dbHandler.updateInspection(projId, iID, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
+                    , "reportImage", Img1, com1, Img2, com2, Img3, com3, Img4, com4,
+                                          Img5,  com5,  "Img6", " com6", "Img7","com7", ItemStatus, Notes);
 
 
 
 
 
-        String status =  dbHandler.getStatus(inspectionId, projectId);
+        String status =  dbHandler.getStatus(iID, projId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date_  = Calendar.getInstance().getTime();
@@ -847,20 +904,21 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
            Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
            branchLabel = mapItem.get(MyConfig.TAG_LABEL);
 
+           TextView fragText = (TextView) findViewById(R.id.Zone);
+            fragText.setText(Integer.toString(GlobalVariables.pos));
 
+        Toast.makeText(InspectionActivity.this, "aID: "+aID , Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(InspectionActivity.this, "Level: "+Level , Toast.LENGTH_SHORT).show();
-
-            HashMap<String, String> list = dbHandler.getInspection(projId, aID);
+            HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
 
             if(!list.isEmpty()) {
 
 
 
-                //    TextView Asset = (TextView) findViewById(R.id.esmasset);
-                TextView observationTextView = (TextView) findViewById(R.id.Observation);
+
                 EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
                 EditText recommendationTextView = (EditText) findViewById(R.id.Recommendation);
+
                 //    TextView  esm_cat = (TextView) findViewById(R.id.ESM_category);
                 //    TextView location =(TextView) findViewById(R.id.Location);
                 //   TextView sublocation =(TextView) findViewById(R.id.SubLocation);
@@ -870,6 +928,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 TextView imageName3 = (TextView) findViewById(R.id.textView18);
                 TextView imageName4 = (TextView) findViewById(R.id.textView19);
                 TextView imageName5 = (TextView) findViewById(R.id.textView20);
+
                 String sign = list.get(MyConfig.TAG_ITEM_STATUS);
                 //         final CheckBox checkBox = (CheckBox)findViewById(R.id.sign_checkBox);
                 //        if(sign.equals("i")  ){
@@ -877,15 +936,28 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 //         }else {
                 //            checkBox.setChecked(false);
                 //         }
-            /*
-            String assetText = list.get(MyConfig.TAG_ASSET_DESCRIPTION);
-            String observationText = list.get(MyConfig.TAG_INSPECTION_OBSERVATION);
-            String servicedByText = list.get(MyConfig.TAG_SERVICED_BY);
-            String recommendationText = list.get(MyConfig.TAG_INSPECTION_RECOMMENDATION);
-            String categoryText = list.get(MyConfig.TAG_CATEGORY_NAME);
-            String subCategoryText = list.get(MyConfig.TAG_SUB_CATEGORY_NAME);
-            String Notes = list.get(MyConfig.TAG_NOTES);
 
+            String relevantInfoText = list.get(MyConfig.TAG_RELEVANT_INFO);
+            String overviewText = list.get(MyConfig.TAG_OVERVIEW);
+            String servicedByText = list.get(MyConfig.TAG_SERVICED_BY);
+            String com1 = list.get(MyConfig.TAG_COM1);
+            String com2 = list.get(MyConfig.TAG_COM2);
+            String com3 = list.get(MyConfig.TAG_COM3);
+            String com4 = list.get(MyConfig.TAG_COM4);
+            String com5 = list.get(MyConfig.TAG_COM5);
+            String Notes = list.get(MyConfig.TAG_NOTES);
+            String date = list.get(MyConfig.TAG_DATE_INSPECTED);
+
+            com1Text.setText(com1);
+            com2Text.setText(com2);
+            com3Text.setText(com3);
+            com4Text.setText(com4);
+            com5Text.setText(com5);
+            Overview.setText(overviewText);
+
+            int itemNos = dbHandler.getSubItemMap(projId, aID);
+            notes.setText(Notes);
+ /*
 
    //         if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
    //            else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
@@ -908,14 +980,15 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 String tag = list.get(MyConfig.TAG_IMAGE1);
 
 
-                int itemNos = dbHandler.getSubItemMap(projId, aID);
+
 
 
                 //  esm_cat.setText("ESM :   "+categoryText);
                 //  Asset.setText("Measure:   "+subCategoryText);
                 //      observationTextView.setText(i);
                 //      servicedTextView.setText(servicedByText);
-                notes.setText(Integer.toString(itemNos));
+
+
                 //       recommendationTextView.setText(recommendationText);
 
 
@@ -1488,7 +1561,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
             takeImageFromCamera(null);
         }
         if (v == btnViewReport) {
-            saveInspectionItem(iID, aID);
+            saveInspectionItem();
 
  //           Intent intent = new Intent(this, ViewReportActivity.class);
  //           intent.putExtra("jobId",jobId);
@@ -1653,7 +1726,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
                 cameraSnap = "1";
                 TextView imageName1 = (TextView) findViewById(R.id.textView16);
                 imageName1.setText("UPDATED");
-                saveInspectionItem(iID,aID);
+                saveInspectionItem();
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
             } catch (IOException e) {
@@ -1859,7 +1932,7 @@ public class InspectionActivity extends Activity  implements OnVerseNameSelectio
 
         super.onDestroy();
 
-        if(Edited == true )saveInspectionItem(iID, aID);
+        if(Edited == true )saveInspectionItem();
 
 
 

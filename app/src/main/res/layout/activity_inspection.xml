@@ -163,6 +163,7 @@
 
 
 
+
         <LinearLayout
 
             android:id="@+id/mainfragment_container"
@@ -172,6 +173,12 @@
             android:paddingLeft="6dp"
             android:orientation="vertical">
 
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="500dp"
+                android:layout_height="400dp"
+                android:id="@+id/container">
+            </androidx.viewpager.widget.ViewPager>
 
 
             <LinearLayout
@@ -240,7 +247,7 @@
                                     android:layout_height="wrap_content" />
 
                                 <EditText
-                                    android:id="@+id/Observation"
+                                    android:id="@+id/Overview"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingLeft="10dp"
@@ -360,6 +367,13 @@
                                 android:paddingLeft="3dp"
                                 android:paddingRight="3dp">
 
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:background="@drawable/image_border"
+                                    >
+
                                 <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent">
@@ -369,7 +383,7 @@
                                         android:id="@+id/imageView"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:background="@drawable/image_border"
+
                                         android:adjustViewBounds="true"
                                         android:cropToPadding="false"
                                         android:paddingLeft="5dp"
@@ -421,7 +435,6 @@
 
                                 </FrameLayout>
 
-
                                 <EditText
                                     android:id="@+id/com1"
                                     android:layout_width="match_parent"
@@ -434,17 +447,25 @@
 
                                 </EditText>
 
+                            </LinearLayout>
+
 
                                    <View
                                     android:layout_width="match_parent"
                                     android:layout_height="10dp"
                                     />
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@drawable/image_border"
+                                >
 
                                 <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/image_border">
+                                   >
 
                                     <ImageView
                                         android:id="@+id/imageView2"
@@ -458,7 +479,7 @@
 
                                     </ImageView>
 
-                                     <ImageView
+                                    <ImageView
                                         android:id="@+id/imageView2_del"
                                         android:layout_width="75dp"
                                         android:layout_height="75dp"
@@ -502,16 +523,27 @@
 
                                 </EditText>
 
+                            </LinearLayout>
+
 
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="10dp"
                                     />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@drawable/image_border"
+                                >
+
                                 <FrameLayout
 
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/image_border">
+
                                     >
 
                                     <ImageView
@@ -568,15 +600,27 @@
 
                                 </EditText>
 
+                            </LinearLayout>
+
+
 
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="10dp"
                                     />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@drawable/image_border">
+
+
                                 <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@drawable/image_border">
+                                    >
 
                                     <ImageView
                                         android:id="@+id/imageView4"
@@ -621,16 +665,24 @@
                                     android:textSize="16sp">
 
                                 </EditText>
-
+                            </LinearLayout>
 
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="10dp"
                                     />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:background="@drawable/image_border"
+                                >
+
                                 <FrameLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:background="@drawable/image_border">
+                                        >
 
                                         <ImageView
                                             android:id="@+id/imageView5"
@@ -675,7 +727,7 @@
 
                                 </EditText>
 
-
+                            </LinearLayout>
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="10dp"

@@ -425,12 +425,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public  void updateInspection(int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+    public  void updateInspection(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
             , String reportImage, String Img1, String com1, String Img2, String com2, String Img3, String com3, String Img4, String com4,
                                   String Img5, String com5, String Img6, String com6, String Img7, String com7, String ItemStatus, String Notes){
 
         String inspectionId = String.valueOf(iId);
         String a_Id = String.valueOf(aId);
+        String proj_id = String.valueOf(projId);
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -459,8 +460,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_INSPECTION_ID + " = ? AND "+COLUMN_A_ID+ " = ? " , new String[]{inspectionId, a_Id});
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_PROJECT_ID +" = ? AND "+ COLUMN_INSPECTION_ID + " = ? AND " +COLUMN_A_ID+ " = ? ", new String[]{proj_id, inspectionId, a_Id});
         db.close();
+
 
     }
 
@@ -1004,7 +1006,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Check if a location contains any sublocations
-    public String getStatus(String jobId, String propId) {
+    public String getStatus(int iId, int projId) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1053,7 +1055,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // Retrieve individual current inspection
-    public HashMap <String, String> getInspection(int projId, int aId) {
+    public HashMap <String, String> getInspection(int projId, int aId, int iId) {
         // Open a database for reading and writing
 
         HashMap<String, String> inspectionItem = new HashMap<String, String>();
@@ -1069,7 +1071,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
                 +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES
                 +" FROM "+TABLE_INSPECTION_ITEM+" I "
-                +" WHERE I."+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId;
+                +" WHERE I."+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId+" AND "+COLUMN_INSPECTION_ID+" = "+iId;
 
 
         //add additional fields: status,  notes, print flag
@@ -1439,7 +1441,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
                 +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
                 +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
-                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES
+                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES+", I."+COLUMN_INSPECTION_ID+", I."+COLUMN_PROJECT_ID+", I."+COLUMN_A_ID
                 +" FROM "+TABLE_INSPECTION_ITEM+" I "
                ;
 
@@ -1470,6 +1472,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_COM7, cursor.getString(16));
                 inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
                 inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
+                inspectionItem.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(19));
+                inspectionItem.put(MyConfig.TAG_PROJECT_ID, cursor.getString(20));
+                inspectionItem.put(MyConfig.TAG_A_ID, cursor.getString(21));
                 inspectionItemsList.add(inspectionItem);
             } while (cursor.moveToNext());
         }
@@ -1592,7 +1597,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 +" FROM "+TABLE_MAP+" M"
 
-                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID+" = "+aId;
+                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);

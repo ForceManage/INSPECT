@@ -1077,7 +1077,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING_ADDITIONAL = s;
-                TextMessage.setText("JSON_STRING " + s);
+            //    TextMessage.setText("JSON_STRING " + s);
 
                 updateAdditionalInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -1414,6 +1414,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
+
+
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
 //            res = jsonString;
