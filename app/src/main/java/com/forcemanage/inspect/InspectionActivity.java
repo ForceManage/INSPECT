@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, View.OnClickListener  {
+public class InspectionActivity extends AppCompatActivity implements I_inspection, OnVerseNameSelectionChangeListener, View.OnClickListener  {
 
     DBHandler ESMdb;
     private Button buttonInsert;
@@ -66,12 +67,26 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private Button buttonEdit;
     private String projectId;
     private String inspectionId;
-    private String locationId;
-    private String sublocationId;
     private String seq = "cur";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;
+
+    public ImageView mPhotoImageView;
+
+    public String photo1 ="";
+    private String photo2;
+    private String photo3;
+    private String photo4;
+    private String photo5;
+    public String[]  photos = new String[5];
+    private String mImageFileLocation = "";
+    private String fname;
+    private String dirName;
+    private View view;
+    public Integer filephoto;
+    public int photoframe;
+    private File photo;
     private ImageView photoA;
     private ImageView photoB;
     private ImageView photoC;
@@ -82,40 +97,26 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
-    public ImageView mPhotoImageView;
     private ImageView del_img2;
     private ImageView del_img3;
     private ImageView del_img4;
     private ImageView del_img5;
-    private String photo1;
-    private String photo2;
-    private String photo3;
-    private String photo4;
-    private String photo5;
-    private String[]  photos = new String[5];
-    private String mImageFileLocation = "";
-    private String fname;
-    private String dirName;
-    private View view;
-    private Integer filephoto;
-    public int photoframe;
-    private File photo;
     private Spinner sprObservation;
     private Spinner sprRecommendation;
-    private Spinner sprTitle;
-    private Spinner sprbuildcat;
-    private Spinner sprasset;
-    private Spinner sprContractor;
-    private EditText Recommendation;
-    private EditText Overview;
-    private EditText ServiceCont;
-    private EditText com1Text;
-    private EditText com2Text;
-    private EditText com3Text;
-    private EditText com4Text;
-    private EditText com5Text;
-    private TextView Buildcat;
-    private TextView imageName1;
+    public String com1 ="";
+    public String com2 ="";
+    public String com3="";
+    public String com4="";
+    public String com5="";
+    public String com6="";
+    public String com7="";
+    public String Overview="";
+    public String relevantInfo="";
+    public String ItemStatus="";
+    public String Notes="";
+    public String bName="";
+
+
 //    private TextView Asset;
     private String cameraSnap ;
     private EditText Note;
@@ -131,12 +132,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private String [] esm_cat;
     private String editing = "NO";
     private int catId;
-    private String esmsubcatId;
-    private int inspArrayPosition;
-    private  String[] assetIdlist;
-    private  String [] locationIdlist;
-    private String [] sublocationIdlist;
-    private String [] recitemlist;
     private String [] observations;
     private String [] recommendations;
     private Integer zone;
@@ -145,19 +140,22 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private MapListAdapter treeListAdapter;
     private List<MapViewData> listItems;
     private int projId;
-    public int aID;
+    public int aID=1;
     public  int Level;
     public int Parent;
     public int Child;
     public int iID = 1;
-    public String branchLabel;
+    public String branchLabel = "Label";
+    public String branchNote = "Note";
 
-    private boolean Edited = false;
+    public boolean Edited = false;
+
+    private Fragment fragment_obj;
 
 
-    private BranchNodeAdapter mBranchNodeAdapter;
 
-    private ViewPager mViewPager;
+
+ //   private ViewPager mViewPager;
 
 
 
@@ -182,20 +180,19 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
 
+        photos[0] = "";
+
+
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
         //Get number of items for the inspection
         ArrayList<HashMap<String, String>> itemNumbers = dbHandlerA.getInspectedItems(inspectionId, projectId);
         ItemNumbers = (TextView) findViewById(R.id.RecordCount);
         ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
-        sublocationId = "0";
-        inspArrayPosition = 0;
-
-    //    displayInspectionItem(projId, iId, seq);
 
 
 
-
+/*
         photoA = (ImageView) findViewById(R.id.imageView);
         //photoA.setOnClickListener(this);
         photoB = (ImageView) findViewById(R.id.imageView2);
@@ -257,12 +254,16 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
 
-        mBranchNodeAdapter = new BranchNodeAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager);
+    //    mBranchNodeAdapter = new BranchNodeAdapter(getSupportFragmentManager());
+     //   mViewPager = (ViewPager) findViewById(R.id.container);
+    //    setupViewPager(mViewPager);
+    //    mViewPager.canScrollHorizontally(0);
 
-        observations = new String[]{"Observation"};
-        recommendations = new String[]{"Recommendation"};
+ */
+        init();
+
+
+
 
 
         ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId);
@@ -353,172 +354,29 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
 
-        // Array adapter to set data in Spinner Widget
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner,observations);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.my_spinner, recommendations);
-        ArrayAdapter<String> adapter6 = new ArrayAdapter<String>(this, R.layout.my_spinner, contractor);
-         // Setting the array adapter containing country list to the spinner widget
-        sprObservation.setAdapter(adapter);
-        sprRecommendation.setAdapter(adapter2);
-        sprContractor.setAdapter(adapter6);
-
-
-
-        ServiceCont.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-              //  Edited = true;
-
-            }
-        });
-
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                 //   Edited = true;
-                }
-            });
-
-
-            Overview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus) Edited = true;
-                }
-            });
-
-        com1Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
-            }
-        });
-
-        Recommendation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) Edited = true;
-            }
-        });
-
-        Note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) Edited = true;
-            }
-        });
-
-         OnItemSelectedListener recommendationSelectedListener = new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
-
-            if (position !=0) {
-                String ex_text = Recommendation.getText().toString();
-                if (ex_text.equals(""))
-                Recommendation.setText(recommendations[position]);
-                else
-                Recommendation.setText(ex_text +"\n"+recommendations[position]);
-            }
-            Edited = true;
-            sprRecommendation.setSelection(0);
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-
-        };
-
-        OnItemSelectedListener observationSelectedListener = new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
-
-                if (position !=0)
-                    Overview.setText(observations[position]);
-                    Edited = true;
-
-                     sprObservation.setSelection(0);
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-
-        };
-
-
-
-
-        OnItemSelectedListener contractorSelectedListener = new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
-                if (position !=0)
-                    ServiceCont.setText(contractor[position]);
-                    Edited = true;
-
-
-
-                sprContractor.setSelection(0);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }
-        };
-
-
-        // Setting ItemClick Handler for Spinner Widget
-        sprRecommendation.setOnItemSelectedListener(recommendationSelectedListener);
-        sprObservation.setOnItemSelectedListener(observationSelectedListener);
-        sprContractor.setOnItemSelectedListener(contractorSelectedListener);
-
 
 
 
     }
 
-    private void doFragmentTransaction(Fragment fragment, String tag, boolean addToBackStack, String message){
+    private void init(){
+
+        BaseFragment fragment = new BaseFragment();
+        doFragmentTransaction(fragment,"BaseFragment",false,"");
+
+
+    }
+
+    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainfragment_container,fragment,tag);
+
+        transaction.replace(R.id.mainfragment_container,fragment,name);
         if(addToBackStack){
-            transaction.addToBackStack(tag);
-            transaction.commit();
-        }
-
+            transaction.addToBackStack(name);
+          }
+        transaction.commit();
     }
 
-    private void setupViewPager(ViewPager viewPager){
-        BranchNodeAdapter adapter = new BranchNodeAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BaseFragment(),"BaseFragment");
-        viewPager.setAdapter(adapter);
-
-    }
 
     public void loadLocations()  {
 
@@ -560,7 +418,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 @Override
     public void OnSelectionChanged(int treeNameIndex) {
 
-    if(Edited == true) saveInspectionItem();
+
+
 
     DetailFragment detailFragment = (DetailFragment) getFragmentManager()
             .findFragmentById(R.id.detail_text);
@@ -570,7 +429,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         // If description is available, we are in two pane layout
         // so we call the method in DescriptionFragment to update its content
         detailFragment.setDetail(treeNameIndex);
-        aID = detailFragment.aID;
+
     } else {
         DetailFragment newDetailFragment = new DetailFragment();
         Bundle args = new Bundle();
@@ -578,7 +437,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
         newDetailFragment.setArguments(args);
 
-        aID = detailFragment.aID;
+
          FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
 
@@ -621,9 +480,35 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
 
+/*    if(aID == 3){
+        InspectionFragment fragment = new InspectionFragment();
+        doFragmentTransaction(fragment,"InspectionFragment",false,"");}
 
-    displayInspectionItem();
- //   saveInspectionItem();
+    else {
+        BaseFragment fragment = new BaseFragment();
+        doFragmentTransaction(fragment, "BaseFragment", false, "");
+
+    }
+
+
+ */
+
+    fragment_obj = (BaseFragment)getSupportFragmentManager().
+            findFragmentByTag("BaseFragment");
+    try {
+
+        branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
+        Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+    }
+    catch(Exception e){
+        System.out.println("Something went wrong.");
+    }
+
+    if(Edited == true); saveInspectionItem();
+    aID = detailFragment.aID;
+  //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+   displayInspectionItem();
+
 }
 
 
@@ -650,8 +535,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner, observations);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.my_spinner, recommendations);
-        sprObservation.setAdapter(adapter);
-        sprRecommendation.setAdapter(adapter2);
+ //       sprObservation.setAdapter(adapter);
+//        sprRecommendation.setAdapter(adapter2);
         }
 
 
@@ -662,7 +547,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
        // String serviceDate = inspectionDate.getText().toString();
         // work out the next service date in three months time
 
-
+        dbHandler.updateBranchNote(projId, aID, branchNote);
 
      //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
@@ -673,7 +558,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         date = nextServiceDate;
 
 
-
+/*
         switch (date){
 
             case "01": nextServiceDate = Integer.toString(year)+"0415";
@@ -704,21 +589,35 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         }
 
 
+ */
 
 
 
-        String overview = Overview.getText().toString();
-        String relevantInfo = Recommendation.getText().toString();
+
+ //       String overview = Overview.getText().toString();
+ //       String relevantInfo = Recommendation.getText().toString();
 
         String ServiceLevel = "1";
-        String ServicedBy = ServiceCont.getText().toString();
-        String tag = cameraSnap;
+ //       String ServicedBy = ServiceCont.getText().toString();
+ /*       String tag = cameraSnap;
         String Img1 = photo1;
         String Img2 = photo2;
         String Img3 = photo3;
         String Img4 = photo4;
         String Img5 = photo5;
-        String com1 = com1Text.getText().toString();
+
+  */
+
+        String tag = "";
+        String Img1 = "photo1";
+        String Img2 = "photo2";
+        String Img3 = "photo3";
+        String Img4 = "photo4";
+        String Img5 = "photo5";
+        String Img6 = "photo6";
+        String Img7 = "photo7";
+
+ /*       String com1 = com1Text.getText().toString();
         String com2 = com2Text.getText().toString();
         String com3 = com3Text.getText().toString();
         String com4 = com4Text.getText().toString();
@@ -727,7 +626,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         String Notes = Note.getText().toString();
 
 
-        dbHandler.updateInspection(projId, iID, aID, date, overview, "servicedBy", relevantInfo, ServiceLevel
+  */
+
+        dbHandler.updateInspection(projId, iID, aID, date, Overview, "servicedBy", relevantInfo, ServiceLevel
                     , "reportImage", Img1, com1, Img2, com2, Img3, com3, Img4, com4,
                                           Img5,  com5,  "Img6", " com6", "Img7","com7", ItemStatus, Notes);
 
@@ -737,10 +638,10 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         String status =  dbHandler.getStatus(iID, projId);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date_  = Calendar.getInstance().getTime();
 
-        dbHandler.updateStatus(inspectionId, status, dateFormat.format(date_));
+        dbHandler.updateStatus(iID, status, dateFormat.format(date_));
 
         Edited = false;
 
@@ -903,21 +804,37 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
            Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
            Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
            branchLabel = mapItem.get(MyConfig.TAG_LABEL);
+           branchNote = mapItem.get(MyConfig.TAG_NOTES);
 
-           TextView fragText = (TextView) findViewById(R.id.Zone);
-            fragText.setText(Integer.toString(GlobalVariables.pos));
 
-        Toast.makeText(InspectionActivity.this, "aID: "+aID , Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(InspectionActivity.this, "aID: "+aID , Toast.LENGTH_SHORT).show();
 
             HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
 
-            if(!list.isEmpty()) {
 
 
+            if(list.isEmpty()) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("aID",branchLabel);
+                bundle.putString("label",branchLabel);
+                bundle.putString("notes",branchNote);
+                bundle.putString("com2",com2);
+                BaseFragment fragment = new BaseFragment();
+                fragment.setArguments(bundle);
 
 
-                EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
-                EditText recommendationTextView = (EditText) findViewById(R.id.Recommendation);
+                    doFragmentTransaction(fragment, "BaseFragment", false, "");
+                }
+
+                else {
+
+        InspectionFragment fragment = new InspectionFragment();
+        doFragmentTransaction(fragment,"InspectionFragment",false,"");
+
+
+   // EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
+    //            EditText recommendationTextView = (EditText) findViewById(R.id.relevantInfo);
 
                 //    TextView  esm_cat = (TextView) findViewById(R.id.ESM_category);
                 //    TextView location =(TextView) findViewById(R.id.Location);
@@ -948,16 +865,10 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             String Notes = list.get(MyConfig.TAG_NOTES);
             String date = list.get(MyConfig.TAG_DATE_INSPECTED);
 
-            com1Text.setText(com1);
-            com2Text.setText(com2);
-            com3Text.setText(com3);
-            com4Text.setText(com4);
-            com5Text.setText(com5);
-            Overview.setText(overviewText);
 
             int itemNos = dbHandler.getSubItemMap(projId, aID);
-            notes.setText(Notes);
- /*
+  /*          notes.setText(Notes);
+
 
    //         if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
    //            else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
@@ -1007,32 +918,33 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                         switch (i) {
                             case 0:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView);
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView);
                                 mPhotoImageView.setImageBitmap(myBitmap);
+
                                 break;
 
                             case 1:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
+                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
                                 mPhotoImageView.setImageBitmap(myBitmap);
-                                imageName2.setText(dirName);
+                      //          imageName2.setText(dirName);
                                 break;
 
                             case 2:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
+                    //            mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
                                 mPhotoImageView.setImageBitmap(myBitmap);
-                                imageName3.setText(dirName);
+                      //          imageName3.setText(dirName);
                                 break;
 
                             case 3:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
+                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
                                 mPhotoImageView.setImageBitmap(myBitmap);
-                                imageName4.setText(dirName);
+                      //          imageName4.setText(dirName);
                                 break;
 
                             case 4:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
                                 mPhotoImageView.setImageBitmap(myBitmap);
-                                imageName5.setText(dirName);
+                       //         imageName5.setText(dirName);
                                 break;
 
 
@@ -1043,32 +955,32 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         switch (i) {
 
                             case 0:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                                mPhotoImageView.setImageResource(R.mipmap.ic_camera);
+                             //   mPhotoImageView = (ImageView) findViewById(R.id.imageView);
+                           //     mPhotoImageView.setImageResource(R.mipmap.ic_camera);
                                 break;
 
                             case 1:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-                                mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                                imageName2.setText("No Photo Record");
+                           //     mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
+                          //      mPhotoImageView.setImageResource(R.mipmap.ic_camera);
+                           //     imageName2.setText("No Photo Record");
                                 break;
 
                             case 2:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-                                mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                                imageName3.setText("No Photo Record");
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
+                        //        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
+                       //         imageName3.setText("No Photo Record");
                                 break;
 
                             case 3:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-                                mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                                imageName4.setText("No Photo Record");
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
+                        //        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
+                        //        imageName4.setText("No Photo Record");
                                 break;
 
                             case 4:
-                                mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-                                mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                                imageName5.setText("No Photo Record");
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                        ///        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
+                        //        imageName5.setText("No Photo Record");
                                 break;
 
 
@@ -1083,13 +995,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 photo4 = photos[3];
                 photo5 = photos[4];
 
-                if (tag.equals("1")) {
-                    imageName1.setText("UPDATED");
-                } else {
-                    imageName1.setText("REQUIRES UPDATING");
-                }
 
-                cameraSnap = tag;
+
+        //        cameraSnap = tag;
 
             } //list is not empty
 
@@ -1625,8 +1533,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             String name = returnCursor.getString(nameIndex);
             returnCursor.close();
 
-            TextView f_name = (TextView) findViewById(R.id.textView16);
-            f_name.setText(name);
+    //       TextView f_name = (TextView) findViewById(R.id.textView16);
+    //        f_name.setText(name);
 
 
 
@@ -1724,8 +1632,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             try {
                 rotateImage(resizePhoto());
                 cameraSnap = "1";
-                TextView imageName1 = (TextView) findViewById(R.id.textView16);
-                imageName1.setText("UPDATED");
+            //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
+            //    imageName1.setText("UPDATED");
                 saveInspectionItem();
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
@@ -1788,7 +1696,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             case 1:
                 photo1 = image.getName();
-               break;
+                 break;
             case 2:
                 photo2 = image.getName();
                 break;
@@ -1940,4 +1848,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     }
 
 
+    @Override
+    public void inflateFragment(String fragmentName, String branchName) {
+  //      if(fragmentName.equals("BaseFragment")){
+  //          BaseFragment fragment = new BaseFragment();
+  //          doFragmentTransaction(fragment,"base_fragment",false,"");
+   //     }
+    }
 }

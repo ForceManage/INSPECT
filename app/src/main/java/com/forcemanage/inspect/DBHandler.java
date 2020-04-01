@@ -543,7 +543,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateStatus(String inspectionId, String status, String date) {
+    public void updateStatus(int iId, String status, String date) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -552,7 +552,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_INSPECTION_STATUS, status);
         values.put(COLUMN_INSPECTION_DATE, date);
 
-        db.update(TABLE_INSPECTION, values, COLUMN_INSPECTION_ID + " = " + inspectionId, null);
+        db.update(TABLE_INSPECTION, values, COLUMN_INSPECTION_ID + " = " + iId, null);
 
     }
 
@@ -564,6 +564,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         values.put(COLUMN_LABEL, label);
+
+
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
+                COLUMN_A_ID+" = "+aId , null);
+
+    }
+
+    public void updateBranchNote(int projId, int aId, String Note) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(COLUMN_NOTES, Note);
 
 
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
@@ -1597,7 +1612,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 +" FROM "+TABLE_MAP+" M"
 
-                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID;
+                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID+" = "+aId;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
