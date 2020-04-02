@@ -566,17 +566,19 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LABEL, label);
 
 
+
+
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
                 COLUMN_A_ID+" = "+aId , null);
 
     }
 
-    public void updateBranchNote(int projId, int aId, String Note) {
+    public void updateBranchNote(int projId, int aId, String Note, String photo) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-
+        values.put(COLUMN_IMG1, photo);
 
         values.put(COLUMN_NOTES, Note);
 
@@ -1084,7 +1086,7 @@ public class DBHandler extends SQLiteOpenHelper {
             String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
                 +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
                 +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
-                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES
+                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES+", I."+COLUMN_SERVICED_BY
                 +" FROM "+TABLE_INSPECTION_ITEM+" I "
                 +" WHERE I."+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId+" AND "+COLUMN_INSPECTION_ID+" = "+iId;
 
@@ -1115,6 +1117,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_COM7, cursor.getString(16));
                 inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
                 inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
+                inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(19));
                 inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());
         }
@@ -1457,6 +1460,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
                 +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
                 +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES+", I."+COLUMN_INSPECTION_ID+", I."+COLUMN_PROJECT_ID+", I."+COLUMN_A_ID
+                +", I."+COLUMN_SERVICED_BY+", I."+COLUMN_SERVICE_LEVEL
                 +" FROM "+TABLE_INSPECTION_ITEM+" I "
                ;
 
@@ -1490,6 +1494,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(19));
                 inspectionItem.put(MyConfig.TAG_PROJECT_ID, cursor.getString(20));
                 inspectionItem.put(MyConfig.TAG_A_ID, cursor.getString(21));
+                inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(22));
+                inspectionItem.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(23));
                 inspectionItemsList.add(inspectionItem);
             } while (cursor.moveToNext());
         }

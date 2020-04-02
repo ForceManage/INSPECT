@@ -39,94 +39,159 @@
                     android:layout_weight="0.2">
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/head_frame"
+                    android:paddingBottom="20dp">
 
-                    <FrameLayout
+                    <TextView
+                        android:id="@+id/branchTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="10dp"
+                        android:text="Title:  "
+                        android:textSize="20sp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="10dp"
+                        android:text="Branch  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="20dp">
+
+                        <TextView
+                            android:id="@+id/Service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:text="Applicable provider:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
 
                         <EditText
                             android:id="@+id/textServicedBy"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:gravity="top"
-                            android:paddingStart="130dp"
-                            android:paddingTop="10dp"
+                            android:layout_margin="5dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:text="Trade"
                             android:textSize="14sp"
                             android:textStyle="normal">
 
                         </EditText>
 
-                        <Spinner
-                            android:id="@+id/spinnerContractor"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:dropDownWidth="400dp"
-                            android:gravity="bottom" />
 
+                    </LinearLayout>
 
-                    </FrameLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
 
-                    <Spinner
-                        android:id="@+id/spinnerObservation"
-                        android:layout_width="190dp"
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="Overview:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
 
-                        android:layout_height="wrap_content" />
 
                     <EditText
                         android:id="@+id/Overview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:background="@android:color/transparent"
+                        android:layout_margin="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/edit_border"
                         android:text="Overview:"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
 
-
-                    <Spinner
-                        android:id="@+id/spinnerRecommendation"
-                        android:layout_width="246dp"
+                    <TextView
+                        android:id="@+id/relevantInfo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-                        android:dropDownWidth="700dp" />
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Relevant Information:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
 
                     <EditText
-                        android:id="@+id/relevantInfo"
+                        android:id="@+id/RelevantInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-
+                        android:layout_margin="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/edit_border"
                         android:paddingLeft="10dp"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp">
 
 
                     <TextView
                         android:id="@+id/notetitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:paddingTop="6dp"
+                        android:layout_marginTop="10dp"
                         android:paddingLeft="10dp"
-                        android:text="NOTE:  "
+                        android:text="Notes:  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal|bold" />
+
+
 
                     <EditText
                         android:id="@+id/note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:paddingLeft="10dp"
+                        android:background="@drawable/edit_border"
+                        android:layout_margin="5dp"
                         android:paddingTop="6dp"
-                        android:textSize="16sp">
+                        android:paddingBottom="6dp"
+                        android:paddingLeft="10dp"
+                        android:textSize="14sp">
 
                     </EditText>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        />
+                </LinearLayout>
 
                     <CheckBox
                         android:id="@+id/sign_checkBox"
@@ -266,8 +331,9 @@
                             android:id="@+id/com1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/image_border"
+                            android:background="@drawable/edit_border"
                             android:paddingLeft="10dp"
+                            android:layout_margin="5dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
                             android:textSize="16sp">
@@ -342,7 +408,8 @@
                             android:id="@+id/com2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/image_border"
+                            android:background="@drawable/edit_border"
+                            android:layout_margin="5dp"
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
@@ -419,7 +486,8 @@
                             android:id="@+id/com3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/image_border"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
@@ -485,7 +553,8 @@
                             android:id="@+id/com4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/image_border"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
@@ -546,7 +615,8 @@
                             android:id="@+id/com5"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/image_border"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"

@@ -1,7 +1,10 @@
 package com.forcemanage.inspect;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.io.File;
 
 public class InspectionFragment extends Fragment implements View.OnClickListener {
 
@@ -44,13 +49,11 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView del_img3;
     private ImageView del_img4;
     private ImageView del_img5;
-    private Spinner sprObservation;
-    private Spinner sprRecommendation;
     private Spinner sprTitle;
     private Spinner sprbuildcat;
     private Spinner sprasset;
     private Spinner sprContractor;
-    private EditText relevantInfo;
+    private EditText RelevantInfo;
     private EditText Overview;
     private EditText ServiceCont;
     private EditText com1Text;
@@ -63,6 +66,15 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private boolean Edited = false;
     private String com1 ="Commentary :";
     private String com2 = "";
+    private String com3 = "";
+    private String com4 = "";
+    private String com5 = "";
+    private String branchTitle = "Title";
+    private String branchName = "Branch";
+    private String aProvider = "Trade";
+    private String overView;
+    private String relevantInfo;
+    private String Notes;
 
     @Override
     public void onAttach(Context context) {
@@ -76,8 +88,18 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
+            branchTitle = bundle.getString("branchHead");
+            branchName = bundle.getString("branchLabel");
+            aProvider = bundle.getString("aprovider");
+            overView = bundle.getString("overview");
+            relevantInfo = bundle.getString("relevantInfo");
+            Notes = bundle.getString("notes");
             com1 = bundle.getString("com1");
             com2 = bundle.getString("com2");
+            com3 = bundle.getString("com3");
+            com4 = bundle.getString("com4");
+            com5 = bundle.getString("com5");
+
         }
 
 
@@ -94,15 +116,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
         Log.d(TAG, "oncreateview: started");
 
-        title = (TextView) view.findViewById(R.id.title);
-        branch = (TextView) view.findViewById(R.id.level);
+        title = (TextView) view.findViewById(R.id.branchTitle);
+        branch = (TextView) view.findViewById(R.id.branchName);
         notes = (EditText) view.findViewById(R.id.note);
-        Img1 = (ImageView) view.findViewById(R.id.imageView);
-        Img2 = (ImageView) view.findViewById(R.id.imageView_file);
-        Img3 = (ImageView) view.findViewById(R.id.imageView_cam);
-        Img4 = (ImageView) view.findViewById(R.id.imageView_draw);
-
-
 
         photoA = (ImageView) view.findViewById(R.id.imageView);
         //photoA.setOnClickListener(this);
@@ -143,12 +159,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         del_img5.setOnClickListener(this);
 
 
-        sprObservation = (Spinner) view.findViewById(R.id.spinnerObservation);
-        sprRecommendation = (Spinner) view.findViewById(R.id.spinnerRecommendation);
-        sprContractor = (Spinner) view.findViewById(R.id.spinnerContractor);
 
          Overview = (EditText) view.findViewById(R.id.Overview);
-         relevantInfo = (EditText) view.findViewById(R.id.relevantInfo);
+         RelevantInfo = (EditText) view.findViewById(R.id.RelevantInfo);
          ServiceCont = (EditText) view.findViewById(R.id.textServicedBy);
          com1Text  = (EditText) view.findViewById(R.id.com1);
          com2Text = (EditText) view.findViewById(R.id.com2);
@@ -157,10 +170,22 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
          com5Text  = (EditText) view.findViewById(R.id.com5);
          final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
 
-         final EditText Note = (EditText) view.findViewById(R.id.note);
 
-         com1Text.setText(com1);
-         com2Text.setText(com2);
+
+         //Fill in the edittext with saved data fro Bundle
+
+        title.setText(branchTitle);
+        branch.setText(branchName);
+        ServiceCont.setText(aProvider);
+        Overview.setText(overView);
+        RelevantInfo.setText(relevantInfo);
+        notes.setText(Notes);
+        com1Text.setText(com1);
+        com2Text.setText(com2);
+        com3Text.setText(com3);
+        com4Text.setText(com4);
+        com5Text.setText(com5);
+
 
      //    getZonesArray();  //Load the zone spinner dropdown
 
@@ -182,14 +207,79 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 }
             });
 
+        photo_cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 1;
+                globalVariables.mPhotoImageView = photoA;
+                globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+
+            }
+        });
+
+        photoB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 1;
+                globalVariables.mPhotoImageView = photoB;
+                globalVariables.takeImageFromCamera(null);
+
+            }
+        });
+
+        photoC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 1;
+                globalVariables.mPhotoImageView = photoC;
+                globalVariables.takeImageFromCamera(null);
+
+            }
+        });
+
+        photoD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 1;
+                globalVariables.mPhotoImageView = photoD;
+                globalVariables.takeImageFromCamera(null);
+
+            }
+        });
+
+        photoE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 1;
+                globalVariables.mPhotoImageView = photoE;
+                globalVariables.takeImageFromCamera(null);
+
+            }
+        });
 
 
+        ServiceCont.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) globalVariables.Edited = true;
+
+            }
+        });
+
+        RelevantInfo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) globalVariables.Edited = true;
+
+            }
+        });
 
          Overview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus) globalVariables.Edited = true;
-                    globalVariables.Overview = Overview.getText().toString();
+
                 }
             });
 
@@ -197,7 +287,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) globalVariables.Edited = true;
-                globalVariables.com1 = com1Text.getText().toString();
+
             }
         });
 
@@ -205,112 +295,112 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) globalVariables.Edited = true;
-                globalVariables.com2 = com2Text.getText().toString();
+
             }
         });
 
-        relevantInfo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        RelevantInfo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) globalVariables.Edited = true;
-                globalVariables.relevantInfo = relevantInfo.getText().toString();
+
 
             }
         });
 
-        Note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        notes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) globalVariables.Edited = true;
-                globalVariables.Notes = Note.getText().toString();
+
             }
         });
-/*
-         OnItemSelectedListener recommendationSelectedListener = new OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
-
-            if (position !=0) {
-                String ex_text = Recommendation.getText().toString();
-                if (ex_text.equals(""))
-                Recommendation.setText(recommendations[position]);
-                else
-                Recommendation.setText(ex_text +"\n"+recommendations[position]);
-            }
-            Edited = true;
-            sprRecommendation.setSelection(0);
-
-
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
+        for (int i = 0; i < 5; i++) {
+            if (globalVariables.photos[i] == null) {
+                globalVariables.photos[i] = "";
+                //    cameraSnap = photos[i];
             }
 
 
-        };
+            if ( globalVariables.photos[i].length() > 12) {
+                String dirName =  globalVariables.photos[i].substring(6, 14);
+                String root = Environment.getExternalStorageDirectory().toString();
+                File Image = new File(root + "/ESM_" + dirName + "/" +  globalVariables.photos[i]);
+                Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
 
-        OnItemSelectedListener observationSelectedListener = new OnItemSelectedListener() {
+                switch (i) {
+                    case 0:
+                       // globalVariables.mPhotoImageView = (ImageView) view.findViewById(R.id.imageView);
+                                photoA.setImageBitmap(myBitmap);
 
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
+                        break;
 
-                if (position !=0)
-                    Overview.setText(observations[position]);
-                    Edited = true;
+                    case 1:
+                        //           mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
+                                  photoB.setImageBitmap(myBitmap);
 
-                     sprObservation.setSelection(0);
+                        break;
 
+                    case 2:
+                        //            mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
+                                  photoC.setImageBitmap(myBitmap);
 
-            }
+                        break;
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
+                    case 3:
+                        //           mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
+                                  photoD.setImageBitmap(myBitmap);
+                        //          imageName4.setText(dirName);
+                        break;
 
-            }
-
-
-        };
-
-
-
-
-        OnItemSelectedListener contractorSelectedListener = new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> my_spinner, View container,
-                                       int position, long id) {
-                if (position !=0)
-                    ServiceCont.setText(contractor[position]);
-                    Edited = true;
-
-
-
-                sprContractor.setSelection(0);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-            }
-        };
+                    case 4:
+                        //           mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                                 photoE.setImageBitmap(myBitmap);
+                        //         imageName5.setText(dirName);
+                        break;
 
 
-        // Setting ItemClick Handler for Spinner Widget
-        sprRecommendation.setOnItemSelectedListener(recommendationSelectedListener);
-        sprObservation.setOnItemSelectedListener(observationSelectedListener);
-        sprContractor.setOnItemSelectedListener(contractorSelectedListener);
+                } //End of switch
+            } //End if there is an image file
+            else {
+
+                switch (i) {
+
+                    case 0:
+                        //   mPhotoImageView = (ImageView) findViewById(R.id.imageView);
+                             photoA.setImageResource(R.mipmap.ic_camera);
+                        break;
+
+                    case 1:
+                        //     mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
+                              photoB.setImageResource(R.mipmap.ic_camera);
+                        //     imageName2.setText("No Photo Record");
+                        break;
+
+                    case 2:
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
+                                photoC.setImageResource(R.mipmap.ic_camera);
+                        //         imageName3.setText("No Photo Record");
+                        break;
+
+                    case 3:
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
+                                photoD.setImageResource(R.mipmap.ic_camera);
+                        //        imageName4.setText("No Photo Record");
+                        break;
+
+                    case 4:
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                                photoE.setImageResource(R.mipmap.ic_camera);
+                        //        imageName5.setText("No Photo Record");
+                        break;
 
 
+                }//End of switch
+            }//End of else
 
-
-*/
+        }//End of loop
 
         return view;
     }

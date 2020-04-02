@@ -41,8 +41,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     private ImageView Img4;
 
 
-    private String branchTitle ="";
-    private String branchtxt = "";
+    private String branchHead ="";
+    private String branchLabel = "";
     private String branchNote = "";
 
 
@@ -52,8 +52,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            branchTitle = bundle.getString("aID");
-            branchtxt = bundle.getString("label");
+            branchHead = bundle.getString("branchHead");
+            branchLabel = bundle.getString("branchLabel");
             branchNote = bundle.getString("notes");
         }
 
@@ -100,20 +100,19 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
 
 
 
-        if (globalVariables.photo1.length() > 12) {
+        if (globalVariables.photoBranch.length() > 12) {
             String dirName = globalVariables.photo1.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
+            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             Img1.setImageBitmap(myBitmap);
-            branch.setText(globalVariables.photo1);
-        }
+         }
 
 
         Img3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 0;
                 globalVariables.mPhotoImageView = Img1;
                 globalVariables.takeImageFromCamera(null);
 
@@ -152,9 +151,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
 
     private void setText(){
 
-        if (!branchTitle.equals("")){
-           title.setText(branchTitle);
-           branch.setText(branchtxt);
+        if (!branchHead.equals("")){
+           title.setText(branchHead);
+           branch.setText(branchLabel);
            bNote.setText(branchNote);
         }
     }

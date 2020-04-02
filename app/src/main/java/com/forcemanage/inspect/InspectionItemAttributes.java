@@ -16,7 +16,7 @@ public class InspectionItemAttributes {
         private String _overview;
         private String _servicedBy;
         private String _relevantInfo;
-        private int _serviceLevel;
+        private String _serviceLevel;
         private String _reportImage;
         private String _image1;
         private String _com1;
@@ -38,7 +38,7 @@ public class InspectionItemAttributes {
         public InspectionItemAttributes() {
         }
 
-        public InspectionItemAttributes(int inspectionId, int projectId, int aId, String dateInspected, String overview, String servicedBy, String relevantInfo, int serviceLevel, String reportImage, String image1
+        public InspectionItemAttributes(int inspectionId, int projectId, int aId, String dateInspected, String overview, String servicedBy, String relevantInfo, String serviceLevel, String reportImage, String image1
                 , String com1, String image2,String com2, String image3, String com3, String image4, String com4, String image5, String com5, String image6, String com6, String image7, String com7
                 ,String itemStatus, String notes) {
 
@@ -89,8 +89,8 @@ public class InspectionItemAttributes {
         public String getservicedBy() {return this._servicedBy; }
         public void setrelevantInfo(String relevantInfo){this._relevantInfo = relevantInfo; }
         public String getrelevantInfo() {return this._relevantInfo; }
-        public void setserviceLevel (int serviceLevel) {this._serviceLevel = serviceLevel; }
-        public int getserviceLevel() {return this._serviceLevel;}
+        public void setserviceLevel (String serviceLevel) {this._serviceLevel = serviceLevel; }
+        public String getserviceLevel() {return this._serviceLevel;}
         public void setReportImage(String reportImage) {this._reportImage = reportImage; }
         public String getReportImage() {return this._reportImage; }
         public void setImage1(String image1) {this._image1 = image1; }

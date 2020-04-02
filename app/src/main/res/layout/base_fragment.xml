@@ -15,29 +15,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            >
+             >
 
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/image_border"
                     android:orientation="vertical"
                     >
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/head_frame"
+                    android:paddingBottom="20dp">
+
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:text="Item Title:  "
+                 android:text="Item Title:  "
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="normal|bold" />
 
                 <TextView
@@ -45,9 +51,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
                     android:text="Item Title:  "
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/noteHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:text="Notes:  "
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />
@@ -56,7 +73,7 @@
                     android:id="@+id/note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/image_border"
+                    android:background="@drawable/edit_border"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
@@ -71,7 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/image_border"
+                android:layout_marginRight="5dp"
                 android:orientation="vertical">
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -774,7 +774,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
                 String dateInspected = jo.getString(MyConfig.TAG_DATE_INSPECTED);
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
-                String serviceBy = jo.getString(MyConfig.TAG_SERVICED_BY);
+                String servicedBy = jo.getString(MyConfig.TAG_SERVICED_BY);
                 String relevantInfo = jo.getString(MyConfig.TAG_RELEVANT_INFO);
                 String aId = jo.getString(MyConfig.TAG_A_ID);
                 String serviceLevel = jo.getString(MyConfig.TAG_SERVICE_LEVEL);
@@ -806,7 +806,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int a_Id = parseInt(aId);
 //                int startDateTime_ = parseInt(startDateTime);
 //                int endDateTime_ = parseInt(endDateTime);
-                int ServiceLevel = parseInt(serviceLevel);
+   //             int ServiceLevel = parseInt(serviceLevel);
 
                 ProjectAttributes projectrow =
                         new ProjectAttributes(projId, addressNo, address, suburb, buildType, buildPermitNmbr, buildClass, noLevels, projectPhoto, keyRequired, floorType, roofType, wallType, projectNote );
@@ -818,12 +818,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // editTextMessage.setText("Test 2");
 
 
-                InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, serviceBy, relevantInfo, ServiceLevel, reportImg, image1, com1, image2, com2
+                InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1, image2, com2
                                                       , image3, com3, image4, com4, image5, com5, image6, com6, image7, com7, itemStatus, notes);
 
                 //editTextMessage.setText("Test 5");
 
-               ActionItemAttributes actionrow = new ActionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, serviceBy, relevantInfo, ServiceLevel, reportImg, image1, com1,itemStatus, notes);
+               ActionItemAttributes actionrow = new ActionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1,itemStatus, notes);
 
 
 

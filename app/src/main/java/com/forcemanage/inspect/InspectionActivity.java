@@ -72,8 +72,24 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;
 
-    public ImageView mPhotoImageView;
+    private ImageView photoA;
+    private ImageView photoB;
+    private ImageView photoC;
+    private ImageView photoD;
+    private ImageView photoE;
+    private ImageView photo_cam;
+    private ImageView photo_draw;
+    private ImageView photo_file;
+    private ImageView photo_file2;
+    private ImageView photo_file3;
 
+    private ImageView del_img2;
+    private ImageView del_img3;
+    private ImageView del_img4;
+    private ImageView del_img5;
+
+    public ImageView mPhotoImageView;
+    public String photoBranch ="";
     public String photo1 ="";
     private String photo2;
     private String photo3;
@@ -85,24 +101,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private String dirName;
     private View view;
     public Integer filephoto;
+
+
+
+
+
     public int photoframe;
     private File photo;
-    private ImageView photoA;
-    private ImageView photoB;
-    private ImageView photoC;
-    private ImageView photoD;
-    private ImageView photoE;
-    private ImageView photo_cam;
-    private ImageView photo_draw;
-    private ImageView photo_file;
-    private ImageView photo_file2;
-    private ImageView photo_file3;
-    private ImageView del_img2;
-    private ImageView del_img3;
-    private ImageView del_img4;
-    private ImageView del_img5;
-    private Spinner sprObservation;
-    private Spinner sprRecommendation;
     public String com1 ="";
     public String com2 ="";
     public String com3="";
@@ -114,7 +119,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public String relevantInfo="";
     public String ItemStatus="";
     public String Notes="";
-    public String bName="";
+    private String aProvider = "Trade";
 
 
 //    private TextView Asset;
@@ -147,10 +152,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public int iID = 1;
     public String branchLabel = "Label";
     public String branchNote = "Note";
-
     public boolean Edited = false;
-
     private Fragment fragment_obj;
+    private String FragDisplay;
 
 
 
@@ -364,12 +368,11 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         BaseFragment fragment = new BaseFragment();
         doFragmentTransaction(fragment,"BaseFragment",false,"");
 
-
     }
 
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+        FragDisplay = name;
         transaction.replace(R.id.mainfragment_container,fragment,name);
         if(addToBackStack){
             transaction.addToBackStack(name);
@@ -493,18 +496,37 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
  */
 
-    fragment_obj = (BaseFragment)getSupportFragmentManager().
-            findFragmentByTag("BaseFragment");
-    try {
 
-        branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
-        Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+
+
+    try
+
+    {
+        if(FragDisplay == "BaseFragment") {
+            fragment_obj = (BaseFragment)getSupportFragmentManager().findFragmentByTag("BaseFragment");
+            branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
+            Toast.makeText(this, "BranchNote from Inspection Acvtivity: " + branchNote, Toast.LENGTH_SHORT).show();
+        }
+        if(FragDisplay == "InspectionFragment"){
+            fragment_obj = (InspectionFragment)getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+            com1 = ((TextView) fragment_obj.getView().findViewById(R.id.com1)).getText().toString();
+            com2 = ((TextView) fragment_obj.getView().findViewById(R.id.com2)).getText().toString();
+            com3 = ((TextView) fragment_obj.getView().findViewById(R.id.com3)).getText().toString();
+            com4 = ((TextView) fragment_obj.getView().findViewById(R.id.com4)).getText().toString();
+            com5 = ((TextView) fragment_obj.getView().findViewById(R.id.com5)).getText().toString();
+            aProvider = ((TextView) fragment_obj.getView().findViewById(R.id.textServicedBy)).getText().toString();
+            Overview = ((TextView) fragment_obj.getView().findViewById(R.id.Overview)).getText().toString();
+            relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.RelevantInfo)).getText().toString();
+            Notes = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
+
+            Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
+        }
     }
     catch(Exception e){
         System.out.println("Something went wrong.");
     }
 
-    if(Edited == true); saveInspectionItem();
+    if(Edited == true) saveInspectionItem();
     aID = detailFragment.aID;
   //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
    displayInspectionItem();
@@ -517,26 +539,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-        ArrayList<HashMap<String, String>> OList = dbHandler.getORlist(Cat_Table,1,subCat);
 
-         observations = new String[OList.size()+1];
-         observations[0] = "Observation";
-        for (int i = 0; i < OList.size(); i++) {
-                observations[i+1] = OList.get(i).get(MyConfig.TAG_NOTE);
-
-              }
-
-        ArrayList<HashMap<String, String>> RList = dbHandler.getORlist(Cat_Table,2,subCat);
-        recommendations = new String[RList.size()+1];
-        recommendations[0] = "Recommendation";
-        for (int i = 0; i < RList.size(); i++) {
-             recommendations[i+1] = RList.get(i).get(MyConfig.TAG_NOTE);
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner, observations);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.my_spinner, recommendations);
- //       sprObservation.setAdapter(adapter);
-//        sprRecommendation.setAdapter(adapter2);
         }
 
 
@@ -547,7 +550,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
        // String serviceDate = inspectionDate.getText().toString();
         // work out the next service date in three months time
 
-        dbHandler.updateBranchNote(projId, aID, branchNote);
+        dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
 
      //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
@@ -599,40 +602,27 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         String ServiceLevel = "1";
  //       String ServicedBy = ServiceCont.getText().toString();
- /*       String tag = cameraSnap;
+        String tag = cameraSnap;
+        String imgBranch = photoBranch;
         String Img1 = photo1;
         String Img2 = photo2;
         String Img3 = photo3;
         String Img4 = photo4;
         String Img5 = photo5;
 
-  */
 
-        String tag = "";
-        String Img1 = "photo1";
-        String Img2 = "photo2";
-        String Img3 = "photo3";
-        String Img4 = "photo4";
-        String Img5 = "photo5";
+
+
         String Img6 = "photo6";
         String Img7 = "photo7";
 
- /*       String com1 = com1Text.getText().toString();
-        String com2 = com2Text.getText().toString();
-        String com3 = com3Text.getText().toString();
-        String com4 = com4Text.getText().toString();
-        String com5 = com5Text.getText().toString();
-        String ItemStatus = "i";
-        String Notes = Note.getText().toString();
 
-
-  */
-
-        dbHandler.updateInspection(projId, iID, aID, date, Overview, "servicedBy", relevantInfo, ServiceLevel
+        if(FragDisplay == "InspectionFragment") {
+            dbHandler.updateInspection(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
                     , "reportImage", Img1, com1, Img2, com2, Img3, com3, Img4, com4,
-                                          Img5,  com5,  "Img6", " com6", "Img7","com7", ItemStatus, Notes);
+                    Img5, com5, "Img6", " com6", "Img7", "com7", ItemStatus, Notes);
 
-
+        }
 
 
 
@@ -724,44 +714,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     }
 
 
-    private void addObservation(String item){
 
-        DBHandler dbHandler = new DBHandler(this, null, null, 1);
-/*
-        if (sublocationId.equals("0")){
-            Toast.makeText(this, "Select the relevant ESM category",Toast.LENGTH_SHORT).show();
-             }
-           else {
-
-               rId = dbHandler.addObservationItem(propertyId, jobId, aId, item);
-
-               Note.setText("");
-               Observation.setText("");
-               Recommendation.setText("");
-               photoA.setImageResource(R.mipmap.ic_camera);
-               photoB.setImageResource(R.mipmap.ic_camera);
-               photoC.setImageResource(R.mipmap.ic_camera);
-               photoD.setImageResource(R.mipmap.ic_camera);
-               photoE.setImageResource(R.mipmap.ic_camera);
-               photo1 = "";
-               photo2 = "";
-               photo3 = "";
-               photo4 = "";
-               photo5 = "";
-
-
-               seq = "cur";
-
-               getinspectionArray();
-               inspArrayPosition = inspArrayPosition + 1;
-
-
-               loadLocations();
-           }
-
-           */
-
-    }
 
 
 
@@ -803,84 +756,71 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
            catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
            Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
            Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
+           photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
            branchLabel = mapItem.get(MyConfig.TAG_LABEL);
            branchNote = mapItem.get(MyConfig.TAG_NOTES);
 
+           String branchHead = dbHandler.getMapBranchTitle(projId,catId);
 
-    //    Toast.makeText(InspectionActivity.this, "aID: "+aID , Toast.LENGTH_SHORT).show();
 
-            HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
+           HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
 
 
 
             if(list.isEmpty()) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("aID",branchLabel);
-                bundle.putString("label",branchLabel);
+                bundle.putString("branchHead",branchHead);
+                bundle.putString("branchLabel",branchLabel);
                 bundle.putString("notes",branchNote);
                 bundle.putString("com2",com2);
                 BaseFragment fragment = new BaseFragment();
                 fragment.setArguments(bundle);
 
 
-                    doFragmentTransaction(fragment, "BaseFragment", false, "");
+                  doFragmentTransaction(fragment, "BaseFragment", false, "");
                 }
 
                 else {
 
-        InspectionFragment fragment = new InspectionFragment();
-        doFragmentTransaction(fragment,"InspectionFragment",false,"");
+
+                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                Overview = list.get(MyConfig.TAG_OVERVIEW);
+                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                com1 = list.get(MyConfig.TAG_COM1);
+                com2 = list.get(MyConfig.TAG_COM2);
+                com3 = list.get(MyConfig.TAG_COM3);
+                com4 = list.get(MyConfig.TAG_COM4);
+                com5 = list.get(MyConfig.TAG_COM5);
+                Notes = list.get(MyConfig.TAG_NOTES);
 
 
-   // EditText servicedTextView = (EditText) findViewById(R.id.textServicedBy);
-    //            EditText recommendationTextView = (EditText) findViewById(R.id.relevantInfo);
+                Bundle bundle = new Bundle();
+                bundle.putString("branchHead",branchHead);
+                bundle.putString("branchLabel",branchLabel);
+                bundle.putString("aprovider",aProvider);
+                bundle.putString("overview",Overview);
+                bundle.putString("relevantInfo",relevantInfo);
+                bundle.putString("notes",Notes);
+                bundle.putString("com1",com1);
+                bundle.putString("com2",com2);
+                bundle.putString("com3",com3);
+                bundle.putString("com4",com4);
+                bundle.putString("com5",com5);
 
-                //    TextView  esm_cat = (TextView) findViewById(R.id.ESM_category);
-                //    TextView location =(TextView) findViewById(R.id.Location);
-                //   TextView sublocation =(TextView) findViewById(R.id.SubLocation);
-                TextView notes = (TextView) findViewById(R.id.note);
-                TextView imageName1 = (TextView) findViewById(R.id.textView16);
-                TextView imageName2 = (TextView) findViewById(R.id.textView17);
-                TextView imageName3 = (TextView) findViewById(R.id.textView18);
-                TextView imageName4 = (TextView) findViewById(R.id.textView19);
-                TextView imageName5 = (TextView) findViewById(R.id.textView20);
 
-                String sign = list.get(MyConfig.TAG_ITEM_STATUS);
-                //         final CheckBox checkBox = (CheckBox)findViewById(R.id.sign_checkBox);
-                //        if(sign.equals("i")  ){
-                //            checkBox.setChecked(true);
-                //         }else {
-                //            checkBox.setChecked(false);
-                //         }
 
-            String relevantInfoText = list.get(MyConfig.TAG_RELEVANT_INFO);
-            String overviewText = list.get(MyConfig.TAG_OVERVIEW);
-            String servicedByText = list.get(MyConfig.TAG_SERVICED_BY);
-            String com1 = list.get(MyConfig.TAG_COM1);
-            String com2 = list.get(MyConfig.TAG_COM2);
-            String com3 = list.get(MyConfig.TAG_COM3);
-            String com4 = list.get(MyConfig.TAG_COM4);
-            String com5 = list.get(MyConfig.TAG_COM5);
-            String Notes = list.get(MyConfig.TAG_NOTES);
-            String date = list.get(MyConfig.TAG_DATE_INSPECTED);
+
+
+                InspectionFragment fragment = new InspectionFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment,"InspectionFragment",false,"");
+
 
 
             int itemNos = dbHandler.getSubItemMap(projId, aID);
-  /*          notes.setText(Notes);
 
-
-   //         if(rId == 1) itemlocation = list.get(MyConfig.TAG_LOCATION_DESC);
-   //            else itemlocation = list.get(MyConfig.TAG_ITEM_NAME);
-            String zoneText = dbHandler.zone(projId, locationId);
-            ZONE.setText("Zone: "+ zoneText);
-            Position.setText("Position: "+ itemlocation);
-       //     ESM.setText("Safety Measure: "+ subCategoryText);
-       //     String assetIdText = list.get(MyConfig.TAG_ASSET_ID);
-      //     location.setText(zoneText);
-      //      String recommendIdText = list.get(MyConfig.TAG_RECOMMEND_NO);
-      //      String serviceDate = list.get(MyConfig.TAG_JOB_ACTUAL_DATE);
-*/
                 photos[0] = list.get(MyConfig.TAG_IMAGE1);
                 photos[1] = list.get(MyConfig.TAG_IMAGE2);
                 photos[2] = list.get(MyConfig.TAG_IMAGE3);
@@ -892,102 +832,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
 
 
-
-
-                //  esm_cat.setText("ESM :   "+categoryText);
-                //  Asset.setText("Measure:   "+subCategoryText);
-                //      observationTextView.setText(i);
-                //      servicedTextView.setText(servicedByText);
-
-
-                //       recommendationTextView.setText(recommendationText);
-
-
-                for (int i = 0; i < 5; i++) {
-                    if (photos[i] == null) {
-                        photos[i] = "";
-                        //    cameraSnap = photos[i];
-                    }
-
-
-                    if (photos[i].length() > 12) {
-                        dirName = photos[i].substring(6, 14);
-                        String root = Environment.getExternalStorageDirectory().toString();
-                        File Image = new File(root + "/ESM_" + dirName + "/" + photos[i]);
-                        Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
-
-                        switch (i) {
-                            case 0:
-                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                                mPhotoImageView.setImageBitmap(myBitmap);
-
-                                break;
-
-                            case 1:
-                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-                                mPhotoImageView.setImageBitmap(myBitmap);
-                      //          imageName2.setText(dirName);
-                                break;
-
-                            case 2:
-                    //            mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-                                mPhotoImageView.setImageBitmap(myBitmap);
-                      //          imageName3.setText(dirName);
-                                break;
-
-                            case 3:
-                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-                                mPhotoImageView.setImageBitmap(myBitmap);
-                      //          imageName4.setText(dirName);
-                                break;
-
-                            case 4:
-                     //           mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-                                mPhotoImageView.setImageBitmap(myBitmap);
-                       //         imageName5.setText(dirName);
-                                break;
-
-
-                        } //End of switch
-                    } //End if there is an image file
-                    else {
-
-                        switch (i) {
-
-                            case 0:
-                             //   mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                           //     mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                                break;
-
-                            case 1:
-                           //     mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-                          //      mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                           //     imageName2.setText("No Photo Record");
-                                break;
-
-                            case 2:
-                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-                        //        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                       //         imageName3.setText("No Photo Record");
-                                break;
-
-                            case 3:
-                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-                        //        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                        //        imageName4.setText("No Photo Record");
-                                break;
-
-                            case 4:
-                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-                        ///        mPhotoImageView.setImageResource(R.mipmap.ic_camera);
-                        //        imageName5.setText("No Photo Record");
-                                break;
-
-
-                        }//End of switch
-                    }//End of else
-
-                }//End of loop
 
                 photo1 = photos[0];
                 photo2 = photos[1];
@@ -1084,7 +928,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             builder.setTitle("Choose an action");
             // add a list
             String[] actions = {"Create New Principal Branch Item",
-                                "Add a New branch",
+                                "Add Navigation Branch",
+                                "Add Report Branch ",
+                                "Add Action Branch",
                                 "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1173,6 +1019,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
                             break;
                         }
+
+                        case 3: {
+
+
+                            break;
+                        }
+
+                        case 4: {
+
+
+                            break;
+                        }
+
                        }
                      }
                     });
@@ -1257,11 +1116,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
 
 
-        if (v == photo_cam) {
-            photoframe = 1;
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-            takeImageFromCamera(null);
-        }
+
 
         if (v == photo_draw) {
 
@@ -1310,86 +1165,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
          }
 
-        if (v == del_img3) {
-
-            //   EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
-            //   dbHandler.deletePhoto(jId,aId, rId, 2);
-
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            //Yes button clicked
-                            photo3 = "";
-                            photoC.setImageResource(R.mipmap.ic_camera);
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-
-        }
-
-        if (v == del_img4) {
-
-            //   EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
-            //   dbHandler.deletePhoto(jId,aId, rId, 2);
-
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            //Yes button clicked
-                            photo4 = "";
-                            photoD.setImageResource(R.mipmap.ic_camera);
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-
-        }
-
-        if (v == del_img5) {
-
-            //   EsmDBHandler dbHandler = new EsmDBHandler(this, null, null, 1);
-            //   dbHandler.deletePhoto(jId,aId, rId, 2);
-
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            //Yes button clicked
-                            photo5 = "";
-                            photoE.setImageResource(R.mipmap.ic_camera);
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-
-        }
 
 
         if (v == photo_file) {
@@ -1447,27 +1222,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         }
 
-        if (v == photoB) {
-            photoframe = 2;
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-            takeImageFromCamera(null);
-        }
 
-        if (v == photoC) {
-            photoframe = 3;
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-            takeImageFromCamera(null);
-        }
-        if (v == photoD) {
-            photoframe = 4;
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-            takeImageFromCamera(null);
-        }
-        if (v == photoE) {
-            photoframe = 5;
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-            takeImageFromCamera(null);
-        }
         if (v == btnViewReport) {
             saveInspectionItem();
 
@@ -1650,6 +1405,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             }
 
             switch (photoframe) {
+
+                case 0:
+                    photoBranch = photos[0];
+
                 case 1:
                     photo1 = photos[0];
                     break;
@@ -1693,6 +1452,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
        photo = image;
 
        switch (photoframe){
+
+           case 0:
+                photoBranch = image.getName();
 
             case 1:
                 photo1 = image.getName();
