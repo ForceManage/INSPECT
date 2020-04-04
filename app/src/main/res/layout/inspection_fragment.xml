@@ -312,18 +312,6 @@
                                 android:saveEnabled="false"
                                 android:foreground="@android:drawable/ic_menu_camera" />
 
-                            <TextView
-                                android:id="@+id/textView16"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:text="TextView"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat"
-                                android:textColor="#ffff00"
-                                android:textSize="16sp" />
-
-
 
                         </FrameLayout>
 
@@ -387,18 +375,6 @@
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="5dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
-
-                            <TextView
-                                android:id="@+id/textView17"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:layout_gravity="bottom"
-                                android:paddingBottom="5dp"
-                                android:text="TextView"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat"
-                                android:textColor="#ffff00"
-                                android:textSize="16sp" />
 
 
 
@@ -467,17 +443,6 @@
                                 android:layout_marginBottom="5dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
-                            <TextView
-                                android:id="@+id/textView18"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:layout_gravity="bottom"
-                                android:paddingBottom="5dp"
-                                android:text="TextView"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat"
-                                android:textColor="#ffff00"
-                                android:textSize="16sp" />
 
 
                         </FrameLayout>
@@ -598,17 +563,6 @@
                                 android:layout_marginBottom="5dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
-                            <TextView
-                                android:id="@+id/textView20"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:layout_gravity="bottom"
-                                android:paddingBottom="5dp"
-                                android:text="TextView"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat"
-                                android:textColor="#ffff00"
-                                android:textSize="16sp" />
 
                         </FrameLayout>
                         <EditText

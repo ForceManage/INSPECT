@@ -105,7 +105,10 @@ public class DBHandler extends SQLiteOpenHelper {
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         // get Writable database for testing purposes only, remove when ready
+
     }
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -588,74 +591,35 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updatelocations(String propId, String locId, String sublocId, String locdesc, int aid, int rid) {
+
+
+    public void deleteInspectionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-
-    /*    // values.put(COLUMN_PROPERTY_ID, propId);
-        // values.put(COLUMN_ASSET_ID, aId);
-        // values.put(COLUMN_LOCATION_ID, locId);
-        // values.put(COLUMN_SUB_LOCATION_ID, sublocId);
-        if(sublocId.equals("0")) {
-            values.put(COLUMN_LOCATION_DESCRIPTION, locdesc);
-            db.update(TABLE_PROPERTY_LOCATIONS, values, COLUMN_PROPERTY_ID + " = " + propId + " AND " +
-                    COLUMN_LOCATION_ID + " = " + locId + " AND " +
-                    COLUMN_SUB_LOCATION_ID + " = " + sublocId, null);
-        } else {
-            values.put(COLUMN_ITEM_NAME, locdesc);
-            values.put(COLUMN_NOTES, locdesc);
-            db.update(TABLE_ESM_INSPECTION_ITEM, values, COLUMN_PROPERTY_ID + " = " + propId + " AND " +
-                    COLUMN_ASSET_ID + " = " + aid + " AND " +
-                    COLUMN_RECOMMEND_NO + " = " + rid, null);
-        }
-
-         */
+        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
+        db.close();
     }
 
-    public void deleteInspectionItem(Integer jId, Integer aId) {
+    public void deleteActionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
 
 
-
-        Cursor cursor;
-
- /*       String selectQuery = "SELECT "+COLUMN_RECOMMEND_NO+" FROM "
-                +TABLE_ESM_INSPECTION_ITEM
-                +" WHERE "+COLUMN_JOB_ID+" = "+jId+" AND "+COLUMN_ASSET_ID+" = "+aId+" AND "+ COLUMN_RECOMMEND_NO+" > "+rId;
-
-        if(rId > 1) {
-            db.delete(TABLE_ESM_INSPECTION_ITEM,COLUMN_JOB_ID+" = "+ jId +" AND "+COLUMN_ASSET_ID+" = "+ aId +" AND "+COLUMN_RECOMMEND_NO+" = "+rId,null);
-            db.close();
-            db = this.getWritableDatabase();
-            cursor = db.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    values.put(COLUMN_RECOMMEND_NO,(cursor.getInt(0))-1);
-                    db.update(TABLE_ESM_INSPECTION_ITEM, values, COLUMN_JOB_ID + " = " + jId + " AND " +
-                            COLUMN_ASSET_ID + " = " + aId +" AND "+ COLUMN_RECOMMEND_NO+" = "+ cursor.getInt(0) , null);
-                } while (cursor.moveToNext()); // Move Cursor to the next row
-            }
-
-        }
-*/
-        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ jId +" AND "+COLUMN_A_ID+" = "+ aId, null);
+        db.delete(TABLE_ACTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
         db.close();
-
-
     }
 
     public void deleteMapBranch(int projId, int aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(TABLE_ACTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
+        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
         db.delete(TABLE_MAP,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId,null);
-   //     db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+COLUMN_LOCATION_ID+" = "+ locationId,null);
 
 
+        db.close();
     }
 
     public void deleteAsset(Integer propId, int aId) {
@@ -707,177 +671,9 @@ public class DBHandler extends SQLiteOpenHelper {
     //Get the current max AssetID Number for the property
 
 
-    public int sublocationitems(int propId, String locationId, String sublocatioId) {
-        // Open a database for reading and writing
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-
-/*
-        String selectQuery;
-        Cursor cursor;
-        int maxrecNo = 0;
-
-        selectQuery = "SELECT MAX("+COLUMN_A_ID+") FROM "
-                +TABLE_ASSET_REGISTER
-                +" WHERE "+ COLUMN_PROPERTY_ID+" = "+propId+"  AND "+COLUMN_LOCATION_ID+" = "+locationId
-                +"  AND "+COLUMN_SUB_LOCATION_ID+" = "+sublocatioId;
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            maxrecNo = cursor.getInt(0);
-
-        }
-
-      */
-        return 1;
-
-
-    }
-
-    public String zone(int propId, String locationId) {
-        // Open a database for reading and writing
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        /*
-        String selectQuery;
-        Cursor cursor;
-        String propZone = "Zone not registered";
-
-
-        selectQuery = "SELECT "+COLUMN_LOCATION_DESCRIPTION+" FROM "
-                +TABLE_PROPERTY_LOCATIONS
-                +" WHERE "+ COLUMN_PROPERTY_ID+" = "+propId+"  AND "+COLUMN_LOCATION_ID+" = "+locationId
-                +"  AND "+COLUMN_SUB_LOCATION_ID+" = 0 ";
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            propZone = cursor.getString(0);
-
-        }
-        if (propZone.equals(null)) propZone = "Zone not registered for this location";
-*/
-        return "1";
-
-
-    }
 
 
 
-    public String addPrimlocation(String propId, String locationDesc) {
-        // Open a database for reading and writing
-
-        /*
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-        int maxlocation = 0;
-
-
-        selectQuery = "SELECT MAX(E2."+COLUMN_LOCATION_ID+") FROM "
-                +TABLE_PROPERTY_LOCATIONS+" E2"
-                +" WHERE E2."+ COLUMN_PROPERTY_ID+" = "+propId;
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            maxlocation = cursor.getInt(0);
-            maxlocation = maxlocation+1;
-        }
-
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_PROPERTY_ID, propId);
-        values.put(COLUMN_LOCATION_ID, maxlocation);
-        values.put(COLUMN_SUB_LOCATION_ID, 0);
-        values.put(COLUMN_LOCATION_DESCRIPTION, locationDesc);
-
-        db.insert(TABLE_PROPERTY_LOCATIONS,null,values);
-*/
-        return Integer.toString(2);
-
-
-
-    }
-
-    public  void addESM(String propId, String jobId, String locationId, String sublocationId, String esmdesc, String esmcat, String esmId, String esmsubId) {
-        // Open a database for reading and writing
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-
-/*
-
-
-        // if an ESM category exists (1,1   1,2 )
-
-        selectQuery = "SELECT "+COLUMN_ASSET_ID+" FROM "
-                +TABLE_ASSET_REGISTER
-                +" WHERE "+ COLUMN_PROPERTY_ID+" = '"+propId+"' AND "
-                + COLUMN_LOCATION_ID+" = '"+locationId+"' AND "
-                + COLUMN_CATEGORY_ID+" = '"+esmId+"' AND "
-                + COLUMN_SUB_CATEGORY_ID+" = 'z'";
-
-        cursor = db.rawQuery(selectQuery, null);
-
-
-        //check if the esm category already exists. If not create it.
-
-        if(cursor.getCount() == 0){
-            addSublocation(propId, locationId, "1", esmcat, true);
-            int assettId = addItem(propId, locationId, "1", esmId, "z", esmcat);
-            addObservationItem(propId, jobId, assettId, esmcat);
-            addSublocation(propId, locationId,"2", esmdesc, true);
-            assettId = addItem(propId, locationId, "2",  esmId, esmsubId, esmdesc );
-            addObservationItem(propId, jobId, assettId, esmdesc);
-        }
-        else {
-            db.close();
-            db = this.getWritableDatabase();
-
-            selectQuery = "SELECT " + COLUMN_SUB_LOCATION_ID + " FROM "
-                    + TABLE_PROPERTY_LOCATIONS
-                    + " WHERE " + COLUMN_PROPERTY_ID+" = "+propId+" AND "
-                    + COLUMN_LOCATION_ID + " = '" + locationId+"'"
-                    + " AND " + COLUMN_SUB_LOCATION_ID + " = '2'";
-
-            cursor = db.rawQuery(selectQuery, null);
-
-            if (cursor.getCount() == 0) {
-                addSublocation(propId, locationId,"2", esmdesc, true);
-            }
-            db.close();
-            db = this.getWritableDatabase();
-
-            selectQuery= "SELECT " + COLUMN_CATEGORY_ID + ", " + COLUMN_SUB_CATEGORY_ID + " FROM "
-                    + TABLE_ASSET_REGISTER
-                    + " WHERE " + COLUMN_PROPERTY_ID+" = "+propId+" AND "
-                    + COLUMN_LOCATION_ID + " = '" + locationId+"' AND "
-                    + COLUMN_CATEGORY_ID + " = '" + esmId+"'"
-                    + " AND " + COLUMN_SUB_CATEGORY_ID + " = '" + esmsubId+"'";
-
-            cursor = db.rawQuery(selectQuery,null);
-
-            if (cursor.getCount() > 0) {
-                //     Toast.makeText(InspectionActivit, "No additional items to Principal Zones (only positions)",Toast.LENGTH_SHORT).show();
-            }
-            else {
-
-                //   int assettId = addItem(propId, locationId, "1",  esmId, "z",esmcat );
-                //   addObservationItem(propId, jobId, assettId, locationDesc);
-
-
-                int assettId = addItem(propId, locationId, "2",  esmId, esmsubId, esmdesc );
-                addObservationItem(propId, jobId, assettId, esmdesc);
-            }
-
-
-        }
-
-
- */
-    }
     //Add sublocation to the location
     public int addLevel(int projID, int CatID,  int Level, int parent, String Label ) {
         // Open a database for reading and writing
@@ -902,7 +698,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PROJECT_ID, projID);
+
         if (Level == 0) {
             values.put(COLUMN_CAT_ID, maxcatID);
             values.put(COLUMN_PARENT, -1);
@@ -910,9 +706,12 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(COLUMN_CAT_ID, CatID);
             values.put(COLUMN_PARENT, parent);
         }
+        values.put(COLUMN_PROJECT_ID, projID);
         values.put(COLUMN_LABEL, Label);
         values.put(COLUMN_LEVEL, Level);
         values.put(COLUMN_A_ID, maxAId);
+        values.put(COLUMN_IMG1,"");
+        values.put(COLUMN_NOTES,"");
         db.insert(TABLE_MAP, null, values);
         db.close();
 
@@ -941,60 +740,130 @@ public class DBHandler extends SQLiteOpenHelper {
 
              label = cursor.getString(0);
         }
-
+        db.close();
         return label;
 
     }
 
 
 
-    public Integer addObservationItem(String PropId, String jobId, int assetId, String item) {
+    public Integer addReportBranch(int projId, int iId, int CatID,  int Level, int aId, String Label) {
         // Open a database for reading and writing
-/*
+
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-        int maxRecommendNo = 1;
+        int result = 0;
+        int a_id = 1; //aId of the branch which has the parent branch clicked
 
-        selectQuery = "SELECT MAX(E2."+COLUMN_RECOMMEND_NO+") FROM "
-                +TABLE_ESM_INSPECTION_ITEM+" E2"
-                +" WHERE E2."+ COLUMN_JOB_ID+" = "+jobId+" AND E2."+COLUMN_ASSET_ID+" = "+assetId;
+        //check if there a subbranch exists
+        selectQuery = "SELECT  "+COLUMN_A_ID+" FROM "
+                +TABLE_MAP+" WHERE "+ COLUMN_PROJECT_ID+" = "+projId+" AND "+COLUMN_PARENT+" = "+aId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            maxRecommendNo = cursor.getInt(0);
-            maxRecommendNo = maxRecommendNo+1;
+
+                                //if subbranch exists
+
+                if (cursor.getCount() > 0) {
+                    a_id = cursor.getInt(0);//check if subbranch is an inspection with the current inspection id
+                    selectQuery = "SELECT  COUNT (I."+COLUMN_PROJECT_ID+") FROM "
+                            +TABLE_INSPECTION_ITEM+" I "
+                            +"JOIN "+TABLE_MAP+" M "
+                            +" ON M. "+COLUMN_A_ID+" = I."+COLUMN_A_ID+" AND M."+COLUMN_PROJECT_ID+" = I."+COLUMN_PROJECT_ID
+                            +" WHERE I."+ COLUMN_PROJECT_ID+" = "+projId+" AND M."+COLUMN_A_ID+" = "+a_id+" AND I."+COLUMN_INSPECTION_ID+" = "+iId;
+
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.moveToFirst()) {
+                        //if inspection exits exit
+                        if (cursor.getInt(0) > 0) {
+                            result = 0;
+                        } else //inspection doesn't exist
+                        {
+                            result = 1;
+
+                            int newId = addLevel(projId, CatID, Level, aId, Label);
+
+                            SQLiteDatabase db_2 = this.getWritableDatabase();
+
+                            ContentValues values = new ContentValues();
+
+                            values.put(COLUMN_PROJECT_ID, projId);
+                            values.put(COLUMN_INSPECTION_ID, iId);
+                            values.put(COLUMN_DATE_INSPECTED, 20200101);
+                            values.put(COLUMN_A_ID, newId);
+                            values.put(COLUMN_OVERVIEW, "");
+                            values.put(COLUMN_RELEVANT_INFO, "");
+                            values.put(COLUMN_SERVICE_LEVEL, "1");
+                            values.put(COLUMN_SERVICED_BY, "");
+                            values.put(COLUMN_REPORT_IMAGE, "0");
+                            values.put(COLUMN_IMG1, "");
+                            values.put(COLUMN_COM1, "");
+                            values.put(COLUMN_IMG2, "");
+                            values.put(COLUMN_COM2, "");
+                            values.put(COLUMN_IMG3, "");
+                            values.put(COLUMN_COM3, "");
+                            values.put(COLUMN_IMG4, "");
+                            values.put(COLUMN_COM4, "");
+                            values.put(COLUMN_IMG5, "");
+                            values.put(COLUMN_COM5, "");
+                            values.put(COLUMN_IMG6, "");
+                            values.put(COLUMN_COM6, "");
+                            values.put(COLUMN_IMG7, "");
+                            values.put(COLUMN_COM7, "");
+                            values.put(COLUMN_ITEM_STATUS, "");
+                            values.put(COLUMN_NOTES, "");
+
+                            db_2.insert(TABLE_INSPECTION_ITEM, null, values);
+                            db_2.close();
+                        }
+                    }
+
+                }
+        }
+        else{
+            result = 1;
+
+            int newId = addLevel(projId, CatID, Level, aId, Label);
+
+            SQLiteDatabase db_1 = this.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+
+            values.put(COLUMN_PROJECT_ID, projId);
+            values.put(COLUMN_INSPECTION_ID, iId);
+            values.put(COLUMN_DATE_INSPECTED, 20200101);
+            values.put(COLUMN_A_ID, newId);
+            values.put(COLUMN_OVERVIEW, "");
+            values.put(COLUMN_RELEVANT_INFO, "");
+            values.put(COLUMN_SERVICE_LEVEL, "1");
+            values.put(COLUMN_SERVICED_BY, "");
+            values.put(COLUMN_REPORT_IMAGE, "0");
+            values.put(COLUMN_IMG1, "");
+            values.put(COLUMN_COM1, "");
+            values.put(COLUMN_IMG2, "");
+            values.put(COLUMN_COM2, "");
+            values.put(COLUMN_IMG3, "");
+            values.put(COLUMN_COM3, "");
+            values.put(COLUMN_IMG4, "");
+            values.put(COLUMN_COM4, "");
+            values.put(COLUMN_IMG5, "");
+            values.put(COLUMN_COM5, "");
+            values.put(COLUMN_IMG6, "");
+            values.put(COLUMN_COM6, "");
+            values.put(COLUMN_IMG7, "");
+            values.put(COLUMN_COM7, "");
+            values.put(COLUMN_ITEM_STATUS, "");
+            values.put(COLUMN_NOTES, "");
+
+            db_1.insert(TABLE_INSPECTION_ITEM, null, values);
+
+            db_1.close();
         }
 
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_JOB_ID, jobId);
-        values.put(COLUMN_PROPERTY_ID,PropId);
-        values.put(COLUMN_ASSET_ID, assetId);
-        values.put(COLUMN_RECOMMEND_NO, maxRecommendNo);
-        values.put(COLUMN_ESM_INSPECTION_OBSERVATION,"");
-        values.put(COLUMN_ESM_RECOMMENDATION,"");
-        values.put(COLUMN_SERVICE_LEVEL,"1");
-        values.put(COLUMN_SERVICED_BY,"");
-        values.put(COLUMN_REPORT_IMAGE,"0");
-        values.put(COLUMN_IMG1,"");
-        values.put(COLUMN_IMG2,"");
-        values.put(COLUMN_IMG3,"");
-        values.put(COLUMN_IMG4,"");
-        values.put(COLUMN_IMG5,"");
-        values.put(COLUMN_ITEM_STATUS,"");
-        values.put(COLUMN_NOTES,"");
-        values.put(COLUMN_ITEM_NAME,item);
 
 
-        db.insert(TABLE_ESM_INSPECTION_ITEM,null,values);
-        db.close();
-
-
-        return maxRecommendNo;
-
- */
-        return 1;
+        return result;
     }
 
 
@@ -1016,6 +885,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
+        db.close();
 
         return cursor.getCount();
 
@@ -1257,130 +1127,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<HashMap<String, String>> getInspectedItems(String jobId, String propId) {
-
-        // ArrayList that contains every row in the database
-        // and each row key / value stored in a HashMap
-
-        ArrayList<HashMap<String, String>> inspectedItemsList;
-
-        inspectedItemsList = new ArrayList<HashMap<String, String>>();
-
-
-/*
-
-        //First query sets out the zones and the related esential measures in those zones
-
-
-        String selectQuery = "SELECT  C."+ COLUMN_CATEGORY_NAME+" AS 'SAFETY_MEASURE', I."+COLUMN_ESM_RECOMMENDATION+", A."+COLUMN_LOCATION_ID+",A."+COLUMN_SUB_LOCATION_ID+
-                ", A."+COLUMN_CATEGORY_ID+",I."+COLUMN_NEXT_DATE_SERVICE+", A."+COLUMN_FREQUENCY+
-
-
-                ",CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN L."+COLUMN_LOCATION_DESCRIPTION+" END AS 'ZONE', "+
-                "CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 1 THEN C."+COLUMN_CATEGORY_NAME+" ELSE '' END AS 'ESM' ,"+
-                "CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 2 THEN C."+COLUMN_SUB_CATEGORY_NAME+" ELSE '' END AS 'ESMcat' ,"+
-                "CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 2 AND I."+COLUMN_ESM_RECOMMENDATION+" = 'Nil' THEN 'OK'"+
-                "WHEN A."+COLUMN_SUB_LOCATION_ID+" = 2 AND I."+COLUMN_ESM_RECOMMENDATION+" != 'Nil' THEN I."+COLUMN_ESM_RECOMMENDATION+" END AS 'STATUS'"+
-
-                " FROM "+TABLE_ESM_INSPECTION_ITEM+" I "+
-                " JOIN "+ TABLE_ESM_INSPECTION+" EI ON I."+COLUMN_JOB_ID+" = EI."+COLUMN_JOB_ID+
-                " JOIN "+ TABLE_ASSET_REGISTER+" A ON A."+COLUMN_PROPERTY_ID+" = EI."+COLUMN_PROPERTY_ID+" AND A."+COLUMN_ASSET_ID+" = I."+COLUMN_ASSET_ID+
-                " JOIN "+ TABLE_ESM_CATEGORIES+" C ON A."+COLUMN_CATEGORY_ID+" = C."+COLUMN_CATEGORY_ID+" AND A."+COLUMN_SUB_CATEGORY_ID+" = C."+COLUMN_SUB_CATEGORY_ID+
-                " JOIN "+ TABLE_PROPERTY_LOCATIONS+" L ON L."+COLUMN_PROPERTY_ID+" = A."+COLUMN_PROPERTY_ID+" AND L."+ COLUMN_LOCATION_ID+" = A."+COLUMN_LOCATION_ID+
-                " AND L."+ COLUMN_SUB_LOCATION_ID+ " = A."+COLUMN_SUB_LOCATION_ID+
-                " JOIN "+ TABLE_PROPERTY_INFO+" P ON P."+COLUMN_PROPERTY_ID+"= EI."+COLUMN_PROPERTY_ID+
-
-                " WHERE (A."+ COLUMN_CATEGORY_ID+ " = 'Z' OR A."+COLUMN_CATEGORY_ID+" = 'A') AND I."+COLUMN_PROPERTY_ID+" = "+propId+" AND I."+COLUMN_RECOMMEND_NO+
-                " = 1 ORDER BY A."+COLUMN_LOCATION_ID+", A."+COLUMN_SUB_LOCATION_ID+", A."+COLUMN_CATEGORY_ID+", A."+COLUMN_SUB_CATEGORY_ID;
-
-
-
-        String selectQueryB = "SELECT  L."+ COLUMN_LOCATION_DESCRIPTION+", I."+COLUMN_ESM_INSPECTION_OBSERVATION+", I."+COLUMN_ESM_RECOMMENDATION+
-                ", I."+COLUMN_IMG1+", I."+COLUMN_IMG2+", I."+COLUMN_ITEM_NAME+
-
-
-                " FROM "+TABLE_ESM_INSPECTION_ITEM+" I "+
-                " JOIN "+ TABLE_ASSET_REGISTER+" A ON A."+COLUMN_PROPERTY_ID+" = I."+COLUMN_PROPERTY_ID+" AND A."+COLUMN_ASSET_ID+" = I."+COLUMN_ASSET_ID+
-                " JOIN "+ TABLE_PROPERTY_LOCATIONS+" L ON L."+COLUMN_PROPERTY_ID+" = A."+COLUMN_PROPERTY_ID+" AND L."+ COLUMN_LOCATION_ID+" = A."+COLUMN_LOCATION_ID+
-                " AND L."+ COLUMN_SUB_LOCATION_ID+ " = 0"+
-
-                " WHERE (A."+ COLUMN_CATEGORY_ID+ " = 'Z' OR A."+COLUMN_CATEGORY_ID+" = 'A') AND I."+COLUMN_PROPERTY_ID+" = "+propId+" AND I."+COLUMN_RECOMMEND_NO+
-                " > 1 AND I."+COLUMN_ESM_RECOMMENDATION+" != 'Nil'";
-
-
-
-
-        // Open a database for reading and writing
-
-
-
-        SQLiteDatabase database = this.getWritableDatabase();
-
-        // Cursor provides read and write access for the
-        // data returned from a database query
-
-        // rawQuery executes the query and returns the result as a Cursor
-
-        Cursor cursor = database.rawQuery(selectQuery, null);
-
-        // Move to the first row
-
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
-
-                // Store the key / value pairs in a HashMap
-                // Access the Cursor data by index that is in the same order
-                // as query
-
-                inspectionItemMap.put("SAFETY_MEASURE", cursor.getString(0));
-                inspectionItemMap.put(MyConfig.TAG_INSPECTION_RECOMMENDATION, cursor.getString(1));
-                inspectionItemMap.put(MyConfig.TAG_LOCATION_ID, (String.valueOf(cursor.getInt(2))));
-                inspectionItemMap.put(MyConfig.TAG_SUB_LOCATION_ID, (String.valueOf(cursor.getInt(3))));
-                inspectionItemMap.put(MyConfig.TAG_CATEGORY_ID, (String.valueOf(cursor.getInt(4))));
-                inspectionItemMap.put(MyConfig.TAG_NEXT_SERVICE_DATE, cursor.getString(5));
-                inspectionItemMap.put(MyConfig.TAG_FREQUENCY, cursor.getString(6));
-                inspectionItemMap.put("ZONE", cursor.getString(7));
-                inspectionItemMap.put("ESM", cursor.getString(8));
-                inspectionItemMap.put("ESM_CAT", cursor.getString(9));
-                inspectionItemMap.put("STATUS", cursor.getString(10));
-
-
-
-                inspectedItemsList.add(inspectionItemMap);
-            } while (cursor.moveToNext()); // Move Cursor to the next row
-        }
-
-
-        Cursor cursorB = database.rawQuery(selectQueryB, null);
-
-        // Move to the first row
-
-        if (cursorB.moveToFirst()) {
-            do {
-                HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
-
-                // Store the key / value pairs in a HashMap
-                // Access the Cursor data by index that is in the same order
-                // as query
-
-                inspectionItemMap.put(MyConfig.TAG_LOCATION_DESC, cursorB.getString(0));
-                inspectionItemMap.put(MyConfig.TAG_INSPECTION_OBSERVATION, cursorB.getString(1));
-                inspectionItemMap.put(MyConfig.TAG_INSPECTION_RECOMMENDATION, cursorB.getString(2));
-                inspectionItemMap.put(MyConfig.TAG_IMAGE1, cursorB.getString(3));
-                inspectionItemMap.put(MyConfig.TAG_IMAGE2, cursorB.getString(4));
-                inspectionItemMap.put(MyConfig.TAG_ITEM_NAME, cursorB.getString(5));
-
-                inspectedItemsList.add(inspectionItemMap);
-
-            } while (cursorB.moveToNext()); // Move Cursor to the next row
-        }
-
-*/
-        // return contact list
-        return inspectedItemsList;
-    }
-
     //Select inspection items for syncing to server
     public ArrayList<HashMap<String, String>> getInspections(){
         HashMap<String, String> inspectionsMap = new HashMap<String, String>();
@@ -1546,7 +1292,7 @@ public class DBHandler extends SQLiteOpenHelper {
         int count = cursor.getCount();
 
 
-
+        db.close();
         return count;
 
     }
@@ -1827,8 +1573,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         dtabase.close();
 
-
  */
+
         return locationArrayList;
 
     }

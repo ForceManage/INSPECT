@@ -101,7 +101,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
 
 
         if (globalVariables.photoBranch.length() > 12) {
-            String dirName = globalVariables.photo1.substring(6, 14);
+            String dirName = globalVariables.photoBranch.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
             File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());

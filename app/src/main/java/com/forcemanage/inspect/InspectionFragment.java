@@ -1,10 +1,17 @@
 package com.forcemanage.inspect;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,15 +26,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static android.app.Activity.RESULT_OK;
 
 public class InspectionFragment extends Fragment implements View.OnClickListener {
 
     private InspectionActivity globalVariables;
 
     private static final String TAG = "Inspection Fragment";
+    private static final int ACTIVITY_START_CAMERA_APP = 0;
+    private static final int ACTIVITY_GET_FILE = 1;
+    private static final int ACTIVITY_DRAW_FILE = 2;
+
     private TextView title;
     private TextView branch;
     private EditText notes;
@@ -187,19 +204,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com5Text.setText(com5);
 
 
-     //    getZonesArray();  //Load the zone spinner dropdown
-
-        // An array containing list of observations
-
-
-
-    //    mBranchNodeAdapter = new BranchNodeAdapter(getSupportFragmentManager());
-     //   mViewPager = (ViewPager) findViewById(R.id.container);
-    //    setupViewPager(mViewPager);
-    //    mViewPager.canScrollHorizontally(0);
-
-
-
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,32 +222,199 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        photo_draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dirName = globalVariables.photo1.substring(6, 14);
+                String root = Environment.getExternalStorageDirectory().toString();
+                File photo_image = new File(root + "/ESM_" + dirName + "/"+globalVariables.photo1);
+
+
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+
+
+
+                Uri data = FileProvider.getUriForFile(getActivity(),BuildConfig.APPLICATION_ID+".provider",photo_image);
+                // Uri data = Uri.parse(photo_image.getAbsolutePath());
+
+                galleryIntent.setDataAndType(data ,"image/*");
+                startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),ACTIVITY_DRAW_FILE);
+
+            }
+        });
+
+
+        photo_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 1;
+                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+            }
+        });
+
+
         photoB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 2;
                 globalVariables.mPhotoImageView = photoB;
                 globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+            }
+        });
 
+        photo_file2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 1;
+                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+            }
+        });
+
+        del_img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                globalVariables.Edited = true;
+                                com2Text.setText("");
+                                globalVariables.photo2 ="";
+                                photoB.setImageResource(R.mipmap.ic_camera);
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
 
         photoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 3;
                 globalVariables.mPhotoImageView = photoC;
                 globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
 
+            }
+        });
+
+        photo_file3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 1;
+                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+            }
+        });
+
+        del_img3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                globalVariables.Edited = true;
+                                com2Text.setText("");
+                                globalVariables.photo2 ="";
+                                photoB.setImageResource(R.mipmap.ic_camera);
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
 
         photoD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 4;
                 globalVariables.mPhotoImageView = photoD;
                 globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
 
             }
         });
@@ -251,9 +422,10 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 5;
                 globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
 
             }
         });
@@ -263,6 +435,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) globalVariables.Edited = true;
+
 
             }
         });
@@ -407,8 +580,11 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
 
-    @Override
+
+        @Override
     public void onClick(View v) {
 
     }
+
+
 }
