@@ -15,7 +15,7 @@ public class GlobalVariables
     public static ArrayList<MapViewNode> nodes = new ArrayList<MapViewNode>();
     public static ArrayList<MapViewNode> displayNodes = new ArrayList<MapViewNode>();
     public static int pos;
-    public static String branchNote;
+    public static String branchType;
 
 
     public static Boolean modified = false;

@@ -79,15 +79,14 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_NOTES = "Notes";
 
 
-
     public static final String TABLE_MAP = "Map";
 
     public static final String COLUMN_CAT_ID = "CatId";
     public static final String COLUMN_LEVEL = "Level";
     public static final String COLUMN_PARENT = "Parent";
     public static final String COLUMN_LABEL = "Label";
-    public static final String COLUMN_CHILD= "Child";
-    public static final String COLUMN_A_ID= "aID";
+    public static final String COLUMN_CHILD = "Child";
+    public static final String COLUMN_A_ID = "aID";
 
 
     public static final String TABLE_A_OR = "A_OR";
@@ -107,7 +106,6 @@ public class DBHandler extends SQLiteOpenHelper {
         // get Writable database for testing purposes only, remove when ready
 
     }
-
 
 
     @Override
@@ -155,7 +153,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INSPECTION_DATE + " TEXT,"
                 + COLUMN_INSPECTOR + " TEXT,"
                 + COLUMN_DATE_TIME_START + " INTEGER,"
-                + COLUMN_DATE_TIME_FINISH + " INTEGER"+ ")";
+                + COLUMN_DATE_TIME_FINISH + " INTEGER" + ")";
 
         db.execSQL(CREATE_INSPECTION_TABLE);
 
@@ -187,7 +185,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_COM7 + " TEXT,"
                 + COLUMN_ITEM_STATUS + " TEXT,"
                 + COLUMN_NOTES + " TEXT,"
-                + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "," + COLUMN_A_ID +"))";
+                + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "," + COLUMN_A_ID + "))";
         //If ESM recommendation  is not nil print photo on report
         db.execSQL(CREATE_INSPECTION_ITEM_TABLE);
 
@@ -207,7 +205,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_COM1 + " TEXT,"
                 + COLUMN_ITEM_STATUS + " TEXT,"
                 + COLUMN_NOTES + " TEXT,"
-                + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "," + COLUMN_A_ID +"))";
+                + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "," + COLUMN_A_ID + "))";
         //If ESM recommendation  is not nil print photo on report
         db.execSQL(CREATE_ACTION_ITEM_TABLE);
 
@@ -276,7 +274,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void clearAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_PROJECT_INFO, null, null);
-         db.delete(TABLE_INSPECTION, null, null);
+        db.delete(TABLE_INSPECTION, null, null);
         db.delete(TABLE_INSPECTION_ITEM, null, null);
         db.delete(TABLE_ACTION_ITEM, null, null);
         db.delete(TABLE_MAP, null, null);
@@ -292,9 +290,8 @@ public class DBHandler extends SQLiteOpenHelper {
     //
 
 
-
     //Store values from MySQL on server to local SQLite
-    public void updateFromServer( ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes, ActionItemAttributes actionItemAttributes ) {
+    public void updateFromServer(ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes, ActionItemAttributes actionItemAttributes) {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_PROJECT_ID, projectAttributes.getProjectId());
@@ -307,8 +304,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NO_LEVELS, projectAttributes.getnumberLevels());
         values.put(COLUMN_PROJECT_PHOTO, projectAttributes.getprojectPhoto());
         values.put(COLUMN_KEY_REQUIRED, projectAttributes.getkeyRequired());
- //       values.put(COLUMN_OC_DATE, projectAttributes.getocDate());
- //       values.put(COLUMN_OC_NUMBER, projectAttributes.getocNmbr());
+        //       values.put(COLUMN_OC_DATE, projectAttributes.getocDate());
+        //       values.put(COLUMN_OC_NUMBER, projectAttributes.getocNmbr());
         values.put(COLUMN_FLOOR_TYPE, projectAttributes.getfloorType());
         values.put(COLUMN_ROOF_TYPE, projectAttributes.getroofType());
         values.put(COLUMN_WALL_TYPE, projectAttributes.getwallType());
@@ -330,11 +327,10 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesInspect.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
         valuesInspect.put(COLUMN_INSPECTION_DATE, inspectionAttributes.getinspectionDate());
         valuesInspect.put(COLUMN_INSPECTOR, inspectionAttributes.getinspector());
- //       valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
- //       valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
+        //       valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
+        //       valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
 
         db.replace(TABLE_INSPECTION, null, valuesInspect);
-
 
 
         ContentValues valuesItem = new ContentValues();
@@ -371,8 +367,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.close();
     }
+
     //Store values from MySQL on server to local SQLite
-    public void updateAdditionalFromServer( MAPattributes mapAttributes ) {
+    public void updateAdditionalFromServer(MAPattributes mapAttributes) {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_PROJECT_ID, mapAttributes.getprojectId());
@@ -390,11 +387,11 @@ public class DBHandler extends SQLiteOpenHelper {
         //replace will delete the row if the asset ID already exists
         db.replace(TABLE_MAP, null, values);
 
-         db.close();
+        db.close();
     }
 
 
-    public void update_OR_FromServer( A_Attributes a_attributes, String CAT) {
+    public void update_OR_FromServer(A_Attributes a_attributes, String CAT) {
 
         //replace will delete the row if the category already exists
         ContentValues values = new ContentValues();
@@ -428,9 +425,9 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public  void updateInspection(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+    public void updateInspection(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
             , String reportImage, String Img1, String com1, String Img2, String com2, String Img3, String com3, String Img4, String com4,
-                                  String Img5, String com5, String Img6, String com6, String Img7, String com7, String ItemStatus, String Notes){
+                                 String Img5, String com5, String Img6, String com6, String Img7, String com7, String ItemStatus, String Notes) {
 
         String inspectionId = String.valueOf(iId);
         String a_Id = String.valueOf(aId);
@@ -443,36 +440,34 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_RELEVANT_INFO, relevantInfo);
         contentValues.put(COLUMN_SERVICE_LEVEL, ServiceLevel);
         contentValues.put(COLUMN_SERVICED_BY, servicedBy);
-        contentValues.put(COLUMN_REPORT_IMAGE,reportImage);
-        contentValues.put(COLUMN_IMG1,Img1);
-        contentValues.put(COLUMN_COM1,com1);
-        contentValues.put(COLUMN_IMG2,Img2);
-        contentValues.put(COLUMN_COM2,com2);
-        contentValues.put(COLUMN_IMG3,Img3);
-        contentValues.put(COLUMN_COM3,com3);
-        contentValues.put(COLUMN_IMG4,Img4);
-        contentValues.put(COLUMN_COM4,com4);
-        contentValues.put(COLUMN_IMG5,Img5);
-        contentValues.put(COLUMN_COM5,com5);
-        contentValues.put(COLUMN_IMG6,Img6);
-        contentValues.put(COLUMN_COM6,com6);
-        contentValues.put(COLUMN_IMG7,Img7);
-        contentValues.put(COLUMN_COM7,com7);
-        contentValues.put(COLUMN_ITEM_STATUS,ItemStatus);
-        contentValues.put(COLUMN_NOTES,Notes);
+        contentValues.put(COLUMN_REPORT_IMAGE, reportImage);
+        contentValues.put(COLUMN_IMG1, Img1);
+        contentValues.put(COLUMN_COM1, com1);
+        contentValues.put(COLUMN_IMG2, Img2);
+        contentValues.put(COLUMN_COM2, com2);
+        contentValues.put(COLUMN_IMG3, Img3);
+        contentValues.put(COLUMN_COM3, com3);
+        contentValues.put(COLUMN_IMG4, Img4);
+        contentValues.put(COLUMN_COM4, com4);
+        contentValues.put(COLUMN_IMG5, Img5);
+        contentValues.put(COLUMN_COM5, com5);
+        contentValues.put(COLUMN_IMG6, Img6);
+        contentValues.put(COLUMN_COM6, com6);
+        contentValues.put(COLUMN_IMG7, Img7);
+        contentValues.put(COLUMN_COM7, com7);
+        contentValues.put(COLUMN_ITEM_STATUS, ItemStatus);
+        contentValues.put(COLUMN_NOTES, Notes);
 
 
-
-        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_PROJECT_ID +" = ? AND "+ COLUMN_INSPECTION_ID + " = ? AND " +COLUMN_A_ID+ " = ? ", new String[]{proj_id, inspectionId, a_Id});
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{proj_id, inspectionId, a_Id});
         db.close();
 
 
     }
 
 
-
     //start inspection (clone previous inspection and put status "p": in progress)
-    public void createNewInspection(int projectId,int inspectionId) {
+    public void createNewInspection(int projectId, int inspectionId) {
         // Open a database for reading and writing
 
         /*
@@ -543,10 +538,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
         values.put(COLUMN_PROJECT_PHOTO, photo);
         db.update(TABLE_PROJECT_INFO, values, COLUMN_PROJECT_ID + " = " + projectId, null);
+        db.close();
 
     }
 
-    public void updateStatus(int iId, String status, String date) {
+    public void updateStatus(int projId, int iId, String status, String date) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -555,8 +551,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_INSPECTION_STATUS, status);
         values.put(COLUMN_INSPECTION_DATE, date);
 
-        db.update(TABLE_INSPECTION, values, COLUMN_INSPECTION_ID + " = " + iId, null);
-
+        db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId, null);
+        db.close();
     }
 
     public void updateBranchLabel(int projId, int aId, String label) {
@@ -569,10 +565,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LABEL, label);
 
 
-
-
-        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
-                COLUMN_A_ID+" = "+aId , null);
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
+                COLUMN_A_ID + " = " + aId, null);
 
     }
 
@@ -586,18 +580,17 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NOTES, Note);
 
 
-        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId+" AND "+
-                COLUMN_A_ID+" = "+aId , null);
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
+                COLUMN_A_ID + " = " + aId, null);
 
     }
-
 
 
     public void deleteInspectionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
+        db.delete(TABLE_INSPECTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
         db.close();
     }
 
@@ -606,7 +599,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
 
-        db.delete(TABLE_ACTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
+        db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
         db.close();
     }
 
@@ -614,9 +607,9 @@ public class DBHandler extends SQLiteOpenHelper {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_ACTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
-        db.delete(TABLE_INSPECTION_ITEM,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId, null);
-        db.delete(TABLE_MAP,COLUMN_PROJECT_ID+" = "+ projId +" AND "+COLUMN_A_ID+" = "+ aId,null);
+        db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+        db.delete(TABLE_INSPECTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+        db.delete(TABLE_MAP, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
 
 
         db.close();
@@ -626,9 +619,8 @@ public class DBHandler extends SQLiteOpenHelper {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
- //       db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+
- //               COLUMN_ASSET_ID+" = "+aId ,null);
-
+        //       db.delete(TABLE_ASSET_REGISTER,COLUMN_PROPERTY_ID+" = "+ propId +" AND "+
+        //               COLUMN_ASSET_ID+" = "+aId ,null);
 
 
     }
@@ -640,7 +632,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String column = "";
 
-        switch (Col){
+        switch (Col) {
             case 2:
                 column = COLUMN_IMG2;
                 break;
@@ -660,10 +652,10 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-        selectQuery = "UPDATE "+TABLE_INSPECTION_ITEM+" SET "
-                +column
-                +" = '' WHERE "+ COLUMN_INSPECTION_ID+" = "+jId+"  AND "+COLUMN_A_ID+" = "+aId
-                ;
+        selectQuery = "UPDATE " + TABLE_INSPECTION_ITEM + " SET "
+                + column
+                + " = '' WHERE " + COLUMN_INSPECTION_ID + " = " + jId + "  AND " + COLUMN_A_ID + " = " + aId
+        ;
 
         cursor = db.rawQuery(selectQuery, null);
     }
@@ -671,59 +663,64 @@ public class DBHandler extends SQLiteOpenHelper {
     //Get the current max AssetID Number for the property
 
 
-
-
-
     //Add sublocation to the location
-    public int addLevel(int projID, int CatID,  int Level, int parent, String Label ) {
+    public int addLevel(int projID, int aId, int CatID, int Level, int parent, String Label) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-        int maxAId = 1;
+        int maxAId = 0;
         int maxcatID = 1;
 
-
-        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
-                + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+        selectQuery = "SELECT " + COLUMN_PROJECT_ID + " FROM "
+                + TABLE_INSPECTION_ITEM
+                + " WHERE " + COLUMN_PROJECT_ID + " = " + projID + " AND " + COLUMN_A_ID + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            maxAId = cursor.getInt(0);
-            maxcatID = cursor.getInt(1);
-            maxAId = maxAId + 1;
-            maxcatID = maxcatID + 1;
-        }
 
-        ContentValues values = new ContentValues();
-
-        if (Level == 0) {
-            values.put(COLUMN_CAT_ID, maxcatID);
-            values.put(COLUMN_PARENT, -1);
         } else {
-            values.put(COLUMN_CAT_ID, CatID);
-            values.put(COLUMN_PARENT, parent);
+            selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
+                    + TABLE_MAP + " M"
+                    + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                maxAId = cursor.getInt(0);
+                maxcatID = cursor.getInt(1);
+                maxAId = maxAId + 1;
+                maxcatID = maxcatID + 1;
+            }
+
+            ContentValues values = new ContentValues();
+
+            if (Level == 0) {
+                values.put(COLUMN_CAT_ID, maxcatID);
+                values.put(COLUMN_PARENT, -1);
+            } else {
+                values.put(COLUMN_CAT_ID, CatID);
+                values.put(COLUMN_PARENT, parent);
+            }
+            values.put(COLUMN_PROJECT_ID, projID);
+            values.put(COLUMN_LABEL, Label);
+            values.put(COLUMN_LEVEL, Level);
+            values.put(COLUMN_A_ID, maxAId);
+            values.put(COLUMN_IMG1, "");
+            values.put(COLUMN_NOTES, "");
+            db.insert(TABLE_MAP, null, values);
+
+
+            //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
         }
-        values.put(COLUMN_PROJECT_ID, projID);
-        values.put(COLUMN_LABEL, Label);
-        values.put(COLUMN_LEVEL, Level);
-        values.put(COLUMN_A_ID, maxAId);
-        values.put(COLUMN_IMG1,"");
-        values.put(COLUMN_NOTES,"");
-        db.insert(TABLE_MAP, null, values);
         db.close();
-
-
-        //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
 
         return maxAId;
 
     }
 
 
-    public String getMapBranchTitle(int projID, int CatID ) {
+    public String getMapBranchTitle(int projID, int CatID) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -733,12 +730,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         selectQuery = "SELECT M." + COLUMN_LABEL + " FROM "
                 + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND M."+COLUMN_CAT_ID+" = "+CatID;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_CAT_ID + " = " + CatID;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
 
-             label = cursor.getString(0);
+            label = cursor.getString(0);
         }
         db.close();
         return label;
@@ -746,8 +743,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public Integer addReportBranch(int projId, int iId, int CatID,  int Level, int aId, String Label) {
+    public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -757,74 +753,73 @@ public class DBHandler extends SQLiteOpenHelper {
         int a_id = 1; //aId of the branch which has the parent branch clicked
 
         //check if there a subbranch exists
-        selectQuery = "SELECT  "+COLUMN_A_ID+" FROM "
-                +TABLE_MAP+" WHERE "+ COLUMN_PROJECT_ID+" = "+projId+" AND "+COLUMN_PARENT+" = "+aId;
+        selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
 
-                                //if subbranch exists
+            //if subbranch exists
 
-                if (cursor.getCount() > 0) {
-                    a_id = cursor.getInt(0);//check if subbranch is an inspection with the current inspection id
-                    selectQuery = "SELECT  COUNT (I."+COLUMN_PROJECT_ID+") FROM "
-                            +TABLE_INSPECTION_ITEM+" I "
-                            +"JOIN "+TABLE_MAP+" M "
-                            +" ON M. "+COLUMN_A_ID+" = I."+COLUMN_A_ID+" AND M."+COLUMN_PROJECT_ID+" = I."+COLUMN_PROJECT_ID
-                            +" WHERE I."+ COLUMN_PROJECT_ID+" = "+projId+" AND M."+COLUMN_A_ID+" = "+a_id+" AND I."+COLUMN_INSPECTION_ID+" = "+iId;
+            if (cursor.getCount() > 0) {
+                a_id = cursor.getInt(0);//check if subbranch is an inspection with the current inspection id
+                selectQuery = "SELECT  COUNT (I." + COLUMN_PROJECT_ID + ") FROM "
+                        + TABLE_INSPECTION_ITEM + " I "
+                        + "JOIN " + TABLE_MAP + " M "
+                        + " ON M. " + COLUMN_A_ID + " = I." + COLUMN_A_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
+                        + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + a_id + " AND I." + COLUMN_INSPECTION_ID + " = " + iId;
 
-                    cursor = db.rawQuery(selectQuery, null);
-                    if (cursor.moveToFirst()) {
-                        //if inspection exits exit
-                        if (cursor.getInt(0) > 0) {
-                            result = 0;
-                        } else //inspection doesn't exist
-                        {
-                            result = 1;
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    //if inspection exits exit
+                    if (cursor.getInt(0) > 0) {
+                        result = 0;
+                    } else //inspection doesn't exist
+                    {
+                        result = 1;
 
-                            int newId = addLevel(projId, CatID, Level, aId, Label);
+                        int newId = addLevel(projId, aId, CatID, Level, aId, Label);
 
-                            SQLiteDatabase db_2 = this.getWritableDatabase();
+                        SQLiteDatabase db_2 = this.getWritableDatabase();
 
-                            ContentValues values = new ContentValues();
+                        ContentValues values = new ContentValues();
 
-                            values.put(COLUMN_PROJECT_ID, projId);
-                            values.put(COLUMN_INSPECTION_ID, iId);
-                            values.put(COLUMN_DATE_INSPECTED, 20200101);
-                            values.put(COLUMN_A_ID, newId);
-                            values.put(COLUMN_OVERVIEW, "");
-                            values.put(COLUMN_RELEVANT_INFO, "");
-                            values.put(COLUMN_SERVICE_LEVEL, "1");
-                            values.put(COLUMN_SERVICED_BY, "");
-                            values.put(COLUMN_REPORT_IMAGE, "0");
-                            values.put(COLUMN_IMG1, "");
-                            values.put(COLUMN_COM1, "");
-                            values.put(COLUMN_IMG2, "");
-                            values.put(COLUMN_COM2, "");
-                            values.put(COLUMN_IMG3, "");
-                            values.put(COLUMN_COM3, "");
-                            values.put(COLUMN_IMG4, "");
-                            values.put(COLUMN_COM4, "");
-                            values.put(COLUMN_IMG5, "");
-                            values.put(COLUMN_COM5, "");
-                            values.put(COLUMN_IMG6, "");
-                            values.put(COLUMN_COM6, "");
-                            values.put(COLUMN_IMG7, "");
-                            values.put(COLUMN_COM7, "");
-                            values.put(COLUMN_ITEM_STATUS, "");
-                            values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_PROJECT_ID, projId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_DATE_INSPECTED, 20200101);
+                        values.put(COLUMN_A_ID, newId);
+                        values.put(COLUMN_OVERVIEW, "");
+                        values.put(COLUMN_RELEVANT_INFO, "");
+                        values.put(COLUMN_SERVICE_LEVEL, "1");
+                        values.put(COLUMN_SERVICED_BY, "");
+                        values.put(COLUMN_REPORT_IMAGE, "0");
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_COM1, "");
+                        values.put(COLUMN_IMG2, "");
+                        values.put(COLUMN_COM2, "");
+                        values.put(COLUMN_IMG3, "");
+                        values.put(COLUMN_COM3, "");
+                        values.put(COLUMN_IMG4, "");
+                        values.put(COLUMN_COM4, "");
+                        values.put(COLUMN_IMG5, "");
+                        values.put(COLUMN_COM5, "");
+                        values.put(COLUMN_IMG6, "");
+                        values.put(COLUMN_COM6, "");
+                        values.put(COLUMN_IMG7, "");
+                        values.put(COLUMN_COM7, "");
+                        values.put(COLUMN_ITEM_STATUS, "");
+                        values.put(COLUMN_NOTES, "");
 
-                            db_2.insert(TABLE_INSPECTION_ITEM, null, values);
-                            db_2.close();
-                        }
+                        db_2.insert(TABLE_INSPECTION_ITEM, null, values);
+                        db_2.close();
                     }
-
                 }
-        }
-        else{
+
+            }
+        } else {
             result = 1;
 
-            int newId = addLevel(projId, CatID, Level, aId, Label);
+            int newId = addLevel(projId, aId, CatID, Level, aId, Label);
 
             SQLiteDatabase db_1 = this.getWritableDatabase();
 
@@ -862,7 +857,6 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
 
-
         return result;
     }
 
@@ -876,10 +870,9 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor;
 
 
-
         selectQuery = "SELECT * FROM "
-                +TABLE_INSPECTION_ITEM+" I"
-                +" WHERE I."+ COLUMN_PROJECT_ID+" = "+propId+" AND I."+COLUMN_INSPECTION_ID+" = "+aId;
+                + TABLE_INSPECTION_ITEM + " I"
+                + " WHERE I." + COLUMN_PROJECT_ID + " = " + propId + " AND I." + COLUMN_INSPECTION_ID + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
 
@@ -942,7 +935,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // Retrieve individual current inspection
-    public HashMap <String, String> getInspection(int projId, int aId, int iId) {
+    public HashMap<String, String> getInspection(int projId, int aId, int iId) {
         // Open a database for reading and writing
 
         HashMap<String, String> inspectionItem = new HashMap<String, String>();
@@ -953,12 +946,12 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
 
 
-            String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
-                +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
-                +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
-                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES+", I."+COLUMN_SERVICED_BY
-                +" FROM "+TABLE_INSPECTION_ITEM+" I "
-                +" WHERE I."+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId+" AND "+COLUMN_INSPECTION_ID+" = "+iId;
+        String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
+                + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
+                + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
+                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY
+                + " FROM " + TABLE_INSPECTION_ITEM + " I "
+                + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
 
 
         //add additional fields: status,  notes, print flag
@@ -998,10 +991,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return inspectionItem;
 
 
-
     }
-
-
 
 
     public ArrayList<HashMap<String, String>> getAllProjects() {
@@ -1013,15 +1003,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
         propertyArrayList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT "+
-                TABLE_PROJECT_INFO+"."+COLUMN_PROJECT_ID+", "+COLUMN_ADDRESS_NUMBER+", "+COLUMN_PROJECT_ADDRESS+", "+COLUMN_PROJECT_SUBURB
-                +", "+COLUMN_INSPECTION_ID+", "+COLUMN_INSPECTION_TYPE+", "+COLUMN_PROJECT_PHOTO+", "+COLUMN_INSPECTION_STATUS
-                +" FROM "+TABLE_PROJECT_INFO
-                +" INNER JOIN "+TABLE_INSPECTION
-                +" ON "+TABLE_PROJECT_INFO+"."+COLUMN_PROJECT_ID+" = "+TABLE_INSPECTION+"."+COLUMN_PROJECT_ID
-                +" WHERE "+COLUMN_INSPECTION_STATUS+" = 'n' OR "+COLUMN_INSPECTION_STATUS+" = 'p' OR "+COLUMN_INSPECTION_STATUS+" = 'c'"
-                +" ORDER BY "+COLUMN_PROJECT_ADDRESS;
-
+        String selectQuery = "SELECT " +
+                TABLE_PROJECT_INFO + "." + COLUMN_PROJECT_ID + ", " + COLUMN_ADDRESS_NUMBER + ", " + COLUMN_PROJECT_ADDRESS + ", " + COLUMN_PROJECT_SUBURB
+                + ", " + COLUMN_INSPECTION_ID + ", " + COLUMN_INSPECTION_TYPE + ", " + COLUMN_PROJECT_PHOTO + ", " + COLUMN_INSPECTION_STATUS
+                + " FROM " + TABLE_PROJECT_INFO
+                + " INNER JOIN " + TABLE_INSPECTION
+                + " ON " + TABLE_PROJECT_INFO + "." + COLUMN_PROJECT_ID + " = " + TABLE_INSPECTION + "." + COLUMN_PROJECT_ID
+                + " WHERE " + COLUMN_INSPECTION_STATUS + " = 'n' OR " + COLUMN_INSPECTION_STATUS + " = 'p' OR " + COLUMN_INSPECTION_STATUS + " = 'c'"
+                + " ORDER BY " + COLUMN_PROJECT_ADDRESS;
 
 
         // Open a database for reading and writing
@@ -1064,7 +1053,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
     public ArrayList<HashMap<String, String>> getInspectedItemPhotos() {
 
         // ArrayList that contains every row in the database
@@ -1074,10 +1062,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         photoArrayList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT I."+
-                COLUMN_IMG1+", I."+COLUMN_IMG2+", I."+COLUMN_IMG3+", I."+COLUMN_IMG4+", I."+COLUMN_IMG5
-                +" FROM "+TABLE_INSPECTION_ITEM+" I JOIN "+TABLE_INSPECTION+" E ON E."+COLUMN_INSPECTION_ID+" = I."+COLUMN_INSPECTION_ID
-                +" WHERE "+COLUMN_INSPECTION_STATUS+" = 'c' OR "+COLUMN_INSPECTION_STATUS+" = 'p'";
+        String selectQuery = "SELECT I." +
+                COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
+                + " FROM " + TABLE_INSPECTION_ITEM + " I JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
+                + " WHERE " + COLUMN_INSPECTION_STATUS + " = 'c' OR " + COLUMN_INSPECTION_STATUS + " = 'p'";
 
    /*     String selectQuery = "SELECT "+
                 TABLE_ESM_INSPECTION+"."+COLUMN_JOB_ID+", "+COLUMN_IMG1+", "+
@@ -1110,13 +1098,18 @@ public class DBHandler extends SQLiteOpenHelper {
                 // as query
 
 
-                if(cursor.getString(0) != "") photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
-                if(cursor.getString(1) != "") photoMap.put(MyConfig.TAG_IMAGE2, cursor.getString(1));
-                if(cursor.getString(2) != "") photoMap.put(MyConfig.TAG_IMAGE3, cursor.getString(2));
-                if(cursor.getString(3) != "") photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
-                if(cursor.getString(4) != "") photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
+                if (cursor.getString(1) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE2, cursor.getString(1));
+                if (cursor.getString(2) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE3, cursor.getString(2));
+                if (cursor.getString(3) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
+                if (cursor.getString(4) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
 
-                photoArrayList.add( photoMap);
+                photoArrayList.add(photoMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
         }
         cursor.close();
@@ -1126,27 +1119,26 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspections(){
+    public ArrayList<HashMap<String, String>> getInspections() {
         HashMap<String, String> inspectionsMap = new HashMap<String, String>();
         ArrayList<HashMap<String, String>> inspectionArrayList = new ArrayList<>();
 
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  E1."+COLUMN_INSPECTION_ID+", E1."+COLUMN_INSPECTION_DATE+", E1."+COLUMN_INSPECTION_STATUS
-                +" FROM "+TABLE_INSPECTION+" E1 ORDER BY "+COLUMN_INSPECTION_ID+" ASC";
+        String selectQuery = "SELECT  E1." + COLUMN_INSPECTION_ID + ", E1." + COLUMN_INSPECTION_DATE + ", E1." + COLUMN_INSPECTION_STATUS
+                + " FROM " + TABLE_INSPECTION + " E1 ORDER BY " + COLUMN_INSPECTION_ID + " ASC";
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
         if (cursor.moveToFirst()) {
             do {
-                inspectionsMap = new HashMap<String,String>();
+                inspectionsMap = new HashMap<String, String>();
                 inspectionsMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
-                inspectionsMap.put (MyConfig.TAG_INSPECTION_DATE, cursor.getString(1));
-                inspectionsMap.put (MyConfig.TAG_INSPECTION_STATUS, cursor.getString(2));
-         //       inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
-        //        inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
+                inspectionsMap.put(MyConfig.TAG_INSPECTION_DATE, cursor.getString(1));
+                inspectionsMap.put(MyConfig.TAG_INSPECTION_STATUS, cursor.getString(2));
+                //       inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
+                //        inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
                 inspectionArrayList.add(inspectionsMap);
 
             } while (cursor.moveToNext());
@@ -1159,30 +1151,30 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getSiteMap(){
+    public ArrayList<HashMap<String, String>> getSiteMap() {
         HashMap<String, String> SiteMap = new HashMap<String, String>();
         ArrayList<HashMap<String, String>> AssArrayList = new ArrayList<>();
 
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM "+TABLE_MAP+" ORDER BY "+ MyConfig.TAG_PROJECT_ID;
+        String selectQuery = "SELECT * FROM " + TABLE_MAP + " ORDER BY " + MyConfig.TAG_PROJECT_ID;
 
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
         // Move to the first row
         if (cursor.moveToFirst()) {
             do {
-                SiteMap = new HashMap<String,String>();
+                SiteMap = new HashMap<String, String>();
                 SiteMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
-                SiteMap.put (MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
-                SiteMap.put (MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
-                SiteMap.put (MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
-                SiteMap.put (MyConfig.TAG_LABEL, cursor.getString(4));
-                SiteMap.put (MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
-                SiteMap.put (MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
-                SiteMap.put (MyConfig.TAG_IMAGE1, cursor.getString(7));
-                SiteMap.put (MyConfig.TAG_NOTES, cursor.getString(8));
+                SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
+                SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
+                SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
+                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
+                SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
+                SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(7));
+                SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(8));
                 AssArrayList.add(SiteMap);
             } while (cursor.moveToNext());
         }
@@ -1193,7 +1185,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspectionItems(){
+    public ArrayList<HashMap<String, String>> getInspectionItems() {
         HashMap<String, String> inspectionItem;
         ArrayList<HashMap<String, String>> inspectionItemsList;
 
@@ -1202,13 +1194,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
-                +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
-                +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
-                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES+", I."+COLUMN_INSPECTION_ID+", I."+COLUMN_PROJECT_ID+", I."+COLUMN_A_ID
-                +", I."+COLUMN_SERVICED_BY+", I."+COLUMN_SERVICE_LEVEL
-                +" FROM "+TABLE_INSPECTION_ITEM+" I "
-               ;
+        String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
+                + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
+                + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
+                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_INSPECTION_ID + ", I." + COLUMN_PROJECT_ID + ", I." + COLUMN_A_ID
+                + ", I." + COLUMN_SERVICED_BY + ", I." + COLUMN_SERVICE_LEVEL
+                + " FROM " + TABLE_INSPECTION_ITEM + " I ";
 
 
         //add additional fields: status,  notes, print flag
@@ -1253,7 +1244,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Get a list of sublocations to populate the sub location spinner
-    public int getSubItemMap(int projId, int aId){
+    public int getSubItemMap(int projId, int aId) {
 
         HashMap<String, String> subItemMap;
         ArrayList<HashMap<String, String>> subItemArrayList;
@@ -1262,16 +1253,16 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT "+COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
-                +" FROM "+TABLE_MAP
-                +" WHERE "+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId;
+        String selectQuery = "SELECT " + COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
+                + " FROM " + TABLE_MAP
+                + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
         int Level = 0;
         if (cursor.moveToFirst()) {
-             Level = cursor.getInt(0);
+            Level = cursor.getInt(0);
         }
         // Move to the first row
         cursor.close();
@@ -1281,10 +1272,9 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
 
-        String selectQuery1 = "SELECT "+COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
-                +" FROM "+TABLE_MAP
-                +" WHERE "+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_LEVEL+" = "+ Level;
-
+        String selectQuery1 = "SELECT " + COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
+                + " FROM " + TABLE_MAP
+                + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = " + Level;
 
 
         cursor = db.rawQuery(selectQuery1, null);
@@ -1299,7 +1289,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getMap(int projID){
+    public ArrayList<HashMap<String, String>> getMap(int projID) {
 
 
         HashMap<String, String> SiteMap;
@@ -1308,16 +1298,15 @@ public class DBHandler extends SQLiteOpenHelper {
         SiteMapArrayList = new ArrayList<HashMap<String, String>>();
 
 
-
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT M."+COLUMN_CAT_ID+", M."+COLUMN_LEVEL+", M."+COLUMN_PARENT+", M."+COLUMN_LABEL
-                +", M."+COLUMN_CHILD+", M."+COLUMN_A_ID+", M."+COLUMN_IMG1+", M."+COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+        String selectQuery = "SELECT M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
 
-                +" FROM "+TABLE_MAP+" M"
+                + " FROM " + TABLE_MAP + " M"
 
-                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID//+" AND (A."+COLUMN_CATEGORY_ID+" = 'A' OR A."+COLUMN_CATEGORY_ID+" = 'Z')"
-                +" ORDER BY M."+COLUMN_CAT_ID;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID//+" AND (A."+COLUMN_CATEGORY_ID+" = 'A' OR A."+COLUMN_CATEGORY_ID+" = 'Z')"
+                + " ORDER BY M." + COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -1346,8 +1335,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public HashMap<String, String> getMapItem(int projID, int aId){
+    public HashMap<String, String> getMapItem(int projID, int aId) {
 
 
         HashMap<String, String> SiteMap = new HashMap<String, String>();
@@ -1356,15 +1344,14 @@ public class DBHandler extends SQLiteOpenHelper {
         SiteMapArrayList = new ArrayList<HashMap<String, String>>();
 
 
-
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT M."+COLUMN_CAT_ID+", M."+COLUMN_LEVEL+", M."+COLUMN_PARENT+", M."+COLUMN_LABEL
-                +", M."+COLUMN_CHILD+", M."+COLUMN_A_ID+", M."+COLUMN_IMG1+", M."+COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+        String selectQuery = "SELECT M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
 
-                +" FROM "+TABLE_MAP+" M"
+                + " FROM " + TABLE_MAP + " M"
 
-                +" WHERE M."+COLUMN_PROJECT_ID+" = "+ projID+" AND M."+COLUMN_A_ID+" = "+aId;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_A_ID + " = " + aId;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -1394,10 +1381,8 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
-
     //Get a list of locations to upload to server
-    public ArrayList<HashMap<String, String>> getActions(){
+    public ArrayList<HashMap<String, String>> getActions() {
 
 
         HashMap<String, String> ActionItemMap;
@@ -1408,8 +1393,8 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT * "
-                +" FROM "+TABLE_ACTION_ITEM
-                +" ORDER BY "+COLUMN_A_ID;
+                + " FROM " + TABLE_ACTION_ITEM
+                + " ORDER BY " + COLUMN_A_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -1418,18 +1403,18 @@ public class DBHandler extends SQLiteOpenHelper {
             do {
                 ActionItemMap = new HashMap<String, String>();
                 ActionItemMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
-                ActionItemMap.put (MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
-                ActionItemMap.put (MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(2))));
-                ActionItemMap.put (MyConfig.TAG_DATE_INSPECTED,cursor.getString(3));
-                ActionItemMap.put (MyConfig.TAG_OVERVIEW,cursor.getString(4));
-                ActionItemMap.put (MyConfig.TAG_RELEVANT_INFO,cursor.getString(5));
-                ActionItemMap.put (MyConfig.TAG_SERVICE_LEVEL,cursor.getString(6));
-                ActionItemMap.put (MyConfig.TAG_SERVICED_BY,cursor.getString(7));
-                ActionItemMap.put (MyConfig.TAG_REPORT_IMAGE,cursor.getString(8));
-                ActionItemMap.put (MyConfig.TAG_IMAGE1,cursor.getString(9));
-                ActionItemMap.put (MyConfig.TAG_COM1,cursor.getString(10));
-                ActionItemMap.put (MyConfig.TAG_ITEM_STATUS,cursor.getString(11));
-                ActionItemMap.put (MyConfig.TAG_NOTES,cursor.getString(12));
+                ActionItemMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                ActionItemMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(2))));
+                ActionItemMap.put(MyConfig.TAG_DATE_INSPECTED, cursor.getString(3));
+                ActionItemMap.put(MyConfig.TAG_OVERVIEW, cursor.getString(4));
+                ActionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursor.getString(5));
+                ActionItemMap.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(6));
+                ActionItemMap.put(MyConfig.TAG_SERVICED_BY, cursor.getString(7));
+                ActionItemMap.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(8));
+                ActionItemMap.put(MyConfig.TAG_IMAGE1, cursor.getString(9));
+                ActionItemMap.put(MyConfig.TAG_COM1, cursor.getString(10));
+                ActionItemMap.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(11));
+                ActionItemMap.put(MyConfig.TAG_NOTES, cursor.getString(12));
 
                 locationList.add(ActionItemMap);
             } while (cursor.moveToNext());
@@ -1438,29 +1423,26 @@ public class DBHandler extends SQLiteOpenHelper {
         dtabase.close();
 
 
-
         return locationList;
 
     }
 
-    public ArrayList<HashMap<String, String>> getinspectionitemlist(int projId, int aId, int iItem){
+    public ArrayList<HashMap<String, String>> getinspectionitemlist(int projId, int aId, int iItem) {
 
         HashMap<String, String> inspectionItem;
         ArrayList<HashMap<String, String>> inspectionitemsArrayList;
-
-
 
 
         inspectionitemsArrayList = new ArrayList<HashMap<String, String>>();
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT I."+COLUMN_DATE_INSPECTED+", I."+COLUMN_OVERVIEW+", I."+COLUMN_RELEVANT_INFO+", I."+COLUMN_IMG1+", I."+COLUMN_COM1
-                +", I."+COLUMN_IMG2+", I."+COLUMN_COM2+", I."+COLUMN_IMG3+", I."+COLUMN_COM3+", I."+COLUMN_IMG4+", I."+COLUMN_COM4
-                +", I."+COLUMN_IMG5+", I."+COLUMN_COM5+", I."+COLUMN_IMG6+", I."+COLUMN_COM6+", I."+COLUMN_IMG7+", I."+COLUMN_COM7
-                +", I."+COLUMN_ITEM_STATUS+", I."+COLUMN_NOTES
-                +" FROM "+TABLE_INSPECTION_ITEM+" I "
-                +" WHERE I."+COLUMN_PROJECT_ID+" = "+ projId+" AND "+COLUMN_A_ID+" = "+aId;
+        String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
+                + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
+                + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
+                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES
+                + " FROM " + TABLE_INSPECTION_ITEM + " I "
+                + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
 
         //add additional fields: status,  notes, print flag
@@ -1496,13 +1478,12 @@ public class DBHandler extends SQLiteOpenHelper {
         dtabase.close();
 
 
-
         return inspectionitemsArrayList;
 
     }
 
 
-    public ArrayList<HashMap<String, String>> getORlist(String CAT_TAB, int type, String subCat){
+    public ArrayList<HashMap<String, String>> getORlist(String CAT_TAB, int type, String subCat) {
 
         HashMap<String, String> ORItemMap;
         ArrayList<HashMap<String, String>> ORArrayList;
@@ -1519,7 +1500,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT " + COLUMN_NOTE
                 + " FROM " + CAT_TAB
-                + " WHERE " + COLUMN_TYPE + " = " + type + " AND " + COLUMN_SUB_CAT + " = '" + subCat+"'";
+                + " WHERE " + COLUMN_TYPE + " = " + type + " AND " + COLUMN_SUB_CAT + " = '" + subCat + "'";
 
 
         //add additional fields: status,  notes, print flag
@@ -1529,7 +1510,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 ORItemMap = new HashMap<String, String>();
-                ORItemMap.put(MyConfig.TAG_NOTE,cursor.getString(0));
+                ORItemMap.put(MyConfig.TAG_NOTE, cursor.getString(0));
                 ORArrayList.add(ORItemMap);
             } while (cursor.moveToNext());
         }
@@ -1540,7 +1521,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<HashMap<String, String>> getZonesArray(String PropId){
+    public ArrayList<HashMap<String, String>> getZonesArray(String PropId) {
 
 
         HashMap<String, String> locationItemMap;
@@ -1579,4 +1560,81 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+
+    public ArrayList<HashMap<String, String>> getInspectedItems(int projId, int iId) {
+
+        // ArrayList that contains every row in the database
+        // and each row key / value stored in a HashMap
+
+        ArrayList<HashMap<String, String>> inspectedItemsList;
+
+        inspectedItemsList = new ArrayList<HashMap<String, String>>();
+
+        SQLiteDatabase dbase = this.getReadableDatabase();
+
+
+        //First query sets out the zones and the related esential measures in those zones
+
+
+        String selectQuery = "SELECT  " + COLUMN_CAT_ID + " , " + COLUMN_LABEL +
+                " FROM " + TABLE_MAP +
+
+                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+" ORDER BY " + COLUMN_CAT_ID;
+
+        Cursor cursor = dbase.rawQuery(selectQuery, null);
+        int i = 1;
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+
+                int catId = cursor.getInt(0);
+                String BranchHead = cursor.getString(1);
+
+                String selectQueryB = "SELECT  I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_NOTES +
+                        ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3
+                        + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", M." + COLUMN_LABEL
+                        + " FROM " + TABLE_INSPECTION_ITEM + " I " +
+                        " JOIN " + TABLE_MAP + " M ON M." + COLUMN_A_ID + " = I." + COLUMN_A_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
+
+                        " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId + " AND M." + COLUMN_CAT_ID + " = " + catId +
+                        " ORDER BY I." + COLUMN_A_ID;
+
+                Cursor cursorB = dbase.rawQuery(selectQueryB, null);
+
+                // Move to the first row
+
+                if (cursorB.moveToFirst()) {
+                    do {
+                        HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
+
+                        // Store the key / value pairs in a HashMap
+                        // Access the Cursor data by index that is in the same order
+                        // as query
+                        inspectionItemMap.put("BranchHead", BranchHead);
+                        inspectionItemMap.put(MyConfig.TAG_OVERVIEW, cursorB.getString(0));
+                        inspectionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursorB.getString(1));
+                        inspectionItemMap.put(MyConfig.TAG_NOTES, cursorB.getString(2));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE1, cursorB.getString(3));
+                        inspectionItemMap.put(MyConfig.TAG_COM1, cursorB.getString(4));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE2, cursorB.getString(5));
+                        inspectionItemMap.put(MyConfig.TAG_COM2, cursorB.getString(6));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE3, cursorB.getString(7));
+                        inspectionItemMap.put(MyConfig.TAG_COM3, cursorB.getString(8));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE4, cursorB.getString(9));
+                        inspectionItemMap.put(MyConfig.TAG_COM4, cursorB.getString(10));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE5, cursorB.getString(11));
+                        inspectionItemMap.put(MyConfig.TAG_COM5, cursorB.getString(12));
+                        inspectionItemMap.put(MyConfig.TAG_LABEL, cursorB.getString(13));
+
+                        inspectedItemsList.add(inspectionItemMap);
+                    } while (cursorB.moveToNext()); // Move Cursor to the next row
+                }
+
+
+            } while (cursor.moveToNext());
+        }
+
+        return inspectedItemsList;
+    }
 }
+

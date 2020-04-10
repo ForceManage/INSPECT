@@ -289,7 +289,7 @@
                             android:layout_marginTop="10dp"
                             android:background="@drawable/image_border"
                             android:padding="3dp"
-                            app:srcCompat="@mipmap/ic_camera"
+                            app:srcCompat="@drawable/ic_camera"
                             android:contentDescription="TODO"></ImageView>
 
                         <ImageView
@@ -310,19 +310,6 @@
                             android:layout_marginBottom="10dp"
                             android:saveEnabled="false"
                             app:srcCompat="@android:drawable/ic_menu_camera" />
-
-                        <TextView
-                            android:id="@+id/textView20"
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:layout_gravity="bottom"
-                            android:layout_marginBottom="8dp"
-                            android:text="TextView"
-                            android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:textColor="#ffff00"
-                            android:textSize="16sp" />
-
 
 
                     </FrameLayout>

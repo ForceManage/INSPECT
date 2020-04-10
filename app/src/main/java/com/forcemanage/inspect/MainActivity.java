@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   //  private List<Joblistdata> jobList;
 
     AmazonS3 s3Client;
-    String bucket = "esmfiles";
+    String bucket = "iappfiles";
     String root;
     TransferUtility transferUtility;
     List<String> listing;
@@ -462,8 +462,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             try {
                 rotateImage(resizePhoto());
-                TextView imageName1 = (TextView) findViewById(R.id.textView20);
-                imageName1.setText("UPDATED");
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 dbHandler.updatePropPhoto(projectId, photo.getName());
@@ -627,8 +625,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
-        DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+      //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
+      //  ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
 
         // To Implement: populate the string and preferably go to item in list... otherwise find a way to include property ID without displaying
         //for(int i = 0; i<list.size(); i++){
@@ -1733,7 +1731,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int i = 0;
         while (i < list.size()) {
             photo_name = list.get(i).get(MyConfig.TAG_PROJECT_PHOTO);
-            uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("1")) uploadFileToS3(view, photo_name);
             i++;
         }
 
@@ -1741,22 +1739,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         while (i  < photolist.size() ) {   //photolist.size()
 
-
-
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE1);
-            uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("photo1")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE2);
-            uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("photo2")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE3);
-            uploadFileToS3(view, photo_name);
-
+            if(!photo_name.equals("photo3")) uploadFileToS3(view, photo_name);
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE4);
-            uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("photo4")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE5);
-            uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
 
             i++;
         }

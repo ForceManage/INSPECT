@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -140,6 +141,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private ArrayAdapter<MapViewNode> aAdapter;
     private MapListAdapter treeListAdapter;
     private List<MapViewData> listItems;
+    public List<ReportItem> reportlistItems;
     private int projId;
     public int aID=1;
     public  int Level;
@@ -440,10 +442,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
      //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         String nextServiceDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        Integer year = Integer.parseInt(nextServiceDate.substring(0,4));
-        String date;
+
+        String date = nextServiceDate;
        // date = nextServiceDate.substring(4,6);
-        date = nextServiceDate;
+       // date = nextServiceDate;
 
 
 
@@ -454,7 +456,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
  //       String relevantInfo = Recommendation.getText().toString();
 
         String ServiceLevel = "1";
-
+        ItemStatus = "p";
 
 
         if(FragDisplay == "InspectionFragment") {
@@ -471,7 +473,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date_  = Calendar.getInstance().getTime();
 
-        dbHandler.updateStatus(iID, status, dateFormat.format(date_));
+        dbHandler.updateStatus(projId, iID, "p", dateFormat.format(date_));
 
         Edited = false;
 
@@ -518,7 +520,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private void addLevel(int Level, String levelName){
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        dbHandler.addLevel(projId, catId, Level, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, aID, catId, Level, aID, levelName);  //this is the ESM category
+        if(result == 0 ) Toast.makeText(this, "Cannot place navigation branch at this position",Toast.LENGTH_SHORT).show();
+        else
         loadMap();
     }
 
@@ -862,14 +866,44 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             // add a list
             String[] actions = {"Delete the current inspection item.",
                     "Delete this Branch",
-                    "Delete the current Zone.",
                     "Cancel this operation."};
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case 0: {deleteInspectionItem(); break;}
-                        case 1: {deleteMapBranch(); break;} //
+                        case 1: {
+
+                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
+
+                           alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        deleteMapBranch();
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+
+                            break;
+
+                        } //
                         case 2:{
 
                /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
@@ -905,8 +939,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                 */
                             break;
                         }
-                        case 3: //
-                        break;
+
                     }
                  //end of case 0
                 }
@@ -921,13 +954,152 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         if (v == btnViewReport) {
             saveInspectionItem();
 
+            // setup the alert builder
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
+            builder.setTitle("Choose an action");
+            // add a list
+            String[] actions = {"Review the inspection report.",
+                    "Compile and email report to user",
+                    "Compile inspection certificate",
+                    "Cancel this operation."};
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0: {
+
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("projectId",projId);
+                            bundle.putInt("iId",iID);
+
+                            DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+                            ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iID);
+
+                            //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
+                            //     recyclerView.setHasFixedSize(true);
+                            //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+                            reportlistItems = new ArrayList<>();
+                            ReportItem listItem;
+
+                            for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
+                                listItem = new ReportItem(
+                                        listItemsmap.get(i).get("BranchHead"),
+                                        listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
+                                        listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
+                                        listItemsmap.get(i).get(MyConfig.TAG_NOTES),
+                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
+                                        listItemsmap.get(i).get(MyConfig.TAG_COM1),
+                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
+                                        listItemsmap.get(i).get(MyConfig.TAG_COM2),
+                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
+                                        listItemsmap.get(i).get(MyConfig.TAG_COM3),
+                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
+                                        listItemsmap.get(i).get(MyConfig.TAG_COM4),
+                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
+                                        listItemsmap.get(i).get(MyConfig.TAG_COM5),
+                                        listItemsmap.get(i).get(MyConfig.TAG_LABEL)
+
+
+                                );
+                                reportlistItems.add(listItem);
+                            }
+
+                            ReportFragment fragment = new ReportFragment();
+                            fragment.setArguments(bundle);
+                            doFragmentTransaction(fragment, "ReportFragment", false, "");
+                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
+
+
+                            break;
+                        }
+                        case 1: {
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
+
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            deleteMapBranch();
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+
+                            break;
+
+                        } //
+                        case 2:{
+
+               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
+
+
+
+
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                         deleteInspectionItem();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+                */
+                            break;
+                        }
+
+                    }
+                    //end of case 0
+                }
+            });
+            // create and show the alert dialog
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
  //           Intent intent = new Intent(this, ViewReportActivity.class);
  //           intent.putExtra("jobId",jobId);
  //           intent.putExtra("propId", propertyId);
  //           startActivity(intent);
         //    finish();
         }
-     }
+
 
     public void takeImageFromCamera(View view) {
 

@@ -1,57 +1,108 @@
 package com.forcemanage.inspect;
 
 /**
- * Created by pijpe on 9/08/2017.
+ * Created by DAP on 3/03/2020.
  */
 
 public class ReportItem {
 
 
-    private String safety_measure;
-    private String observation;
-    private String recommend;
+    private String BranchHead;
+    private String overview;
+    private String relevantInfo;
+    private String notes;
     private String image1;
+    private String com1;
     private String image2;
-    private String location;
-    private String zone;
-    private String esm;
-    private String esm_cat;
-    private String status;
+    private String com2;
+    private String image3;
+    private String com3;
+    private String image4;
+    private String com4;
+    private String image5;
+    private String com5;
+    private String label;
 
 
-    public ReportItem(String safety_measure, String observation, String recommend, String image1, String image2, String location, String zone, String esm, String esm_cat, String status) {
+    public ReportItem(String BranchHead, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
+                      String image3, String com3, String image4, String com4, String image5, String com5, String label ) {
 
-        this.safety_measure = safety_measure;
-        this.observation = observation;
-        this.recommend = recommend;
+        this.BranchHead = BranchHead;
+        this.overview = overview;
+        this.relevantInfo = relevantInfo;
+        this.notes = notes;
         this.image1 = image1;
+        this.com1 = com1;
         this.image2 = image2;
-        this.location = location;
-        this.zone = zone;
-        this.esm = esm;
-        this.esm_cat = esm_cat;
-        this.status = status;
-    //    this.sublocation = Integer.parseInt(sublocation);
+        this.com2 = com2;
+        this.image3 = image3;
+        this.com3 = com3;
+        this.image4 = image4;
+        this.com4 = com4;
+        this.image5 = image5;
+        this.com5 = com5;
+        this.label = label;
+       }
+
+    public String getBranchHead() {
+        return BranchHead;
     }
 
-    public String getSafety_measure(){
-        return safety_measure;
+    public String getImage1() {
+        return image1;
     }
-    public String getLocation(){
-        return location;
+
+    public String getImage2() {
+        return image2;
     }
-    public String getObserv() {
-        return observation;
+
+    public String getOverview() {
+        return overview;
     }
-    public String getRecommend() {
-        return recommend;
+
+    public String getRelevantInfo() {
+        return relevantInfo;
     }
-    public String getEsm() { return esm;}
-    public String getImage1() {return image1;}
-    public String getImage2() {return image2;}
-    public String getZone() {return zone;}
-    public String getEsm_cat() {return esm_cat;}
-    public String getStatus() {return status;}
- //   public int getSublocation() {return sublocation;}
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public String getCom1() {
+        return com1;
+    }
+
+    public String getCom2() {
+        return com2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public String getCom3() {
+        return com3;
+    }
+
+    public String getImage4() {
+        return image4;
+    }
+
+    public String getCom4() {
+        return com4;
+    }
+
+    public String getImage5() {
+        return image5;
+    }
+
+    public String getCom5() {
+        return com5;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
 
 }

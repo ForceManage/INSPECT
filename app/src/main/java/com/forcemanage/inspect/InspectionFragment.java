@@ -326,7 +326,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                 globalVariables.Edited = true;
                                 com2Text.setText("");
                                 globalVariables.photo2 ="";
-                                photoB.setImageResource(R.mipmap.ic_camera);
+                                photoB.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
@@ -393,7 +393,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                 globalVariables.Edited = true;
                                 com2Text.setText("");
                                 globalVariables.photo2 ="";
-                                photoB.setImageResource(R.mipmap.ic_camera);
+                                photoB.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
@@ -472,19 +472,11 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        RelevantInfo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) globalVariables.Edited = true;
-
-
-            }
-        });
 
         notes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) globalVariables.Edited = true;
+                if(hasFocus) globalVariables.Edited = true;
 
             }
         });
@@ -542,30 +534,30 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                     case 0:
                         //   mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                             photoA.setImageResource(R.mipmap.ic_camera);
+                             photoA.setImageResource(R.drawable.ic_camera);
                         break;
 
                     case 1:
                         //     mPhotoImageView = (ImageView) findViewById(R.id.imageView2);
-                              photoB.setImageResource(R.mipmap.ic_camera);
+                              photoB.setImageResource(R.drawable.ic_camera);
                         //     imageName2.setText("No Photo Record");
                         break;
 
                     case 2:
                         //        mPhotoImageView = (ImageView) findViewById(R.id.imageView3);
-                                photoC.setImageResource(R.mipmap.ic_camera);
+                                photoC.setImageResource(R.drawable.ic_camera);
                         //         imageName3.setText("No Photo Record");
                         break;
 
                     case 3:
                         //        mPhotoImageView = (ImageView) findViewById(R.id.imageView4);
-                                photoD.setImageResource(R.mipmap.ic_camera);
+                                photoD.setImageResource(R.drawable.ic_camera);
                         //        imageName4.setText("No Photo Record");
                         break;
 
                     case 4:
                         //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
-                                photoE.setImageResource(R.mipmap.ic_camera);
+                                photoE.setImageResource(R.drawable.ic_camera);
                         //        imageName5.setText("No Photo Record");
                         break;
 
