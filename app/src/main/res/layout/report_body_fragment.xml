@@ -22,7 +22,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="0.6"
+    android:layout_weight="0.7"
     android:orientation="vertical"
     >
 
@@ -33,8 +33,9 @@
         android:layout_gravity="top"
         android:paddingTop="6dp"
         android:paddingLeft="10dp"
+        android:paddingRight="25dp"
         android:text="Title:  "
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textColor="@android:color/black"
         android:textStyle="normal|bold" />
 
@@ -42,12 +43,15 @@
         android:id="@+id/branchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_gravity="top"
         android:paddingTop="6dp"
         android:paddingLeft="10dp"
+        android:paddingRight="25dp"
         android:text="Branch  "
+        android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:textStyle="normal" />
+        android:textStyle="normal|bold" />
 
 
     <TextView
@@ -56,6 +60,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:text="Overview:  "
+        android:layout_marginTop="30dp"
         android:textColor="@android:color/black"
         android:textStyle="normal|bold" />
 
@@ -65,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
+        android:paddingRight="25dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -84,6 +90,7 @@
         android:id="@+id/Observation1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -94,6 +101,7 @@
         android:id="@+id/Observation2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -104,6 +112,7 @@
         android:id="@+id/Observation3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -114,6 +123,7 @@
         android:id="@+id/Observation4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -125,6 +135,7 @@
         android:id="@+id/Observation5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -136,8 +147,9 @@
         android:id="@+id/relevantInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:paddingLeft="10dp"
-        android:text="Relevaant Information:  "
+        android:text="Relevant Information:  "
         android:textColor="@android:color/black"
         android:textStyle="normal|bold" />
 
@@ -146,6 +158,7 @@
         android:id="@+id/RelevantInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="25dp"
         android:paddingLeft="10dp"
         android:layout_margin="5dp"
         android:paddingTop="5dp"
@@ -161,7 +174,7 @@
          android:layout_width="0dp"
          android:layout_height="match_parent"
          android:orientation="vertical"
-         android:layout_weight="0.4"
+         android:layout_weight="0.3"
          >
 
 
@@ -169,7 +182,7 @@
              android:id="@+id/imageView1"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight="0.2"
+             android:layout_weight="0.12"
              android:adjustViewBounds="true"
              android:cropToPadding="false"
              android:paddingLeft="5dp"
@@ -177,13 +190,22 @@
              android:paddingRight="5dp"
              android:paddingBottom="5dp"
              app:srcCompat="@drawable/ic_camera" />
-         />
+
+         <TextView
+             android:id="@+id/fig0"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingLeft="10dp"
+             android:layout_margin="5dp"
+             android:paddingTop="1dp"
+             android:paddingBottom="5dp"
+             android:textSize="14sp" />
 
          <ImageView
              android:id="@+id/imageView2"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight="0.2"
+             android:layout_weight="0.12"
              android:adjustViewBounds="true"
              android:cropToPadding="false"
              android:paddingLeft="5dp"
@@ -191,13 +213,22 @@
              android:paddingRight="5dp"
              android:paddingBottom="5dp"
              app:srcCompat="@drawable/ic_camera" />
-         />
+
+         <TextView
+             android:id="@+id/fig1"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingLeft="10dp"
+             android:layout_margin="5dp"
+             android:paddingTop="1dp"
+             android:paddingBottom="5dp"
+             android:textSize="14sp" />
 
          <ImageView
              android:id="@+id/imageView3"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight="0.2"
+             android:layout_weight="0.12"
              android:adjustViewBounds="true"
              android:cropToPadding="false"
              android:paddingLeft="5dp"
@@ -205,13 +236,22 @@
              android:paddingRight="5dp"
              android:paddingBottom="5dp"
              app:srcCompat="@drawable/ic_camera" />
-         />
+
+         <TextView
+             android:id="@+id/fig2"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingLeft="10dp"
+             android:layout_margin="5dp"
+             android:paddingTop="1dp"
+             android:paddingBottom="5dp"
+             android:textSize="14sp" />
 
          <ImageView
              android:id="@+id/imageView4"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight="0.2"
+             android:layout_weight="0.12"
              android:adjustViewBounds="true"
              android:cropToPadding="false"
              android:paddingLeft="5dp"
@@ -219,13 +259,22 @@
              android:paddingRight="5dp"
              android:paddingBottom="5dp"
              app:srcCompat="@drawable/ic_camera" />
-         />
+
+         <TextView
+             android:id="@+id/fig3"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingLeft="10dp"
+             android:layout_margin="5dp"
+             android:paddingTop="1dp"
+             android:paddingBottom="5dp"
+             android:textSize="14sp" />
 
          <ImageView
              android:id="@+id/imageView5"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight="0.2"
+             android:layout_weight="0.12"
              android:adjustViewBounds="true"
              android:cropToPadding="false"
              android:paddingLeft="5dp"
@@ -233,7 +282,16 @@
              android:paddingRight="5dp"
              android:paddingBottom="5dp"
              app:srcCompat="@drawable/ic_camera" />
-         />
+
+         <TextView
+             android:id="@+id/fig4"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingLeft="10dp"
+             android:layout_margin="5dp"
+             android:paddingTop="1dp"
+             android:paddingBottom="5dp"
+             android:textSize="14sp" />
 
 
      </LinearLayout>

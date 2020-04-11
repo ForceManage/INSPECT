@@ -35,6 +35,15 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:background="@drawable/head_frame"
             android:paddingBottom="20dp">
 
+            <TextView
+                android:id="@+id/page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Work Scope  "
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:id="@+id/title"
@@ -59,25 +68,98 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
         </LinearLayout>
 
         <TextView
-            android:id="@+id/noteHead"
+            android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:text="Scope Description:  "
             android:layout_marginTop="30dp"
-            android:text="Notes:  "
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textStyle="normal|bold" />
+
+
+        <EditText
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="25dp"
+            android:layout_margin="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/edit_border"
+            android:textSize="14sp" />
+
+
+
+
+        <TextView
+            android:id="@+id/Scope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="Scope:  "
+            android:textColor="@android:color/black"
+            android:textStyle="normal|bold" />
+
+
+        <EditText
+            android:id="@+id/scope"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="25dp"
+            android:paddingLeft="10dp"
+            android:layout_margin="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/edit_border"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/Perform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="Performance Criteria:  "
+            android:textColor="@android:color/black"
             android:textStyle="normal|bold" />
 
         <EditText
-            android:id="@+id/note"
+            android:id="@+id/perform"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="25dp"
+            android:paddingLeft="10dp"
+            android:layout_margin="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/edit_border"
+            android:textSize="14sp" />
+
+
+        <TextView
+            android:id="@+id/Notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:text="Notes:  "
+            android:textColor="@android:color/black"
+            android:textStyle="normal|bold" />
+
+
+        <EditText
+            android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_border"
+            android:paddingRight="25dp"
             android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="16sp"/>
+            android:layout_margin="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textSize="14sp" />
+
 
 
     </LinearLayout>

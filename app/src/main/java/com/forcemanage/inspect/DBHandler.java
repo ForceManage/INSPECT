@@ -664,7 +664,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Add sublocation to the location
-    public int addLevel(int projID, int aId, int CatID, int Level, int parent, String Label) {
+    public int addLevel(int projID, int aId, int CatID, int Level, int parent, String Label, int type) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -706,6 +706,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(COLUMN_LABEL, Label);
             values.put(COLUMN_LEVEL, Level);
             values.put(COLUMN_A_ID, maxAId);
+            values.put(COLUMN_CHILD,type);
             values.put(COLUMN_IMG1, "");
             values.put(COLUMN_NOTES, "");
             db.insert(TABLE_MAP, null, values);
@@ -752,110 +753,176 @@ public class DBHandler extends SQLiteOpenHelper {
         int result = 0;
         int a_id = 1; //aId of the branch which has the parent branch clicked
 
-        //check if there a subbranch exists
-        selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId;
+        //First check if current branch is a location branch
+        selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst())
+            if (cursor.getInt(0) != 0){cursor.close();}
+                else{
 
-            //if subbranch exists
+ /*               //check if there a subbranch exists
+                selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
+                        + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId;
 
-            if (cursor.getCount() > 0) {
-                a_id = cursor.getInt(0);//check if subbranch is an inspection with the current inspection id
-                selectQuery = "SELECT  COUNT (I." + COLUMN_PROJECT_ID + ") FROM "
-                        + TABLE_INSPECTION_ITEM + " I "
-                        + "JOIN " + TABLE_MAP + " M "
-                        + " ON M. " + COLUMN_A_ID + " = I." + COLUMN_A_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                        + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + a_id + " AND I." + COLUMN_INSPECTION_ID + " = " + iId;
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
 
-                cursor = db.rawQuery(selectQuery, null);
-                if (cursor.moveToFirst()) {
-                    //if inspection exits exit
-                    if (cursor.getInt(0) > 0) {
-                        result = 0;
-                    } else //inspection doesn't exist
-                    {
-                        result = 1;
+                //if subbranch exists
 
-                        int newId = addLevel(projId, aId, CatID, Level, aId, Label);
+                if (cursor.getCount() > 0) {
+                    a_id = cursor.getInt(0);//check if subbranch is an inspection with the current inspection id
+                    selectQuery = "SELECT  COUNT (I." + COLUMN_PROJECT_ID + ") FROM "
+                            + TABLE_INSPECTION_ITEM + " I "
+                            + "JOIN " + TABLE_MAP + " M "
+                            + " ON M. " + COLUMN_A_ID + " = I." + COLUMN_A_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
+                            + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + a_id + " AND I." + COLUMN_INSPECTION_ID + " = " + iId;
 
-                        SQLiteDatabase db_2 = this.getWritableDatabase();
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.moveToFirst()) {
+                        //if inspection exits exit
+                        if (cursor.getInt(0) > 0) {
+                            result = 0;
+                        } else //inspection doesn't exist
+                        {
+     */                       result = 1;
 
-                        ContentValues values = new ContentValues();
+                            int newId = addLevel(projId, aId, CatID, Level, aId, Label, 1); //first aId is aId second aId passed as the parent
+                                                                                                    //of the new branch
+                            SQLiteDatabase db_2 = this.getWritableDatabase();
 
-                        values.put(COLUMN_PROJECT_ID, projId);
-                        values.put(COLUMN_INSPECTION_ID, iId);
-                        values.put(COLUMN_DATE_INSPECTED, 20200101);
-                        values.put(COLUMN_A_ID, newId);
-                        values.put(COLUMN_OVERVIEW, "");
-                        values.put(COLUMN_RELEVANT_INFO, "");
-                        values.put(COLUMN_SERVICE_LEVEL, "1");
-                        values.put(COLUMN_SERVICED_BY, "");
-                        values.put(COLUMN_REPORT_IMAGE, "0");
-                        values.put(COLUMN_IMG1, "");
-                        values.put(COLUMN_COM1, "");
-                        values.put(COLUMN_IMG2, "");
-                        values.put(COLUMN_COM2, "");
-                        values.put(COLUMN_IMG3, "");
-                        values.put(COLUMN_COM3, "");
-                        values.put(COLUMN_IMG4, "");
-                        values.put(COLUMN_COM4, "");
-                        values.put(COLUMN_IMG5, "");
-                        values.put(COLUMN_COM5, "");
-                        values.put(COLUMN_IMG6, "");
-                        values.put(COLUMN_COM6, "");
-                        values.put(COLUMN_IMG7, "");
-                        values.put(COLUMN_COM7, "");
-                        values.put(COLUMN_ITEM_STATUS, "");
-                        values.put(COLUMN_NOTES, "");
+                            ContentValues values = new ContentValues();
 
-                        db_2.insert(TABLE_INSPECTION_ITEM, null, values);
-                        db_2.close();
-                    }
+                            values.put(COLUMN_PROJECT_ID, projId);
+                            values.put(COLUMN_INSPECTION_ID, iId);
+                            values.put(COLUMN_DATE_INSPECTED, 20200101);
+                            values.put(COLUMN_A_ID, newId);
+                            values.put(COLUMN_OVERVIEW, "");
+                            values.put(COLUMN_RELEVANT_INFO, "");
+                            values.put(COLUMN_SERVICE_LEVEL, "1");
+                            values.put(COLUMN_SERVICED_BY, "");
+                            values.put(COLUMN_REPORT_IMAGE, "0");
+                            values.put(COLUMN_IMG1, "");
+                            values.put(COLUMN_COM1, "");
+                            values.put(COLUMN_IMG2, "");
+                            values.put(COLUMN_COM2, "");
+                            values.put(COLUMN_IMG3, "");
+                            values.put(COLUMN_COM3, "");
+                            values.put(COLUMN_IMG4, "");
+                            values.put(COLUMN_COM4, "");
+                            values.put(COLUMN_IMG5, "");
+                            values.put(COLUMN_COM5, "");
+                            values.put(COLUMN_IMG6, "");
+                            values.put(COLUMN_COM6, "");
+                            values.put(COLUMN_IMG7, "");
+                            values.put(COLUMN_COM7, "");
+                            values.put(COLUMN_ITEM_STATUS, "");
+                            values.put(COLUMN_NOTES, "");
+
+                            db_2.insert(TABLE_INSPECTION_ITEM, null, values);
+                            db_2.close();
+                        }
+     /*               }
+
                 }
+            } else {
+                result = 1;
 
+                int newId = addLevel(projId, aId, CatID, Level, aId, Label, 1);
+
+                SQLiteDatabase db_1 = this.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+
+                values.put(COLUMN_PROJECT_ID, projId);
+                values.put(COLUMN_INSPECTION_ID, iId);
+                values.put(COLUMN_DATE_INSPECTED, 20200101);
+                values.put(COLUMN_A_ID, newId);
+                values.put(COLUMN_OVERVIEW, "");
+                values.put(COLUMN_RELEVANT_INFO, "");
+                values.put(COLUMN_SERVICE_LEVEL, "1");
+                values.put(COLUMN_SERVICED_BY, "");
+                values.put(COLUMN_REPORT_IMAGE, "0");
+                values.put(COLUMN_IMG1, "");
+                values.put(COLUMN_COM1, "");
+                values.put(COLUMN_IMG2, "");
+                values.put(COLUMN_COM2, "");
+                values.put(COLUMN_IMG3, "");
+                values.put(COLUMN_COM3, "");
+                values.put(COLUMN_IMG4, "");
+                values.put(COLUMN_COM4, "");
+                values.put(COLUMN_IMG5, "");
+                values.put(COLUMN_COM5, "");
+                values.put(COLUMN_IMG6, "");
+                values.put(COLUMN_COM6, "");
+                values.put(COLUMN_IMG7, "");
+                values.put(COLUMN_COM7, "");
+                values.put(COLUMN_ITEM_STATUS, "");
+                values.put(COLUMN_NOTES, "");
+
+                db_1.insert(TABLE_INSPECTION_ITEM, null, values);
+
+                db_1.close();
             }
-        } else {
-            result = 1;
 
-            int newId = addLevel(projId, aId, CatID, Level, aId, Label);
 
-            SQLiteDatabase db_1 = this.getWritableDatabase();
+        }*///close if first query did not return a position branch
 
-            ContentValues values = new ContentValues();
+        return result;
+    }
 
-            values.put(COLUMN_PROJECT_ID, projId);
-            values.put(COLUMN_INSPECTION_ID, iId);
-            values.put(COLUMN_DATE_INSPECTED, 20200101);
-            values.put(COLUMN_A_ID, newId);
-            values.put(COLUMN_OVERVIEW, "");
-            values.put(COLUMN_RELEVANT_INFO, "");
-            values.put(COLUMN_SERVICE_LEVEL, "1");
-            values.put(COLUMN_SERVICED_BY, "");
-            values.put(COLUMN_REPORT_IMAGE, "0");
-            values.put(COLUMN_IMG1, "");
-            values.put(COLUMN_COM1, "");
-            values.put(COLUMN_IMG2, "");
-            values.put(COLUMN_COM2, "");
-            values.put(COLUMN_IMG3, "");
-            values.put(COLUMN_COM3, "");
-            values.put(COLUMN_IMG4, "");
-            values.put(COLUMN_COM4, "");
-            values.put(COLUMN_IMG5, "");
-            values.put(COLUMN_COM5, "");
-            values.put(COLUMN_IMG6, "");
-            values.put(COLUMN_COM6, "");
-            values.put(COLUMN_IMG7, "");
-            values.put(COLUMN_COM7, "");
-            values.put(COLUMN_ITEM_STATUS, "");
-            values.put(COLUMN_NOTES, "");
 
-            db_1.insert(TABLE_INSPECTION_ITEM, null, values);
+    public Integer addActionBranch(int projId, int iId, int CatID, int Level, int aId, String Label) {
+        // Open a database for reading and writing
 
-            db_1.close();
-        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int result = 0;
+        int i_id ; //aId of the branch which has the parent branch clicked
 
+        //First check if current branch is a location branch - child is a code for the current branch
+        selectQuery = "SELECT  " + COLUMN_CHILD +", "+COLUMN_INSPECTION_ID+ " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+            if (cursor.getInt(0) != 1){cursor.close();}
+            else{
+
+                            result = 1;
+
+                            if(cursor.getInt(1) != iId)
+                                i_id = cursor.getInt(1);
+                            else
+                                i_id = iId; //make sure that action from inspection has same inspectionId
+
+
+                                int newId = addLevel(projId, aId, CatID, Level, aId, Label, 2);
+
+                                SQLiteDatabase db_2 = this.getWritableDatabase();
+
+                                ContentValues values = new ContentValues();
+
+                                values.put(COLUMN_PROJECT_ID, projId);
+                                values.put(COLUMN_INSPECTION_ID, i_id);
+                                values.put(COLUMN_DATE_INSPECTED, 20200101);
+                                values.put(COLUMN_A_ID, newId);
+                                values.put(COLUMN_OVERVIEW, "");
+                                values.put(COLUMN_RELEVANT_INFO, "");
+                                values.put(COLUMN_SERVICE_LEVEL, "1");
+                                values.put(COLUMN_SERVICED_BY, "");
+                                values.put(COLUMN_REPORT_IMAGE, "0");
+                                values.put(COLUMN_IMG1, "");
+                                values.put(COLUMN_COM1, "");
+                                values.put(COLUMN_ITEM_STATUS, "");
+                                values.put(COLUMN_NOTES, "");
+
+                                db_2.insert(TABLE_ACTION_ITEM, null, values);
+                                db_2.close();
+
+            }//close if first query did not return a position branch
 
         return result;
     }

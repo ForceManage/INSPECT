@@ -81,21 +81,26 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
         int node_level = node.getNodeLevel();
+        int node_branchCat = node.getbranchCat();
 
-        if (node_level == 3){holder.arrow.setImageResource(R.drawable.ic_note);} else
+        switch (node_branchCat){
 
-        if (node.getIsExpanded() == GlobalVariables.TRUE)
-        {
+            case 0:{
+                if (node.getIsExpanded() == GlobalVariables.TRUE)
+                   holder.arrow.setImageResource(R.drawable.ic_chevron_down);
+                else
+                    holder.arrow.setImageResource(R.drawable.ic_chevron_right);
+                break;
+           }
+            case 1: holder.arrow.setImageResource(R.drawable.ic_note);
+            break;
 
-            holder.arrow.setImageResource(R.drawable.ic_chevron_down);
+            case 2: holder.arrow.setImageResource(R.drawable.ic_note);
+                break;
 
         }
-        else
-        {
 
-            holder.arrow.setImageResource(R.drawable.ic_chevron_right);
 
-        }
 
 
         holder.arrow.setTag(position);
