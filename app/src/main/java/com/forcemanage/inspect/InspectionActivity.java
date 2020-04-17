@@ -2,8 +2,6 @@ package com.forcemanage.inspect;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,6 +37,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.ByteArrayOutputStream;
@@ -190,7 +190,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
 
-        ItemNumbers = (TextView) findViewById(R.id.RecordCount);
+      //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
       //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
 
 
@@ -220,12 +220,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
    //     TreeViewLists.LoadDisplayList();
 
 
-   //     Note = (EditText) findViewById(R.id.note);
-   //     Note.setText(Arrays.toString(level)+" "+Arrays.toString(locationdesc)+" "+Arrays.toString(id)+" "+Arrays.toString(parent));
-
-
-
-
         if (findViewById(R.id.fragment_container) != null){
 
             // However if we are being restored from a previous state, then we don't
@@ -237,7 +231,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             // Create an Instance of Fragment
             MapViewFragment treeFragment = new MapViewFragment();
             treeFragment.setArguments(getIntent().getExtras());
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, treeFragment)
                     .commit();
 
@@ -322,16 +316,16 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
         GlobalVariables.modified = true;
-        OnSelectionChanged(0);
+    //    MapListAdapter mAdapter = new MapListAdapter(this);
+     //   mAdapter.notifyDataSetChanged();
+     //   OnSelectionChanged(0);
     }
 
 @Override
     public void OnSelectionChanged(int treeNameIndex) {
 
 
-
-
-    DetailFragment detailFragment = (DetailFragment) getFragmentManager()
+    DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
             .findFragmentById(R.id.detail_text);
 
 
@@ -348,7 +342,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         newDetailFragment.setArguments(args);
 
 
-         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -367,19 +361,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
         newDetailFragment.setArguments(args);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the backStack so the User can navigate back
         fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
 
 
         //fm.popBackStack(DF,0);
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStackImmediate();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
         }
 
         // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -415,11 +409,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         if(FragDisplay == "ActionItemFragment"){
             fragment_obj = (ActionItemFragment)getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
-
-   //         aProvider = ((TextView) fragment_obj.getView().findViewById(R.id.textServicedBy)).getText().toString();
-   //         Overview = ((TextView) fragment_obj.getView().findViewById(R.id.Overview)).getText().toString();
-   //         relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.RelevantInfo)).getText().toString();
-   //         Notes = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
+            Overview = ((TextView) fragment_obj.getView().findViewById(R.id.desc)).getText().toString();
+            com1 = ((TextView) fragment_obj.getView().findViewById(R.id.scope)).getText().toString();
+            relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.perform)).getText().toString();
+            Notes = ((TextView) fragment_obj.getView().findViewById(R.id.notes)).getText().toString();
 
             //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
         }
@@ -429,7 +422,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     }
 
     if(Edited == true) saveInspectionItem();
+
     aID = detailFragment.aID;
+
   //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
    displayInspectionItem();
 
@@ -451,8 +446,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
        // String serviceDate = inspectionDate.getText().toString();
         // work out the next service date in three months time
-
-        dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
+        if(FragDisplay == "BaseFragment") {
+            dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
+        }
 
      //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
@@ -481,7 +477,11 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         }
 
+        if(FragDisplay == "ActionItemFragment") {
+            dbHandler.updateActionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
+                    , "reportImage", photo1, com1, ItemStatus, Notes);
 
+        }
 
         String status =  dbHandler.getStatus(iID, projId);
 
@@ -567,7 +567,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     }
 
 
-    private void editLocation(String branchLabel){
+    public void editLocation(String branchLabel){
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.updateBranchLabel(projId, aID, branchLabel);
@@ -603,6 +603,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                    fragment.setArguments(bundle);
 
                    doFragmentTransaction(fragment, "BaseFragment", false, "");
+
+                   photo1 = photoBranch;
                    break;
                }
                case 1:{
@@ -661,53 +663,37 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                }
                case 2: {
 
-                   HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
+                   HashMap<String, String> list = dbHandler.getActionItem(projId, aID, iID);
 
                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                    Overview = list.get(MyConfig.TAG_OVERVIEW);
                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
                    com1 = list.get(MyConfig.TAG_COM1);
-                   com2 = list.get(MyConfig.TAG_COM2);
-                   com3 = list.get(MyConfig.TAG_COM3);
-                   com4 = list.get(MyConfig.TAG_COM4);
-                   com5 = list.get(MyConfig.TAG_COM5);
                    Notes = list.get(MyConfig.TAG_NOTES);
 
 
                    Bundle bundle = new Bundle();
                    bundle.putString("branchHead",branchHead);
                    bundle.putString("branchLabel",branchLabel);
-                   bundle.putString("aprovider",aProvider);
-                   bundle.putString("overview",Overview);
-                   bundle.putString("relevantInfo",relevantInfo);
+                   bundle.putString("description",Overview);
+                   bundle.putString("scope",com1);
+                   bundle.putString("perform",relevantInfo);
                    bundle.putString("notes",Notes);
-                   bundle.putString("com1",com1);
-                   bundle.putString("com2",com2);
-                   bundle.putString("com3",com3);
-                   bundle.putString("com4",com4);
-                   bundle.putString("com5",com5);
 
-                   InspectionFragment fragment = new InspectionFragment();
+                   ActionItemFragment fragment = new ActionItemFragment();
                    fragment.setArguments(bundle);
 
-                   doFragmentTransaction(fragment,"InspectionFragment",false,"");
+                   doFragmentTransaction(fragment,"ActionItemFragment",false,"");
 
-                   int itemNos = dbHandler.getSubItemMap(projId, aID);
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                   photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                   photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                   photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                   photos[4] = list.get(MyConfig.TAG_IMAGE5);
+
 
                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
                    String tag = list.get(MyConfig.TAG_IMAGE1);
 
                    photo1 = photos[0];
-                   photo2 = photos[1];
-                   photo3 = photos[2];
-                   photo4 = photos[3];
-                   photo5 = photos[4];
 
                    break;
 
@@ -1337,7 +1323,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             Uri selectedImage = data.getData();
 
-             Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
+            Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
 
            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             returnCursor.moveToFirst();
@@ -1359,29 +1345,58 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             // Set the Image in ImageView after decoding the String
             // photoA.setImageBitmap(BitmapFactory.decodeFile(path));
 
+            if(FragDisplay == "BaseFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
             // photoA.setImageURI(selectedImage);
+            if(FragDisplay == "InspectionFragment") {
 
-            fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
 
-            switch (filephoto) {
-                case 1:
-                    photoA  =  fragment_obj.getView().findViewById(R.id.imageView);
-                    photoA.setImageURI(selectedImage);
-                    break;
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
 
-                case 2:
-                    photoB  =  fragment_obj.getView().findViewById(R.id.imageView);
-                    photoB.setImageURI(selectedImage);
-                    break;
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
 
-                case 3:
-                    photoC  =  fragment_obj.getView().findViewById(R.id.imageView);
-                    photoC.setImageURI(selectedImage);
-                    break;
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                }
 
             }
 
+            if(FragDisplay == "ActionItemFragment") {
 
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+
+                }
+
+            }
 
             File from = new File(path);
 
@@ -1412,7 +1427,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             switch (filephoto) {
                 case 1:
-                    //           photoA.setImageURI(selectedImage);
+                    if(FragDisplay == "BaseFragment") photoBranch =to.getName();
                     photo1 = to.getName();
                     break;
 
@@ -1426,10 +1441,12 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     photo3 = to.getName();
                     break;
 
-            }
+              }
 
+            saveInspectionItem();
 
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(to)));
+
        //     getContentResolver().notifyChange(Uri.fromFile(to),null);
 
             // load original photo to next imageview

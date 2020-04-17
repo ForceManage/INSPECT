@@ -40,6 +40,8 @@ public class MyConfig {
 
 
     //Inspection Item
+    public static final String TAG_IMAGE = "Image";
+    public static final String TAG_P_ID = "pID";
     public static final String TAG_A_ID = "aID";
     public static final String TAG_DATE_INSPECTED = "dateInspected";
     public static final String TAG_OVERVIEW = "Overview";
@@ -81,5 +83,5 @@ public class MyConfig {
     public static final String TAG_NUM = "num";
     public static final String TAG_SUBCAT = "subCat";
     public static final String TAG_TYPE = "type";
-    public static final String TAG_NOTE = "note";
+    public static final String TAG_NOTE = "Note";
 }

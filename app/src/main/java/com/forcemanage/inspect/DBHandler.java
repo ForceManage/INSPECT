@@ -19,7 +19,7 @@ import java.util.logging.Level;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -49,6 +49,8 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_INSPECTOR = "Inspector";
     public static final String COLUMN_INSPECTION_STATUS = "InspectionStatus";
     public static final String COLUMN_INSPECTION_TYPE = "InspectionType";
+    public static final String COLUMN_P_ID = "pID";
+    public static final String COLUMN_IMAGE = "Image";
 
     public static final String TABLE_INSPECTION_ITEM = "InspectionItem";
     public static final String TABLE_ACTION_ITEM = "ActionItem";
@@ -153,7 +155,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INSPECTION_DATE + " TEXT,"
                 + COLUMN_INSPECTOR + " TEXT,"
                 + COLUMN_DATE_TIME_START + " INTEGER,"
-                + COLUMN_DATE_TIME_FINISH + " INTEGER" + ")";
+                + COLUMN_DATE_TIME_FINISH + " INTEGER,"
+                + COLUMN_LABEL + " TEXT,"
+                + COLUMN_LEVEL + " INTEGER,"
+                + COLUMN_PARENT + " INTEGER,"
+                + COLUMN_P_ID + " INTEGER,"
+                + COLUMN_IMAGE + " TEXT,"
+                + COLUMN_NOTE + " TEXT"
+                + ")";
 
         db.execSQL(CREATE_INSPECTION_TABLE);
 
@@ -329,6 +338,12 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesInspect.put(COLUMN_INSPECTOR, inspectionAttributes.getinspector());
         //       valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
         //       valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
+        valuesInspect.put(COLUMN_LABEL, inspectionAttributes.getlabel());
+        valuesInspect.put(COLUMN_LEVEL, inspectionAttributes.getlevel());
+        valuesInspect.put(COLUMN_PARENT, inspectionAttributes.getparent());
+        valuesInspect.put(COLUMN_P_ID, inspectionAttributes.getpID());
+        valuesInspect.put(COLUMN_IMAGE, inspectionAttributes.getimage());
+        valuesInspect.put(COLUMN_NOTE, inspectionAttributes.getnote());
 
         db.replace(TABLE_INSPECTION, null, valuesInspect);
 
@@ -466,6 +481,32 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public void updateActionItem(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+            , String reportImage, String Img1, String com1, String ItemStatus, String Notes) {
+
+        String inspectionId = String.valueOf(iId);
+        String a_Id = String.valueOf(aId);
+        String proj_id = String.valueOf(projId);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_DATE_INSPECTED, date);
+        contentValues.put(COLUMN_OVERVIEW, overview);
+        contentValues.put(COLUMN_RELEVANT_INFO, relevantInfo);
+        contentValues.put(COLUMN_SERVICE_LEVEL, ServiceLevel);
+        contentValues.put(COLUMN_SERVICED_BY, servicedBy);
+        contentValues.put(COLUMN_REPORT_IMAGE, reportImage);
+        contentValues.put(COLUMN_IMG1, Img1);
+        contentValues.put(COLUMN_COM1, com1);
+        contentValues.put(COLUMN_ITEM_STATUS, ItemStatus);
+        contentValues.put(COLUMN_NOTES, Notes);
+        db.update(TABLE_ACTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{proj_id, inspectionId, a_Id});
+        db.close();
+
+
+    }
+
+
     //start inspection (clone previous inspection and put status "p": in progress)
     public void createNewInspection(int projectId, int inspectionId) {
         // Open a database for reading and writing
@@ -576,7 +617,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_IMG1, photo);
-
         values.put(COLUMN_NOTES, Note);
 
 
@@ -672,48 +712,73 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor;
         int maxAId = 0;
         int maxcatID = 1;
+        int branchType = 0;
 
-        selectQuery = "SELECT " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_INSPECTION_ITEM
-                + " WHERE " + COLUMN_PROJECT_ID + " = " + projID + " AND " + COLUMN_A_ID + " = " + aId;
+        selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projID + " AND " + COLUMN_A_ID + " = " + aId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+            branchType = cursor.getInt(0);
+
+        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
+            maxAId = cursor.getInt(0);
+            maxcatID = cursor.getInt(1);
+            maxAId = maxAId + 1;
+            maxcatID = maxcatID + 1;
+        }
 
-        } else {
-            selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
-                    + TABLE_MAP + " M"
-                    + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
-            cursor = db.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
-                maxAId = cursor.getInt(0);
-                maxcatID = cursor.getInt(1);
-                maxAId = maxAId + 1;
-                maxcatID = maxcatID + 1;
-            }
+        switch(branchType){
 
-            ContentValues values = new ContentValues();
+            case(0):{
+                ContentValues values = new ContentValues();
 
-            if (Level == 0) {
-                values.put(COLUMN_CAT_ID, maxcatID);
-                values.put(COLUMN_PARENT, -1);
-            } else {
+                if (Level == 0) {
+                    values.put(COLUMN_CAT_ID, maxcatID);
+                    values.put(COLUMN_PARENT, -1);
+                } else {
+                    values.put(COLUMN_CAT_ID, CatID);
+                    values.put(COLUMN_PARENT, parent);
+                }
+                values.put(COLUMN_PROJECT_ID, projID);
+                values.put(COLUMN_LABEL, Label);
+                values.put(COLUMN_LEVEL, Level);
+                values.put(COLUMN_A_ID, maxAId);
+                values.put(COLUMN_CHILD,type);
+                values.put(COLUMN_IMG1, "");
+                values.put(COLUMN_NOTES, "");
+                db.insert(TABLE_MAP, null, values);
+
+                break;
+                //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
+                }
+            case(1):{
+
+                ContentValues values = new ContentValues();
+
                 values.put(COLUMN_CAT_ID, CatID);
                 values.put(COLUMN_PARENT, parent);
+                values.put(COLUMN_PROJECT_ID, projID);
+                values.put(COLUMN_LABEL, Label);
+                values.put(COLUMN_LEVEL, Level);
+                values.put(COLUMN_A_ID, maxAId);
+                values.put(COLUMN_CHILD,type);
+                values.put(COLUMN_IMG1, "");
+                values.put(COLUMN_NOTES, "");
+                db.insert(TABLE_MAP, null, values);
+
+                break;
             }
-            values.put(COLUMN_PROJECT_ID, projID);
-            values.put(COLUMN_LABEL, Label);
-            values.put(COLUMN_LEVEL, Level);
-            values.put(COLUMN_A_ID, maxAId);
-            values.put(COLUMN_CHILD,type);
-            values.put(COLUMN_IMG1, "");
-            values.put(COLUMN_NOTES, "");
-            db.insert(TABLE_MAP, null, values);
 
-
-            //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
         }
+
+
         db.close();
 
         return maxAId;
@@ -882,8 +947,8 @@ public class DBHandler extends SQLiteOpenHelper {
         int result = 0;
         int i_id ; //aId of the branch which has the parent branch clicked
 
-        //First check if current branch is a location branch - child is a code for the current branch
-        selectQuery = "SELECT  " + COLUMN_CHILD +", "+COLUMN_INSPECTION_ID+ " FROM "
+        //First check if current branch is a inspection branch - child is a code for the current branch
+        selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
                 + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
@@ -891,9 +956,13 @@ public class DBHandler extends SQLiteOpenHelper {
             if (cursor.getInt(0) != 1){cursor.close();}
             else{
 
-                            result = 1;
+                result = 1;
+                selectQuery = "SELECT  " + COLUMN_INSPECTION_ID+ " FROM "
+                        + TABLE_INSPECTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
-                            if(cursor.getInt(1) != iId)
+
+
+                            if(cursor.getInt(0) != iId)
                                 i_id = cursor.getInt(1);
                             else
                                 i_id = iId; //make sure that action from inspection has same inspectionId
@@ -1056,6 +1125,52 @@ public class DBHandler extends SQLiteOpenHelper {
         // return inspection data for propertyid, Jobid, inspection id
         database.close();
         return inspectionItem;
+
+
+    }
+
+    // Retrieve individual current inspection
+    public HashMap<String, String> getActionItem(int projId, int aId, int iId) {
+        // Open a database for reading and writing
+
+        HashMap<String, String> actionItem = new HashMap<String, String>();
+
+        ArrayList<HashMap<String, String>> actionItemList;
+        actionItemList = new ArrayList<HashMap<String, String>>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+
+        String selectQuery = "SELECT A." + COLUMN_DATE_INSPECTED + ", A." + COLUMN_OVERVIEW + ", A." + COLUMN_RELEVANT_INFO + ", A." + COLUMN_IMG1 + ", A." + COLUMN_COM1
+
+                + ", A." + COLUMN_ITEM_STATUS + ", A." + COLUMN_NOTES + ", A." + COLUMN_SERVICED_BY
+                + " FROM " + TABLE_ACTION_ITEM + " A "
+                + " WHERE A." + COLUMN_PROJECT_ID + " = " + projId + " AND A." + COLUMN_A_ID + " = " + aId + " AND A." + COLUMN_INSPECTION_ID + " = " + iId;
+
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+                actionItem = new HashMap<String, String>();
+                actionItem.put(MyConfig.TAG_DATE_INSPECTED, (String.valueOf(cursor.getInt(0))));
+                actionItem.put(MyConfig.TAG_OVERVIEW, cursor.getString(1));
+                actionItem.put(MyConfig.TAG_RELEVANT_INFO, cursor.getString(2));
+                actionItem.put(MyConfig.TAG_IMAGE1, cursor.getString(3));
+                actionItem.put(MyConfig.TAG_COM1, cursor.getString(4));
+                actionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(5));
+                actionItem.put(MyConfig.TAG_NOTES, cursor.getString(6));
+                actionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(7));
+                actionItemList.add(actionItem);
+            } while (cursor.moveToNext());
+        }
+
+
+        // return inspection data for propertyid, Jobid, inspection id
+        database.close();
+        return actionItem;
 
 
     }
@@ -1353,6 +1468,56 @@ public class DBHandler extends SQLiteOpenHelper {
         return count;
 
     }
+
+
+    //Get a list of sublocations to populate the sub location spinner
+    public ArrayList<HashMap<String, String>> getProjects() {
+
+
+        HashMap<String, String> ProjectMap;
+        ArrayList<HashMap<String, String>> ProjectMapArrayList;
+
+        ProjectMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQuery = "SELECT P."+COLUMN_PROJECT_ADDRESS+", P." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
+                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+
+                + " FROM " + TABLE_PROJECT_INFO + " P"
+                + " JOIN " + TABLE_INSPECTION + " I"
+                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+            //    + " GROUP BY P."+COLUMN_PROJECT_ID
+
+                + " ORDER BY I." + COLUMN_INSPECTION_ID;
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProjectMap = new HashMap<String, String>();
+
+                ProjectMap.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(0));
+                ProjectMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                ProjectMap.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(2));
+                ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(3))));
+                ProjectMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                ProjectMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(5))));
+                ProjectMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(6))));
+                ProjectMap.put(MyConfig.TAG_IMAGE, cursor.getString(7));
+                ProjectMap.put(MyConfig.TAG_NOTE, cursor.getString(8));
+
+                ProjectMapArrayList.add(ProjectMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return ProjectMapArrayList;
+
+    }
+
 
 
     //Get a list of sublocations to populate the sub location spinner

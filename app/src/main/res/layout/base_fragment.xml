@@ -35,14 +35,23 @@
                     android:background="@drawable/head_frame"
                     android:paddingBottom="20dp">
 
+                    <TextView
+                        android:id="@+id/page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="Navigation Mode "
 
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="normal|bold" />
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                  android:text="Item Title:  "
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="normal|bold" />
 
@@ -52,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:text="Item Title:  "
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />
 
@@ -73,24 +82,68 @@
                     android:id="@+id/note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edit_border"
                     android:layout_margin="5dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:hint="Descriptive notes here"
                     android:textSize="16sp"/>
 
 
             </LinearLayout>
+
+
 
             <LinearLayout
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:background="@drawable/image_border"
                 android:layout_marginRight="5dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
+
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.1">
+
+                        <ImageView
+                            android:id="@+id/imageView_cam"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:cropToPadding="false"
+                            android:paddingLeft="2dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="2dp"
+                            android:paddingBottom="2dp"
+                            android:layout_margin="2dp"
+                            android:layout_gravity="left"
+                            android:background="@drawable/edit_border"
+                            app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                        <ImageView
+                            android:id="@+id/imageView_draw"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="bottom|right"
+                            android:visibility="visible"
+                            android:background="@drawable/image_border"
+                            android:foreground="@android:drawable/ic_menu_edit" />
+
+                    </FrameLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/image_border"
+                    >
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -117,46 +170,16 @@
                         android:id="@+id/imageView_file"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_gravity="bottom|left"
+                        android:layout_gravity="bottom|right"
                         android:layout_marginBottom="10dp"
                         android:foreground="@android:drawable/ic_menu_gallery" />
 
-                    <ImageView
-                        android:id="@+id/imageView_draw"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="bottom|center"
-                        android:visibility="visible"
-                        android:layout_marginBottom="10dp"
-                        android:foreground="@android:drawable/ic_menu_edit" />
-
-                    <ImageView
-                        android:id="@+id/imageView_cam"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="bottom|right"
-                        android:layout_marginBottom="10dp"
-                        android:saveEnabled="false"
-                        android:foreground="@android:drawable/ic_menu_camera" />
 
 
-
-
-
-                </FrameLayout>
-
-
-
-
-
-
-
-
-
+                 </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
-
-
 
 
     </LinearLayout>

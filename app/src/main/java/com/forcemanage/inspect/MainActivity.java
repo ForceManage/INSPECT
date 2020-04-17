@@ -84,7 +84,7 @@ import static java.lang.Integer.parseInt;
 import static java.util.Objects.isNull;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener,  View.OnClickListener {
 
     public static final int REQUEST_CODE = 20;
     private Button buttonUpdatePropInfo;
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String projectId;
     private String fname;
     private String cat;
+    private List<MapViewData> listItems;
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -153,7 +154,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTransferUtility();
 
 
+        DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
+
+        //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
+        //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
+
+
+       // init();
+
+        ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects();
+
+        listItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (Projects.size()); i++){
+
+            listItem = new MapViewData(
+
+
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                 //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt("0"),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Projects.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
+                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
+                    Projects.get(i).get(MyConfig.TAG_NOTES)
+            );
+            listItems.add(listItem);
+        }
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        //     TreeViewLists.LoadDisplayList();
+
+
+        if (findViewById(R.id.fragment_container) != null){
+
+            // However if we are being restored from a previous state, then we don't
+            // need to do anything and should return or we could end up with overlapping Fragments
+            if (savedInstanceState != null){
+                return;
+            }
+
+            // Create an Instance of Fragment
+            MapViewFragment treeFragment = new MapViewFragment();
+            treeFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, treeFragment)
+                    .commit();
+
+        }
 
         List<String> inspectors = new ArrayList<String>();
         inspectors.add("AP");
@@ -224,6 +276,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void OnSelectionChanged(int treeNameIndex) {
+
+    }
 
     @Override
     public void onResume(){
@@ -770,6 +826,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String inspectionStatus = jo.getString(MyConfig.TAG_INSPECTION_STATUS);
 //               String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
 //                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
+                String Label = jo.getString(MyConfig.TAG_LABEL);
+                String Level = jo.getString(MyConfig.TAG_LEVEL);
+                String Parent = jo.getString(MyConfig.TAG_PARENT);
+                String pID = jo.getString(MyConfig.TAG_P_ID);
+                String Image = jo.getString(MyConfig.TAG_IMAGE);
+                String Note = jo.getString(MyConfig.TAG_NOTE);
                 String dateInspected = jo.getString(MyConfig.TAG_DATE_INSPECTED);
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
                 String servicedBy = jo.getString(MyConfig.TAG_SERVICED_BY);
@@ -802,6 +864,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int InspectionId = parseInt(inspectionId);
                 int noLevels = parseInt(nmbrLevels);
                 int a_Id = parseInt(aId);
+                int p_Id = parseInt(pID);
+                int level = parseInt(Level);
+                int parent = parseInt(Parent);
 //                int startDateTime_ = parseInt(startDateTime);
 //                int endDateTime_ = parseInt(endDateTime);
    //             int ServiceLevel = parseInt(serviceLevel);
@@ -811,7 +876,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // editTextMessage.setText("Test 1");
 
 
-                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector);
+                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, Label, level, parent, p_Id, Image, Note);
 
                 // editTextMessage.setText("Test 2");
 

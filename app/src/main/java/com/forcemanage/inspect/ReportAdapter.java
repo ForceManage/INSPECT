@@ -103,23 +103,23 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                     Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
                     if (i == 0){
                         image1.setImageBitmap(myBitmap);
-                        fig0.setText("Fig "+itemNo+"0");
+                        fig0.setText("Fig "+itemNo+".0");
                     }
                     if (i == 1){
                         image2.setImageBitmap(myBitmap);
-                        fig1.setText("Fig "+itemNo+"1");
+                        fig1.setText("Fig "+itemNo+".1");
                     }
                     if (i == 2){
                         image3.setImageBitmap(myBitmap);
-                        fig2.setText("Fig "+itemNo+"2");
+                        fig2.setText("Fig "+itemNo+".2");
                     }
                     if (i == 3) {
                         image4.setImageBitmap(myBitmap);
-                        fig3.setText("Fig "+itemNo+"3");
+                        fig3.setText("Fig "+itemNo+".3");
                     }
                     if (i == 4){
                         image5.setImageBitmap(myBitmap);
-                        fig4.setText("Fig "+itemNo+"4");
+                        fig4.setText("Fig "+itemNo+".4");
                     }
                 }
             }

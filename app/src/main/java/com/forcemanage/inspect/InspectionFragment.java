@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -48,10 +49,11 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private TextView title;
     private TextView branch;
     private EditText notes;
-    private ImageView Img1;
-    private ImageView Img2;
-    private ImageView Img3;
-    private ImageView Img4;
+    private ImageView cam1;
+    private ImageView cam2;
+    private ImageView cam3;
+    private ImageView cam4;
+    private ImageView cam5;
     private ImageView photoA;
     private ImageView photoB;
     private ImageView photoC;
@@ -131,12 +133,24 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         //       btnInspection = (Button) view.findViewById(R.id.btnInspection);
 
 
+
+
         Log.d(TAG, "oncreateview: started");
 
         title = (TextView) view.findViewById(R.id.branchTitle);
         branch = (TextView) view.findViewById(R.id.branchName);
         notes = (EditText) view.findViewById(R.id.note);
 
+        cam1 = (ImageView) view.findViewById(R.id.cameraClick1);
+        cam1.setOnClickListener(this);
+        cam2 = (ImageView) view.findViewById(R.id.cameraClick2);
+        cam2.setOnClickListener(this);
+        cam3 = (ImageView) view.findViewById(R.id.cameraClick3);
+        cam3.setOnClickListener(this);
+        cam4 = (ImageView) view.findViewById(R.id.cameraClick4);
+        cam4.setOnClickListener(this);
+        cam5 = (ImageView) view.findViewById(R.id.cameraClick5);
+        cam5.setOnClickListener(this);
         photoA = (ImageView) view.findViewById(R.id.imageView);
         //photoA.setOnClickListener(this);
         photoB = (ImageView) view.findViewById(R.id.imageView2);
@@ -147,9 +161,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoD.setOnClickListener(this);
         photoE = (ImageView) view.findViewById(R.id.imageView5);
         photoE.setOnClickListener(this);
-
-        photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
-        photo_cam.setOnClickListener(this);
 
         photo_draw = (ImageView) view.findViewById(R.id.imageView_draw);
         photo_draw.setOnClickListener(this);
@@ -175,6 +186,18 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         del_img5 = (ImageView) view.findViewById(R.id.imageView5_del);
         del_img5.setOnClickListener(this);
 
+        if(!globalVariables.photo1.equals(""))
+        cam1.setBackgroundResource(R.drawable.edit_border_solid);
+        if(!globalVariables.photo2.equals(""))
+            cam2.setBackgroundResource(R.drawable.edit_border_solid);
+        if(!globalVariables.photo3.equals(""))
+            cam3.setBackgroundResource(R.drawable.edit_border_solid);
+        if(!globalVariables.photo4.equals(""))
+            cam4.setBackgroundResource(R.drawable.edit_border_solid);
+        if(!globalVariables.photo5.equals(""))
+            cam5.setBackgroundResource(R.drawable.edit_border_solid);
+      //  else
+       //     cam1.setBackgroundResource(R.drawable.edit_border);
 
 
          Overview = (EditText) view.findViewById(R.id.Overview);
@@ -185,6 +208,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
          com3Text  = (EditText) view.findViewById(R.id.com3);
          com4Text  = (EditText) view.findViewById(R.id.com4);
          com5Text  = (EditText) view.findViewById(R.id.com5);
+
          final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
 
 
@@ -204,18 +228,63 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com5Text.setText(com5);
 
 
-            checkBox.setOnClickListener(new View.OnClickListener() {
+        checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                  //   Edited = true;
                 }
             });
 
-        photo_cam.setOnClickListener(new View.OnClickListener() {
+
+        cam1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 globalVariables.photoframe = 1;
                 globalVariables.mPhotoImageView = photoA;
+                globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+
+            }
+        });
+
+        cam2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 2;
+                globalVariables.mPhotoImageView = photoB;
+                globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+
+            }
+        });
+
+        cam3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 3;
+                globalVariables.mPhotoImageView = photoC;
+                globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+
+            }
+        });
+
+        cam4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 4;
+                globalVariables.mPhotoImageView = photoD;
+                globalVariables.takeImageFromCamera(null);
+                globalVariables.Edited = true;
+
+            }
+        });
+
+        cam5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 5;
+                globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
 
@@ -288,7 +357,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photo_file2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.filephoto = 1;
+                globalVariables.filephoto = 2;
                 globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -355,7 +424,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photo_file3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.filephoto = 1;
+                globalVariables.filephoto = 3;
                 globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);

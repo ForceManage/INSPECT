@@ -95,8 +95,8 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
         Log.d(TAG, "oncreateview: started");
 
-        title = (TextView) view.findViewById(R.id.branchTitle);
-        branch = (TextView) view.findViewById(R.id.branchName);
+        title = (TextView) view.findViewById(R.id.title);
+        branch = (TextView) view.findViewById(R.id.level);
         notesE = (EditText) view.findViewById(R.id.note);
 
         photoA = (ImageView) view.findViewById(R.id.imageView);

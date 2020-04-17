@@ -4,18 +4,17 @@ package com.forcemanage.inspect;
  * Created by cindyoakes on 9/23/16.
  */
 
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.fragment.app.ListFragment;
+
 
 public class MapViewFragment extends ListFragment {
 
 
-
-    int indx;
 
 
     MapListAdapter mAdapter;
@@ -65,7 +64,7 @@ public class MapViewFragment extends ListFragment {
         mAdapter.notifyDataSetChanged();
 
 
-       // TreeViewNode node = GlobalVariables.displayNodes.get(position);
+        MapViewNode node = GlobalVariables.displayNodes.get(position);
 
 
         OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();

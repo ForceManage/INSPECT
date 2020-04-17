@@ -80,8 +80,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         holder.content.setText(node.getNodeName());
 
 
-        int node_level = node.getNodeLevel();
-        int node_branchCat = node.getbranchCat();
+       int node_branchCat = node.getbranchCat();
 
         switch (node_branchCat){
 
@@ -92,10 +91,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                     holder.arrow.setImageResource(R.drawable.ic_chevron_right);
                 break;
            }
-            case 1: holder.arrow.setImageResource(R.drawable.ic_note);
+            case 1: holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
             break;
 
-            case 2: holder.arrow.setImageResource(R.drawable.ic_note);
+            case 2: holder.arrow.setImageResource(R.drawable.ic_note_text);
                 break;
 
         }
@@ -142,39 +141,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                     }
 
-                 //  InspectionActivity inspectionActivity = new InspectionActivity();
-                 //  inspectionActivity.deleteInspectionItem(GlobalVariables.jId, GlobalVariables.aId,GlobalVariables.rId);
-                 //  inspectionActivity.loadLocations();
 
-                  // remove(node);
+                  MapViewLists.LoadDisplayList();
 
-
-                 //   remove(node);
-
-                    MapViewLists.LoadDisplayList();
-                  //  clear();
-                    notifyDataSetChanged();
+                   notifyDataSetChanged();
 
 
-               //
-
-
- /*
-                    TreeViewNode node = GlobalVariables.displayNodes.get(0);
-
-                    if (node.getIsExpanded() == GlobalVariables.TRUE) {
-                        node.setIsExpanded(GlobalVariables.FALSE);
-
-                    } else {
-                        if (node.getNodeChildren() != null)
-                            node.setIsExpanded(GlobalVariables.TRUE);
-
-                    }
-
-                    TreeViewLists.LoadDisplayList();
-                    notifyDataSetChanged();
-*/
-                }
+               }
 
                 // showMessage("Adapter listener "+node.getNodeChildren().toString());
             }

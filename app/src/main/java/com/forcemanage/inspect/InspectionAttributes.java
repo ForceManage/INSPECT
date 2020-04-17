@@ -11,12 +11,22 @@ public class InspectionAttributes {
     private int _projectId;
     private String _inspectionDate;
     private String _inspector;
+
+
  //   private int _startDateTime;
  //   private int _endDateTime;
+    private String _label;
+    private int _level;
+    private int _parent;
+    private int _pID;
+    private String _image;
+    private String _note;
 
     public InspectionAttributes() {
     }
-    public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate, String inspector) {
+
+    public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate,
+                                String inspector, String label, int level, int parent, int pid, String image, String note){  //, int parent, int aID, String img1, String notes) {
         this._inspectionId = inspectionId;
         this._inspectionType = inspectionType;
         this._inspectionStatus = inspectionStatus;
@@ -24,6 +34,12 @@ public class InspectionAttributes {
         this._inspectionType = inspectionType;
         this._inspectionDate = inspectionDate;
         this._inspector = inspector;
+        this._label = label;
+        this._level = level;
+        this._parent = parent;
+        this._pID = pid;
+        this._image = image;
+        this._note = note;
 //        this._startDateTime = startDateTime;
 //        this._endDateTime = endDateTime;
      }
@@ -53,4 +69,50 @@ public class InspectionAttributes {
  //   public int getendDateTime() {return this._endDateTime;}
 
 
+    public void setlabel(String label) {this._label = label;
+    }
+
+    public String getlabel() {
+        return this._label;
+    }
+
+    public void setlevel(int level) {
+        this._level = level;
+    }
+
+    public int getlevel() {
+        return _level;
+    }
+
+    public void setparent(int parent) {
+        this._parent = parent;
+    }
+
+    public int getparent() {
+        return _parent;
+    }
+
+    public void setpID(int pID) {
+        this._pID = pID;
+    }
+
+    public int getpID() {
+        return _pID;
+    }
+
+    public String getimage() {
+        return _image;
+    }
+
+    public String getnote() {
+        return _note;
+    }
+
+    public void setimage(String image) {
+        this._image = image;
+    }
+
+    public void setnote(String note) {
+        this._note = note;
+    }
 }
