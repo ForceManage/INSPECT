@@ -22,6 +22,7 @@ public class DetailFragment extends Fragment
     int mCurrentPosition = -1;
     int id;
     int aID;
+    int cat;
     String Name;
 
     TextView mDetailTextView;
@@ -83,7 +84,8 @@ public class DetailFragment extends Fragment
             mCurrentPosition = detailIndex;
             mDetailTextView.setText(node.getNodeName());
             Name = node.getNodeName();
-            aID = node.getID();
+            aID = node.getaID();
+            cat = node.getbranchCat();
         }
         else   Log.v("set Detail ", "index > display Nodes ");
 

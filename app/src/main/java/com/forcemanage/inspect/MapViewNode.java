@@ -37,7 +37,7 @@ public class MapViewNode
         this._nodeLevel = nodeLevel;
     }
 
-    public int getID()
+    public int getaID()
     {
         return _aID;
     }
@@ -46,6 +46,8 @@ public class MapViewNode
     {
         this._aID = aID;
     }
+
+
 
     public int getbranchCat()
     {

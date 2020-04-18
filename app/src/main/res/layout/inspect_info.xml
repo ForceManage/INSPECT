@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@drawable/image_border"
+            android:orientation="vertical">
+
+
+            <ScrollView
+
+                android:id="@+id/scroll_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/head_frame"
+                    android:paddingBottom="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.75">
+
+                    <TextView
+                        android:id="@+id/page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="Information Branch  "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="10dp"
+                        android:text="Project:  "
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="10dp"
+                        android:text="Collated Information  "
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right">
+
+                    <Button
+                        android:id="@+id/btnInspection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:backgroundTint="@android:color/tertiary_text_light"
+                        android:drawableLeft="@android:drawable/ic_media_ff"
+                        android:text="INSPECTION"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </FrameLayout>
+
+                </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/Service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="Applicable provider:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+                        <EditText
+                            android:id="@+id/textServicedBy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Relevant trade/skillset applicable"
+                            android:textSize="16sp"/>
+
+
+
+
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Overview:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+                    <EditText
+                        android:id="@+id/Overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Item overview here. Specific text input below each photo."
+                        android:textSize="16sp"/>
+
+
+                    <TextView
+                        android:id="@+id/relevantInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Relevant Information:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+                    <EditText
+                        android:id="@+id/RelevantInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Other Subject information "
+                        android:textSize="16sp"/>
+
+
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Notes:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Author notes (text not printed)"
+                        android:textSize="16sp"/>
+
+
+
+                    <CheckBox
+                        android:id="@+id/sign_checkBox"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Certified Sign-off. Checking signifies the Item has been inspected and commentary varified" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="bottom">
+
+
+
+
+            </FrameLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,6 +37,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private RecyclerView recyclerView;
   //  private List<Joblistdata> jobList;
+    private String FragDisplay;
 
     AmazonS3 s3Client;
     String bucket = "iappfiles";
@@ -161,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
 
 
-       // init();
+        init();
 
         ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects();
 
@@ -175,8 +179,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
                  //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
-                    Integer.parseInt("0"),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
+
                     Projects.get(i).get(MyConfig.TAG_LABEL),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
@@ -229,8 +234,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         buttonSyncAll.setOnClickListener(this);
         buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
         buttonSyncPhotos.setOnClickListener(this);
-        buttonInspection = (Button) findViewById(R.id.btnInspection);
-        buttonInspection.setOnClickListener(this);
+   //     buttonInspection = (Button) findViewById(R.id.btnInspection);
+   //     buttonInspection.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
         buttonLoadNotes = (Button) findViewById(R.id.btnDownload_O_R);
@@ -239,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         info_icon.setOnClickListener(this);
         photo_cam =(ImageView) findViewById(R.id.imageView_cam);
         photo_cam.setOnClickListener(this);
-        TextMessage = (EditText) findViewById(R.id.editText6);
         buttonClearAll.setEnabled(false);
         // listView = (ListView)findViewById(R.id.lstMain);
 
@@ -276,9 +280,37 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    private void init(){
+
+        ProjectInfoFragment fragment = new ProjectInfoFragment();
+        doFragmentTransaction(fragment,"ProjectInfoFragment",false,"");
+
+    }
+
+    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragDisplay = name;
+        transaction.replace(R.id.mainfragment_container,fragment,name);
+        if(addToBackStack){
+            transaction.addToBackStack(name);
+        }
+        transaction.commit();
+    }
+
     @Override
     public void OnSelectionChanged(int treeNameIndex) {
 
+
+        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+
+        projectId = Integer.toString(node.getbranchCat()); //This is setup in MainActivity as BranchCat to work with MapList
+        inspectionId = Integer.toString(node.getaID());
+
+        if(node.getNodeLevel() == 1) {
+            InspectInfoFragment fragment = new InspectInfoFragment();
+            doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+        }
     }
 
     @Override
@@ -286,7 +318,42 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         super.onResume();
         //   updatePropList();
-        //  Toast.makeText(this, "This has just resumed. Do a login", Toast.LENGTH_LONG).show();
+       //   Toast.makeText(this, "This has just resumed. Do a login", Toast.LENGTH_LONG).show();
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+        if (GlobalVariables.modified == true) {
+            MapViewFragment newDetailFragment = new MapViewFragment();
+            Bundle args = new Bundle();
+            detailFragment.mCurrentPosition = -1;
+
+            args.putInt(DetailFragment.KEY_POSITION, 0);
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            FragmentManager fm = getSupportFragmentManager();
+
+
+            //fm.popBackStack(DF,0);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            GlobalVariables.modified = false;
+            OnSelectionChanged(0);
+
+
+
+
+        }
+
     }
 
 
@@ -427,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
         }
 
-        if (v == buttonInspection) {
+ /*       if (v == buttonInspection) {
             Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
 
             //Intent theIntent = new Intent(getApplication(), ViewReportActivity.class);
@@ -436,6 +503,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             else {
 
+                GlobalVariables.modified = true;
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
@@ -446,6 +514,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             }
         }
+
+  */
 
         if (v == photo_cam) {
 
@@ -688,7 +758,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //for(int i = 0; i<list.size(); i++){
         //    propertyList[i] = "Lake street, 25, Reservoir";
         //}
-        if (list.size() == 0) {
+   /*     if (list.size() == 0) {
 
             recyclerView  = (RecyclerView) findViewById(R.id.reportView);
             recyclerView.setAdapter(null);
@@ -782,8 +852,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         }
-    }
 
+    */
+    }
 
 
     //Update the SQLite db with data from MySQL db
