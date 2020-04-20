@@ -10,20 +10,22 @@ public class MapViewData
     private int catId;
     private int branchCat;
     private String label;
-    private int aid;
+    private int aId;
+    private int iId;
     private int parent;
     private String image1;
     private String notes;
 
     public MapViewData() {}
 
-    public MapViewData(int Level, int CatID, int branchCat, String Label, int aID, int Parent, String Image1, String Notes)
+    public MapViewData(int Level, int CatID, int branchCat, String Label, int aID, int iID, int Parent, String Image1, String Notes)
     {
         this.level= Level;
         this.catId = CatID;
         this.branchCat = branchCat;
         this.label = Label;
-        this.aid = aID;
+        this.aId = aID;
+        this.iId = iID;
         this.parent = Parent;
         this.image1 = Image1;
         this.notes = Notes;
@@ -69,12 +71,22 @@ public class MapViewData
 
     public int getaID()
     {
-        return aid;
+        return aId;
     }
 
     public void setaID(int aID)
     {
-        this.aid = aID;
+        this.aId = aID;
+    }
+
+    public int getiID()
+    {
+        return iId;
+    }
+
+    public void setiID(int iID)
+    {
+        this.aId = iID;
     }
 
     public int getParent()

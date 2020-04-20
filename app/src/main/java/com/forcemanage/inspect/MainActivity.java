@@ -39,6 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -112,10 +113,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private ImageView photo_cam;
     private File photo;
     private String dirName;
-    private String inspectionId;
-    private String projectId;
+    public String inspectionId;
+    public String projectId;
     private String fname;
     private String cat;
+
     private List<MapViewData> listItems;
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
@@ -178,11 +180,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                 //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                 //
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
 
                     Projects.get(i).get(MyConfig.TAG_LABEL),
+
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
                     Projects.get(i).get(MyConfig.TAG_IMAGE1),
@@ -305,12 +309,26 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         projectId = Integer.toString(node.getbranchCat()); //This is setup in MainActivity as BranchCat to work with MapList
-        inspectionId = Integer.toString(node.getaID());
+        inspectionId = Integer.toString(node.getiID());
 
-        if(node.getNodeLevel() == 1) {
-            InspectInfoFragment fragment = new InspectInfoFragment();
-            doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+
+        switch (node.getNodeLevel()){
+
+            case 0:{
+
+                ProjectInfoFragment fragment = new ProjectInfoFragment();
+                doFragmentTransaction(fragment,"ProjectInfoFragment",false,"");
+                break;
+            }
+            case 1:{
+
+                InspectInfoFragment fragment = new InspectInfoFragment();
+                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                break;
+            }
         }
+
+
     }
 
     @Override
@@ -320,9 +338,47 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //   updatePropList();
        //   Toast.makeText(this, "This has just resumed. Do a login", Toast.LENGTH_LONG).show();
 
+
+  /*      DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects();
+
+        listItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (Projects.size()); i++){
+
+            listItem = new MapViewData(
+
+
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
+
+                    Projects.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
+                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
+                    Projects.get(i).get(MyConfig.TAG_NOTES)
+            );
+            listItems.add(listItem);
+        }
+
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        //     TreeViewLists.LoadDisplayList();
+
+*/
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        MapViewLists.LoadDisplayList();
+        GlobalVariables.modified = true;
+        //    MapListAdapter mAdapter = new MapListAdapter(this);
+        //   mAdapter.notifyDataSetChanged();
+        //   OnSelectionChanged(0);
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
+
+
         if (GlobalVariables.modified == true) {
             MapViewFragment newDetailFragment = new MapViewFragment();
             Bundle args = new Bundle();
@@ -347,7 +403,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             GlobalVariables.modified = false;
-            OnSelectionChanged(0);
+     //       MapListAdapter mapListAdapter = new MapListAdapter(this);
+     //       mapListAdapter.notifyDataSetChanged();
+         //   OnSelectionChanged(0);
 
 
 
@@ -468,7 +526,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             if (nInfo != null && nInfo.isConnected()) {
                 //editTextMessage.setText(selectedItem ); // possibly intended to use this tocheckwhat was uploaded....
                 syncToServer();
-                recyclerView.setAdapter(null);
+
 
 
             } else {
@@ -752,7 +810,51 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
       //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-      //  ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects();
+        listItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (Projects.size()); i++){
+
+            listItem = new MapViewData(
+
+
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
+
+                    Projects.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
+                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
+                    Projects.get(i).get(MyConfig.TAG_NOTES)
+            );
+            listItems.add(listItem);
+        }
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        //     TreeViewLists.LoadDisplayList();
+
+
+        if (findViewById(R.id.fragment_container) != null){
+
+            // However if we are being restored from a previous state, then we don't
+            // need to do anything and should return or we could end up with overlapping Fragments
+       //     if (savedInstanceState != null){
+       //         return;
+       //     }
+
+            // Create an Instance of Fragment
+            MapViewFragment treeFragment = new MapViewFragment();
+            treeFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, treeFragment)
+                    .commit();
+
+        }
 
         // To Implement: populate the string and preferably go to item in list... otherwise find a way to include property ID without displaying
         //for(int i = 0; i<list.size(); i++){
@@ -1006,6 +1108,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String Label = jo.getString(MyConfig.TAG_LABEL);
                 String Child = jo.getString(MyConfig.TAG_CHILD);
                 String aId = jo.getString(MyConfig.TAG_A_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String Photo = jo.getString(MyConfig.TAG_IMAGE1);
                 String Note = jo.getString(MyConfig.TAG_NOTES);
 
@@ -1014,13 +1117,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 int ProjId = parseInt(projId);
                 int a_Id = parseInt(aId);
+                int i_Id = parseInt(iId);
                 int CatId = parseInt(catId);
                 int level = parseInt(Level);
                 int parent = parseInt(Parent);
                 int child = parseInt(Child);
 
 
-                MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, Photo, Note);
+                MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, i_Id, Photo, Note);
                 // editTextMessage.setText("Additional Test 1");
 
                       //editTextMessage.setText("Test 5");

@@ -50,7 +50,7 @@ public class MapViewLists
 
 
 
-     //   TreeViewLists.LoadDisplayList();
+     //   MapViewLists.LoadDisplayList();
         return GlobalVariables.dataList;
 
         // return GlobalVariables.dataList;
@@ -80,6 +80,7 @@ public class MapViewLists
             node.setNodeName(data.getLabel());
             node.setbrancCat(data.getBranchCat());
             node.setaID(data.getaID());
+            node.setiID(data.getiID());
             int newLevel = data.getLevel() + 1;
             node.setNodeChildern(null);
             ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
@@ -117,6 +118,7 @@ public class MapViewLists
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
             node.setaID(data.getaID());
+            node.setiID(data.getiID());
             node.setbrancCat(data.getBranchCat());
             node.setIsExpanded(GlobalVariables.FALSE);
             int newLevel = level + 1;

@@ -10,6 +10,7 @@ public class MapViewNode
 {
     private int _nodeLevel;
     private int _aID;
+    private int _iID;
     private int _branchCat;
     private String _isExpanded;
     private String _nodeName;
@@ -17,10 +18,11 @@ public class MapViewNode
 
     public MapViewNode() {}
 
-    public MapViewNode(int nodeLevel, int aID, int branchCat, String isExpanded, String nodeName, ArrayList<MapViewNode> nodeChildren)
+    public MapViewNode(int nodeLevel, int aID, int iID, int branchCat, String isExpanded, String nodeName, ArrayList<MapViewNode> nodeChildren)
     {
         this._nodeLevel = nodeLevel;
         this._aID = aID;
+        this._iID = iID;
         this._branchCat = branchCat;
         this._isExpanded = isExpanded;
         this._nodeName = nodeName;
@@ -47,7 +49,15 @@ public class MapViewNode
         this._aID = aID;
     }
 
+    public int getiID()
+    {
+        return _iID;
+    }
 
+    public void setiID(int iID)
+    {
+        this._iID = iID;
+    }
 
     public int getbranchCat()
     {

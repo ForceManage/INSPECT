@@ -19,7 +19,7 @@ import java.util.logging.Level;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -141,6 +141,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_LABEL + " TEXT,"
                 + COLUMN_CHILD + " INTEGER,"
                 + COLUMN_A_ID + " INTEGER,"
+                + COLUMN_INSPECTION_ID + " INTEGER,"
                 + COLUMN_IMG1 + " TEXT,"
                 + COLUMN_NOTES + " TEXT,"
                 + "PRIMARY KEY " + "(" + COLUMN_PROJECT_ID + "," + COLUMN_A_ID + "))";
@@ -394,6 +395,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_LABEL, mapAttributes.getlabel());
         values.put(COLUMN_CHILD, mapAttributes.getchild());
         values.put(COLUMN_A_ID, mapAttributes.getaId());
+        values.put(COLUMN_INSPECTION_ID, mapAttributes.getiId());
         values.put(COLUMN_IMG1, mapAttributes.getimage1());
         values.put(COLUMN_NOTES, mapAttributes.getnote());
 
@@ -1071,7 +1073,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // Retrieve individual current inspection
-    public HashMap<String, String> getInspection(int projId, int aId, int iId) {
+    public HashMap<String, String> getInspection(int projId, int iId) {
         // Open a database for reading and writing
 
         HashMap<String, String> inspectionItem = new HashMap<String, String>();
@@ -1087,7 +1089,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
                 + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY
                 + " FROM " + TABLE_INSPECTION_ITEM + " I "
-                + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
+                + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
 
 
         //add additional fields: status,  notes, print flag
@@ -1521,7 +1523,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getMap(int projID) {
+    public ArrayList<HashMap<String, String>> getMap(int projID, int iID) {
 
 
         HashMap<String, String> SiteMap;
@@ -1533,11 +1535,11 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
-                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
 
                 + " FROM " + TABLE_MAP + " M"
 
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID//+" AND (A."+COLUMN_CATEGORY_ID+" = 'A' OR A."+COLUMN_CATEGORY_ID+" = 'Z')"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
                 + " ORDER BY M." + COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -1545,18 +1547,19 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 SiteMap = new HashMap<String, String>();
-
-                SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(0))));
-                SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
-                SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(2))));
-                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(3));
-                SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(4))));
-                SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(5))));
-                SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(6));
-                SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
+                   SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(0))));
+                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
+                    SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(2))));
+                    SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(3));
+                    SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(4))));
+                    SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(5))));
+                    SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(6))));
+                    SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(7));
+                    SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(8));
 
 
                 SiteMapArrayList.add(SiteMap);
+
             } while (cursor.moveToNext());
         }
 

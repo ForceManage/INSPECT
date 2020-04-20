@@ -38,13 +38,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/head_frame"
-                    android:paddingBottom="20dp">
+                   >
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_weight="0.75">
+                        android:layout_weight="0.9">
 
                     <TextView
                         android:id="@+id/page"
@@ -82,94 +82,64 @@
                 </LinearLayout>
 
 
-                    <FrameLayout
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|right">
+                        android:layout_weight="0.2"
+                       >
 
-                    <Button
-                        android:id="@+id/btnInspection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:backgroundTint="@android:color/tertiary_text_light"
-                        android:drawableLeft="@android:drawable/ic_media_ff"
-                        android:text="INSPECTION"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        <ImageButton
+                            android:id="@+id/InspectionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/navigate_next_foreground">
 
-                </FrameLayout>
+                        </ImageButton>
+
+
+                </LinearLayout>
 
                 </LinearLayout>
 
                         <TextView
-                            android:id="@+id/Service"
+                            android:id="@+id/Text1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
-                            android:layout_marginTop="20dp"
-                            android:text="Applicable provider:  "
+                            android:layout_marginTop="25dp"
+                            android:text="Date of Inspection:  "
                             android:textColor="@android:color/black"
-                            android:textStyle="normal|bold" />
-
-                        <EditText
-                            android:id="@+id/textServicedBy"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
-                            android:hint="Relevant trade/skillset applicable"
-                            android:textSize="16sp"/>
-
-
-
+                            android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/overview"
+                        android:id="@+id/Text2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Overview:  "
+                        android:layout_marginTop="15dp"
+                        android:text="Type of Inspection:  "
                         android:textColor="@android:color/black"
-                        android:textStyle="normal|bold" />
-
-
-                    <EditText
-                        android:id="@+id/Overview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:hint="Item overview here. Specific text input below each photo."
-                        android:textSize="16sp"/>
-
+                        android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/relevantInfo"
+                        android:id="@+id/Text3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Relevant Information:  "
+                        android:layout_marginTop="15dp"
+                        android:text="Auditor:  "
                         android:textColor="@android:color/black"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal" />
 
-                    <EditText
-                        android:id="@+id/RelevantInfo"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/Text4"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:hint="Other Subject information "
-                        android:textSize="16sp"/>
-
+                        android:layout_marginTop="15dp"
+                        android:text=":  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
 
 
                     <TextView

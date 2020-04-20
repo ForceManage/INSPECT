@@ -196,7 +196,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         init();
 
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId, iID);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -209,6 +209,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
                      SiteMapData.get(i).get(MyConfig.TAG_LABEL),
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
                      SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
                      SiteMapData.get(i).get(MyConfig.TAG_NOTES)
@@ -217,17 +218,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         }
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
-   //     TreeViewLists.LoadDisplayList();
+     //   MapViewLists.LoadDisplayList();
+
+         GlobalVariables.modified = false;
 
 
         if (findViewById(R.id.fragment_container) != null){
 
             // However if we are being restored from a previous state, then we don't
             // need to do anything and should return or we could end up with overlapping Fragments
-            if (savedInstanceState != null){
-                return;
-            }
-
+        //    if (savedInstanceState != null){
+        //        return;
+       //     }
+//
             // Create an Instance of Fragment
             MapViewFragment treeFragment = new MapViewFragment();
             treeFragment.setArguments(getIntent().getExtras());
@@ -293,7 +296,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public void loadMap()  {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -306,6 +309,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
                     SiteMapData.get(i).get(MyConfig.TAG_LABEL),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
                     SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
                     SiteMapData.get(i).get(MyConfig.TAG_NOTES)
@@ -610,7 +614,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                case 1:{
 
 
-                   HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
+                   HashMap<String, String> list = dbHandler.getInspection(projId, iID);
 
                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                    Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -1676,6 +1680,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     protected void onDestroy() {
 
         super.onDestroy();
+        GlobalVariables.modified = true;
 
         if(Edited == true )saveInspectionItem();
 

@@ -13,10 +13,11 @@ public class MAPattributes {
         private String _label;
         private int _child;
         private int _aId;
+        private int _iId;
         private String _image1;
         private String _note;
 
-        public MAPattributes(int ProjectID, int CatID, int Level, int Parent, String Label, int Child, int aID, String image1, String Notes) {
+        public MAPattributes(int ProjectID, int CatID, int Level, int Parent, String Label, int Child, int aID, int iID, String image1, String Notes) {
 
             this._projectId = ProjectID;
             this._catID = CatID;
@@ -25,6 +26,7 @@ public class MAPattributes {
             this._label = Label;
             this._child = Child;
             this._aId = aID;
+            this._iId = iID;
             this._image1= image1;
             this._note = Notes;
 
@@ -54,6 +56,8 @@ public class MAPattributes {
 
         public int getaId() {return _aId; }
 
+        public int getiId() {return _iId; }
+
         public String getimage1() {return _image1; }
 
         public String getnote() {return _note; }
@@ -82,6 +86,10 @@ public class MAPattributes {
 
         public void setaId(int _aId) {
         this._aId = _aId;
+    }
+
+        public void setiId(int _iId) {
+        this._iId = _iId;
     }
 
         public void set_image1(String _image1) {

@@ -44,6 +44,8 @@ public class MapViewFragment extends ListFragment {
     @Override
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
+
+
         GlobalVariables.pos = position;
         if (position != ListView.INVALID_POSITION) {
             MapViewNode node = GlobalVariables.displayNodes.get(position);
@@ -58,10 +60,10 @@ public class MapViewFragment extends ListFragment {
             }
         }
 
-
         MapViewLists.LoadDisplayList();
 
         mAdapter.notifyDataSetChanged();
+
 
 
         MapViewNode node = GlobalVariables.displayNodes.get(position);

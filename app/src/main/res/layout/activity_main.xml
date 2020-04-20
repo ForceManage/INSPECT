@@ -237,10 +237,11 @@
             </LinearLayout>
 
 
-
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/image_border"
+                    >
 
                         <ImageView
                             android:id="@+id/imageView6"
@@ -250,13 +251,12 @@
                             android:baselineAlignBottom="true"
                             android:cropToPadding="false"
                             android:layout_marginTop="5dp"
-                            android:background="@drawable/image_border"
                             android:padding="3dp"
                             app:srcCompat="@drawable/ic_camera"
                             ></ImageView>
 
 
-            </LinearLayout>
+            </FrameLayout>
 
         </LinearLayout>
 

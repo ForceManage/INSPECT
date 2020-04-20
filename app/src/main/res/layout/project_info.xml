@@ -77,69 +77,104 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
-                            android:layout_marginTop="20dp"
-                            android:text="Applicable provider:  "
+                            android:layout_marginTop="25dp"
+                            android:text="Project:  "
                             android:textColor="@android:color/black"
                             android:textStyle="normal|bold" />
 
-                        <EditText
-                            android:id="@+id/textServicedBy"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
-                            android:hint="Relevant trade/skillset applicable"
-                            android:textSize="16sp"/>
-
-
-
 
                     <TextView
-                        android:id="@+id/overview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Overview:  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal|bold" />
-
-
-                    <EditText
-                        android:id="@+id/Overview"
+                        android:id="@+id/text1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="5dp"
                         android:paddingBottom="10dp"
-                        android:hint="Item overview here. Specific text input below each photo."
+                        android:hint="Root title. Eg. Site Address/Project name/etc"
                         android:textSize="16sp"/>
 
 
+
                     <TextView
-                        android:id="@+id/relevantInfo"
+                        android:id="@+id/Text2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="Relevant Information:  "
+                        android:text="Build type:  "
                         android:textColor="@android:color/black"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal" />
 
-                    <EditText
-                        android:id="@+id/RelevantInfo"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/Text3"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:hint="Other Subject information "
-                        android:textSize="16sp"/>
+                        android:layout_marginTop="15dp"
+                        android:text="Building Permit No.:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
 
+                    <TextView
+                        android:id="@+id/Text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Building Class:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Levels:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Access key/code:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Floor:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Walls:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Roof:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
 
 
                     <TextView
@@ -160,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="5dp"
                         android:paddingBottom="10dp"
                         android:hint="Author notes (text not printed)"
                         android:textSize="16sp"/>

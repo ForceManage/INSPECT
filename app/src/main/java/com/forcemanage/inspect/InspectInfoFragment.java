@@ -1,12 +1,14 @@
 package com.forcemanage.inspect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,8 +63,28 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
+        ImageButton inspectionBtn = (ImageButton) view.findViewById(R.id.InspectionButton);
+        inspectionBtn.setOnClickListener(this);
+
 
          setText();
+
+        inspectionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+
+
+                Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
+
+                bundle.putString("PROJECT_ID", globalVariables.projectId);
+                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                theIntent.putExtras(bundle);
+                startActivity(theIntent);
+
+            }
+        });
 
 
 /*
