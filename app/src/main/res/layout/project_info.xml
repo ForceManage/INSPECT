@@ -84,7 +84,7 @@
 
 
                     <TextView
-                        android:id="@+id/text1"
+                        android:id="@+id/Text1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -228,15 +228,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="bottom">
 
-                <Button
-                    android:id="@+id/testReport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:backgroundTint="#b3a962"
-                    android:drawableLeft="@android:drawable/sym_contact_card"
-                    android:text="VIEW REPORT"
-                    android:textColor="@android:color/white" />
+
             </FrameLayout>
 
 

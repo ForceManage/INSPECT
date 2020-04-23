@@ -5,7 +5,7 @@ package com.forcemanage.inspect;
  */
 public class MapViewData
 {
-
+    private int projId;
     private int level;
     private int catId;
     private int branchCat;
@@ -18,8 +18,9 @@ public class MapViewData
 
     public MapViewData() {}
 
-    public MapViewData(int Level, int CatID, int branchCat, String Label, int aID, int iID, int Parent, String Image1, String Notes)
+    public MapViewData(int projId, int Level, int CatID, int branchCat, String Label, int aID, int iID, int Parent, String Image1, String Notes)
     {
+        this.projId = projId;
         this.level= Level;
         this.catId = CatID;
         this.branchCat = branchCat;
@@ -31,6 +32,10 @@ public class MapViewData
         this.notes = Notes;
 
     }
+
+    public  int getProjId() { return projId; }
+
+    public void setProjId (int projId){this.projId = projId;}
 
     public int getLevel()
     {

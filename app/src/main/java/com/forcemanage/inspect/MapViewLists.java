@@ -75,6 +75,7 @@ public class MapViewLists
             Log.v("LoadInitialNodes", data.getLabel());
 
             MapViewNode node = new MapViewNode();
+            node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
             node.setNodeName(data.getLabel());
@@ -115,6 +116,7 @@ public class MapViewLists
 
 
             MapViewNode node = new MapViewNode();
+            node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
             node.setaID(data.getaID());

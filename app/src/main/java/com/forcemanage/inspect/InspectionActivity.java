@@ -204,6 +204,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         for (int i = 0; i < (SiteMapData.size()); i++){
 
              listItem = new MapViewData(
+                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
                      Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
@@ -282,6 +283,39 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
     }
 
+    private String dayTime(int Type) {
+
+        String daytime = "20000101";
+
+        switch (Type) {
+
+            case (1): {
+
+                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (2): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (3): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+        }
+        return daytime;
+    }
+
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
@@ -304,6 +338,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         for (int i = 0; i < (SiteMapData.size()); i++){
 
             listItem = new MapViewData(
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
@@ -454,21 +489,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
         }
 
-     //   String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        String nextServiceDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-
-        String date = nextServiceDate;
-       // date = nextServiceDate.substring(4,6);
-       // date = nextServiceDate;
-
-
-
-
-
-
- //       String overview = Overview.getText().toString();
- //       String relevantInfo = Recommendation.getText().toString();
+        String date = dayTime(1);
 
         String ServiceLevel = "1";
         ItemStatus = "p";
@@ -489,10 +511,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         String status =  dbHandler.getStatus(iID, projId);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        Date date_  = Calendar.getInstance().getTime();
-
-        dbHandler.updateStatus(projId, iID, "p", dateFormat.format(date_));
+        dbHandler.updateStatus(projId, iID, "p", dayTime(1));
 
         Edited = false;
 
@@ -539,10 +558,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private void addLevel(int Level, String levelName){
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, aID, catId, Level, aID, levelName,0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName,0);  //this is the ESM category
         if(result == 0 ) Toast.makeText(this, "Cannot place navigation branch at this position",Toast.LENGTH_SHORT).show();
         else
-        loadMap();
+            loadMap();
     }
 
 
@@ -614,7 +633,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                case 1:{
 
 
-                   HashMap<String, String> list = dbHandler.getInspection(projId, iID);
+                   HashMap<String, String> list = dbHandler.getInspection(projId, iID, aID);
 
                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                    Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -1405,8 +1424,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             File from = new File(path);
 
 
-            fname = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            fname = dayTime(3);
+            dirName = dayTime(1);
             fname = projectId+"_"+fname;
 
             String root = Environment.getExternalStorageDirectory().toString();
@@ -1516,8 +1535,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
     File createPhotoFile()throws IOException {
 
-        fname = new SimpleDateFormat("yyyyMMddHH").format(new Date());
-        dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        fname = dayTime(3);
+        dirName = dayTime(1);
         fname = projectId+"_"+fname;
         String root = Environment.getExternalStorageDirectory().toString();
         File storageDirectory = new File(root + "/ESM_"+dirName+"/");

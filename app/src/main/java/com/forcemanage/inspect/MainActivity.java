@@ -2,8 +2,10 @@ package com.forcemanage.inspect;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private Button buttonInspection;
     private Button buttonLoadJobList;
     private Button buttonLoadNotes;
+    private Button btnAddActivity;
     private EditText TextMessage;
     DBHandler ESMdb;
     private String JSON_STRING;
@@ -125,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private RecyclerView recyclerView;
   //  private List<Joblistdata> jobList;
     private String FragDisplay;
+    private Fragment fragment_obj;
+
 
     AmazonS3 s3Client;
     String bucket = "iappfiles";
@@ -178,19 +184,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             listItem = new MapViewData(
 
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
 
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                 //
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-
                     Projects.get(i).get(MyConfig.TAG_LABEL),
-
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_P_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
                     Projects.get(i).get(MyConfig.TAG_IMAGE1),
                     Projects.get(i).get(MyConfig.TAG_NOTES)
+
             );
             listItems.add(listItem);
         }
@@ -244,6 +249,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         buttonLoadJobList.setOnClickListener(this);
         buttonLoadNotes = (Button) findViewById(R.id.btnDownload_O_R);
         buttonLoadNotes.setOnClickListener(this);
+        btnAddActivity = (Button) findViewById(R.id.addProject);
+        btnAddActivity.setOnClickListener(this);
+        buttonLoadNotes.setOnClickListener(this);
         info_icon = (ImageView) findViewById(R.id.imageView_info);
         info_icon.setOnClickListener(this);
         photo_cam =(ImageView) findViewById(R.id.imageView_cam);
@@ -291,6 +299,45 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    //returns the date/datetime depending on type required in YYYYMMDD format
+    private String dayTime(int Type){
+
+        String daytime = "20000101";
+
+        switch (Type){
+
+            case (1):{
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                Date date_  = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (2):{
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                Date date_  = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (3): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+        }
+
+
+        return daytime;
+
+    }
+
+
+
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
@@ -308,66 +355,60 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
 
-        projectId = Integer.toString(node.getbranchCat()); //This is setup in MainActivity as BranchCat to work with MapList
+        projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
         inspectionId = Integer.toString(node.getiID());
 
 
-        switch (node.getNodeLevel()){
+        TextView projlist = (TextView) findViewById(R.id.ProjectList);
 
-            case 0:{
+
+        switch (node.getNodeLevel()) {
+
+            case 0: {
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
+                bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
+                bundle.putString("permit", branchNote);
+                bundle.putString("class", branchNote);
+                bundle.putString("levels", branchNote);
+                bundle.putString("photo", com2);
+                bundle.putString("key", com2);
+                bundle.putString("floor", com2);
+                bundle.putString("roof", com2);
+                bundle.putString("wall", com2);
+                bundle.putString("notes", com2);
+
 
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
-                doFragmentTransaction(fragment,"ProjectInfoFragment",false,"");
+                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 break;
             }
-            case 1:{
+
+            case 1: {
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
-                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
                 break;
             }
         }
-
-
     }
+
+
 
     @Override
     public void onResume(){
 
         super.onResume();
-        //   updatePropList();
-       //   Toast.makeText(this, "This has just resumed. Do a login", Toast.LENGTH_LONG).show();
+       //    updatePropList();
 
-
-  /*      DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects();
-
-        listItems = new ArrayList<>();
-        MapViewData listItem;
-
-        for (int i = 0; i < (Projects.size()); i++){
-
-            listItem = new MapViewData(
-
-
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
-
-                    Projects.get(i).get(MyConfig.TAG_LABEL),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
-                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
-                    Projects.get(i).get(MyConfig.TAG_NOTES)
-            );
-            listItems.add(listItem);
-        }
-
-        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
-        //     TreeViewLists.LoadDisplayList();
-
-*/
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
         MapViewLists.LoadDisplayList();
@@ -403,15 +444,23 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             GlobalVariables.modified = false;
-     //       MapListAdapter mapListAdapter = new MapListAdapter(this);
-     //       mapListAdapter.notifyDataSetChanged();
-         //   OnSelectionChanged(0);
-
-
-
+            //       MapListAdapter mapListAdapter = new MapListAdapter(this);
+            //       mapListAdapter.notifyDataSetChanged();
+            //   OnSelectionChanged(0);
 
         }
 
+
+    }
+
+
+    private void addLevel(int Level, String levelName){
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+    //    int result = dbHandler.addLevel(projectId);
+    //    if(result == 0 ) Toast.makeText(this, "Cannot place navigation branch at this position",Toast.LENGTH_SHORT).show();
+    //    else
+    //        loadMap();
     }
 
 
@@ -420,6 +469,92 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
         String selectedItem = "Sync All: " + String.valueOf(spinner1.getSelectedItem());
+
+
+        if(v == btnAddActivity){
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+     //       final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose an action");
+            // add a list
+            String[] actions = {"Request New Project",
+                    "Request New Activity for Project ",
+                    "Cancel Request "};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Branch Head Title: " );//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Branch below : " );//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            addLevel(0, branchText.getText().toString());
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+                            break;
+
+                        }
+
+                        case 1: {
+
+
+
+                            break;
+
+                        }
+
+                        case 2: {
+
+
+                            break;
+                        }
+
+
+                    }
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+
+        }
+
+
+
 
         if (v == buttonUpdatePropInfo) {
             //update the SQLite db with data from MySQL db if there is and internet connection
@@ -807,10 +942,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
+     //   final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
       //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+     //   ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
         ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects();
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -819,14 +954,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             listItem = new MapViewData(
 
-
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    //   Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
-
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
                     Projects.get(i).get(MyConfig.TAG_LABEL),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_P_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
                     Projects.get(i).get(MyConfig.TAG_IMAGE1),
@@ -838,7 +971,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
         //     TreeViewLists.LoadDisplayList();
 
-
+/*
         if (findViewById(R.id.fragment_container) != null){
 
             // However if we are being restored from a previous state, then we don't
@@ -855,8 +988,47 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .commit();
 
         }
+*/
 
-        // To Implement: populate the string and preferably go to item in list... otherwise find a way to include property ID without displaying
+        MapViewLists.LoadDisplayList();
+        GlobalVariables.modified = true;
+        //    MapListAdapter mAdapter = new MapListAdapter(this);
+        //   mAdapter.notifyDataSetChanged();
+        //   OnSelectionChanged(0);
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+
+
+        if (GlobalVariables.modified == true) {
+            MapViewFragment newDetailFragment = new MapViewFragment();
+            Bundle args = new Bundle();
+            detailFragment.mCurrentPosition = -1;
+
+            args.putInt(DetailFragment.KEY_POSITION, 0);
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            FragmentManager fm = getSupportFragmentManager();
+
+
+            //fm.popBackStack(DF,0);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            GlobalVariables.modified = false;
+            //       MapListAdapter mapListAdapter = new MapListAdapter(this);
+            //       mapListAdapter.notifyDataSetChanged();
+            //   OnSelectionChanged(0);
+        }
+
+            // To Implement: populate the string and preferably go to item in list... otherwise find a way to include property ID without displaying
         //for(int i = 0; i<list.size(); i++){
         //    propertyList[i] = "Lake street, 25, Reservoir";
         //}
@@ -1506,7 +1678,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         Get_DOR_JSON gj = new Get_DOR_JSON();
         gj.execute();
     }
-    private void get_EOR_JSON() {
+    private void get_requestActivity_JSON() {
 
         class Get_EOR_JSON extends AsyncTask<Void, Void, String> {
 
@@ -1571,9 +1743,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json = new JSONObject();
                     json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_INSPECTION_ID, inspList.get(i).get(MyConfig.TAG_INSPECTION_ID));
-                    if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "2019-06-01");}
+                    if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
-                    json.put(MyConfig.TAG_INSPECTION_STATUS, inspList.get(i).get(MyConfig.TAG_INSPECTION_STATUS));
+                    json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
+                    json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
+                    json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
+                    json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
+                    json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
+                    json.put(MyConfig.TAG_LABEL, inspList.get(i).get(MyConfig.TAG_LABEL));
+                    json.put(MyConfig.TAG_LEVEL, inspList.get(i).get(MyConfig.TAG_LEVEL));
+                    json.put(MyConfig.TAG_PARENT, inspList.get(i).get(MyConfig.TAG_PARENT));
+                    json.put(MyConfig.TAG_P_ID, inspList.get(i).get(MyConfig.TAG_P_ID));
+                    json.put(MyConfig.TAG_IMAGE, inspList.get(i).get(MyConfig.TAG_IMAGE));
+                    json.put(MyConfig.TAG_NOTE, inspList.get(i).get(MyConfig.TAG_NOTE));
                  //   json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
                  //   json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
 
@@ -1701,6 +1883,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_LABEL, MapList.get(i).get(MyConfig.TAG_LABEL));
                     json.put(MyConfig.TAG_CHILD, MapList.get(i).get(MyConfig.TAG_CHILD));
                     json.put(MyConfig.TAG_A_ID, MapList.get(i).get(MyConfig.TAG_A_ID));
+                    json.put(MyConfig.TAG_INSPECTION_ID, MapList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     json.put(MyConfig.TAG_IMAGE1, MapList.get(i).get(MyConfig.TAG_IMAGE1));
                     json.put(MyConfig.TAG_NOTES, MapList.get(i).get(MyConfig.TAG_NOTES));
                     jsonArray.put(json);
@@ -1714,6 +1897,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
+            Log.v("MAP JSON", jsonString);
 //                res = jsonString;
         }
         return res;

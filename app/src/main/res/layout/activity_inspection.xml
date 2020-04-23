@@ -45,11 +45,11 @@
                     android:id="@+id/SubLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="6dp"
                     android:padding="2dp"
                     android:paddingStart="2dp"
-                    android:text="Navigation MAP"
+                    android:text="Project Tree"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="normal|bold" />

@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 public class MapViewNode
 {
+    private int _projId;
     private int _nodeLevel;
-    private int _aID;
     private int _iID;
+    private int _aID;
     private int _branchCat;
     private String _isExpanded;
     private String _nodeName;
@@ -18,8 +19,9 @@ public class MapViewNode
 
     public MapViewNode() {}
 
-    public MapViewNode(int nodeLevel, int aID, int iID, int branchCat, String isExpanded, String nodeName, ArrayList<MapViewNode> nodeChildren)
+    public MapViewNode(int projId, int nodeLevel, int iID, int aID, int branchCat, String isExpanded, String nodeName, ArrayList<MapViewNode> nodeChildren)
     {
+        this._projId = projId;
         this._nodeLevel = nodeLevel;
         this._aID = aID;
         this._iID = iID;
@@ -27,6 +29,16 @@ public class MapViewNode
         this._isExpanded = isExpanded;
         this._nodeName = nodeName;
         this._nodeChildren = nodeChildren;
+    }
+
+    public  int getprojId()
+    {
+        return _projId;
+    }
+
+    public void setiprojId(int projId)
+    {
+        this._projId = projId;
     }
 
     public int getNodeLevel()
