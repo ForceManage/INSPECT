@@ -59,6 +59,43 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnDownloadJobs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#092877"
+                    android:text="Download"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_cloud_download_outline"
+                    />
+
+
+                <Button
+                    android:id="@+id/btnSyncAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#092877"
+                    android:text="Upload"
+                    android:textSize="11sp"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:drawableStart="@drawable/ic_cloud_upload_outline"
+                    />
+
+
+            </LinearLayout>
+
+
             <TextView
                 android:id="@+id/ProjectList"
                 android:layout_width="wrap_content"
@@ -73,6 +110,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="top"
                 android:layout_weight="0.5"
+                android:paddingTop="10dp"
                 android:orientation="horizontal">
 
 
@@ -97,76 +135,38 @@
 
 
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom">
 
                 <Button
                     android:id="@+id/addProject"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/tertiary_text_light"
-                    android:drawableStart="@android:drawable/ic_menu_add"
-                    android:textSize="14sp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="Add"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_text_box_plus_outline"
+
                     />
 
                 <Button
                     android:id="@+id/btnloadJobs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/tertiary_text_light"
-                    android:drawableLeft="@android:drawable/ic_menu_view"
-                    android:text="SHOW DOWNLOADED JOBS "
-                    android:textSize="14sp"
-                    android:textColor="@android:color/white" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="List"
+                    android:textSize="11sp"
+                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                     />
 
-                <Button
-                    android:id="@+id/btnDownloadJobs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_jobs"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btnDownloadPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_photos"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btnDownload_O_R"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_comments"
-                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
 
-                <Button
-                    android:id="@+id/btnSyncPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/ic_menu_upload"
-                    android:text="@string/upload_photos"
-                    android:textColor="@android:color/white" />
 
-                <Button
-                    android:id="@+id/btnSyncAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/ic_menu_upload_you_tube"
-                    android:text="@string/upload_data"
-                    android:textColor="@android:color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -191,8 +191,12 @@
                         android:enabled="false"
                         android:text="@string/clear_tablet_data"
                         android:textColor="@android:color/white" />
+
                 </LinearLayout>
-            </LinearLayout>
+
+
+
+
 
         </LinearLayout>
 
@@ -216,7 +220,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:layout_weight="0.4"
+            android:paddingRight="5dp"
+            android:layout_weight="0.45"
             android:orientation="vertical"
             android:baselineAligned="false">
 

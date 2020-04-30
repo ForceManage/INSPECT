@@ -497,7 +497,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
 
         if(FragDisplay == "InspectionFragment") {
-            dbHandler.updateInspection(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
+            dbHandler.updateInspectionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
                     , "reportImage", photo1, com1, photo2, com2, photo3, com3, photo4, com4,
                     photo5, com5, "Img6", " com6", "Img7", "com7", ItemStatus, Notes);
 
@@ -633,7 +633,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                case 1:{
 
 
-                   HashMap<String, String> list = dbHandler.getInspection(projId, iID, aID);
+                   HashMap<String, String> list = dbHandler.getInspectionItem(projId, iID, aID);
 
                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                    Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -644,6 +644,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                    com4 = list.get(MyConfig.TAG_COM4);
                    com5 = list.get(MyConfig.TAG_COM5);
                    Notes = list.get(MyConfig.TAG_NOTES);
+                   String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
 
 
                    Bundle bundle = new Bundle();
@@ -651,6 +652,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                    bundle.putString("branchLabel",branchLabel);
                    bundle.putString("aprovider",aProvider);
                    bundle.putString("overview",Overview);
+                   bundle.putString("date",dateInspected);
                    bundle.putString("relevantInfo",relevantInfo);
                    bundle.putString("notes",Notes);
                    bundle.putString("com1",com1);

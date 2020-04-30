@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -94,6 +95,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String overView;
     private String relevantInfo;
     private String Notes;
+    private String inspectionDate;
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -111,6 +115,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             branchName = bundle.getString("branchLabel");
             aProvider = bundle.getString("aprovider");
             overView = bundle.getString("overview");
+            inspectionDate = bundle.getString("date");
             relevantInfo = bundle.getString("relevantInfo");
             Notes = bundle.getString("notes");
             com1 = bundle.getString("com1");
@@ -120,6 +125,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             com5 = bundle.getString("com5");
 
         }
+
+     //   inspectionDate =  inspectionDate.substring(6,8)+"-"+inspectionDate.substring(4,6)+"-"+inspectionDate.substring(0,4);
+
 
 
     }
@@ -215,8 +223,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
          //Fill in the edittext with saved data fro Bundle
 
+
         title.setText(branchTitle);
-        branch.setText(branchName);
+        branch.setText(branchName+" date: "+stringdate(inspectionDate));
         ServiceCont.setText(aProvider);
         Overview.setText(overView);
         RelevantInfo.setText(relevantInfo);
@@ -645,6 +654,21 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         @Override
     public void onClick(View v) {
 
+    }
+
+    public String stringdate(String date){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date d = null;
+        try {
+            d = sdf.parse(date);
+        } catch (ParseException ex) {
+            Log.v("Exception", ex.getLocalizedMessage());
+        }
+        sdf.applyPattern("dd MMM yyyy");
+        date = sdf.format(d);
+
+        return date;
     }
 
 

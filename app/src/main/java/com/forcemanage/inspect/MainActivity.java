@@ -94,7 +94,7 @@ import static java.util.Objects.isNull;
 public class MainActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener,  View.OnClickListener {
 
     public static final int REQUEST_CODE = 20;
-    private Button buttonUpdatePropInfo;
+    private Button buttonDownload;
     private Button buttonSyncAll;
     private Button buttonClearAll;
     private Button buttonDownloadPhotos;
@@ -233,25 +233,25 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         // Toast.makeText(this, "Inspector: "+ String.valueOf(spinInspector.getSelectedItem()), Toast.LENGTH_LONG).show();
 
-        buttonUpdatePropInfo = (Button) findViewById(R.id.btnDownloadJobs);
-        buttonUpdatePropInfo.setOnClickListener(this);
-        buttonDownloadPhotos = (Button) findViewById(R.id.btnDownloadPhotos);
-        buttonDownloadPhotos.setOnClickListener(this);
+        buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
+        buttonDownload.setOnClickListener(this);
+   //     buttonDownloadPhotos = (Button) findViewById(R.id.btnDownloadPhotos);
+   //     buttonDownloadPhotos.setOnClickListener(this);
         buttonClearAll = (Button) findViewById(R.id.btnClearData);
         buttonClearAll.setOnClickListener(this);
         buttonSyncAll = (Button) findViewById(R.id.btnSyncAll);
         buttonSyncAll.setOnClickListener(this);
-        buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
-        buttonSyncPhotos.setOnClickListener(this);
+   //     buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
+   //     buttonSyncPhotos.setOnClickListener(this);
    //     buttonInspection = (Button) findViewById(R.id.btnInspection);
    //     buttonInspection.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
-        buttonLoadNotes = (Button) findViewById(R.id.btnDownload_O_R);
-        buttonLoadNotes.setOnClickListener(this);
+   //     buttonLoadNotes = (Button) findViewById(R.id.btnDownload_O_R);
+  //      buttonLoadNotes.setOnClickListener(this);
         btnAddActivity = (Button) findViewById(R.id.addProject);
         btnAddActivity.setOnClickListener(this);
-        buttonLoadNotes.setOnClickListener(this);
+   //     buttonLoadNotes.setOnClickListener(this);
         info_icon = (ImageView) findViewById(R.id.imageView_info);
         info_icon.setOnClickListener(this);
         photo_cam =(ImageView) findViewById(R.id.imageView_cam);
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (nInfo != null && nInfo.isConnected()) {
             //getJSON();
         } else {
-            buttonUpdatePropInfo.setEnabled(false);
+            buttonDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
         }
         //   updatePropList();
@@ -371,10 +371,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+ //               bundle.putString("branchLabel", branchLabel);
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
-                bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
+ /*               bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
                 bundle.putString("permit", branchNote);
                 bundle.putString("class", branchNote);
                 bundle.putString("levels", branchNote);
@@ -386,16 +386,33 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("notes", com2);
 
 
+  */
+
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                fragment.setArguments(bundle);
                 fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 break;
             }
 
             case 1: {
 
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+
+                Bundle bundle = new Bundle();
+             //   bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                //               bundle.putString("branchLabel", branchLabel);
+                bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+                bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
+                bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+                bundle.putString("auditor",projectItem.get(MyConfig.TAG_INSPECTOR));
+
+
                 InspectInfoFragment fragment = new InspectInfoFragment();
                 doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
+                fragment.setArguments(bundle);
                 break;
             }
         }
@@ -471,15 +488,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String selectedItem = "Sync All: " + String.valueOf(spinner1.getSelectedItem());
 
 
-        if(v == btnAddActivity){
+        if (v == btnAddActivity) {
 
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-     //       final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-            // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Choose an action");
+            builder.setTitle("Add Project/Activity ");
             // add a list
             String[] actions = {"Request New Project",
                     "Request New Activity for Project ",
@@ -497,9 +510,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " );//Integer.parseInt(locationId)
+                            itemTitle.setText("Branch Head Title: ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : " );//Integer.parseInt(locationId)
+                            locationText.setText("Branch below : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -529,7 +542,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         case 1: {
 
 
-
                             break;
 
                         }
@@ -554,30 +566,61 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
+        if (v == buttonDownload) {
 
 
-        if (v == buttonUpdatePropInfo) {
-            //update the SQLite db with data from MySQL db if there is and internet connection
-            ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
-            if (nInfo != null && nInfo.isConnected()) {
-                getJSON();
-                getAdditionalJSON();
-         //       getCategoryJSON();
-                get_AOR_JSON();
-             //   get_BOR_JSON();
-                //    get_OR_JSON("TABLE_B_OR");
-            } else {
-                buttonUpdatePropInfo.setEnabled(false);
-                Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Cloud Storage Data Download Options");
+            // add a list
+            String[] actions = {"Download Projects",
+                    "Download photos ",
+                    "Cancel Request "};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+                                    downloadprojects();
+
+                            break;
+
+                        }
+
+                        case 1: {
+
+                                    downloadphotos();
+                            break;
+
+                        }
+
+                        case 2: {
+
+
+                            break;
+                        }
+
+
+                    }
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
         }
+
+
         if (v == buttonClearAll) {
             //Delete the information in the tables initially implemented for testing purposes
             clearTablet();
             updatePropList();
         }
 
+/*
         if (v == buttonLoadNotes) {
             ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
             NetworkInfo nInfo = cManager.getActiveNetworkInfo();
@@ -594,121 +637,67 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
         }
 
+
+*/
         //Loads jobs from the tablet database
         if (v == buttonLoadJobList) {
 
             updatePropList();
         }
 
-        if (v == buttonDownloadPhotos) {
-
-            //Get the property information for all the properties to inspect
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
-            //Get a list of all the images for the properties to inspect
-            DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
-
-            int i = 0;
-            while (i < list.size()) {
-
-                downloadFileFromS3(view, list.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
-                i++;
-            }
-
-            //for each propertyID call method to search the propertyIDINFO create the directory and download the information
-
-            i = 0;
-            while (i < list.size()) {
-
-                getObjectslistFromFolder(bucket,list.get(i).get(MyConfig.TAG_PROJECT_ID)+"INFO");
-
-                i++;
-            }
-
-
-            i = 0;
-            while (i < photolist.size() ) {  //
-                //try {
-                if (photolist.get(i).get(MyConfig.TAG_IMAGE1) != null || photolist.get(i).get(MyConfig.TAG_IMAGE1) != "")
-                    downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE1));
-                if (photolist.get(i).get(MyConfig.TAG_IMAGE2) != null || photolist.get(i).get(MyConfig.TAG_IMAGE2) != "")
-                    downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE2));
-                if (photolist.get(i).get(MyConfig.TAG_IMAGE3) != null || photolist.get(i).get(MyConfig.TAG_IMAGE3) != "")
-                    downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE3));
-                if (photolist.get(i).get(MyConfig.TAG_IMAGE4) != null || photolist.get(i).get(MyConfig.TAG_IMAGE4) != "")
-                    downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE4));
-                if (photolist.get(i).get(MyConfig.TAG_IMAGE5) != null || photolist.get(i).get(MyConfig.TAG_IMAGE5) != "")
-                    downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE5));
-
-
-                i++;
-                //  } catch (Exception e) {
-                //      e.printStackTrace();
-                //      Log.e("tag", "Exception found while listing "+ e);
-                //  }
-
-
-            }
-
-
-        }
 
         if (v == buttonSyncAll) {
-            //update the MySQL db on the server with he inspection data, if there is and internet connection
-            ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
-            if (nInfo != null && nInfo.isConnected()) {
-                //editTextMessage.setText(selectedItem ); // possibly intended to use this tocheckwhat was uploaded....
-                syncToServer();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Cload Storage Upload Options");
+            // add a list
+            String[] actions = {"Upload All Activity Data recorded",
+                    "Upload Text Data only",
+                    "Upload Photo Data only",
+                    "Cancel Request "};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+                            uploaddata();
+                            uploadphotos();
+                            break;
+
+                        }
+
+                        case 1: {
+
+                            uploaddata();
+                            break;
+
+                        }
+
+                        case 2: {
+
+                            uploadphotos();
+                            break;
+                        }
+
+                        case 3: {
 
 
+                            break;
+                        }
+                    }
 
-            } else {
-//                buttonUpdatePropInfo.setEnabled(false);
-                Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
-            }
-        }
-        if (v == buttonSyncPhotos) {
-            //update the SQLite db with data from MySQL db if there is and internet connection
-            ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
-            if (nInfo != null && nInfo.isConnected()) {
-                //    editTextMessage.setText("Sync Inspected Only");
-                //Upload photos to Bucket
+                }
+            });
 
-                // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
-                //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
-                upLoadPhotos(null);
+            AlertDialog dialog = builder.create();
 
-            } else {
-                buttonUpdatePropInfo.setEnabled(false);
-                Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
-            }
-        }
+            dialog.show();
 
- /*       if (v == buttonInspection) {
-            Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
-
-            //Intent theIntent = new Intent(getApplication(), ViewReportActivity.class);
-            Bundle extras = new Bundle();
-            if(projectId == null ){Toast.makeText(this, "Select a project", Toast.LENGTH_LONG).show();}
-
-            else {
-
-                GlobalVariables.modified = true;
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-
-                extras.putString("PROJECT_ID", projectId);
-                extras.putString("INSPECTION_ID", inspectionId);
-                theIntent.putExtras(extras);
-                startActivity(theIntent);
-
-            }
         }
 
-  */
+
 
         if (v == photo_cam) {
 
@@ -2457,6 +2446,111 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
 
         });
+    }
+
+    public void downloadprojects(){
+
+        //update the SQLite db with data from MySQL db if there is and internet connection
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
+            getJSON();
+            getAdditionalJSON();
+            //       getCategoryJSON();
+            get_AOR_JSON();
+            //   get_BOR_JSON();
+            //    get_OR_JSON("TABLE_B_OR");
+        } else {
+            buttonDownload.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void downloadphotos(){
+
+        //Get the property information for all the properties to inspect
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
+        //Get a list of all the images for the properties to inspect
+        DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
+        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+
+        int i = 0;
+        while (i < list.size()) {
+
+            downloadFileFromS3(view, list.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
+            i++;
+        }
+
+        //for each propertyID call method to search the propertyIDINFO create the directory and download the information
+
+        i = 0;
+        while (i < list.size()) {
+
+            getObjectslistFromFolder(bucket,list.get(i).get(MyConfig.TAG_PROJECT_ID)+"INFO");
+
+            i++;
+        }
+
+
+        i = 0;
+        while (i < photolist.size() ) {  //
+            //try {
+            if (photolist.get(i).get(MyConfig.TAG_IMAGE1) != null || photolist.get(i).get(MyConfig.TAG_IMAGE1) != "")
+                downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE1));
+            if (photolist.get(i).get(MyConfig.TAG_IMAGE2) != null || photolist.get(i).get(MyConfig.TAG_IMAGE2) != "")
+                downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE2));
+            if (photolist.get(i).get(MyConfig.TAG_IMAGE3) != null || photolist.get(i).get(MyConfig.TAG_IMAGE3) != "")
+                downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE3));
+            if (photolist.get(i).get(MyConfig.TAG_IMAGE4) != null || photolist.get(i).get(MyConfig.TAG_IMAGE4) != "")
+                downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE4));
+            if (photolist.get(i).get(MyConfig.TAG_IMAGE5) != null || photolist.get(i).get(MyConfig.TAG_IMAGE5) != "")
+                downloadFileFromS3(view, photolist.get(i).get(MyConfig.TAG_IMAGE5));
+
+
+            i++;
+            //  } catch (Exception e) {
+            //      e.printStackTrace();
+            //      Log.e("tag", "Exception found while listing "+ e);
+            //  }
+
+
+        }
+    }
+
+    public void uploaddata(){
+
+        //update the MySQL db on the server with he inspection data, if there is and internet connection
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
+            //editTextMessage.setText(selectedItem ); // possibly intended to use this tocheckwhat was uploaded....
+            syncToServer();
+
+
+
+        } else {
+//                buttonUpdatePropInfo.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void uploadphotos(){
+
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
+            //    editTextMessage.setText("Sync Inspected Only");
+            //Upload photos to Bucket
+
+            // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
+            //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
+            upLoadPhotos(null);
+
+        } else {
+            buttonDownload.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

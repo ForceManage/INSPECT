@@ -1,5 +1,6 @@
 package com.forcemanage.inspect;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class InspectInfoFragment extends Fragment implements View.OnClickListener{
 
     private MainActivity globalVariables;
@@ -28,6 +33,14 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String branchHead ="";
     private String branchLabel = "";
     private String branchNote = "";
+    private String inspectionDate;
+    private String typeInspection;
+    private String auditor;
+    private String note;
+    private Boolean Edited;
+    private String projectId;
+    private String inspectionId;
+
 
 
     @Override
@@ -39,8 +52,16 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
       //      branchHead = bundle.getString("branchHead");
       //      branchLabel = bundle.getString("branchLabel");
       //      branchNote = bundle.getString("notes");
+            inspectionDate = bundle.getString("date");
+            note = bundle.getString("note");
+            auditor = bundle.getString("auditor");
+            typeInspection = bundle.getString("inspectType");
+            Edited = false;
+
         }
 
+        projectId = globalVariables.projectId;
+        inspectionId = globalVariables.inspectionId;
 
     }
 
@@ -63,21 +84,28 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
+        TextView inspectDate = (TextView) view.findViewById(R.id.Text1);
+        TextView inspectionType = (TextView) view.findViewById(R.id.Text2);
+        TextView inspector = (TextView) view.findViewById(R.id.Text3);
         ImageButton inspectionBtn = (ImageButton) view.findViewById(R.id.InspectionButton);
+
+
         inspectionBtn.setOnClickListener(this);
 
 
          setText();
+         inspectDate.setText("Inspection issued on:  "+stringdate(inspectionDate));
+         inspectionType.setText("Type of inspection:  "+typeInspection);
+         inspector.setText("Auditor:  "+ auditor);
+         bNote.setText(note);
 
         inspectionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Bundle bundle = new Bundle();
-
-
-                Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
-
+               Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
+                saveData();
                 bundle.putString("PROJECT_ID", globalVariables.projectId);
                 bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
                 theIntent.putExtras(bundle);
@@ -87,57 +115,25 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         });
 
 
-/*
+
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+
+            Edited = true;
+                // String serviceDate = inspectionDate.getText().toString();
+                // work out the next service date in three months time
 
             }
+
         });
 
 
-
-
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setView(promptView);
-                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                itemTitle.setText("Branch Head Title: "+ branchHead);//Integer.parseInt(locationId)
-                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                locationText.setText("Current label : "+ branchLabel );//Integer.parseInt(locationId)
-                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                LocationText.setText(branchLabel);
-                // setup a dialog window
-                alertDialogBuilder.setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                          //      globalVariables.editLocation(LocationText.getText().toString());
-
-
-                            }
-                        })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                // create an alert dialog
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
-            }
-        });
-
-    */
 
         return view;
     }
+
+
 
     private void setText(){
 
@@ -152,5 +148,35 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
+    }
+
+    public String stringdate(String date){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date d = null;
+        try {
+            d = sdf.parse(date);
+        } catch (ParseException ex) {
+            Log.v("Exception", ex.getLocalizedMessage());
+        }
+        sdf.applyPattern("dd MMM yyyy");
+        date = sdf.format(d);
+
+        return date;
+    }
+
+    public void saveData(){
+
+        DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+        note = bNote.getText().toString();
+
+        dbHandler.updateInspection(projectId, inspectionId, note);
+}
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (Edited = true) saveData();
     }
 }

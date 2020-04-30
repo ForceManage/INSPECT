@@ -440,7 +440,23 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateInspection(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+    public void updateInspection(String projId, String iId, String Notes) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_NOTE, Notes);
+
+
+        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
+        db.close();
+
+
+    }
+
+
+
+    public void updateInspectionItem(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
             , String reportImage, String Img1, String com1, String Img2, String com2, String Img3, String com3, String Img4, String com4,
                                  String Img5, String com5, String Img6, String com6, String Img7, String com7, String ItemStatus, String Notes) {
 
@@ -609,6 +625,8 @@ public class DBHandler extends SQLiteOpenHelper {
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
                 COLUMN_A_ID + " = " + aId, null);
 
+        db.close();
+
     }
 
     public void updateBranchNote(int projId, int aId, String Note, String photo) {
@@ -622,6 +640,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
                 COLUMN_A_ID + " = " + aId, null);
+
+        db.close();
 
     }
 
@@ -1091,8 +1111,51 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public HashMap<String, String> getInspection(String projId, String iId) {
+        // Open a database for reading and writing
+
+        HashMap<String, String> inspectionItem = new HashMap<String, String>();
+
+        ArrayList<HashMap<String, String>> inspectionItemList;
+        inspectionItemList = new ArrayList<HashMap<String, String>>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+
+        String selectQuery = "SELECT I." + COLUMN_INSPECTION_DATE + ", I." + COLUMN_INSPECTION_TYPE + ", I." + COLUMN_INSPECTOR
+                + ", I." + COLUMN_INSPECTION_STATUS+ ", I." + COLUMN_NOTE
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
+
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+                inspectionItem = new HashMap<String, String>();
+                inspectionItem.put(MyConfig.TAG_INSPECTION_DATE, cursor.getString(0));
+                inspectionItem.put(MyConfig.TAG_INSPECTION_TYPE, cursor.getString(1));
+                inspectionItem.put(MyConfig.TAG_INSPECTOR, cursor.getString(2));
+                inspectionItem.put(MyConfig.TAG_INSPECTION_STATUS, cursor.getString(3));
+                inspectionItem.put(MyConfig.TAG_NOTE, cursor.getString(4));
+
+                inspectionItemList.add(inspectionItem);
+            } while (cursor.moveToNext());
+        }
+
+
+        // return inspection data for propertyid, Jobid, inspection id
+        database.close();
+        return inspectionItem;
+
+
+    }
+
+
     // Retrieve individual current inspection
-    public HashMap<String, String> getInspection(int projId, int iId, int aId) {
+    public HashMap<String, String> getInspectionItem(int projId, int iId, int aId) {
         // Open a database for reading and writing
 
         HashMap<String, String> inspectionItem = new HashMap<String, String>();
@@ -1118,7 +1181,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 inspectionItem = new HashMap<String, String>();
-                inspectionItem.put(MyConfig.TAG_DATE_INSPECTED, (String.valueOf(cursor.getInt(0))));
+                inspectionItem.put(MyConfig.TAG_DATE_INSPECTED, cursor.getString(0));  //(String.valueOf(cursor.getInt(0))));
                 inspectionItem.put(MyConfig.TAG_OVERVIEW, cursor.getString(1));
                 inspectionItem.put(MyConfig.TAG_RELEVANT_INFO, cursor.getString(2));
                 inspectionItem.put(MyConfig.TAG_IMAGE1, cursor.getString(3));
@@ -1250,6 +1313,7 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext()); // Move Cursor to the next row
         }
         cursor.close();
+        database.close();
         // return contact list
         return propertyArrayList;
 
@@ -1316,7 +1380,7 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext()); // Move Cursor to the next row
         }
         cursor.close();
-
+        database.close();
         // return contact list
         return photoArrayList;
     }
@@ -1950,6 +2014,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
+        dbase.close();
 
         return inspectedItemsList;
     }

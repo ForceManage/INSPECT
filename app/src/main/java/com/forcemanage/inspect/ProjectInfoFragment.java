@@ -34,9 +34,13 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private TextView branch;
     private EditText bNote;
 
+
+
     private String branchHead ="";
     private String branchLabel = "";
     private String branchNote = "";
+
+    private String ProjAddress = "";
 
 
     @Override
@@ -45,9 +49,25 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-      //      branchHead = bundle.getString("branchHead");
+            branchHead = bundle.getString("branchHead");
       //      branchLabel = bundle.getString("branchLabel");
       //      branchNote = bundle.getString("notes");
+            ProjAddress = bundle.getString("address");
+ /*           bundle.putString("branchHead", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+            bundle.putString("branchLabel", branchLabel);
+            bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
+            bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
+            bundle.putString("permit", branchNote);
+            bundle.putString("class", branchNote);
+            bundle.putString("levels", branchNote);
+            bundle.putString("photo", com2);
+            bundle.putString("key", com2);
+            bundle.putString("floor", com2);
+            bundle.putString("roof", com2);
+            bundle.putString("wall", com2);
+            bundle.putString("notes", com2);
+
+  */
         }
 
 
@@ -72,6 +92,12 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
+
+       TextView projAddress = (TextView) view.findViewById(R.id.Text1);
+       TextView projNumber = (TextView) view.findViewById(R.id.branchTitle);
+
+       projAddress.setText(ProjAddress);
+       projNumber.setText("Project ID:  "+branchHead);
 
          setText();
 
@@ -131,9 +157,9 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private void setText(){
 
         if (!branchHead.equals("")){
-           title.setText(branchHead);
-           branch.setText(branchLabel);
-           bNote.setText(branchNote);
+   //        title.setText(branchHead);
+   //        branch.setText(branchLabel);
+   //        bNote.setText(branchNote);
         }
     }
 

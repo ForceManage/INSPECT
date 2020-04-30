@@ -64,7 +64,7 @@
                         android:layout_gravity="top"
                         android:paddingTop="6dp"
                         android:paddingLeft="10dp"
-                        android:text="Collated Information  "
+                        android:text="Project Information  "
                         android:textColor="@android:color/white"
                         android:textStyle="normal" />
 
@@ -201,16 +201,6 @@
                         android:textSize="16sp"/>
 
 
-
-                    <CheckBox
-                        android:id="@+id/sign_checkBox"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:paddingLeft="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="false"
-                        android:text="Certified Sign-off. Checking signifies the Item has been inspected and commentary varified" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
