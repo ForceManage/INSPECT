@@ -335,8 +335,8 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesInspect.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
         valuesInspect.put(COLUMN_INSPECTION_DATE, inspectionAttributes.getinspectionDate());
         valuesInspect.put(COLUMN_INSPECTOR, inspectionAttributes.getinspector());
-        //       valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
-        //       valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
+        valuesInspect.put(COLUMN_DATE_TIME_START, inspectionAttributes.getstartDateTime());
+        valuesInspect.put(COLUMN_DATE_TIME_FINISH, inspectionAttributes.getendDateTime());
         valuesInspect.put(COLUMN_LABEL, inspectionAttributes.getlabel());
         valuesInspect.put(COLUMN_LEVEL, inspectionAttributes.getlevel());
         valuesInspect.put(COLUMN_PARENT, inspectionAttributes.getparent());
@@ -439,6 +439,20 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateProject(String projId, String Notes) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_PROJECT_NOTE, Notes);
+
+
+        db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+        db.close();
+
+
+    }
+
 
     public void updateInspection(String projId, String iId, String Notes) {
 
@@ -494,6 +508,19 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
 
 
+    }
+
+
+    public void logInspection(String projID, String iID, String start, String end){
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_DATE_TIME_START, start);
+        contentValues.put(COLUMN_DATE_TIME_FINISH, end);
+
+        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ?", new String[]{projID, iID});
+        db.close();
     }
 
 
@@ -1123,7 +1150,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         String selectQuery = "SELECT I." + COLUMN_INSPECTION_DATE + ", I." + COLUMN_INSPECTION_TYPE + ", I." + COLUMN_INSPECTOR
-                + ", I." + COLUMN_INSPECTION_STATUS+ ", I." + COLUMN_NOTE
+                + ", I." + COLUMN_INSPECTION_STATUS+ ", I." + COLUMN_DATE_TIME_START+ ", I." + COLUMN_DATE_TIME_FINISH+ ", I." + COLUMN_NOTE
                 + " FROM " + TABLE_INSPECTION + " I "
                 + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
 
@@ -1139,7 +1166,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_INSPECTION_TYPE, cursor.getString(1));
                 inspectionItem.put(MyConfig.TAG_INSPECTOR, cursor.getString(2));
                 inspectionItem.put(MyConfig.TAG_INSPECTION_STATUS, cursor.getString(3));
-                inspectionItem.put(MyConfig.TAG_NOTE, cursor.getString(4));
+                inspectionItem.put(MyConfig.TAG_START_DATE_TIME, cursor.getString(4));
+                inspectionItem.put(MyConfig.TAG_END_DATE_TIME, cursor.getString(5));
+                inspectionItem.put(MyConfig.TAG_NOTE, cursor.getString(6));
 
                 inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());

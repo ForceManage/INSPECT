@@ -91,7 +91,7 @@
                         android:paddingLeft="10dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="10dp"
-                        android:hint="Root title. Eg. Site Address/Project name/etc"
+                        android:hint="Project Title - Eg. Project Address/Project name/ etc"
                         android:textSize="16sp"/>
 
 
@@ -198,6 +198,7 @@
                         android:paddingTop="5dp"
                         android:paddingBottom="10dp"
                         android:hint="Author notes (text not printed)"
+                        android:textColor="@color/cardview_shadow_start_color"
                         android:textSize="16sp"/>
 
 

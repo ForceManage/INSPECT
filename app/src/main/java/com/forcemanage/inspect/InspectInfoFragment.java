@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private Boolean Edited;
     private String projectId;
     private String inspectionId;
+    private String dateInspected;
+    private String endTime;
 
 
 
@@ -56,6 +59,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             note = bundle.getString("note");
             auditor = bundle.getString("auditor");
             typeInspection = bundle.getString("inspectType");
+            dateInspected = bundle.getString("dateInspected");
+            endTime = bundle.getString("endTime");
             Edited = false;
 
         }
@@ -86,16 +91,19 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         bNote = (EditText) view.findViewById(R.id.note);
         TextView inspectDate = (TextView) view.findViewById(R.id.Text1);
         TextView inspectionType = (TextView) view.findViewById(R.id.Text2);
-        TextView inspector = (TextView) view.findViewById(R.id.Text3);
-        ImageButton inspectionBtn = (ImageButton) view.findViewById(R.id.InspectionButton);
+        TextView inspectedDate = (TextView) view.findViewById(R.id.Text3);
+        TextView inspector = (TextView) view.findViewById(R.id.Text4);
+        Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
 
 
         inspectionBtn.setOnClickListener(this);
 
 
          setText();
-         inspectDate.setText("Inspection issued on:  "+stringdate(inspectionDate));
-         inspectionType.setText("Type of inspection:  "+typeInspection);
+         endTime = stringdate(endTime,3);
+         inspectDate.setText("Activity raised:  "+stringdate(inspectionDate,1));
+         inspectionType.setText("Type of Activity:  "+typeInspection);
+         inspectedDate.setText("Activity recorded: "+stringdate(dateInspected,2)+"  -  "+endTime);
          inspector.setText("Auditor:  "+ auditor);
          bNote.setText(note);
 
@@ -150,17 +158,53 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
     }
 
-    public String stringdate(String date){
+    public String stringdate(String date, int type){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date d = null;
-        try {
-            d = sdf.parse(date);
-        } catch (ParseException ex) {
-            Log.v("Exception", ex.getLocalizedMessage());
+        switch (type) {
+
+            case 1: {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy");
+                date = sdf.format(d);
+                break;
+            }
+            case 2: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy, HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+            case 3: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
         }
-        sdf.applyPattern("dd MMM yyyy");
-        date = sdf.format(d);
 
         return date;
     }

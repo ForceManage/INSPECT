@@ -155,7 +155,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public boolean Edited = false;
     private Fragment fragment_obj;
     private String FragDisplay;
-
+    private Boolean logTime;
+    private String startTime;
+    private String endTime;
 
 
 
@@ -186,6 +188,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         photos[0] = "";
 
+        startTime = dayTime(3);
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
@@ -240,6 +243,34 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     .commit();
 
         }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
+        builder.setTitle("Select Activity Method");
+        // add a list
+        String[] actions = {"Data collection and Log time",
+                "View/Edit collected information",
+               };
+        builder.setItems(actions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:{
+                         logTime = true;
+
+
+                        break;
+                    }
+
+                    case 1: //
+                        logTime = false;
+                        break;
+                }
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
 
 
         esm_cat = new String[]{
@@ -307,7 +338,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             case (3): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -511,7 +542,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         String status =  dbHandler.getStatus(iID, projId);
 
-        dbHandler.updateStatus(projId, iID, "p", dayTime(1));
+  //      dbHandler.updateStatus(projId, iID, "p", dayTime(1));
 
         Edited = false;
 
@@ -648,6 +679,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
 
                    Bundle bundle = new Bundle();
+                   bundle.putString("projectID",projectId);
+                   bundle.putString("inspectionID",inspectionId);
                    bundle.putString("branchHead",branchHead);
                    bundle.putString("branchLabel",branchLabel);
                    bundle.putString("aprovider",aProvider);
@@ -1705,8 +1738,12 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         if(Edited == true )saveInspectionItem();
 
+        endTime = dayTime(3);
 
-
+        if(logTime==true) {
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+        }
 
     }
 

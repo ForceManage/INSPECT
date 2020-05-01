@@ -88,14 +88,6 @@
                         android:layout_weight="0.2"
                        >
 
-                        <ImageButton
-                            android:id="@+id/InspectionButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_arrow_forward_ios_24px">
-
-                        </ImageButton>
-
 
                 </LinearLayout>
 
@@ -165,11 +157,30 @@
                         android:hint="Author notes (text not printed)"
                         android:textSize="16sp"/>
 
-
-
-                     <com.google.android.material.textfield.TextInputLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom">
+
+
+                         <Button
+                            android:id="@+id/InspectionButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:paddingLeft="10dp"
+                            android:layout_gravity="bottom|right"
+                            android:text="Do Activity"
+                            android:textSize="14sp"
+                            android:drawableLeft="@drawable/ic_arrow_forward_ios_24px">
+
+                        </Button>
+
+
+                    </FrameLayout>
+
+
+
 
 
                 </LinearLayout>

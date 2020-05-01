@@ -41,6 +41,9 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private String branchNote = "";
 
     private String ProjAddress = "";
+    private Boolean Edited;
+    private String note;
+    private String projectId;
 
 
     @Override
@@ -53,6 +56,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
       //      branchLabel = bundle.getString("branchLabel");
       //      branchNote = bundle.getString("notes");
             ProjAddress = bundle.getString("address");
+            note = bundle.getString("note");
  /*           bundle.putString("branchHead", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
             bundle.putString("branchLabel", branchLabel);
             bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
@@ -70,6 +74,8 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
   */
         }
 
+            Edited = false;
+        projectId = globalVariables.projectId;
 
     }
 
@@ -98,6 +104,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
        projAddress.setText(ProjAddress);
        projNumber.setText("Project ID:  "+branchHead);
+       bNote.setText(note);
 
          setText();
 
@@ -151,6 +158,18 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
     */
 
+        bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                Edited = true;
+                // String serviceDate = inspectionDate.getText().toString();
+                // work out the next service date in three months time
+
+            }
+
+        });
+
         return view;
     }
 
@@ -167,5 +186,20 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void saveData(){
+
+        DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+        note = bNote.getText().toString();
+
+        dbHandler.updateProject(projectId, note);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (Edited = true) saveData();
     }
 }

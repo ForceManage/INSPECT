@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -96,6 +97,10 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String relevantInfo;
     private String Notes;
     private String inspectionDate;
+    private String startTime;
+    private String endTime;
+    private String projectId;
+    private String inspectionId;
 
 
 
@@ -111,6 +116,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
+            projectId = bundle.getString("projectID");
+            inspectionId = bundle.getString("inspectionID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             aProvider = bundle.getString("aprovider");
@@ -128,7 +135,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
      //   inspectionDate =  inspectionDate.substring(6,8)+"-"+inspectionDate.substring(4,6)+"-"+inspectionDate.substring(0,4);
 
-
+           inspectionDate = dayTime(1);
+           startTime = dayTime(2);
 
     }
 
@@ -671,5 +679,47 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         return date;
     }
 
+    private String dayTime(int Type) {
 
+        String daytime = "20000101";
+
+        switch (Type) {
+
+            case (1): {
+
+                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (2): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (3): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+        }
+        return daytime;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+ //       endTime = dayTime(2);
+ //       DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+//        dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+
+
+    }
 }

@@ -32,33 +32,6 @@
             android:paddingRight="5dp"
             >
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-                <Switch
-                    android:id="@+id/switch2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dp"
-                    android:text="TABLET" />
-
-                <TextView
-                    android:id="@+id/inspectorName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:text="Author"
-                         />
-
-                <Spinner
-                    android:id="@+id/spinnerInspectorID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,6 +67,33 @@
 
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <Switch
+                    android:id="@+id/switch2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:text="TABLET" />
+
+                <TextView
+                    android:id="@+id/inspectorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="Author"
+                         />
+
+                <Spinner
+                    android:id="@+id/spinnerInspectorID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
 
 
             <TextView
@@ -218,11 +218,12 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:layout_weight="0.45"
             android:orientation="vertical"
+            android:background="@drawable/image_border"
             android:baselineAligned="false">
 
 
@@ -261,7 +262,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/image_border"
+
                     >
 
                         <ImageView

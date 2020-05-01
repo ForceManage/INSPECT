@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -324,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             case (3): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -334,6 +335,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         return daytime;
 
+    }
+
+    private String datetoString(String date){
+        String datestring = "";
+
+        String[] idate = date.split("-");
+        datestring = idate[0]+idate[1]+idate[2];
+
+        return datestring;
     }
 
 
@@ -374,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
  //               bundle.putString("branchLabel", branchLabel);
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
+                bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
  /*               bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
                 bundle.putString("permit", branchNote);
                 bundle.putString("class", branchNote);
@@ -405,6 +416,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
              //   bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 //               bundle.putString("branchLabel", branchLabel);
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+                bundle.putString("dateInspected", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+                bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
                 bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
                 bundle.putString("auditor",projectItem.get(MyConfig.TAG_INSPECTOR));
@@ -1155,11 +1168,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String wallType = jo.getString(MyConfig.TAG_WALL_TYPE);
                 String inspectionId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String inspectionType = jo.getString(MyConfig.TAG_INSPECTION_TYPE);
-                String inspectionDate = jo.getString(MyConfig.TAG_INSPECTION_DATE);
+                String inspectionDate = datetoString(jo.getString(MyConfig.TAG_INSPECTION_DATE));
                 String inspector = jo.getString(MyConfig.TAG_INSPECTOR);
                 String inspectionStatus = jo.getString(MyConfig.TAG_INSPECTION_STATUS);
-//               String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
-//                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
+                String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
+                String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
                 String Label = jo.getString(MyConfig.TAG_LABEL);
                 String Level = jo.getString(MyConfig.TAG_LEVEL);
                 String Parent = jo.getString(MyConfig.TAG_PARENT);
@@ -1210,7 +1223,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 // editTextMessage.setText("Test 1");
 
 
-                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, Label, level, parent, p_Id, Image, Note);
+                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime, Label, level, parent, p_Id, Image, Note);
 
                 // editTextMessage.setText("Test 2");
 
@@ -1735,9 +1748,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
+                    json.put(MyConfig.TAG_INSPECTION_STATUS, inspList.get(i).get(MyConfig.TAG_INSPECTION_STATUS));
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
+                    if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
+                    else
                     json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
+                    if(inspList.get(i).get(MyConfig.TAG_END_DATE_TIME)==null) json.put(MyConfig.TAG_END_DATE_TIME, "20200101010101");
+                    else
                     json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
                     json.put(MyConfig.TAG_LABEL, inspList.get(i).get(MyConfig.TAG_LABEL));
                     json.put(MyConfig.TAG_LEVEL, inspList.get(i).get(MyConfig.TAG_LEVEL));
@@ -1745,8 +1763,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_P_ID, inspList.get(i).get(MyConfig.TAG_P_ID));
                     json.put(MyConfig.TAG_IMAGE, inspList.get(i).get(MyConfig.TAG_IMAGE));
                     json.put(MyConfig.TAG_NOTE, inspList.get(i).get(MyConfig.TAG_NOTE));
-                 //   json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
-                 //   json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
 
                     jsonArray.put(json);
                     j = j + 1;
@@ -1761,8 +1777,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_TO_SERVER, jsonString);
             //       res = jsonString;
-
+            Log.v("MAP JSON", jsonString);
         }
+
         return res;
 
     }
@@ -1886,7 +1903,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
-            Log.v("MAP JSON", jsonString);
+ //           Log.v("MAP JSON", jsonString);
 //                res = jsonString;
         }
         return res;
@@ -2043,7 +2060,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
 
-                message = itemSaved;
+                message = inspSaved;
 
                 if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&& (actionsSaved.equals(yes))){
 

@@ -13,8 +13,8 @@ public class InspectionAttributes {
     private String _inspector;
 
 
- //   private int _startDateTime;
- //   private int _endDateTime;
+    private String _startDateTime;
+    private String _endDateTime;
     private String _label;
     private int _level;
     private int _parent;
@@ -26,7 +26,7 @@ public class InspectionAttributes {
     }
 
     public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate,
-                                String inspector, String label, int level, int parent, int pid, String image, String note){  //, int parent, int aID, String img1, String notes) {
+                                String inspector, String startDateTime, String endDateTime, String label, int level, int parent, int pid, String image, String note){  //, int parent, int aID, String img1, String notes) {
         this._inspectionId = inspectionId;
         this._inspectionType = inspectionType;
         this._inspectionStatus = inspectionStatus;
@@ -40,8 +40,8 @@ public class InspectionAttributes {
         this._pID = pid;
         this._image = image;
         this._note = note;
-//        this._startDateTime = startDateTime;
-//        this._endDateTime = endDateTime;
+        this._startDateTime = startDateTime;
+        this._endDateTime = endDateTime;
      }
 
 
@@ -63,10 +63,10 @@ public class InspectionAttributes {
     public String getinspectionDate() {return this._inspectionDate; }
     public void setinspector(String inspector) {this._inspector = inspector; }
     public String getinspector() {return this._inspector; }
- //   public void setstartDateTime (int startDateTime) {this._startDateTime = startDateTime; }
- //   public int getstartDateTime() {return this._startDateTime; }
- //   public void setendDateTime (int endDateTime) {this._endDateTime = endDateTime; }
- //   public int getendDateTime() {return this._endDateTime;}
+    public void setstartDateTime (String startDateTime) {this._startDateTime = startDateTime; }
+    public String getstartDateTime() {return this._startDateTime; }
+    public void setendDateTime (String endDateTime) {this._endDateTime = endDateTime; }
+    public String getendDateTime() {return this._endDateTime;}
 
 
     public void setlabel(String label) {this._label = label;
