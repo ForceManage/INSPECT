@@ -101,6 +101,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String endTime;
     private String projectId;
     private String inspectionId;
+    private int aId;
 
 
 
@@ -118,6 +119,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         if(bundle != null){
             projectId = bundle.getString("projectID");
             inspectionId = bundle.getString("inspectionID");
+            aId = bundle.getInt("aID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             aProvider = bundle.getString("aprovider");
@@ -715,6 +717,26 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+       if(globalVariables.Edited == true){
+
+           DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+           // String serviceDate = inspectionDate.getText().toString();
+           // work out the next service date in three months time
+
+
+
+               dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
+                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1"
+                       , "reportImage", globalVariables.photos[0], com1, globalVariables.photos[1], com2, globalVariables.photos[2],
+                       com3, globalVariables.photos[3], com4,
+                       globalVariables.photos[4], com5, "Img6", " com6", "Img7", "com7", "p", notes.getText().toString());
+
+               globalVariables.Edited = false;
+
+           }
+
 
  //       endTime = dayTime(2);
  //       DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);

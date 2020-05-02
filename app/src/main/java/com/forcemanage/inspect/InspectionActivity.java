@@ -39,6 +39,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.ListFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.ByteArrayOutputStream;
@@ -386,9 +387,11 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
         GlobalVariables.modified = true;
+
+
     //    MapListAdapter mAdapter = new MapListAdapter(this);
      //   mAdapter.notifyDataSetChanged();
-     //   OnSelectionChanged(0);
+       OnSelectionChanged(GlobalVariables.pos);
     }
 
 @Override
@@ -427,9 +430,12 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     if (GlobalVariables.modified == true) {
         MapViewFragment newDetailFragment = new MapViewFragment();
         Bundle args = new Bundle();
-        detailFragment.mCurrentPosition = -1;
+       detailFragment.mCurrentPosition = -1;
+
+
 
         args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+
         newDetailFragment.setArguments(args);
         androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
@@ -446,9 +452,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             getSupportFragmentManager().popBackStackImmediate();
         }
 
+
         // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
         GlobalVariables.modified = false;
-        OnSelectionChanged(0);
+
+        OnSelectionChanged(GlobalVariables.pos);
 
     }
 
@@ -576,6 +586,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             dbHandler.deleteMapBranch(projId, aID);
             dbHandler.deleteInspectionItem(projId,aID);
+            GlobalVariables.pos = GlobalVariables.pos-1;
             loadMap();
 
         }
@@ -681,6 +692,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                    Bundle bundle = new Bundle();
                    bundle.putString("projectID",projectId);
                    bundle.putString("inspectionID",inspectionId);
+                   bundle.putInt("aID",aID);
                    bundle.putString("branchHead",branchHead);
                    bundle.putString("branchLabel",branchLabel);
                    bundle.putString("aprovider",aProvider);
@@ -1734,7 +1746,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     protected void onDestroy() {
 
         super.onDestroy();
-        GlobalVariables.modified = true;
+    //    GlobalVariables.modified = true;
 
         if(Edited == true )saveInspectionItem();
 

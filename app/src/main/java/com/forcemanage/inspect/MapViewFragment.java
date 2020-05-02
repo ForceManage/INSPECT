@@ -44,34 +44,32 @@ public class MapViewFragment extends ListFragment {
     @Override
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
-
-
         GlobalVariables.pos = position;
-        if (position != ListView.INVALID_POSITION) {
+
+
+            if (position != ListView.INVALID_POSITION) {
+                MapViewNode node = GlobalVariables.displayNodes.get(position);
+
+                if (node.getIsExpanded() == GlobalVariables.TRUE) {
+                    node.setIsExpanded(GlobalVariables.FALSE);
+
+                } else {
+                    if (node.getNodeChildren() != null)
+                        node.setIsExpanded(GlobalVariables.TRUE);
+
+                }
+            }
+
+            MapViewLists.LoadDisplayList();
+
+            mAdapter.notifyDataSetChanged();
+
+
             MapViewNode node = GlobalVariables.displayNodes.get(position);
 
-            if (node.getIsExpanded() == GlobalVariables.TRUE) {
-                node.setIsExpanded(GlobalVariables.FALSE);
 
-            } else {
-                if (node.getNodeChildren() != null)
-                    node.setIsExpanded(GlobalVariables.TRUE);
-
-            }
-        }
-
-        MapViewLists.LoadDisplayList();
-
-        mAdapter.notifyDataSetChanged();
-
-
-
-        MapViewNode node = GlobalVariables.displayNodes.get(position);
-
-
-        OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
-        listener.OnSelectionChanged(position);
-
+            OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
+            listener.OnSelectionChanged(position);
 
 
         v.post(new Runnable() {

@@ -34,7 +34,7 @@
                 android:id="@+id/nav_bar"
                 android:layout_width="match_parent"
                 android:layout_height="1116dp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.7"
                 android:background="@drawable/image_border"
                 android:orientation="vertical"
                 android:paddingLeft="8dp"
@@ -58,7 +58,9 @@
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.8"
+                    android:layout_marginTop="15dp"
                     android:orientation="horizontal">
 
 
@@ -79,26 +81,17 @@
 
                 </LinearLayout>
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/image_border"
-                android:orientation="vertical">
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <Button
                         android:id="@+id/button_edit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
-                        android:background="@drawable/head_frame"
+                        android:backgroundTint="#DFB005"
                         android:drawableLeft="@android:drawable/ic_input_get"
                         android:enabled="true"
                         android:text=" EDIT "
@@ -109,7 +102,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
-                        android:background="@drawable/head_frame"
+                        android:backgroundTint="#DFB005"
                         android:drawableStart="@android:drawable/ic_menu_add"
                         android:enabled="true"
                         android:textColor="@android:color/white" />
@@ -119,7 +112,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
-                        android:background="@drawable/head_frame"
+                        android:backgroundTint="#DFB005"
                         android:drawableLeft="@android:drawable/ic_menu_delete"
                         android:enabled="true"
                         android:textColor="@android:color/white" />
@@ -127,12 +120,23 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/image_border"
+                android:orientation="vertical">
+
+
+
+
                 <Button
                     android:id="@+id/btnViewReport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/head_frame"
+                    android:backgroundTint="#DFB005"
                     android:drawableLeft="@android:drawable/sym_contact_card"
                     android:text="VIEW REPORT"
                     android:textColor="@android:color/white" />

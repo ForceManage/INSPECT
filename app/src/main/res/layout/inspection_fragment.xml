@@ -202,18 +202,22 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:layout_gravity="bottom">
 
                 <Button
-                    android:id="@+id/testReport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnViewReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_gravity="bottom"
-                    android:backgroundTint="#b3a962"
-                    android:drawableLeft="@android:drawable/sym_contact_card"
+                    android:backgroundTint="#DFB005"
+                    android:drawableStart="@drawable/ic_format_list_bulleted"
+                    android:drawablePadding="15dp"
                     android:text="VIEW REPORT"
                     android:textColor="@android:color/white" />
+
             </FrameLayout>
 
 

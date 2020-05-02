@@ -195,38 +195,35 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
     <LinearLayout
 
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
         android:layout_marginRight="5dp"
+        android:background="@drawable/image_border"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1">
+            android:layout_height="wrap_content"
+            >
 
             <ImageView
                 android:id="@+id/imageView_cam"
                 android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:cropToPadding="false"
+                android:layout_height="60dp"
                 android:paddingLeft="2dp"
                 android:paddingTop="2dp"
                 android:paddingRight="2dp"
                 android:paddingBottom="2dp"
                 android:layout_margin="2dp"
-                android:layout_gravity="left"
-                android:background="@drawable/edit_border"
+                android:layout_gravity="top|left"
                 app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
 
             <ImageView
                 android:id="@+id/imageView_draw"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="top|right"
                 android:visibility="visible"
-                android:background="@drawable/image_border"
                 android:foreground="@android:drawable/ic_menu_edit" />
 
         </FrameLayout>
@@ -234,12 +231,13 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/image_border"
+
             >
+
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/image_border"
             android:layout_weight="1.0"
             >
 
