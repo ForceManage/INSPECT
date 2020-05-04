@@ -61,12 +61,11 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements I_inspection, OnVerseNameSelectionChangeListener, View.OnClickListener  {
+public class InspectionActivity extends AppCompatActivity implements I_inspection, OnVerseNameSelectionChangeListener, View.OnClickListener {
 
     DBHandler ESMdb;
     private Button buttonInsert;
     private Button buttonDelete;
-    private Button btnViewReport;
     private Button buttonEdit;
     private String projectId;
     private String inspectionId;
@@ -88,13 +87,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
 
     public ImageView mPhotoImageView;
-    public String photoBranch ="";
-    public String photo1 ="";
+    public String photoBranch = "";
+    public String photo1 = "";
     public String photo2;
     public String photo3;
     public String photo4;
     public String photo5;
-    public String[]  photos = new String[5];
+    public String[] photos = new String[5];
     private String mImageFileLocation = "";
     private String fname;
     private String dirName;
@@ -102,42 +101,39 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public int filephoto;
 
 
-
-
-
     public int photoframe;
     private File photo;
-    public String com1 ="";
-    public String com2 ="";
-    public String com3="";
-    public String com4="";
-    public String com5="";
-    public String com6="";
-    public String com7="";
-    public String Overview="";
-    public String relevantInfo="";
-    public String ItemStatus="";
-    public String Notes="";
+    public String com1 = "";
+    public String com2 = "";
+    public String com3 = "";
+    public String com4 = "";
+    public String com5 = "";
+    public String com6 = "";
+    public String com7 = "";
+    public String Overview = "";
+    public String relevantInfo = "";
+    public String ItemStatus = "";
+    public String Notes = "";
     private String aProvider = "Trade";
 
 
-//    private TextView Asset;
-    private String cameraSnap ;
+    //    private TextView Asset;
+    private String cameraSnap;
     private EditText Note;
     private TextView ItemNumbers;
-  //  private TextView location;
-  //  private String location;
-  //  private TextView SubLocation;
+    //  private TextView location;
+    //  private String location;
+    //  private TextView SubLocation;
     private String ESMtxt;
     private String itemlocation;
     private String[] locationsArr;
     private String[] sublocationsArr;
     private String[] iTitle;
-    private String [] esm_cat;
+    private String[] esm_cat;
     private String editing = "NO";
     private int catId;
-    private String [] observations;
-    private String [] recommendations;
+    private String[] observations;
+    private String[] recommendations;
     private Integer zone;
     private ArrayAdapter<String> adapter5;
     private ArrayAdapter<MapViewNode> aAdapter;
@@ -145,14 +141,14 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private List<MapViewData> listItems;
     public List<ReportItem> reportlistItems;
     private int projId;
-    public int aID=1;
-    public  int Level;
+    public int aID = 1;
+    public int Level;
     public int Parent;
     public int Child;
     public int iID = 1;
     public String branchLabel = "Label";
     public String branchNote = "Note";
-    private int branchCode=0;
+    private int branchCode = 0;
     public boolean Edited = false;
     private Fragment fragment_obj;
     private String FragDisplay;
@@ -161,9 +157,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private String endTime;
 
 
-
- //   private ViewPager mViewPager;
-
+    //   private ViewPager mViewPager;
 
 
     @Override
@@ -177,8 +171,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
         buttonInsert = (Button) findViewById(R.id.button2);
         buttonInsert.setOnClickListener(this);
-        btnViewReport = (Button) findViewById(R.id.btnViewReport);
-        btnViewReport.setOnClickListener(this);
         buttonDelete = (Button) findViewById(R.id.button4);
         buttonDelete.setOnClickListener(this);
         buttonEdit = (Button) findViewById(R.id.button_edit);
@@ -189,13 +181,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         photos[0] = "";
 
-        startTime = dayTime(3);
+        startTime = dayTime(4);
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
 
-      //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
-      //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
+        //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
+        //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
 
 
         init();
@@ -205,36 +197,36 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         listItems = new ArrayList<>();
         MapViewData listItem;
 
-        for (int i = 0; i < (SiteMapData.size()); i++){
+        for (int i = 0; i < (SiteMapData.size()); i++) {
 
-             listItem = new MapViewData(
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
-                     SiteMapData.get(i).get(MyConfig.TAG_LABEL),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
-                     SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
-                     SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+            listItem = new MapViewData(
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
             );
             listItems.add(listItem);
         }
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
-     //   MapViewLists.LoadDisplayList();
+        //   MapViewLists.LoadDisplayList();
 
-         GlobalVariables.modified = false;
+        GlobalVariables.modified = false;
 
 
-        if (findViewById(R.id.fragment_container) != null){
+        if (findViewById(R.id.fragment_container) != null) {
 
             // However if we are being restored from a previous state, then we don't
             // need to do anything and should return or we could end up with overlapping Fragments
-        //    if (savedInstanceState != null){
-        //        return;
-       //     }
+            //    if (savedInstanceState != null){
+            //        return;
+            //     }
 //
             // Create an Instance of Fragment
             MapViewFragment treeFragment = new MapViewFragment();
@@ -250,13 +242,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         // add a list
         String[] actions = {"Data collection and Log time",
                 "View/Edit collected information",
-               };
+        };
         builder.setItems(actions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:{
-                         logTime = true;
+                    case 0: {
+                        logTime = true;
 
 
                         break;
@@ -288,7 +280,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                 "Division 1, Subdivision 2 (Pre 1994 )",
                 "Division 1, Subdivision 1 (1 July 1994 - 1 May 2004 )",
                 "Division 1, Subdivision 1 (From May 2004.  Post 1994 )",
-         };
+        };
 
         iTitle = new String[]{
                 "Branch Title",
@@ -308,10 +300,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
     }
 
-    private void init(){
+    private void init() {
 
         BaseFragment fragment = new BaseFragment();
-        doFragmentTransaction(fragment,"BaseFragment",false,"");
+        doFragmentTransaction(fragment, "BaseFragment", false, "");
 
     }
 
@@ -339,6 +331,14 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             case (3): {
 
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (4): {
+
                 java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
@@ -348,18 +348,18 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         return daytime;
     }
 
-    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
+    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
-        transaction.replace(R.id.mainfragment_container,fragment,name);
-        if(addToBackStack){
+        transaction.replace(R.id.mainfragment_container, fragment, name);
+        if (addToBackStack) {
             transaction.addToBackStack(name);
-          }
+        }
         transaction.commit();
     }
 
 
-    public void loadMap()  {
+    public void loadMap() {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID);
@@ -367,7 +367,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         listItems = new ArrayList<>();
         MapViewData listItem;
 
-        for (int i = 0; i < (SiteMapData.size()); i++){
+        for (int i = 0; i < (SiteMapData.size()); i++) {
 
             listItem = new MapViewData(
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
@@ -389,144 +389,137 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         GlobalVariables.modified = true;
 
 
-    //    MapListAdapter mAdapter = new MapListAdapter(this);
-     //   mAdapter.notifyDataSetChanged();
-       OnSelectionChanged(GlobalVariables.pos);
+        //    MapListAdapter mAdapter = new MapListAdapter(this);
+        //   mAdapter.notifyDataSetChanged();
+        OnSelectionChanged(GlobalVariables.pos);
     }
 
-@Override
+    @Override
     public void OnSelectionChanged(int treeNameIndex) {
 
 
-    DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.detail_text);
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
 
 
-    if (detailFragment != null) {
-        // If description is available, we are in two pane layout
-        // so we call the method in DescriptionFragment to update its content
-        detailFragment.setDetail(treeNameIndex);
+        if (detailFragment != null) {
+            // If description is available, we are in two pane layout
+            // so we call the method in DescriptionFragment to update its content
+            detailFragment.setDetail(treeNameIndex);
 
-    } else {
-        DetailFragment newDetailFragment = new DetailFragment();
-        Bundle args = new Bundle();
+        } else {
+            DetailFragment newDetailFragment = new DetailFragment();
+            Bundle args = new Bundle();
 
-        args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-        newDetailFragment.setArguments(args);
-
-
-         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+            newDetailFragment.setArguments(args);
 
 
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the backStack so the User can navigate back
-        fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-
-        //  fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
-    }
-
-    if (GlobalVariables.modified == true) {
-        MapViewFragment newDetailFragment = new MapViewFragment();
-        Bundle args = new Bundle();
-       detailFragment.mCurrentPosition = -1;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
 
-        args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+            //  fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
 
-        newDetailFragment.setArguments(args);
-        androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        }
 
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the backStack so the User can navigate back
-        fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        FragmentManager fm = getSupportFragmentManager();
+        if (GlobalVariables.modified == true) {
+            MapViewFragment newDetailFragment = new MapViewFragment();
+            Bundle args = new Bundle();
+            detailFragment.mCurrentPosition = -1;
 
 
-        //fm.popBackStack(DF,0);
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            FragmentManager fm = getSupportFragmentManager();
+
+
+            //fm.popBackStack(DF,0);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+
+            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
+            GlobalVariables.modified = false;
+
+            OnSelectionChanged(GlobalVariables.pos);
+
         }
 
 
-        // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        try {
+            if (FragDisplay == "BaseFragment") {
+                fragment_obj = (BaseFragment) getSupportFragmentManager().findFragmentByTag("BaseFragment");
+                branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
+                //     Toast.makeText(this, "BranchNote from Inspection Acvtivity: " + branchNote, Toast.LENGTH_SHORT).show();
+            }
+            if (FragDisplay == "InspectionFragment") {
+                fragment_obj = (InspectionFragment) getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+                com1 = ((TextView) fragment_obj.getView().findViewById(R.id.com1)).getText().toString();
+                com2 = ((TextView) fragment_obj.getView().findViewById(R.id.com2)).getText().toString();
+                com3 = ((TextView) fragment_obj.getView().findViewById(R.id.com3)).getText().toString();
+                com4 = ((TextView) fragment_obj.getView().findViewById(R.id.com4)).getText().toString();
+                com5 = ((TextView) fragment_obj.getView().findViewById(R.id.com5)).getText().toString();
+                aProvider = ((TextView) fragment_obj.getView().findViewById(R.id.textServicedBy)).getText().toString();
+                Overview = ((TextView) fragment_obj.getView().findViewById(R.id.Overview)).getText().toString();
+                relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.RelevantInfo)).getText().toString();
+                Notes = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
 
+                //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
+            }
 
-        GlobalVariables.modified = false;
+            if (FragDisplay == "ActionItemFragment") {
+                fragment_obj = (ActionItemFragment) getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
+                Overview = ((TextView) fragment_obj.getView().findViewById(R.id.desc)).getText().toString();
+                com1 = ((TextView) fragment_obj.getView().findViewById(R.id.scope)).getText().toString();
+                relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.perform)).getText().toString();
+                Notes = ((TextView) fragment_obj.getView().findViewById(R.id.notes)).getText().toString();
 
-        OnSelectionChanged(GlobalVariables.pos);
+                //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            System.out.println("Something went wrong.");
+        }
+
+        if (Edited == true) saveInspectionItem();
+
+        aID = detailFragment.aID;
+
+        //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+        displayInspectionItem();
 
     }
 
 
-
-    try
-
-    {
-        if(FragDisplay == "BaseFragment") {
-            fragment_obj = (BaseFragment)getSupportFragmentManager().findFragmentByTag("BaseFragment");
-            branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
-       //     Toast.makeText(this, "BranchNote from Inspection Acvtivity: " + branchNote, Toast.LENGTH_SHORT).show();
-        }
-        if(FragDisplay == "InspectionFragment"){
-            fragment_obj = (InspectionFragment)getSupportFragmentManager().findFragmentByTag("InspectionFragment");
-            com1 = ((TextView) fragment_obj.getView().findViewById(R.id.com1)).getText().toString();
-            com2 = ((TextView) fragment_obj.getView().findViewById(R.id.com2)).getText().toString();
-            com3 = ((TextView) fragment_obj.getView().findViewById(R.id.com3)).getText().toString();
-            com4 = ((TextView) fragment_obj.getView().findViewById(R.id.com4)).getText().toString();
-            com5 = ((TextView) fragment_obj.getView().findViewById(R.id.com5)).getText().toString();
-            aProvider = ((TextView) fragment_obj.getView().findViewById(R.id.textServicedBy)).getText().toString();
-            Overview = ((TextView) fragment_obj.getView().findViewById(R.id.Overview)).getText().toString();
-            relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.RelevantInfo)).getText().toString();
-            Notes = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
-
-        //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
-        }
-
-        if(FragDisplay == "ActionItemFragment"){
-            fragment_obj = (ActionItemFragment)getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
-            Overview = ((TextView) fragment_obj.getView().findViewById(R.id.desc)).getText().toString();
-            com1 = ((TextView) fragment_obj.getView().findViewById(R.id.scope)).getText().toString();
-            relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.perform)).getText().toString();
-            Notes = ((TextView) fragment_obj.getView().findViewById(R.id.notes)).getText().toString();
-
-            //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
-        }
-    }
-    catch(Exception e){
-        System.out.println("Something went wrong.");
-    }
-
-    if(Edited == true) saveInspectionItem();
-
-    aID = detailFragment.aID;
-
-  //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
-   displayInspectionItem();
-
-}
-
-
-    private void getORArray(String Cat_Table, String subCat){
+    private void getORArray(String Cat_Table, String subCat) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-
-        }
-
+    }
 
 
-    private void saveInspectionItem(){
+    private void saveInspectionItem() {
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-       // String serviceDate = inspectionDate.getText().toString();
+        // String serviceDate = inspectionDate.getText().toString();
         // work out the next service date in three months time
-        if(FragDisplay == "BaseFragment") {
+        if (FragDisplay == "BaseFragment") {
             dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
         }
 
@@ -537,47 +530,45 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         ItemStatus = "p";
 
 
-        if(FragDisplay == "InspectionFragment") {
+        if (FragDisplay == "InspectionFragment") {
             dbHandler.updateInspectionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
                     , "reportImage", photo1, com1, photo2, com2, photo3, com3, photo4, com4,
                     photo5, com5, "Img6", " com6", "Img7", "com7", ItemStatus, Notes);
 
         }
 
-        if(FragDisplay == "ActionItemFragment") {
+        if (FragDisplay == "ActionItemFragment") {
             dbHandler.updateActionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
-                    , "reportImage", photo1, com1, ItemStatus, Notes);
+                    , photo1, com1, ItemStatus, Notes);
 
         }
 
-        String status =  dbHandler.getStatus(iID, projId);
+        String status = dbHandler.getStatus(iID, projId);
 
-  //      dbHandler.updateStatus(projId, iID, "p", dayTime(1));
+        //      dbHandler.updateStatus(projId, iID, "p", dayTime(1));
 
         Edited = false;
 
     }
 
 
-    public void deleteInspectionItem(){
+    public void deleteInspectionItem() {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
         if (Level > 0) {
 
-                dbHandler.deleteInspectionItem(projId, aID);
-                loadMap();
+            dbHandler.deleteInspectionItem(projId, aID);
+            loadMap();
 
-            }
-
-               else {
-                      Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
-                }
-     }
+        } else {
+            Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
-    public void deleteMapBranch(){
+    public void deleteMapBranch() {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -585,23 +576,22 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         if (Level > 0) {
 
             dbHandler.deleteMapBranch(projId, aID);
-            dbHandler.deleteInspectionItem(projId,aID);
-            GlobalVariables.pos = GlobalVariables.pos-1;
+            dbHandler.deleteInspectionItem(projId, aID);
+            GlobalVariables.pos = GlobalVariables.pos - 1;
             loadMap();
 
-        }
-
-        else {
+        } else {
             Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private void addLevel(int Level, String levelName){
+    private void addLevel(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName,0);  //this is the ESM category
-        if(result == 0 ) Toast.makeText(this, "Cannot place navigation branch at this position",Toast.LENGTH_SHORT).show();
+        int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName, 0);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place navigation branch at this position", Toast.LENGTH_SHORT).show();
         else
             loadMap();
     }
@@ -612,10 +602,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addReportBranch(projId, iID, catId, Level, aID, levelName);  //this is the ESM category
 
-        if(result ==1)
-        loadMap();
+        if (result == 1)
+            loadMap();
         else
-        Toast.makeText(this, "Cannot place report branch at this position",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place report branch at this position", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -624,152 +614,158 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addActionBranch(projId, iID, catId, Level, aID, levelName);  //this is the ESM category
 
-        if(result ==1)
+        if (result == 1)
             loadMap();
         else
-            Toast.makeText(this, "Cannot place an Action branch at this position",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place an Action branch at this position", Toast.LENGTH_SHORT).show();
 
     }
 
 
-    public void editLocation(String branchLabel){
+    public void editLocation(String branchLabel) {
 
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            dbHandler.updateBranchLabel(projId, aID, branchLabel);
-            loadMap();
-     }
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        dbHandler.updateBranchLabel(projId, aID, branchLabel);
+        loadMap();
+    }
 
-    private void displayInspectionItem(){
+    private void displayInspectionItem() {
 
-  //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-            HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID);
+        HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID);
 
-           catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
-           Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
-           Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
-           photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
-           branchLabel = mapItem.get(MyConfig.TAG_LABEL);
-           branchNote = mapItem.get(MyConfig.TAG_NOTES);
-           branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
+        catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
+        Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
+        Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
+        photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
+        branchLabel = mapItem.get(MyConfig.TAG_LABEL);
+        branchNote = mapItem.get(MyConfig.TAG_NOTES);
+        branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
 
-           String branchHead = dbHandler.getMapBranchTitle(projId,catId);
+        String branchHead = dbHandler.getMapBranchTitle(projId, catId);
 
-           switch (branchCode){
+        switch (branchCode) {
 
-               case 0: {
-                   Bundle bundle = new Bundle();
-                   bundle.putString("branchHead",branchHead);
-                   bundle.putString("branchLabel",branchLabel);
-                   bundle.putString("notes",branchNote);
-                   bundle.putString("com2",com2);
-                   BaseFragment fragment = new BaseFragment();
-                   fragment.setArguments(bundle);
+            case 0: {
+                Bundle bundle = new Bundle();
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putInt("aID", aID);
+                bundle.putString("notes", branchNote);
+                bundle.putString("com2", com2);
+                BaseFragment fragment = new BaseFragment();
+                fragment.setArguments(bundle);
 
-                   doFragmentTransaction(fragment, "BaseFragment", false, "");
+                doFragmentTransaction(fragment, "BaseFragment", false, "");
 
-                   photo1 = photoBranch;
-                   break;
-               }
-               case 1:{
-
-
-                   HashMap<String, String> list = dbHandler.getInspectionItem(projId, iID, aID);
-
-                   relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                   Overview = list.get(MyConfig.TAG_OVERVIEW);
-                   aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                   com1 = list.get(MyConfig.TAG_COM1);
-                   com2 = list.get(MyConfig.TAG_COM2);
-                   com3 = list.get(MyConfig.TAG_COM3);
-                   com4 = list.get(MyConfig.TAG_COM4);
-                   com5 = list.get(MyConfig.TAG_COM5);
-                   Notes = list.get(MyConfig.TAG_NOTES);
-                   String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                photo1 = photoBranch;
+                break;
+            }
+            case 1: {
 
 
-                   Bundle bundle = new Bundle();
-                   bundle.putString("projectID",projectId);
-                   bundle.putString("inspectionID",inspectionId);
-                   bundle.putInt("aID",aID);
-                   bundle.putString("branchHead",branchHead);
-                   bundle.putString("branchLabel",branchLabel);
-                   bundle.putString("aprovider",aProvider);
-                   bundle.putString("overview",Overview);
-                   bundle.putString("date",dateInspected);
-                   bundle.putString("relevantInfo",relevantInfo);
-                   bundle.putString("notes",Notes);
-                   bundle.putString("com1",com1);
-                   bundle.putString("com2",com2);
-                   bundle.putString("com3",com3);
-                   bundle.putString("com4",com4);
-                   bundle.putString("com5",com5);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, iID, aID);
 
-                   InspectionFragment fragment = new InspectionFragment();
-                   fragment.setArguments(bundle);
-
-                   doFragmentTransaction(fragment,"InspectionFragment",false,"");
-
-                   int itemNos = dbHandler.getSubItemMap(projId, aID);
-
-                   photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                   photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                   photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                   photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                   photos[4] = list.get(MyConfig.TAG_IMAGE5);
-
-                   //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                   String tag = list.get(MyConfig.TAG_IMAGE1);
-
-                   photo1 = photos[0];
-                   photo2 = photos[1];
-                   photo3 = photos[2];
-                   photo4 = photos[3];
-                   photo5 = photos[4];
-
-                   break;
-
-               }
-               case 2: {
-
-                   HashMap<String, String> list = dbHandler.getActionItem(projId, aID, iID);
-
-                   relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                   Overview = list.get(MyConfig.TAG_OVERVIEW);
-                   aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                   com1 = list.get(MyConfig.TAG_COM1);
-                   Notes = list.get(MyConfig.TAG_NOTES);
+                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                Overview = list.get(MyConfig.TAG_OVERVIEW);
+                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                com1 = list.get(MyConfig.TAG_COM1);
+                com2 = list.get(MyConfig.TAG_COM2);
+                com3 = list.get(MyConfig.TAG_COM3);
+                com4 = list.get(MyConfig.TAG_COM4);
+                com5 = list.get(MyConfig.TAG_COM5);
+                Notes = list.get(MyConfig.TAG_NOTES);
+                String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
 
 
-                   Bundle bundle = new Bundle();
-                   bundle.putString("branchHead",branchHead);
-                   bundle.putString("branchLabel",branchLabel);
-                   bundle.putString("description",Overview);
-                   bundle.putString("scope",com1);
-                   bundle.putString("perform",relevantInfo);
-                   bundle.putString("notes",Notes);
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putInt("aID", aID);
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("aprovider", aProvider);
+                bundle.putString("overview", Overview);
+                bundle.putString("date", dateInspected);
+                bundle.putString("relevantInfo", relevantInfo);
+                bundle.putString("notes", Notes);
+                bundle.putString("com1", com1);
+                bundle.putString("com2", com2);
+                bundle.putString("com3", com3);
+                bundle.putString("com4", com4);
+                bundle.putString("com5", com5);
 
-                   ActionItemFragment fragment = new ActionItemFragment();
-                   fragment.setArguments(bundle);
+                InspectionFragment fragment = new InspectionFragment();
+                fragment.setArguments(bundle);
 
-                   doFragmentTransaction(fragment,"ActionItemFragment",false,"");
+                doFragmentTransaction(fragment, "InspectionFragment", false, "");
+
+                int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                photos[4] = list.get(MyConfig.TAG_IMAGE5);
+
+                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                photo1 = photos[0];
+                photo2 = photos[1];
+                photo3 = photos[2];
+                photo4 = photos[3];
+                photo5 = photos[4];
+
+                break;
+
+            }
+            case 2: {
+
+                HashMap<String, String> list = dbHandler.getActionItem(projId, aID, iID);
+
+                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                Overview = list.get(MyConfig.TAG_OVERVIEW);
+                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                com1 = list.get(MyConfig.TAG_COM1);
+                Notes = list.get(MyConfig.TAG_NOTES);
+
+
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putInt("aID", aID);
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("description", Overview);
+                bundle.putString("scope", com1);
+                bundle.putString("perform", relevantInfo);
+                bundle.putString("notes", Notes);
+
+                ActionItemFragment fragment = new ActionItemFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment, "ActionItemFragment", false, "");
 
                 //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
-                   photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
 
 
-                   //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                   String tag = list.get(MyConfig.TAG_IMAGE1);
+                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                String tag = list.get(MyConfig.TAG_IMAGE1);
 
-                   photo1 = photos[0];
+                photo1 = photos[0];
 
-                   break;
+                break;
 
 
-               }
-           }
+            }
+        }
 
 
 
@@ -845,7 +841,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     public void onClick(View v) {
 
 
-        if (v == buttonEdit){
+        if (v == buttonEdit) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -864,19 +860,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
-                          case 0:{
+                        case 0: {
 
 
-                           LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
-                              final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                              itemTitle.setText("Branch Head Title: "+ branchTitle);//Integer.parseInt(locationId)
-                              final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                              locationText.setText("Current label : "+ branchLabel );//Integer.parseInt(locationId)
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Current label : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                              LocationText.setText(branchLabel);
+                            LocationText.setText(branchLabel);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -899,7 +895,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             break;
                         }
 
-                 case 1: //
+                        case 1: //
                             break;
                     }
                 }
@@ -912,7 +908,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         }
 
 
-        if (v == buttonInsert){
+        if (v == buttonInsert) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -923,10 +919,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             builder.setTitle("Choose an action");
             // add a list
             String[] actions = {"Create New Principal Branch Item",
-                                "Add Navigation Branch",
-                                "Add Report Branch ",
-                                "Add Action Branch",
-                                "Cancel Add/Create "};
+                    "Add Navigation Branch",
+                    "Add Report Branch ",
+                    "Add Action Branch",
+                    "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
@@ -940,16 +936,16 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
+                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : "+ branchLabel );//Integer.parseInt(locationId)
+                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch="";
-                                            addLevel(0,branchText.getText().toString());
+                                            photoBranch = "";
+                                            addLevel(0, branchText.getText().toString());
 
 
                                         }
@@ -971,35 +967,35 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
                         case 1: {
 
-                                LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Branch below : "+ branchLabel );//Integer.parseInt(locationId)
-                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                // setup a dialog window
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                photoBranch="";
-                                                addLevel((Level+1),branchText.getText().toString());
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            photoBranch = "";
+                                            addLevel((Level + 1), branchText.getText().toString());
 
 
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
 
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
 
                             break;
 
@@ -1013,16 +1009,16 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
+                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : "+ branchLabel );//Integer.parseInt(locationId)
+                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch="";
-                                            addReportBranch((Level+1),branchText.getText().toString());
+                                            photoBranch = "";
+                                            addReportBranch((Level + 1), branchText.getText().toString());
 
 
                                         }
@@ -1037,7 +1033,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             // create an alert dialog
                             AlertDialog alert = alertDialogBuilder.create();
                             alert.show();
-
 
 
                             break;
@@ -1050,16 +1045,16 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: "+ branchTitle  );//Integer.parseInt(locationId)
+                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Relevant Branch : "+ branchLabel );//Integer.parseInt(locationId)
+                            locationText.setText("Relevant Branch : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch="";
-                                            addActionBranch((Level+1),branchText.getText().toString());
+                                            photoBranch = "";
+                                            addActionBranch((Level + 1), branchText.getText().toString());
 
 
                                         }
@@ -1076,7 +1071,6 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             alert.show();
 
 
-
                             break;
                         }
 
@@ -1086,22 +1080,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             break;
                         }
 
-                       }
-                     }
-                    });
-
-                    AlertDialog dialog = builder.create();
-
-                        dialog.show();
-
-
                     }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
 
 
+        }
 
 
-        if (v == buttonDelete){
-
+        if (v == buttonDelete) {
 
 
             // setup the alert builder
@@ -1116,149 +1107,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
-                        case 0: {deleteInspectionItem(); break;}
-                        case 1: {
-
-                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
-
-                           alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                        deleteMapBranch();
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-
-                            break;
-
-                        } //
-                        case 2:{
-
-               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
-
-
-
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                         deleteInspectionItem();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                */
-                            break;
-                        }
-
-                    }
-                 //end of case 0
-                }
-            });
-            // create and show the alert dialog
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        }
-
-
-        if (v == btnViewReport) {
-            saveInspectionItem();
-
-            // setup the alert builder
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setTitle("Choose an action");
-            // add a list
-            String[] actions = {"Review the inspection report.",
-                    "Compile and email report to user",
-                    "Compile inspection certificate",
-                    "Cancel this operation."};
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
                         case 0: {
-
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("projectId",projId);
-                            bundle.putInt("iId",iID);
-
-                            DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-                            ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iID);
-
-                            //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-                            //     recyclerView.setHasFixedSize(true);
-                            //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-                            reportlistItems = new ArrayList<>();
-                            ReportItem listItem;
-
-                            for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
-                                listItem = new ReportItem(
-                                        listItemsmap.get(i).get("BranchHead"),
-                                        listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
-                                        listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
-                                        listItemsmap.get(i).get(MyConfig.TAG_NOTES),
-                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
-                                        listItemsmap.get(i).get(MyConfig.TAG_COM1),
-                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
-                                        listItemsmap.get(i).get(MyConfig.TAG_COM2),
-                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
-                                        listItemsmap.get(i).get(MyConfig.TAG_COM3),
-                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
-                                        listItemsmap.get(i).get(MyConfig.TAG_COM4),
-                                        listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
-                                        listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                        listItemsmap.get(i).get(MyConfig.TAG_LABEL)
-
-
-                                );
-                                reportlistItems.add(listItem);
-                            }
-
-                            ReportFragment fragment = new ReportFragment();
-                            fragment.setArguments(bundle);
-                            doFragmentTransaction(fragment, "ReportFragment", false, "");
-                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
-
-
+                            deleteInspectionItem();
                             break;
                         }
                         case 1: {
@@ -1289,11 +1139,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                             alert.show();
 
 
-
                             break;
 
                         } //
-                        case 2:{
+                        case 2: {
 
                /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
@@ -1338,12 +1187,157 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             dialog.show();
         }
- //           Intent intent = new Intent(this, ViewReportActivity.class);
- //           intent.putExtra("jobId",jobId);
- //           intent.putExtra("propId", propertyId);
- //           startActivity(intent);
-        //    finish();
-        }
+
+
+
+    }
+
+    public void reportMenu() {
+
+        saveInspectionItem();
+
+        // setup the alert builder
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
+        builder.setTitle("Choose an action");
+        // add a list
+        String[] actions = {"Review the inspection report.",
+                "Compile and email report to user",
+                "Compile inspection certificate",
+                "Cancel this operation."};
+        builder.setItems(actions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("projectId", projId);
+                        bundle.putInt("iId", iID);
+
+                        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iID);
+
+                        //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
+                        //     recyclerView.setHasFixedSize(true);
+                        //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+                        reportlistItems = new ArrayList<>();
+                        ReportItem listItem;
+
+                        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
+                            listItem = new ReportItem(
+                                    listItemsmap.get(i).get("BranchHead"),
+                                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
+                                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
+                                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
+                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL)
+
+
+                            );
+
+                            reportlistItems.add(listItem);
+
+                            Log.v("report list", listItemsmap.get(i).get("BranchHead")+", ");
+                        }
+
+                        ReportFragment fragment = new ReportFragment();
+                        fragment.setArguments(bundle);
+                        doFragmentTransaction(fragment, "ReportFragment", false, "");
+                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
+
+
+                        break;
+                    }
+                    case 1: {
+
+                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                        View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                        alertDialogBuilder.setView(promptView);
+                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                        locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
+
+                        alertDialogBuilder.setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        deleteMapBranch();
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                        // create an alert dialog
+                        AlertDialog alert = alertDialogBuilder.create();
+                        alert.show();
+
+
+                        break;
+
+                    } //
+                    case 2: {
+
+               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
+
+
+
+
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                         deleteInspectionItem();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+                */
+                        break;
+                    }
+
+                }
+                //end of case 0
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
+
 
 
     public void takeImageFromCamera(View view) {
@@ -1750,7 +1744,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         if(Edited == true )saveInspectionItem();
 
-        endTime = dayTime(3);
+        endTime = dayTime(4);
 
         if(logTime==true) {
             DBHandler dbHandler = new DBHandler(this, null, null, 1);

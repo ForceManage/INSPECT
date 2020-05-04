@@ -328,6 +328,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             case (3): {
 
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (4): {
+
                 java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
@@ -383,6 +391,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
 
+                mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                String propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
+
+                if(propPhoto.length() > 14)
+                {
+                    dirName = propPhoto.substring(6, 14);
+                    root = Environment.getExternalStorageDirectory().toString();
+                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
+
+                    if (propImage.exists()) {
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
+                        mPhotoImageView.setImageBitmap(myBitmap);
+                    }
+                }
+                else {
+                    Integer draw = android.R.drawable.ic_menu_camera;
+                    mPhotoImageView.setImageDrawable(getDrawable(draw));
+                }
+
+
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
  //               bundle.putString("branchLabel", branchLabel);
@@ -414,6 +443,26 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+
+                mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                String propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+
+                if(propPhoto.length() > 14)
+                {
+                    dirName = propPhoto.substring(6, 14);
+                    root = Environment.getExternalStorageDirectory().toString();
+                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
+
+                    if (propImage.exists()) {
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
+                        mPhotoImageView.setImageBitmap(myBitmap);
+                    }
+                }
+                else {
+                    Integer draw = android.R.drawable.ic_menu_camera;
+                    mPhotoImageView.setImageDrawable(getDrawable(draw));
+                }
 
                 Bundle bundle = new Bundle();
              //   bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
@@ -784,11 +833,29 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
+            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            switch (node.getNodeLevel()){
+
+                case 0:{
+
+                    dbHandler.updatePropPhoto(projectId, photo.getName());
+                }
+
+                case 1:{
+
+                    dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
+
+                }
+            }
+
+
             try {
                 rotateImage(resizePhoto());
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
-                dbHandler.updatePropPhoto(projectId, photo.getName());
+
+
 
 
             } catch (IOException e) {
@@ -804,8 +871,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     File createPhotoFile()throws IOException {
 
-        fname = new SimpleDateFormat("yyyyMMddHH").format(new Date());
-        dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        fname = dayTime(3);
+        dirName = dayTime(1);
         fname = projectId+"_"+fname;
         String root = Environment.getExternalStorageDirectory().toString();
         File storageDirectory = new File(root + "/ESM_"+dirName+"/");

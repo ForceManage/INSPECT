@@ -31,7 +31,7 @@ import static android.graphics.Color.BLACK;
 import static android.graphics.Color.GRAY;
 import static android.graphics.Color.WHITE;
 
-public class BaseFragment extends Fragment implements View.OnClickListener{
+public class BaseFragment extends Fragment implements View.OnClickListener {
 
     private InspectionActivity globalVariables;
 
@@ -44,11 +44,15 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
+    private Button reportBtn;
 
 
-    private String branchHead ="";
+    private String branchHead = "";
     private String branchLabel = "";
     private String branchNote = "";
+    private String projectId;
+    private String inspectionId;
+    private int aId;
 
 
     @Override
@@ -56,10 +60,13 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
         super.onCreate(savedInstanceState);
 
         Bundle bundle = this.getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             branchHead = bundle.getString("branchHead");
             branchLabel = bundle.getString("branchLabel");
             branchNote = bundle.getString("notes");
+            projectId = bundle.getString("projectID");
+            inspectionId = bundle.getString("inspectionID");
+            aId = bundle.getInt("aID");
         }
 
 
@@ -76,7 +83,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.base_fragment,container,false);
+        View view = inflater.inflate(R.layout.base_fragment, container, false);
 
 
         Log.d(TAG, "oncreateview: started");
@@ -94,19 +101,18 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
         photo_file.setOnClickListener(this);
 
+        reportBtn = (Button) view.findViewById(R.id.btnViewReport);
 
-         setText();
-
+        setText();
 
 
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if (hasFocus) globalVariables.Edited = true;
 
             }
         });
-
 
 
         if (globalVariables.photoBranch.length() > 12) {
@@ -115,7 +121,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
             File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             photoA.setImageBitmap(myBitmap);
-         }
+        }
 
 
         photo_cam.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +155,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
                     startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
 
                 }
+                else  Toast.makeText(getActivity(), "Function requires a photograph",Toast.LENGTH_SHORT).show();
 
 
             }
@@ -179,10 +186,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
                 // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
-               // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),1);
-                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-             }
-
+                // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),1);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), globalVariables.ACTIVITY_GET_FILE);
+            }
 
 
         });
@@ -195,9 +201,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                 alertDialogBuilder.setView(promptView);
                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                itemTitle.setText("Branch Head Title: "+ branchHead);//Integer.parseInt(locationId)
+                itemTitle.setText("Branch Head Title: " + branchHead);//Integer.parseInt(locationId)
                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                locationText.setText("Current label : "+ branchLabel );//Integer.parseInt(locationId)
+                locationText.setText("Current label : " + branchLabel);//Integer.parseInt(locationId)
                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                 LocationText.setText(branchLabel);
                 // setup a dialog window
@@ -221,15 +227,24 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
                 alert.show();
             }
         });
+
+
+        reportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.reportMenu();
+            }
+        });
+
         return view;
     }
 
-    private void setText(){
+    private void setText() {
 
-        if (!branchHead.equals("")){
-           title.setText(branchHead);
-           branch.setText(branchLabel);
-           bNote.setText(branchNote);
+        if (!branchHead.equals("")) {
+            title.setText(branchHead);
+            branch.setText(branchLabel);
+            bNote.setText(branchNote);
         }
     }
 
@@ -237,5 +252,28 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (globalVariables.Edited == true) {
+
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+            // String serviceDate = inspectionDate.getText().toString();
+            // work out the next service date in three months time
+
+
+            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "20200101", "",
+                    "", "", "1"
+                    , "reportImage",  globalVariables.photos[0], "", "", "", "",
+                    "", "", "",
+                    "", "", "Img6", " com6", "Img7", "com7", "p", bNote.getText().toString());
+
+            globalVariables.Edited = false;
+
+        }
     }
 }

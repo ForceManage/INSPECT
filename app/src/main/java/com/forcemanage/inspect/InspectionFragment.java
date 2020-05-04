@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -34,8 +36,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -84,6 +88,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private EditText com5Text;
     private TextView Buildcat;
     private TextView imageName1;
+    private Button reportBtn;
     private boolean Edited = false;
     private String com1 ="Commentary :";
     private String com2 = "";
@@ -229,7 +234,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
          final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
 
-
+         reportBtn = (Button) view.findViewById(R.id.btnViewReport);
 
          //Fill in the edittext with saved data fro Bundle
 
@@ -313,22 +318,25 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photo_draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dirName = globalVariables.photo1.substring(6, 14);
-                String root = Environment.getExternalStorageDirectory().toString();
-                File photo_image = new File(root + "/ESM_" + dirName + "/"+globalVariables.photo1);
+
+                if(!globalVariables.photo1.equals("")) {
+                    String dirName = globalVariables.photo1.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
 
 
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_VIEW);
+                    Intent galleryIntent = new Intent();
+                    galleryIntent.setAction(Intent.ACTION_VIEW);
 
 
+                    Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", photo_image);
+                    // Uri data = Uri.parse(photo_image.getAbsolutePath());
 
-                Uri data = FileProvider.getUriForFile(getActivity(),BuildConfig.APPLICATION_ID+".provider",photo_image);
-                // Uri data = Uri.parse(photo_image.getAbsolutePath());
+                    galleryIntent.setDataAndType(data, "image/*");
+                    startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
+                }
 
-                galleryIntent.setDataAndType(data ,"image/*");
-                startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),ACTIVITY_DRAW_FILE);
-
+                else  Toast.makeText(getActivity(), "Function requires a photograph",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -654,6 +662,13 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }//End of else
 
         }//End of loop
+
+        reportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            globalVariables.reportMenu();
+            }
+        });
 
         return view;
     }

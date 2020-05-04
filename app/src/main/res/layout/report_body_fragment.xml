@@ -22,7 +22,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="0.7"
+    android:layout_weight="0.55"
     android:orientation="vertical"
     >
 
@@ -174,17 +174,16 @@
          android:layout_width="0dp"
          android:layout_height="match_parent"
          android:orientation="vertical"
-         android:layout_weight="0.3"
+         android:layout_weight="0.45"
          >
 
 
          <ImageView
              android:id="@+id/imageView1"
              android:layout_width="match_parent"
-             android:layout_height="0dp"
-             android:layout_weight="0.12"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.1"
              android:adjustViewBounds="true"
-             android:cropToPadding="false"
              android:paddingLeft="2dp"
              android:paddingTop="2dp"
              android:paddingRight="2dp"
@@ -196,17 +195,16 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="10dp"
-             android:paddingTop="1dp"
-             android:paddingBottom="5dp"
-             android:textSize="14sp" />
+             android:layout_marginBottom="10dp"
+             android:textStyle="bold"
+             android:textSize="16sp" />
 
          <ImageView
              android:id="@+id/imageView2"
              android:layout_width="match_parent"
-             android:layout_height="0dp"
-             android:layout_weight="0.12"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.1"
              android:adjustViewBounds="true"
-             android:cropToPadding="false"
              android:paddingLeft="2dp"
              android:paddingTop="2dp"
              android:paddingRight="2dp"
@@ -218,17 +216,16 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="10dp"
-             android:paddingTop="1dp"
-             android:paddingBottom="5dp"
-             android:textSize="14sp" />
+             android:textStyle="bold"
+             android:layout_marginBottom="10dp"
+             android:textSize="16sp" />
 
          <ImageView
              android:id="@+id/imageView3"
              android:layout_width="match_parent"
-             android:layout_height="0dp"
-             android:layout_weight="0.12"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.1"
              android:adjustViewBounds="true"
-             android:cropToPadding="false"
              android:paddingLeft="2dp"
              android:paddingTop="2dp"
              android:paddingRight="2dp"
@@ -240,17 +237,17 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="10dp"
-             android:paddingTop="1dp"
-             android:paddingBottom="5dp"
-             android:textSize="14sp" />
+             android:textStyle="bold"
+             android:layout_marginBottom="10dp"
+             android:textSize="16sp" />
+
 
          <ImageView
              android:id="@+id/imageView4"
              android:layout_width="match_parent"
-             android:layout_height="0dp"
-             android:layout_weight="0.12"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.1"
              android:adjustViewBounds="true"
-             android:cropToPadding="false"
              android:paddingLeft="2dp"
              android:paddingTop="2dp"
              android:paddingRight="2dp"
@@ -262,17 +259,16 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="10dp"
-             android:paddingTop="1dp"
-             android:paddingBottom="5dp"
-             android:textSize="14sp" />
+             android:textStyle="bold"
+             android:layout_marginBottom="10dp"
+             android:textSize="16sp" />
 
          <ImageView
              android:id="@+id/imageView5"
              android:layout_width="match_parent"
-             android:layout_height="0dp"
-             android:layout_weight="0.12"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.1"
              android:adjustViewBounds="true"
-             android:cropToPadding="false"
              android:paddingLeft="2dp"
              android:paddingTop="2dp"
              android:paddingRight="2dp"
@@ -284,13 +280,13 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="10dp"
-             android:paddingTop="1dp"
-             android:paddingBottom="5dp"
-             android:textSize="14sp" />
+             android:textStyle="bold"
+             android:layout_marginBottom="10dp"
+             android:textSize="16sp" />
 
 
      </LinearLayout>
 
-     /</LinearLayout>
+     </LinearLayout>
 
 </RelativeLayout>

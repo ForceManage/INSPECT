@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,10 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ActionItemFragment extends Fragment implements View.OnClickListener {
 
@@ -60,6 +65,9 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
     private String scope = "Desc";
     private String perform = "Desc";
     private String notes = "Desc";
+    private String projectId;
+    private String inspectionId;
+    private int aId;
 
     @Override
     public void onAttach(Context context) {
@@ -73,6 +81,9 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
+            projectId = bundle.getString("projectID");
+            inspectionId = bundle.getString("inspectionID");
+            aId = bundle.getInt("aID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             desciption = bundle.getString("description");
@@ -146,9 +157,10 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
         photo_draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dirName = globalVariables.photo1.substring(6, 14);
-                String root = Environment.getExternalStorageDirectory().toString();
-                File photo_image = new File(root + "/ESM_" + dirName + "/"+globalVariables.photo1);
+                if (!globalVariables.photo1.equals("")) {
+                    String dirName = globalVariables.photo1.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
 
 
                 Intent galleryIntent = new Intent();
@@ -161,6 +173,8 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
                 galleryIntent.setDataAndType(data ,"image/*");
                 startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),ACTIVITY_DRAW_FILE);
+            }
+                else  Toast.makeText(getActivity(), "Function requires a photograph",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -279,4 +293,79 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
     }
 
 
+    public String stringdate(String date){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date d = null;
+        try {
+            d = sdf.parse(date);
+        } catch (ParseException ex) {
+            Log.v("Exception", ex.getLocalizedMessage());
+        }
+        sdf.applyPattern("dd MMM yyyy");
+        date = sdf.format(d);
+
+        return date;
+    }
+
+    private String dayTime(int Type) {
+
+        String daytime = "20000101";
+
+        switch (Type) {
+
+            case (1): {
+
+                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (2): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+
+            case (3): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+        }
+        return daytime;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(globalVariables.Edited == true){
+
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+            // String serviceDate = inspectionDate.getText().toString();
+            // work out the next service date in three months time
+
+            dbHandler.updateActionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, dayTime(1), descriptionE.getText().toString(),
+                                      "", performE.getText().toString(), ""
+                    , globalVariables.photos[0], scopeE.getText().toString(), "p", notesE.getText().toString());
+
+            globalVariables.Edited = false;
+
+        }
+
+
+        //       endTime = dayTime(2);
+        //       DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+//        dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+
+
+    }
 }
