@@ -100,9 +100,11 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
 
          setText();
+         if (!endTime.equals("null"))
          endTime = stringdate(endTime,3);
          inspectDate.setText("Activity raised:  "+stringdate(inspectionDate,1));
          inspectionType.setText("Type of Activity:  "+typeInspection);
+         if(!dateInspected.equals("null"))
          inspectedDate.setText("Activity recorded: "+stringdate(dateInspected,2)+"  -  "+endTime);
          inspector.setText("Auditor:  "+ auditor);
          bNote.setText(note);

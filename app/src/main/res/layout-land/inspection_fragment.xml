@@ -376,8 +376,8 @@
 
                             <ImageView
                                 android:id="@+id/imageView_file"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="10dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
@@ -560,6 +560,14 @@
                                 android:layout_marginBottom="5dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
+                            <ImageView
+                                android:id="@+id/imageView4_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
 
                          </FrameLayout>
 
@@ -609,6 +617,14 @@
                                 android:layout_gravity="bottom|left"
                                 android:layout_marginBottom="5dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView5_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
 
 
                         </FrameLayout>

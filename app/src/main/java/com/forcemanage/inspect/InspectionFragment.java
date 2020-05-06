@@ -70,6 +70,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
+    private ImageView photo_file4;
+    private ImageView photo_file5;
     private ImageView del_img2;
     private ImageView del_img3;
     private ImageView del_img4;
@@ -107,7 +109,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String projectId;
     private String inspectionId;
     private int aId;
-
 
 
     @Override
@@ -197,6 +198,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photo_file3 = (ImageView) view.findViewById(R.id.imageView3_file);
         photo_file3.setOnClickListener(this);
 
+        photo_file4 = (ImageView) view.findViewById(R.id.imageView4_file);
+        photo_file4.setOnClickListener(this);
+
+        photo_file5 = (ImageView) view.findViewById(R.id.imageView5_file);
+        photo_file5.setOnClickListener(this);
+
         del_img2 = (ImageView) view.findViewById(R.id.imageView2_del);
         del_img2.setOnClickListener(this);
 
@@ -239,6 +246,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
          //Fill in the edittext with saved data fro Bundle
 
 
+
+
         title.setText(branchTitle);
         branch.setText(branchName+" date: "+stringdate(inspectionDate));
         ServiceCont.setText(aProvider);
@@ -267,6 +276,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+                cam1.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
         });
@@ -278,6 +288,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoB;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+                cam2.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
         });
@@ -289,6 +300,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoC;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+                cam3.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
         });
@@ -300,6 +312,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoD;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+                cam4.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
         });
@@ -311,6 +324,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+                cam5.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
         });
@@ -487,9 +501,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 globalVariables.Edited = true;
-                                com2Text.setText("");
-                                globalVariables.photo2 ="";
-                                photoB.setImageResource(R.drawable.ic_camera);
+                                com3Text.setText("");
+                                globalVariables.photo3 ="";
+                                photoC.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
@@ -515,6 +529,62 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        photo_file4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 4;
+                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+            }
+        });
+
+        del_img4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                globalVariables.Edited = true;
+                                com4Text.setText("");
+                                globalVariables.photo4 ="";
+                                photoD.setImageResource(R.drawable.ic_camera);
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
         photoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -526,6 +596,61 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        photo_file5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 5;
+                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+            }
+        });
+
+        del_img5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                globalVariables.Edited = true;
+                                com5Text.setText("");
+                                globalVariables.photo5 ="";
+                                photoE.setImageResource(R.drawable.ic_camera);
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
 
         ServiceCont.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -561,6 +686,30 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         });
 
         com2Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) globalVariables.Edited = true;
+
+            }
+        });
+
+        com3Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) globalVariables.Edited = true;
+
+            }
+        });
+
+        com4Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) globalVariables.Edited = true;
+
+            }
+        });
+
+        com5Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) globalVariables.Edited = true;
@@ -743,14 +892,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
                dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
-                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1"
-                       , "reportImage", globalVariables.photos[0], com1, globalVariables.photos[1], com2, globalVariables.photos[2],
-                       com3, globalVariables.photos[3], com4,
-                       globalVariables.photos[4], com5, "Img6", " com6", "Img7", "com7", "p", notes.getText().toString());
+                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage", globalVariables.photos[0],
+                       com1, globalVariables.photos[1], com2, globalVariables.photos[2],com3, globalVariables.photos[3], com4, globalVariables.photos[4],
+                       com5, "Img6", " com6", "Img7", "com7", "p", notes.getText().toString());
 
                globalVariables.Edited = false;
 
+
+
            }
+
 
 
  //       endTime = dayTime(2);

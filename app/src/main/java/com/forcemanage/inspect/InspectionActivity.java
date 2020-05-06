@@ -157,6 +157,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private String endTime;
 
 
+
+
     //   private ViewPager mViewPager;
 
 
@@ -179,12 +181,19 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
 
+
+     //   dateBtn = (Button) findViewById(R.id.btndate);
+     //   dateBtn.setOnClickListener(this);
+
+
+
+
         photos[0] = "";
 
         startTime = dayTime(4);
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
-
+        dbHandlerA.updateInspectionItemdate();
 
         //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
         //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
@@ -1443,6 +1452,16 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                         photoC.setImageURI(selectedImage);
                         break;
 
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
                 }
 
             }
@@ -1504,6 +1523,17 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     //          photoC.setImageURI(selectedImage);
                     photo3 = to.getName();
                     break;
+
+                case 4:
+                    //          photoC.setImageURI(selectedImage);
+                    photo4 = to.getName();
+                    break;
+
+                case 5:
+                    //          photoC.setImageURI(selectedImage);
+                    photo5 = to.getName();
+                    break;
+
 
               }
 
@@ -1749,6 +1779,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         if(logTime==true) {
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+            dbHandler.updateStatus(Integer.parseInt(projectId), Integer.parseInt(inspectionId),"p",dayTime(1));
         }
 
     }

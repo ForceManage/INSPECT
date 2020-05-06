@@ -103,32 +103,101 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                     if (propImage.exists()) {
 
                         Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                        if (i == 0) {
-                            image1.setImageBitmap(myBitmap);
-                            fig0.setText("Fig " + itemNo + ".0");
+                        switch (i) {
+                            case 0: {
+                                image1.setVisibility(View.VISIBLE);
+                                image1.setImageBitmap(myBitmap);
+                                fig0.setText("Fig " + itemNo + ".0");
+                                break;
+                            }
+                            case 1: {
+                                image2.setImageBitmap(myBitmap);
+                                image2.setVisibility(View.VISIBLE);
+                                fig1.setText("Fig " + itemNo + ".1");
+                                break;
+                            }
+                            case 2: {
+                                image3.setImageBitmap(myBitmap);
+                                image3.setVisibility(View.VISIBLE);
+                                fig2.setText("Fig " + itemNo + ".2");
+                                break;
+                            }
+                            case 3: {
+                                image4.setImageBitmap(myBitmap);
+                                image4.setVisibility(View.VISIBLE);
+                                fig3.setText("Fig " + itemNo + ".3");
+                                break;
+                            }
+                            case 4: {
+                                image5.setImageBitmap(myBitmap);
+                                image5.setVisibility(View.VISIBLE);
+                                fig4.setText("Fig " + itemNo + ".4");
+                                break;
+                            }
                         }
-                        if (i == 1) {
-                            image2.setImageBitmap(myBitmap);
-                            fig1.setText("Fig " + itemNo + ".1");
+                    }
+                    else {
+
+                        switch (i){
+
+                            case 0: {
+                                image1.setVisibility(View.GONE);
+                                break;
+                            }
+                            case 1: {
+                            image2.setVisibility(View.GONE);
+                            break;
                         }
-                        if (i == 2) {
-                            image3.setImageBitmap(myBitmap);
-                            fig2.setText("Fig " + itemNo + ".2");
+                        case 2: {
+                            image3.setVisibility(View.GONE);
+                            break;
                         }
-                        if (i == 3) {
-                            image4.setImageBitmap(myBitmap);
-                            fig3.setText("Fig " + itemNo + ".3");
+                        case 3: {
+                            image4.setVisibility(View.GONE);
+                            break;
                         }
-                        if (i == 4) {
-                            image5.setImageBitmap(myBitmap);
-                            fig4.setText("Fig " + itemNo + ".4");
+                        case 4: {
+                            image5.setVisibility(View.GONE);
+                            break;
                         }
+
+                    }
+                    }
+
+
+
+                }
+                else {
+                    switch (i) {
+
+                        case 0: {
+                            image1.setVisibility(View.GONE);
+                            break;
+                        }
+                        case 1: {
+                            image2.setVisibility(View.GONE);
+                            break;
+                        }
+                        case 2: {
+                            image3.setVisibility(View.GONE);
+                            break;
+                        }
+                        case 3: {
+                            image4.setVisibility(View.GONE);
+                            break;
+                        }
+                        case 4: {
+                            image5.setVisibility(View.GONE);
+                            break;
+                        }
+
                     }
                 }
             }
 
 
-        } else {
+        }
+        else {
 
             row = inflater.inflate(R.layout.report_actionitem_fragment, null, true);
             TextView title = (TextView) row.findViewById(R.id.branchTitle);

@@ -379,6 +379,27 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.replace(TABLE_INSPECTION_ITEM, null, valuesItem);
 
+
+        ContentValues valuesAction = new ContentValues();
+        valuesAction.put(COLUMN_INSPECTION_ID, inspectionAttributes.getinspectionId());
+        valuesAction.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
+        valuesAction.put(COLUMN_A_ID, inspectionItemAttributes.getaId());
+        valuesAction.put(COLUMN_DATE_INSPECTED, inspectionItemAttributes.getdateInspected());
+        valuesAction.put(COLUMN_OVERVIEW, inspectionItemAttributes.getoverview());
+        valuesAction.put(COLUMN_SERVICED_BY, inspectionItemAttributes.getservicedBy());
+        valuesAction.put(COLUMN_RELEVANT_INFO, inspectionItemAttributes.getrelevantInfo());
+        valuesAction.put(COLUMN_SERVICE_LEVEL, inspectionItemAttributes.getserviceLevel());
+        valuesAction.put(COLUMN_REPORT_IMAGE, inspectionItemAttributes.getReportImage());
+        valuesAction.put(COLUMN_IMG1, inspectionItemAttributes.getimage1());
+        valuesAction.put(COLUMN_COM1, inspectionItemAttributes.getcom1());
+        valuesAction.put(COLUMN_ITEM_STATUS, inspectionItemAttributes.get_itemStatus());
+        valuesAction.put(COLUMN_NOTES, inspectionItemAttributes.get_notes());
+
+
+        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+
+        db.replace(TABLE_ACTION_ITEM, null, valuesItem);
+
         db.close();
     }
 
@@ -510,6 +531,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+
+    public void updateInspectionItemdate() {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_DATE_INSPECTED, "20200424");
+
+
+
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_DATE_INSPECTED +" = ?" , new String[]{"2020-04-24"});
+        db.close();
+
+
+    }
 
     public void logInspection(String projID, String iID, String start, String end){
 
@@ -1026,7 +1062,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
         int result = 0;
-        int i_id ; //aId of the branch which has the parent branch clicked
+        int i_id = 0; //aId of the branch which has the parent branch clicked
 
         //First check if current branch is a inspection branch - child is a code for the current branch
         selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
@@ -1042,11 +1078,13 @@ public class DBHandler extends SQLiteOpenHelper {
                         + TABLE_INSPECTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
 
 
-
-                            if(cursor.getInt(0) != iId)
-                                i_id = cursor.getInt(1);
-                            else
-                                i_id = iId; //make sure that action from inspection has same inspectionId
+                            cursor = db.rawQuery(selectQuery, null);
+                            if (cursor.moveToFirst()) {
+                                if (cursor.getInt(0) != iId)
+                                    i_id = cursor.getInt(0);
+                                else
+                                    i_id = iId; //make sure that action from inspection has same inspectionId
+                            }
 
 
                                 int newId = addLevel(projId, aId, i_id, CatID, Level, aId, Label, 2);
@@ -1376,7 +1414,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT I." +
                 COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
                 + " FROM " + TABLE_INSPECTION_ITEM + " I JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
-                + " WHERE " + COLUMN_INSPECTION_STATUS + " = 'c' OR " + COLUMN_INSPECTION_STATUS + " = 'p'";
+                + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
 
    /*     String selectQuery = "SELECT "+
                 TABLE_ESM_INSPECTION+"."+COLUMN_JOB_ID+", "+COLUMN_IMG1+", "+
@@ -1507,7 +1545,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspectionItems() {
+    public ArrayList<HashMap<String, String>> getInspectedItems() {
         HashMap<String, String> inspectionItem;
         ArrayList<HashMap<String, String>> inspectionItemsList;
 
@@ -1520,8 +1558,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
                 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
                 + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_INSPECTION_ID + ", I." + COLUMN_PROJECT_ID + ", I." + COLUMN_A_ID
-                + ", I." + COLUMN_SERVICED_BY + ", I." + COLUMN_SERVICE_LEVEL
-                + " FROM " + TABLE_INSPECTION_ITEM + " I ";
+                + ", I." + COLUMN_SERVICED_BY + ", I." + COLUMN_SERVICE_LEVEL+", I."+COLUMN_REPORT_IMAGE
+                + " FROM " + TABLE_INSPECTION_ITEM + " I "
+                + " ORDER BY I."+ COLUMN_PROJECT_ID;
 
 
         //add additional fields: status,  notes, print flag
@@ -1555,6 +1594,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_A_ID, cursor.getString(21));
                 inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(22));
                 inspectionItem.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(23));
+                inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(24));
                 inspectionItemsList.add(inspectionItem);
             } while (cursor.moveToNext());
         }
@@ -1819,7 +1859,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT * "
                 + " FROM " + TABLE_ACTION_ITEM
-                + " ORDER BY " + COLUMN_A_ID;
+                + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_A_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -2004,7 +2044,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT  " + COLUMN_CAT_ID + " , " + COLUMN_LABEL +
                 " FROM " + TABLE_MAP +
 
-                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+" ORDER BY " + COLUMN_CAT_ID;
+                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+ " ORDER BY " + COLUMN_CAT_ID;
 
         Cursor cursor = dbase.rawQuery(selectQuery, null);
         int i = 1;
@@ -2019,9 +2059,12 @@ public class DBHandler extends SQLiteOpenHelper {
                         ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3
                         + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", M." + COLUMN_LABEL
                         + " FROM " + TABLE_INSPECTION_ITEM + " I " +
-                        " JOIN " + TABLE_MAP + " M ON M." + COLUMN_A_ID + " = I." + COLUMN_A_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
+                        " JOIN " + TABLE_MAP + " M ON M." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
+                                                            " AND M."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
+                        " JOIN " + TABLE_ACTION_ITEM + " AI ON AI." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND AI." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
+                        " AND AI."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
 
-                        " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId + " AND M." + COLUMN_CHILD + " = 1"
+                        " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId + " AND M." + COLUMN_CHILD + " > 0"
                         + " AND M." + COLUMN_CAT_ID + " = " + catId +
                         " ORDER BY M." + COLUMN_CAT_ID + ", I." + COLUMN_A_ID;
 

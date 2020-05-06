@@ -1249,7 +1249,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String pID = jo.getString(MyConfig.TAG_P_ID);
                 String Image = jo.getString(MyConfig.TAG_IMAGE);
                 String Note = jo.getString(MyConfig.TAG_NOTE);
-                String dateInspected = jo.getString(MyConfig.TAG_DATE_INSPECTED);
+                String dateInspected = datetoString(jo.getString(MyConfig.TAG_DATE_INSPECTED));
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
                 String servicedBy = jo.getString(MyConfig.TAG_SERVICED_BY);
                 String relevantInfo = jo.getString(MyConfig.TAG_RELEVANT_INFO);
@@ -1389,59 +1389,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
-    //Update the SQLite db with additional from MySQL db
- /*   private void updateCategoryInfo() {
-        JSONObject jsonObject = null;
-
-        //editTextMessage.setText("Print String: " + JSON_STRING);
-        //editTextMessage.setText("Test");
-        try {
-            jsonObject = new JSONObject(JSON_STRING_CATEGORIES);
-            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
-            //    editTextMessage.setText("Test begin Category " + result);
-
-            for (int i = 0; i < result.length(); i++) {
-                // testing only -
-                String imsg = Integer.toString(i);
-                String rmsg = Integer.toString(result.length());
-                String msg = "Testing Loop category " + imsg + " result no " + rmsg;
-                //       editTextMessage.setText(msg);
-
-                JSONObject jo = result.getJSONObject(i);
-                String catId = jo.getString(MyConfig.TAG_CAT_ID);
-                String esmCatId = jo.getString(MyConfig.TAG_CATEGORY_ID);
-                String esmCatName = jo.getString(MyConfig.TAG_CATEGORY_NAME);
-                String esmSubCatId = jo.getString(MyConfig.TAG_SUB_CATEGORY_ID);
-                String esmSubCatName = jo.getString(MyConfig.TAG_SUB_CATEGORY_NAME);
-                String freq = jo.getString(MyConfig.TAG_FREQUENCY);
-                String freqNote = jo.getString(MyConfig.TAG_FREQUENCY_NOTE);
-
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-                int cId = parseInt(catId);
-
-                ESMCategoryAttributes categoryRow =
-                        new ESMCategoryAttributes(cId, esmCatId, esmCatName, esmSubCatId, esmSubCatName, freq, freqNote);
-
-
-                //editTextMessage.setText("Test 5");
-
-                dbHandler.updateCategoriesFromServer(categoryRow);
-
-                // testing only -
-                //   editTextMessage.setText("Test Category end");
-
-            }
-
-        } catch (JSONException e) {
-            // editTextMessage.setText(" Exception");
-            Log.e("ESM", "unexpected JSON exception", e);
-            //e.printStackTrace();
-        }
-        // testing only -
-        // editTextMessage.setText("Test 4");
-    }
-*/
 
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
@@ -1859,7 +1806,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String res = "initiated";
         HashMap<String, String> inspItemMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectionItems();
+        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems();
         String tempString = "";
         String testString = "";
 
@@ -2042,7 +1989,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         JSONArray jsonArray = new JSONArray();
         int j = 0;
 
-        if (actionItemList.size() == 0) {
+        if (ActionList.size() == 0) {
             //no items toupdatelist
             res = "No Locations to upload";
         } else {
@@ -2130,7 +2077,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
 
-                message = inspSaved;
+                message = inspItemsToServer();
 
                 if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&& (actionsSaved.equals(yes))){
 
