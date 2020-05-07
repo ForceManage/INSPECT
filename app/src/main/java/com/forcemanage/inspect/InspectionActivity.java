@@ -547,7 +547,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         }
 
         if (FragDisplay == "ActionItemFragment") {
-            dbHandler.updateActionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
+            dbHandler.updateActionItem(projectId, inspectionId, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
                     , photo1, com1, ItemStatus, Notes);
 
         }

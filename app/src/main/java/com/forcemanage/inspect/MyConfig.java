@@ -2,9 +2,10 @@ package com.forcemanage.inspect;
 
 public class MyConfig {
 
-
+    public static final String URL_GET_PROJECTS = "https://dev.force-management.com/TAB_INSPECT/Inspection/getProjects.php?InspectorId=";
     public static final String URL_GET_PROJECT_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getInspectionInfo.php?InspectorId=";
     public static final String URL_GET_ADDITIONAL_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getAdditionalInfo.php?InspectorId=";
+    public static final String URL_GET_ACTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getActionItem.php?InspectorId=";
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
     public static final String URL_SYNC_INSPECTION_ITEMS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspItemsToServer.php";

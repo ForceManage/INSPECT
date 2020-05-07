@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     DBHandler ESMdb;
     private String JSON_STRING;
     private String JSON_STRING_ADDITIONAL;
-    private String JSON_STRING_CATEGORIES;
+    private String JSON_STRING_ACTION;
+    private String JSON_STRING_PROJECT_LIST;
     private String JSON_STRING_OR;
     private ListView listView;
     private CheckBox checkBox;
@@ -1043,24 +1044,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
         //     TreeViewLists.LoadDisplayList();
 
-/*
-        if (findViewById(R.id.fragment_container) != null){
-
-            // However if we are being restored from a previous state, then we don't
-            // need to do anything and should return or we could end up with overlapping Fragments
-       //     if (savedInstanceState != null){
-       //         return;
-       //     }
-
-            // Create an Instance of Fragment
-            MapViewFragment treeFragment = new MapViewFragment();
-            treeFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, treeFragment)
-                    .commit();
-
-        }
-*/
 
         MapViewLists.LoadDisplayList();
         GlobalVariables.modified = true;
@@ -1100,129 +1083,31 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             //   OnSelectionChanged(0);
         }
 
-            // To Implement: populate the string and preferably go to item in list... otherwise find a way to include property ID without displaying
-        //for(int i = 0; i<list.size(); i++){
-        //    propertyList[i] = "Lake street, 25, Reservoir";
-        //}
-   /*     if (list.size() == 0) {
 
-            recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-            recyclerView.setAdapter(null);
-
-            //display an empty list
-
-        } else if (list.size() != 0) {
-            // Get the ListView and assign an event handler to it
-
-            TextView record;
-            record = (TextView) findViewById(R.id.textView3);
-            record.setText(Integer.toString(list.size()) + " Properties to inspect: ");
-
-            // Download the property images and store them in their corresponding directories
-
-
-            final List<Projectlistdata> projectlistdata =   new ArrayList<>();
-            Projectlistdata listItem;
-
-            for (int i = 0; i <= (list.size()-1); i++){
-                listItem = new Projectlistdata(
-
-                        list.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
-                        list.get(i).get(MyConfig.TAG_PROJECT_ID),
-                        list.get(i).get(MyConfig.TAG_ADDRESS_NO),
-                        list.get(i).get(MyConfig.TAG_INSPECTION_STATUS),
-                        list.get(i).get(MyConfig.TAG_BUILD_TYPE),
-                        list.get(i).get(MyConfig.TAG_PROJECT_SUBURB)
-                );
-                projectlistdata.add(listItem);
-            }
-
-
-            recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            ProjectListAdapter projectlistAdapter = new ProjectListAdapter(projectlistdata ,new projectchangelistener() {
-                @Override
-                public void OnjobChanged(int position) {
-
-                    Log.v("List position: ", Integer.toString(position));
-
-
-
-                    TextView propName = (TextView) findViewById(R.id.textView4);
-
-                    // Convert that contactId into a String
-
-                    //                   String propertyIdValue = propertyId.getText().toString();
-//
-
-
-
-
-                    propName.setText(list.get(position).get(MyConfig.TAG_ADDRESS_NO) + "  " + list.get(position).get(MyConfig.TAG_PROJECT_ADDRESS)
-                            + "  File: " + list.get(position).get(MyConfig.TAG_PROJECT_PHOTO));
-
-
-                    mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                    String propPhoto = list.get(position).get(MyConfig.TAG_PROJECT_PHOTO);
-                    //      String jobstat = list.get(position).get(MyConfig.TAG_JOB_STATUS);
-
-                    projectId = list.get(position).get(MyConfig.TAG_PROJECT_ID);
-                    inspectionId = list.get(position).get(MyConfig.TAG_INSPECTION_ID);
-
-                    if(propPhoto.length() > 14)
-                    {
-                        dirName = propPhoto.substring(6, 14);
-                        root = Environment.getExternalStorageDirectory().toString();
-                        File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
-
-                        if (propImage.exists()) {
-
-                            Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                            mPhotoImageView.setImageBitmap(myBitmap);
-                        }
-                    }
-                    else {
-                        Integer draw = android.R.drawable.ic_menu_camera;
-                        mPhotoImageView.setImageDrawable(getDrawable(draw));
-                    }
-
-                }
-
-            });
-
-            recyclerView.setAdapter(projectlistAdapter);
-
-
-
-        }
-
-    */
     }
 
 
-    //Update the SQLite db with data from MySQL db
-    private void updatePropInfo() {
+    //Get projects from server
+
+    private void updateProjects() {
         JSONObject jsonObject = null;
 
         //editTextMessage.setText("Print String: " + JSON_STRING);
         //editTextMessage.setText("Test");
         try {
-            jsonObject = new JSONObject(JSON_STRING);
+            jsonObject = new JSONObject(JSON_STRING_PROJECT_LIST);
             JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
-            //  editTextMessage.setText("Test begin");
+            //   editTextMessage.setText("Test begin additional");
 
             for (int i = 0; i < result.length(); i++) {
                 // testing only -
-              //  String imsg = Integer.toString(i);
-              //  String rmsg = Integer.toString(result.length());
-              //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
-              //  TextMessage.setText(msg);
+                //  String imsg = Integer.toString(i);
+                //   String rmsg = Integer.toString(result.length());
+                //   String msg = "Testing Loop additional " + imsg + " result no " + rmsg;
+                //     editTextMessage.setText(msg);
 
                 JSONObject jo = result.getJSONObject(i);
-                String id = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String projectId = jo.getString(MyConfig.TAG_PROJECT_ID);
                 String addressNo = jo.getString(MyConfig.TAG_ADDRESS_NO);
                 String address = jo.getString(MyConfig.TAG_PROJECT_ADDRESS);
                 String suburb = jo.getString(MyConfig.TAG_PROJECT_SUBURB);
@@ -1249,11 +1134,73 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String pID = jo.getString(MyConfig.TAG_P_ID);
                 String Image = jo.getString(MyConfig.TAG_IMAGE);
                 String Note = jo.getString(MyConfig.TAG_NOTE);
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int projId = parseInt(projectId);
+                int InspectionId = parseInt(inspectionId);
+                int level = parseInt(Level);
+                int parent = parseInt(Parent);
+                int noLevels = parseInt(nmbrLevels);
+                int p_Id = parseInt(pID);
+
+                ProjectAttributes projectrow =
+                        new ProjectAttributes(projId, addressNo, address, suburb, buildType, buildPermitNmbr, buildClass, noLevels, projectPhoto, keyRequired, floorType, roofType, wallType, projectNote );
+                // editTextMessage.setText("Test 1");
+
+
+                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime, Label, level, parent, p_Id, Image, Note);
+
+                // editTextMessage.setText("Test 2");
+
+
+                //editTextMessage.setText("Test 5");
+
+                dbHandler.updateProjectsFromServer(projectrow, inspectionRow);
+
+                // testing only -
+                //   editTextMessage.setText("Test end additional");
+
+                updatePropList();
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("ESM", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
+
+    //Update the inspection items SQLite db with data from MySQL db
+    private void updatePropInfo() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //  editTextMessage.setText("Test begin");
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+              //  String imsg = Integer.toString(i);
+              //  String rmsg = Integer.toString(result.length());
+              //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
+              //  TextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
+                String aId = jo.getString(MyConfig.TAG_A_ID);
                 String dateInspected = datetoString(jo.getString(MyConfig.TAG_DATE_INSPECTED));
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
                 String servicedBy = jo.getString(MyConfig.TAG_SERVICED_BY);
                 String relevantInfo = jo.getString(MyConfig.TAG_RELEVANT_INFO);
-                String aId = jo.getString(MyConfig.TAG_A_ID);
                 String serviceLevel = jo.getString(MyConfig.TAG_SERVICE_LEVEL);
                 String reportImg = jo.getString(MyConfig.TAG_REPORT_IMAGE);
                 String image1 = jo.getString(MyConfig.TAG_IMAGE1);
@@ -1277,25 +1224,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-                int projId = parseInt(id);
-                int InspectionId = parseInt(inspectionId);
-                int noLevels = parseInt(nmbrLevels);
+                int projId = parseInt(projid);
+                int InspectionId = parseInt(iId);
                 int a_Id = parseInt(aId);
-                int p_Id = parseInt(pID);
-                int level = parseInt(Level);
-                int parent = parseInt(Parent);
+
 //                int startDateTime_ = parseInt(startDateTime);
 //                int endDateTime_ = parseInt(endDateTime);
    //             int ServiceLevel = parseInt(serviceLevel);
-
-                ProjectAttributes projectrow =
-                        new ProjectAttributes(projId, addressNo, address, suburb, buildType, buildPermitNmbr, buildClass, noLevels, projectPhoto, keyRequired, floorType, roofType, wallType, projectNote );
-                // editTextMessage.setText("Test 1");
-
-
-                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime, Label, level, parent, p_Id, Image, Note);
-
-                // editTextMessage.setText("Test 2");
 
 
                 InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1, image2, com2
@@ -1303,17 +1238,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 //editTextMessage.setText("Test 5");
 
-               ActionItemAttributes actionrow = new ActionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1,itemStatus, notes);
 
+                dbHandler.updateFromServer(itemRow);
 
-
-                dbHandler.updateFromServer(projectrow, inspectionRow, itemRow, actionrow);
-
-
-                // testing only -
-                // editTextMessage.setText("Test end");
-
-            }
+              }
 
         } catch (JSONException e) {
             // editTextMessage.setText(" Exception");
@@ -1322,11 +1250,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
         // testing only -
         // editTextMessage.setText("Test 4");
-        updatePropList();
+     }
 
-    }
 
-    //Update the SQLite db with additional from MySQL db
+    //Update the MAP SQLite db with additional from MAP MySQL db
     private void updateAdditionalInfo() {
         JSONObject jsonObject = null;
 
@@ -1389,6 +1316,66 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
+// Get ActionItems from the server
+    private void updateAction() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_ACTION);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //  editTextMessage.setText("Test begin");
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                //  String imsg = Integer.toString(i);
+                //  String rmsg = Integer.toString(result.length());
+                //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
+                //  TextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
+                String aId = jo.getString(MyConfig.TAG_A_ID);
+                String dateInspected = datetoString(jo.getString(MyConfig.TAG_DATE_INSPECTED));
+                String overview = jo.getString(MyConfig.TAG_OVERVIEW);
+                String servicedBy = jo.getString(MyConfig.TAG_SERVICED_BY);
+                String relevantInfo = jo.getString(MyConfig.TAG_RELEVANT_INFO);
+                String serviceLevel = jo.getString(MyConfig.TAG_SERVICE_LEVEL);
+                String reportImg = jo.getString(MyConfig.TAG_REPORT_IMAGE);
+                String image1 = jo.getString(MyConfig.TAG_IMAGE1);
+                String com1 = jo.getString(MyConfig.TAG_COM1);
+                String itemStatus = jo.getString(MyConfig.TAG_ITEM_STATUS);
+                String notes = jo.getString(MyConfig.TAG_NOTES);
+
+
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int projId = parseInt(projid);
+                int InspectionId = parseInt(iId);
+                int a_Id = parseInt(aId);
+
+
+                ActionItemAttributes actionrow = new ActionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1,itemStatus, notes);
+
+
+
+                dbHandler.updateActionFromServer(actionrow);
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("ESM", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
+
 
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
@@ -1439,14 +1426,52 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
-    private void postInspectionJSON() {
-
-    }
 
     private void clearTablet() {
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         dbHandler.clearAllData();
 
+    }
+
+
+    private void getProjectsJSON() {
+        class GetProjectsJSON extends AsyncTask<Void, Void, String> {
+
+            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
+
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                JSON_STRING_PROJECT_LIST = s;
+                //    TextMessage.setText("JSON_STRING " + s);
+
+                updateProjects();
+                // testing only - editTextMessage.setText(JSON_STRING);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                RequestHandler_ rh = new RequestHandler_();
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECTS, ServicePerson);
+                return s;
+            }
+
+
+
+        }
+        GetProjectsJSON gj = new GetProjectsJSON();
+        gj.execute();
     }
 
     private void getJSON() {
@@ -1527,9 +1552,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         gj.execute();
     }
 
-    /*
-    private void getCategoryJSON() {
-        class GetCategoryJSON extends AsyncTask<Void, Void, String> {
+
+    private void getActionJSON() {
+        class GetActionJSON extends AsyncTask<Void, Void, String> {
+
+            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
 
@@ -1543,23 +1571,29 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                JSON_STRING_CATEGORIES = s;
+                JSON_STRING_ACTION = s;
+                //    TextMessage.setText("JSON_STRING " + s);
 
-                updateCategoryInfo();
+                updateAction();
+                // testing only - editTextMessage.setText(JSON_STRING);
             }
 
             @Override
             protected String doInBackground(Void... params) {
+
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequest(MyConfig.URL_GET_CATEGORY_INFO);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_ACTION, ServicePerson);
                 return s;
             }
 
+
+
         }
-        GetCategoryJSON gj = new GetCategoryJSON();
+        GetActionJSON gj = new GetActionJSON();
         gj.execute();
     }
-*/
+
+
     private void get_AOR_JSON() {
 
         class Get_OR_JSON extends AsyncTask<Void, Void, String> {
@@ -2490,6 +2524,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (nInfo != null && nInfo.isConnected()) {
             getJSON();
             getAdditionalJSON();
+            getProjectsJSON();
+            getActionJSON();
             //       getCategoryJSON();
             get_AOR_JSON();
             //   get_BOR_JSON();

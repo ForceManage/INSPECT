@@ -353,9 +353,9 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
 
-            dbHandler.updateActionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, dayTime(1), descriptionE.getText().toString(),
+            dbHandler.updateActionItem(projectId, inspectionId, aId, dayTime(1), descriptionE.getText().toString(),
                                       "", performE.getText().toString(), ""
-                    , globalVariables.photos[0], scopeE.getText().toString(), "p", notesE.getText().toString());
+                    , globalVariables.photo1, scopeE.getText().toString(), "p", notesE.getText().toString());
 
             globalVariables.Edited = false;
 

@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -298,8 +298,9 @@ public class DBHandler extends SQLiteOpenHelper {
     //
 
 
-    //Store values from MySQL on server to local SQLite
-    public void updateFromServer(ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes, InspectionItemAttributes inspectionItemAttributes, ActionItemAttributes actionItemAttributes) {
+
+
+    public void updateProjectsFromServer(ProjectAttributes projectAttributes, InspectionAttributes inspectionAttributes) {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_PROJECT_ID, projectAttributes.getProjectId());
@@ -346,10 +347,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.replace(TABLE_INSPECTION, null, valuesInspect);
 
+        db.close();
+
+    }
+
+
+    //Store values from MySQL on server to local SQLite
+    public void updateFromServer(InspectionItemAttributes inspectionItemAttributes) {
+        ContentValues values = new ContentValues();
+
+
+
 
         ContentValues valuesItem = new ContentValues();
-        valuesItem.put(COLUMN_INSPECTION_ID, inspectionAttributes.getinspectionId());
-        valuesItem.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
+        valuesItem.put(COLUMN_INSPECTION_ID, inspectionItemAttributes.getinspectionId());
+        valuesItem.put(COLUMN_PROJECT_ID, inspectionItemAttributes.getprojectId());
         valuesItem.put(COLUMN_A_ID, inspectionItemAttributes.getaId());
         valuesItem.put(COLUMN_DATE_INSPECTED, inspectionItemAttributes.getdateInspected());
         valuesItem.put(COLUMN_OVERVIEW, inspectionItemAttributes.getoverview());
@@ -374,34 +386,15 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesItem.put(COLUMN_ITEM_STATUS, inspectionItemAttributes.get_itemStatus());
         valuesItem.put(COLUMN_NOTES, inspectionItemAttributes.get_notes());
 
-
+        SQLiteDatabase db = this.getWritableDatabase();
         //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
 
         db.replace(TABLE_INSPECTION_ITEM, null, valuesItem);
 
 
-        ContentValues valuesAction = new ContentValues();
-        valuesAction.put(COLUMN_INSPECTION_ID, inspectionAttributes.getinspectionId());
-        valuesAction.put(COLUMN_PROJECT_ID, inspectionAttributes.getprojectId());
-        valuesAction.put(COLUMN_A_ID, inspectionItemAttributes.getaId());
-        valuesAction.put(COLUMN_DATE_INSPECTED, inspectionItemAttributes.getdateInspected());
-        valuesAction.put(COLUMN_OVERVIEW, inspectionItemAttributes.getoverview());
-        valuesAction.put(COLUMN_SERVICED_BY, inspectionItemAttributes.getservicedBy());
-        valuesAction.put(COLUMN_RELEVANT_INFO, inspectionItemAttributes.getrelevantInfo());
-        valuesAction.put(COLUMN_SERVICE_LEVEL, inspectionItemAttributes.getserviceLevel());
-        valuesAction.put(COLUMN_REPORT_IMAGE, inspectionItemAttributes.getReportImage());
-        valuesAction.put(COLUMN_IMG1, inspectionItemAttributes.getimage1());
-        valuesAction.put(COLUMN_COM1, inspectionItemAttributes.getcom1());
-        valuesAction.put(COLUMN_ITEM_STATUS, inspectionItemAttributes.get_itemStatus());
-        valuesAction.put(COLUMN_NOTES, inspectionItemAttributes.get_notes());
 
-
-        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
-
-        db.replace(TABLE_ACTION_ITEM, null, valuesItem);
-
-        db.close();
     }
+
 
     //Store values from MySQL on server to local SQLite
     public void updateAdditionalFromServer(MAPattributes mapAttributes) {
@@ -426,6 +419,31 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void updateActionFromServer(ActionItemAttributes actionItemAttributes) {
+
+        ContentValues valuesAction = new ContentValues();
+        valuesAction.put(COLUMN_INSPECTION_ID, actionItemAttributes.getinspectionId());
+        valuesAction.put(COLUMN_PROJECT_ID, actionItemAttributes.getprojectId());
+        valuesAction.put(COLUMN_A_ID, actionItemAttributes.getaId());
+        valuesAction.put(COLUMN_DATE_INSPECTED, actionItemAttributes.getdate());
+        valuesAction.put(COLUMN_OVERVIEW, actionItemAttributes.getoverview());
+        valuesAction.put(COLUMN_SERVICED_BY, actionItemAttributes.getservicedBy());
+        valuesAction.put(COLUMN_RELEVANT_INFO, actionItemAttributes.getrelevantInfo());
+        valuesAction.put(COLUMN_SERVICE_LEVEL, actionItemAttributes.getserviceLevel());
+        valuesAction.put(COLUMN_REPORT_IMAGE, actionItemAttributes.getReportImage());
+        valuesAction.put(COLUMN_IMG1, actionItemAttributes.getimage1());
+        valuesAction.put(COLUMN_COM1, actionItemAttributes.getcom1());
+        valuesAction.put(COLUMN_ITEM_STATUS, actionItemAttributes.get_itemStatus());
+        valuesAction.put(COLUMN_NOTES, actionItemAttributes.get_notes());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+
+        db.replace(TABLE_ACTION_ITEM, null, valuesAction);
+
+        db.close();
+    }
 
     public void update_OR_FromServer(A_Attributes a_attributes, String CAT) {
 
@@ -560,12 +578,12 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateActionItem(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
+    public void updateActionItem(String projId, String iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
             , String Img1, String com1, String ItemStatus, String Notes) {
 
-        String inspectionId = String.valueOf(iId);
+
         String a_Id = String.valueOf(aId);
-        String proj_id = String.valueOf(projId);
+
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -578,7 +596,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_COM1, com1);
         contentValues.put(COLUMN_ITEM_STATUS, ItemStatus);
         contentValues.put(COLUMN_NOTES, Notes);
-        db.update(TABLE_ACTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{proj_id, inspectionId, a_Id});
+        db.update(TABLE_ACTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{projId, iId, a_Id});
         db.close();
 
 
@@ -2044,7 +2062,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT  " + COLUMN_CAT_ID + " , " + COLUMN_LABEL +
                 " FROM " + TABLE_MAP +
 
-                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+ " ORDER BY " + COLUMN_CAT_ID;
+                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+ " GROUP BY " + COLUMN_CAT_ID+ " ORDER BY " + COLUMN_CAT_ID;
 
         Cursor cursor = dbase.rawQuery(selectQuery, null);
         int i = 1;
@@ -2061,12 +2079,12 @@ public class DBHandler extends SQLiteOpenHelper {
                         + " FROM " + TABLE_INSPECTION_ITEM + " I " +
                         " JOIN " + TABLE_MAP + " M ON M." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
                                                             " AND M."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
-                        " JOIN " + TABLE_ACTION_ITEM + " AI ON AI." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND AI." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
-                        " AND AI."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
+                  //      " JOIN " + TABLE_ACTION_ITEM + " AI ON AI." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND AI." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
+                   //     " AND AI."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
 
                         " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId + " AND M." + COLUMN_CHILD + " > 0"
                         + " AND M." + COLUMN_CAT_ID + " = " + catId +
-                        " ORDER BY M." + COLUMN_CAT_ID + ", I." + COLUMN_A_ID;
+                        " ORDER BY I." + COLUMN_A_ID;
 
                 Cursor cursorB = dbase.rawQuery(selectQueryB, null);
 
@@ -2102,9 +2120,8 @@ public class DBHandler extends SQLiteOpenHelper {
                                 + ", I." + COLUMN_NOTES + ", I." + COLUMN_IMG1
                                 + " FROM " + TABLE_ACTION_ITEM + " I " +
                                 " JOIN " + TABLE_MAP + " M ON M." + COLUMN_A_ID + " = I." + COLUMN_REPORT_IMAGE + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
-
-
-                                " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId
+                                " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId+
+                                " AND M."+COLUMN_CAT_ID+" = "+catId
                                 + " ORDER BY I." + COLUMN_A_ID;
 
                         Cursor cursorC = dbase.rawQuery(selectQueryC, null);
