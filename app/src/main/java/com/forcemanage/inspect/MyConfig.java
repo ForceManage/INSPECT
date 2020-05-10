@@ -13,6 +13,7 @@ public class MyConfig {
     public static final String URL_SYNC_PROJECT_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncProjectToServer.php";
     public static final String URL_SYNC_ACTIONS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncActionsToServer.php";
     public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php";
+    public static final String URL_EMAIL_REPORT= "https://dev.force-management.com/TAB_INSPECT/Inspection/EngReport1.php?projId=";
     //JSON Tags
     //Property informtion
     public static final String TAG_JSON_ARRAY="result";

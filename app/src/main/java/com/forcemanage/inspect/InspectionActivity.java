@@ -1,6 +1,5 @@
 package com.forcemanage.inspect;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,37 +9,27 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.ListFragment;
-import androidx.viewpager.widget.ViewPager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,12 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.security.PublicKey;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,6 +58,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     public static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;
+    private static final int PICK_CONTACT = 3;
 
     private ImageView photoA;
     private ImageView photoB;
@@ -1210,8 +1196,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
         builder.setTitle("Choose an action");
         // add a list
-        String[] actions = {"Review the inspection report.",
+        String[] actions = {"Compile and review the inspection report.",
                 "Compile and email report to user",
+                "Compile and email report to Contact List entity",
                 "Compile inspection certificate",
                 "Cancel this operation."};
         builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1271,31 +1258,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     }
                     case 1: {
 
-                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                        View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                        alertDialogBuilder.setView(promptView);
-                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                        locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
-
-                        alertDialogBuilder.setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        deleteMapBranch();
-
-                                    }
-                                })
-                                .setNegativeButton("Cancel",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-
-                        // create an alert dialog
-                        AlertDialog alert = alertDialogBuilder.create();
-                        alert.show();
-
+                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                        startActivityForResult(intentContact, PICK_CONTACT);
 
                         break;
 
@@ -1385,27 +1349,26 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
-        if (requestCode == ACTIVITY_DRAW_FILE && resultCode == 0){
+        if (requestCode == ACTIVITY_DRAW_FILE && resultCode == 0) {
 
             onClick(photo_file);
 
         }
 
 
-        if (requestCode == ACTIVITY_GET_FILE && resultCode == RESULT_OK){
+        if (requestCode == ACTIVITY_GET_FILE && resultCode == RESULT_OK) {
 
             Uri selectedImage = data.getData();
 
             Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
 
-           int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             returnCursor.moveToFirst();
             String name = returnCursor.getString(nameIndex);
             returnCursor.close();
 
 
-
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
             // Get the cursor
             Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             // Move to first row
@@ -1418,7 +1381,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             // Set the Image in ImageView after decoding the String
             // photoA.setImageBitmap(BitmapFactory.decodeFile(path));
 
-            if(FragDisplay == "BaseFragment") {
+            if (FragDisplay == "BaseFragment") {
 
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseFragment");
 
@@ -1432,7 +1395,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             }
             // photoA.setImageURI(selectedImage);
-            if(FragDisplay == "InspectionFragment") {
+            if (FragDisplay == "InspectionFragment") {
 
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
 
@@ -1466,7 +1429,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             }
 
-            if(FragDisplay == "ActionItemFragment") {
+            if (FragDisplay == "ActionItemFragment") {
 
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
 
@@ -1486,23 +1449,24 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             fname = dayTime(3);
             dirName = dayTime(1);
-            fname = projectId+"_"+fname;
+            fname = projectId + "_" + fname;
 
             String root = Environment.getExternalStorageDirectory().toString();
-            String SD = root + "/ESM_"+dirName+"/";
-            File storageDirectory = new File(root + "/ESM_"+dirName+"/");
+            String SD = root + "/ESM_" + dirName + "/";
+            File storageDirectory = new File(root + "/ESM_" + dirName + "/");
             // Toast.makeText(this, "should have made directory",Toast.LENGTH_SHORT).show();
             // Toast.makeText(this, "string root name = "+root ,Toast.LENGTH_SHORT).show();
-            if (!storageDirectory.exists()){storageDirectory.mkdirs();}
+            if (!storageDirectory.exists()) {
+                storageDirectory.mkdirs();
+            }
 
-            File to = new File(SD+fname+".jpg");
+            File to = new File(SD + fname + ".jpg");
 
 
-
-           // from.renameTo(to);  This deletes the source file from
+            // from.renameTo(to);  This deletes the source file from
 
             try {
-                copy(from,to);
+                copy(from, to);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1510,7 +1474,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             switch (filephoto) {
                 case 1:
-                    if(FragDisplay == "BaseFragment") photoBranch =to.getName();
+                    if (FragDisplay == "BaseFragment") photoBranch = to.getName();
                     photo1 = to.getName();
                     break;
 
@@ -1535,13 +1499,13 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                     break;
 
 
-              }
+            }
 
             saveInspectionItem();
 
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(to)));
 
-       //     getContentResolver().notifyChange(Uri.fromFile(to),null);
+            //     getContentResolver().notifyChange(Uri.fromFile(to),null);
 
             // load original photo to next imageview
             //   Uri photo_image = Uri.fromFile(photo);
@@ -1556,8 +1520,8 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
             try {
                 rotateImage(resizePhoto());
                 cameraSnap = "1";
-            //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
-            //    imageName1.setText("UPDATED");
+                //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
+                //    imageName1.setText("UPDATED");
                 saveInspectionItem();
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
@@ -1565,10 +1529,9 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
                 e.printStackTrace();
             }
 
-        }
-        else if (requestCode == ACTIVITY_START_CAMERA_APP) {
+        } else if (requestCode == ACTIVITY_START_CAMERA_APP) {
             photo.delete();
-            if(cameraSnap != "1") {
+            if (cameraSnap != "1") {
                 cameraSnap = "0";
                 Edited = true;
             }
@@ -1601,7 +1564,101 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
             }
         }
-    }
+
+
+        if (requestCode == PICK_CONTACT) {
+
+            final String emailAdress;
+            emailAdress = getContactInfo(data);
+
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.email_accept, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.email);
+                            locationText.setText(emailAdress);//location.getText().toString());
+
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            class Send_Report extends AsyncTask<Void, Void, Void> {
+                                            @Override
+                                            protected Void doInBackground(Void... params) {
+                                                RequestHandler_ rh = new RequestHandler_();
+                                                rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+                                                return null;
+                                            }
+
+                                            }
+                                            Send_Report rep = new Send_Report();
+                                            rep.execute();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+
+        }
+
+
+
+
+            // Your class variables now have the data, so do something with it.
+
+
+        }
+
+    protected String getContactInfo(Intent data)
+    {
+
+        Cursor cursor = null;
+        String email = "", name = "";
+        try {
+            Uri result = data.getData();
+            Log.v(" Email", "Got a contact result: " + result.toString());
+
+            // get the contact id from the Uri
+            String id = result.getLastPathSegment();
+
+            // query for everything email
+            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,  null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id }, null);
+
+            int nameId = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+            int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+
+            // let's just get the first email
+            if (cursor.moveToFirst()) {
+                email = cursor.getString(emailIdx);
+                name = cursor.getString(nameId);
+                Log.v(" Email", "Got email: " + email);
+            } else {
+                Log.w(" Email", "No results");
+            }
+        } catch (Exception e) {
+            Log.e(" Email", "Failed to get email data", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+
+
+        }
+        return email;
+    }//getContactInfo
+
+
 
 
     File createPhotoFile()throws IOException {
@@ -1645,6 +1702,10 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         mImageFileLocation = image.getAbsolutePath();
         return image;
     }
+
+
+
+
 
     private Bitmap resizePhoto() throws IOException {
 

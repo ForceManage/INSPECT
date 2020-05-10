@@ -607,7 +607,21 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
+                            DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
+                            final int pId = dbHandler.getInspectionpId(parseInt(projectId));
+
+                            class reqAct extends AsyncTask<Void, Void, Void> {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    RequestHandler_ rh = new RequestHandler_();
+                                    rh.sendRequestParam(MyConfig.URL_REQUEST_ACTIVITY, projectId+"&pId="+ Integer.toString(pId));
+                                    return null;
+                                }
+
+                            }
+                            reqAct req = new reqAct();
+                            req.execute();
                             break;
 
                         }
@@ -2231,7 +2245,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE4);
             if(!photo_name.equals("photo4")) uploadFileToS3(view, photo_name);
 
-            photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE5);
+            photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE);
+            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
+
+            photo_name = photolist.get(i).get("ActionImage");
             if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
 
             i++;

@@ -943,6 +943,28 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public int getInspectionpId(int projID) {
+        // Open a database for reading and writing
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int pId = 0;
+
+        selectQuery = "SELECT M." + COLUMN_P_ID + " FROM "
+                + TABLE_INSPECTION + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_PARENT + " = -1";
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            pId = cursor.getInt(0);
+        }
+
+        db.close();
+        return pId;
+
+    }
 
     public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label) {
         // Open a database for reading and writing
@@ -1429,9 +1451,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
         photoArrayList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT I." +
-                COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
-                + " FROM " + TABLE_INSPECTION_ITEM + " I JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
+        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
+                +", E."+COLUMN_IMAGE+", A."+COLUMN_IMG1
+
+
+                + " FROM " + TABLE_INSPECTION_ITEM +" I "
+                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
+                + " JOIN " + TABLE_ACTION_ITEM+ " A ON A." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
                 + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
 
    /*     String selectQuery = "SELECT "+
@@ -1475,6 +1501,10 @@ public class DBHandler extends SQLiteOpenHelper {
                     photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
                 if (cursor.getString(4) != "")
                     photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
+                if (cursor.getString(5) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(5));
+                if (cursor.getString(6) != "")
+                    photoMap.put("ActionImage", cursor.getString(6));
 
                 photoArrayList.add(photoMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
@@ -2061,7 +2091,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  " + COLUMN_CAT_ID + " , " + COLUMN_LABEL +
                 " FROM " + TABLE_MAP +
-
                 " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+ " GROUP BY " + COLUMN_CAT_ID+ " ORDER BY " + COLUMN_CAT_ID;
 
         Cursor cursor = dbase.rawQuery(selectQuery, null);

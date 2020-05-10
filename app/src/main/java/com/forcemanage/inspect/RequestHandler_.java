@@ -162,6 +162,17 @@ public class RequestHandler_ {
         return sb.toString();
     }
 
+    public void sendRequestParam(String requestURL, String annex){
+
+        try {
+            URL url = new URL(requestURL+annex);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        }catch(Exception e){
+        }
+
+    }
+
     private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
