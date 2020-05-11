@@ -478,15 +478,75 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateProject(String projId, String Notes) {
+    public void updateProject(String projId, String item, String txt, int num) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_PROJECT_NOTE, Notes);
+        switch (item){
+            case "Project ID":{
+                contentValues.put(COLUMN_ADDRESS_NUMBER, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Project Address":{
+                contentValues.put(COLUMN_PROJECT_ADDRESS, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Build Type":{
+                contentValues.put(COLUMN_BUILD_TYPE, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Building Permit Number":{
+                contentValues.put(COLUMN_BUILD_PERMIT_NMBR, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Building Class":{
+                contentValues.put(COLUMN_BUILDING_CLASS, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "No. of levels":{
+                contentValues.put(COLUMN_NO_LEVELS, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Access key/code":{
+                contentValues.put(COLUMN_BUILD_TYPE, num);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Floor Type":{
+                contentValues.put(COLUMN_FLOOR_TYPE, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Wall Type":{
+                contentValues.put(COLUMN_WALL_TYPE, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+            case "Roof Type":{
+                contentValues.put(COLUMN_ROOF_TYPE, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
+
+            case "Project Note":{
+                contentValues.put(COLUMN_PROJECT_NOTE, txt);
+                db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+                break;
+            }
 
 
-        db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
+        }
+
+
+
+
         db.close();
 
 

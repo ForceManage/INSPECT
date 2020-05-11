@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public String projectId;
     private String fname;
     private String cat;
-
     private List<MapViewData> listItems;
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
@@ -415,22 +414,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
- //               bundle.putString("branchLabel", branchLabel);
-                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
+ //             bundle.putString("branchLabel", branchLabel);
+                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
- /*               bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
-                bundle.putString("permit", branchNote);
-                bundle.putString("class", branchNote);
-                bundle.putString("levels", branchNote);
-                bundle.putString("photo", com2);
-                bundle.putString("key", com2);
-                bundle.putString("floor", com2);
-                bundle.putString("roof", com2);
-                bundle.putString("wall", com2);
-                bundle.putString("notes", com2);
+                bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
+                bundle.putString("permit", projectItem.get(MyConfig.TAG_BUILD_PERMIT_NMBR));
+                bundle.putString("class", projectItem.get(MyConfig.TAG_BUILD_CLASS));
+                bundle.putString("levels", projectItem.get(MyConfig.TAG_NMBR_LEVELS));
+                bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+                bundle.putString("key", projectItem.get(MyConfig.TAG_KEY_REQUIRED));
+                bundle.putString("floor", projectItem.get(MyConfig.TAG_FLOOR_TYPE));
+                bundle.putString("roof", projectItem.get(MyConfig.TAG_ROOF_TYPE));
+                bundle.putString("wall", projectItem.get(MyConfig.TAG_WALL_TYPE));
 
 
-  */
+
+
 
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
@@ -786,6 +785,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
+
+
         if (v == info_icon) {
 
             root = Environment.getExternalStorageDirectory().getPath();
@@ -818,7 +819,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             }
         }
+
+
     }
+
+
+
+
 
 
 

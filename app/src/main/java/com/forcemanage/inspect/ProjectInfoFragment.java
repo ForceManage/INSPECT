@@ -44,6 +44,15 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private Boolean Edited;
     private String note;
     private String projectId;
+    private String BuildType;
+    private String BuildPermNo;
+    private String BuildClass;
+    private String Levels;
+    private String AccessKey;
+    private String Floor;
+    private String Walls;
+    private String Roof;
+
 
 
     @Override
@@ -57,22 +66,17 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
       //      branchNote = bundle.getString("notes");
             ProjAddress = bundle.getString("address");
             note = bundle.getString("note");
- /*           bundle.putString("branchHead", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-            bundle.putString("branchLabel", branchLabel);
-            bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS) + ", " + projectItem.get(MyConfig.TAG_PROJECT_SUBURB));
-            bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
-            bundle.putString("permit", branchNote);
-            bundle.putString("class", branchNote);
-            bundle.putString("levels", branchNote);
-            bundle.putString("photo", com2);
-            bundle.putString("key", com2);
-            bundle.putString("floor", com2);
-            bundle.putString("roof", com2);
-            bundle.putString("wall", com2);
-            bundle.putString("notes", com2);
 
-  */
-        }
+
+            BuildType = bundle.getString("buildType");
+            BuildPermNo = bundle.getString("permit");
+            Levels = bundle.getString("levels");
+            AccessKey = bundle.getString("key");
+            Floor = bundle.getString("floor");
+            Walls = bundle.getString("wall");
+            Roof = bundle.getString("roof");
+
+         }
 
             Edited = false;
         projectId = globalVariables.projectId;
@@ -99,64 +103,97 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
 
-       TextView projAddress = (TextView) view.findViewById(R.id.Text1);
+       final TextView projAddress = (TextView) view.findViewById(R.id.Text1);
        TextView projNumber = (TextView) view.findViewById(R.id.branchTitle);
 
        projAddress.setText(ProjAddress);
        projNumber.setText("Project ID:  "+branchHead);
        bNote.setText(note);
 
-         setText();
 
-
-/*
-        bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
-
-            }
-        });
-
-
-
-
-        title.setOnClickListener(new View.OnClickListener() {
+        final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
+        TVprojectID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setView(promptView);
-                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                itemTitle.setText("Branch Head Title: "+ branchHead);//Integer.parseInt(locationId)
-                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                locationText.setText("Current label : "+ branchLabel );//Integer.parseInt(locationId)
-                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                LocationText.setText(branchLabel);
-                // setup a dialog window
-                alertDialogBuilder.setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                          //      globalVariables.editLocation(LocationText.getText().toString());
-
-
-                            }
-                        })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                // create an alert dialog
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
+              editProject("Project ID",TVprojectID.getText().toString());
+            }
+        });
+        projAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Project Address",projAddress.getText().toString());
             }
         });
 
-    */
+        final TextView TVbuildType = (TextView) view.findViewById(R.id.Text2);
+        TVbuildType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Build Type",TVbuildType.getText().toString());
+            }
+        });
+
+        final TextView TVbuildPerm = (TextView) view.findViewById(R.id.Text3);
+        TVbuildPerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Building Permit No.",TVbuildPerm.getText().toString());
+            }
+        });
+
+        final TextView TVbuildClass = (TextView) view.findViewById(R.id.Text4);
+        TVbuildClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Building Class",TVbuildClass.getText().toString());
+            }
+        });
+
+        final TextView TVlevels = (TextView) view.findViewById(R.id.Text5);
+        TVlevels.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("No. of levels",TVlevels.getText().toString());
+            }
+        });
+        final TextView TVaccessCode = (TextView) view.findViewById(R.id.Text6);
+        TVaccessCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Access key/code",TVaccessCode.getText().toString());
+            }
+        });
+
+        final TextView TVfloorType = (TextView) view.findViewById(R.id.Text7);
+        TVfloorType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Floor Type", TVfloorType.getText().toString());
+            }
+        });
+
+        final TextView TVwallType = (TextView) view.findViewById(R.id.Text8);
+        TVwallType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Wall Type", TVwallType.getText().toString());
+            }
+        });
+
+        final TextView TVroofType = (TextView) view.findViewById(R.id.Text9);
+        TVroofType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Roof Type", TVroofType.getText().toString());
+            }
+        });
+
+         setText();
+        TVbuildType.setText("Build Type:  "+BuildType);
+        TVaccessCode.setText("Access key/code:  "+AccessKey);
+        TVbuildClass.setText("Building Class:  "+BuildClass);
+        TVlevels.setText("Levels:  "+Levels);
+        TVbuildPerm.setText("Building Permit No.:  "+BuildPermNo);
 
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -188,12 +225,95 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
     }
 
+
+    public void editProject(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Project Details ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText(item);//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        switch (item) {
+
+                            case "Project Address":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "Project ID":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "Build Type":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "Building Permit No.":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "No. of levels":{
+                                dbHandler.updateProject(projectId,item ,"", Integer.parseInt(branchText.getText().toString()) );
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "Access key/code":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+                            case "Floor Type":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                break;
+                            }
+                            case "Wall Type":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                break;
+                            }
+                            case "Roof Type":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                                break;
+                            }
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
+
+    }
+
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
 
-        dbHandler.updateProject(projectId, note);
+        dbHandler.updateProject(projectId, "Project Note" , note, 0);
     }
 
     @Override

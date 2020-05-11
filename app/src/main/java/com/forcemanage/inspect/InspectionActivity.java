@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements I_inspection, OnVerseNameSelectionChangeListener, View.OnClickListener {
+public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, View.OnClickListener {
 
     DBHandler ESMdb;
     private Button buttonInsert;
@@ -386,6 +386,7 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
 
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
+
         OnSelectionChanged(GlobalVariables.pos);
     }
 
@@ -624,11 +625,12 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
         loadMap();
     }
 
-    private void displayInspectionItem() {
+
+    public void displayInspectionItem() {
 
         //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
+        if(aID == 0) aID = 1;
         HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID);
 
         catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
@@ -1846,11 +1848,5 @@ public class InspectionActivity extends AppCompatActivity implements I_inspectio
     }
 
 
-    @Override
-    public void inflateFragment(String fragmentName, String branchName) {
-  //      if(fragmentName.equals("BaseFragment")){
-  //          BaseFragment fragment = new BaseFragment();
-  //          doFragmentTransaction(fragment,"base_fragment",false,"");
-   //     }
-    }
+
 }
