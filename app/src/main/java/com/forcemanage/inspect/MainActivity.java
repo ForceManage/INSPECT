@@ -417,15 +417,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
  //             bundle.putString("branchLabel", branchLabel);
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
-                bundle.putString("buildType", projectItem.get(MyConfig.TAG_BUILD_TYPE));
-                bundle.putString("permit", projectItem.get(MyConfig.TAG_BUILD_PERMIT_NMBR));
-                bundle.putString("class", projectItem.get(MyConfig.TAG_BUILD_CLASS));
-                bundle.putString("levels", projectItem.get(MyConfig.TAG_NMBR_LEVELS));
+                bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
+                bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
+                bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
+                bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
                 bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
-                bundle.putString("key", projectItem.get(MyConfig.TAG_KEY_REQUIRED));
-                bundle.putString("floor", projectItem.get(MyConfig.TAG_FLOOR_TYPE));
-                bundle.putString("roof", projectItem.get(MyConfig.TAG_ROOF_TYPE));
-                bundle.putString("wall", projectItem.get(MyConfig.TAG_WALL_TYPE));
+                bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
+                bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
+                bundle.putString("infoI", projectItem.get(MyConfig.TAG_INFO_I));
+                bundle.putString("infoJ", projectItem.get(MyConfig.TAG_INFO_J));
 
 
 
@@ -1132,16 +1132,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String addressNo = jo.getString(MyConfig.TAG_ADDRESS_NO);
                 String address = jo.getString(MyConfig.TAG_PROJECT_ADDRESS);
                 String suburb = jo.getString(MyConfig.TAG_PROJECT_SUBURB);
-                String buildType = jo.getString(MyConfig.TAG_BUILD_TYPE);
-                String buildPermitNmbr = jo.getString(MyConfig.TAG_BUILD_PERMIT_NMBR);
-                String buildClass = jo.getString(MyConfig.TAG_BUILD_CLASS);
-                String nmbrLevels = jo.getString(MyConfig.TAG_NMBR_LEVELS);
+                String infoA = jo.getString(MyConfig.TAG_INFO_A);
+                String infoB = jo.getString(MyConfig.TAG_INFO_B);
+                String infoC = jo.getString(MyConfig.TAG_INFO_C);
+                String infoD = jo.getString(MyConfig.TAG_INFO_D);
                 String projectNote = jo.getString(MyConfig.TAG_PROJECT_NOTE);
                 String projectPhoto = jo.getString(MyConfig.TAG_PROJECT_PHOTO);
-                String keyRequired = jo.getString(MyConfig.TAG_KEY_REQUIRED);
-                String floorType = jo.getString(MyConfig.TAG_FLOOR_TYPE);
-                String roofType = jo.getString(MyConfig.TAG_ROOF_TYPE);
-                String wallType = jo.getString(MyConfig.TAG_WALL_TYPE);
+                String infoE = jo.getString(MyConfig.TAG_INFO_E);
+                String infoH = jo.getString(MyConfig.TAG_INFO_H);
+                String infoI = jo.getString(MyConfig.TAG_INFO_I);
+                String infoJ = jo.getString(MyConfig.TAG_INFO_J);
                 String inspectionId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String inspectionType = jo.getString(MyConfig.TAG_INSPECTION_TYPE);
                 String inspectionDate = datetoString(jo.getString(MyConfig.TAG_INSPECTION_DATE));
@@ -1162,11 +1162,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int InspectionId = parseInt(inspectionId);
                 int level = parseInt(Level);
                 int parent = parseInt(Parent);
-                int noLevels = parseInt(nmbrLevels);
                 int p_Id = parseInt(pID);
 
                 ProjectAttributes projectrow =
-                        new ProjectAttributes(projId, addressNo, address, suburb, buildType, buildPermitNmbr, buildClass, noLevels, projectPhoto, keyRequired, floorType, roofType, wallType, projectNote );
+                        new ProjectAttributes(projId, addressNo, address, suburb, infoA, infoB, infoC, infoD, projectPhoto, infoE, infoH, infoI, infoJ, projectNote );
                 // editTextMessage.setText("Test 1");
 
 

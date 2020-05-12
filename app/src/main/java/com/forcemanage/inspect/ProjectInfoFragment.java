@@ -44,14 +44,14 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private Boolean Edited;
     private String note;
     private String projectId;
-    private String BuildType;
-    private String BuildPermNo;
-    private String BuildClass;
-    private String Levels;
-    private String AccessKey;
-    private String Floor;
-    private String Walls;
-    private String Roof;
+    private String infoA;
+    private String infoB;
+    private String infoC;
+    private String infoD;
+    private String infoE;
+    private String infoH;
+    private String infoI;
+    private String infoJ;
 
 
 
@@ -68,13 +68,13 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
             note = bundle.getString("note");
 
 
-            BuildType = bundle.getString("buildType");
-            BuildPermNo = bundle.getString("permit");
-            Levels = bundle.getString("levels");
-            AccessKey = bundle.getString("key");
-            Floor = bundle.getString("floor");
-            Walls = bundle.getString("wall");
-            Roof = bundle.getString("roof");
+            infoA = bundle.getString("infoA");
+            infoB = bundle.getString("infoB");
+            infoC = bundle.getString("infoC");
+            infoD = bundle.getString("infoD");
+            infoE = bundle.getString("infoE");
+            infoI = bundle.getString("infoI");
+            infoJ = bundle.getString("infoJ");
 
          }
 
@@ -125,75 +125,79 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        final TextView TVbuildType = (TextView) view.findViewById(R.id.Text2);
-        TVbuildType.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoA = (TextView) view.findViewById(R.id.Text2);
+        TVinfoA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Build Type",TVbuildType.getText().toString());
+                editProject("infoA",TVinfoA.getText().toString());
             }
         });
 
-        final TextView TVbuildPerm = (TextView) view.findViewById(R.id.Text3);
-        TVbuildPerm.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoB = (TextView) view.findViewById(R.id.Text3);
+        TVinfoB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Building Permit No.",TVbuildPerm.getText().toString());
+                editProject("infoB",TVinfoB.getText().toString());
             }
         });
 
-        final TextView TVbuildClass = (TextView) view.findViewById(R.id.Text4);
-        TVbuildClass.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoC = (TextView) view.findViewById(R.id.Text4);
+        TVinfoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Building Class",TVbuildClass.getText().toString());
+                editProject("infoC",TVinfoC.getText().toString());
             }
         });
 
-        final TextView TVlevels = (TextView) view.findViewById(R.id.Text5);
-        TVlevels.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoD = (TextView) view.findViewById(R.id.Text5);
+        TVinfoD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("No. of levels",TVlevels.getText().toString());
+                editProject("infoD",TVinfoD.getText().toString());
             }
         });
-        final TextView TVaccessCode = (TextView) view.findViewById(R.id.Text6);
-        TVaccessCode.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoE = (TextView) view.findViewById(R.id.Text6);
+        TVinfoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Access key/code",TVaccessCode.getText().toString());
-            }
-        });
-
-        final TextView TVfloorType = (TextView) view.findViewById(R.id.Text7);
-        TVfloorType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editProject("Floor Type", TVfloorType.getText().toString());
+                editProject("infoE",TVinfoE.getText().toString());
             }
         });
 
-        final TextView TVwallType = (TextView) view.findViewById(R.id.Text8);
-        TVwallType.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoH = (TextView) view.findViewById(R.id.Text7);
+        TVinfoH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Wall Type", TVwallType.getText().toString());
+                editProject("infoH", TVinfoH.getText().toString());
             }
         });
 
-        final TextView TVroofType = (TextView) view.findViewById(R.id.Text9);
-        TVroofType.setOnClickListener(new View.OnClickListener() {
+        final TextView TVinfoI = (TextView) view.findViewById(R.id.Text8);
+        TVinfoI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Roof Type", TVroofType.getText().toString());
+                editProject("infoI", TVinfoI.getText().toString());
+            }
+        });
+
+        final TextView TVinfoJ = (TextView) view.findViewById(R.id.Text9);
+        TVinfoJ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("infoJ", TVinfoJ.getText().toString());
             }
         });
 
          setText();
-        TVbuildType.setText("Build Type:  "+BuildType);
-        TVaccessCode.setText("Access key/code:  "+AccessKey);
-        TVbuildClass.setText("Building Class:  "+BuildClass);
-        TVlevels.setText("Levels:  "+Levels);
-        TVbuildPerm.setText("Building Permit No.:  "+BuildPermNo);
+        TVinfoA.setText(infoA);
+        TVinfoB.setText(infoB);
+        TVinfoC.setText(infoC);
+        TVinfoD.setText(infoD);
+        TVinfoE.setText(infoE);
+        TVinfoH.setText(infoH);
+        TVinfoI.setText(infoI);
+        TVinfoJ.setText(infoJ);
+
 
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -256,35 +260,35 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Build Type":{
+                            case "infoA":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Building Permit No.":{
+                            case "infoB":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "No. of levels":{
-                                dbHandler.updateProject(projectId,item ,"", Integer.parseInt(branchText.getText().toString()) );
+                            case "infoC":{
+                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0 );
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Access key/code":{
+                            case "infoD":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Floor Type":{
+                            case "infoE":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 break;
                             }
-                            case "Wall Type":{
+                            case "infoH":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 break;
                             }
-                            case "Roof Type":{
+                            case "infoI":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 break;
                             }

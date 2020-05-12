@@ -17,28 +17,28 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
 
     public static final String COLUMN_PROJECT_ID = "ProjectId";
     public static final String COLUMN_CLIENT_ID = "ClientId";
-    public static final String COLUMN_BUILD_TYPE = "BuildType";
-    public static final String COLUMN_BUILD_PERMIT_NMBR = "BuildPermitNmbr";
-    public static final String COLUMN_BUILDING_CLASS = "BuildingClass";
-    public static final String COLUMN_NO_LEVELS = "NmbrLevels";
+    public static final String COLUMN_INFO_A = "InfoA";
+    public static final String COLUMN_INFO_B = "InfoB";
+    public static final String COLUMN_INFO_C = "InfoC";
+    public static final String COLUMN_INFO_D = "InfoD";
     public static final String COLUMN_PROJECT_NOTE = "ProjectNote";
     public static final String COLUMN_ADDRESS_NUMBER = "AddressNumber";
     public static final String COLUMN_PROJECT_ADDRESS = "ProjectAddress";
     public static final String COLUMN_PROJECT_SUBURB = "ProjectSuburb";
     public static final String COLUMN_PROJECT_PHOTO = "ProjectPhoto";
-    public static final String COLUMN_KEY_REQUIRED = "KeyRequired";
-    public static final String COLUMN_OC_DATE = "OCDate";
-    public static final String COLUMN_OC_NUMBER = "OCNumber";
-    public static final String COLUMN_FLOOR_TYPE = "FloorType";
-    public static final String COLUMN_ROOF_TYPE = "RoofType";
-    public static final String COLUMN_WALL_TYPE = "WallType";
+    public static final String COLUMN_INFO_E = "InfoE";
+    public static final String COLUMN_INFO_F = "InfoF";
+    public static final String COLUMN_INFO_G = "InfoG";
+    public static final String COLUMN_INFO_H = "InfoH";
+    public static final String COLUMN_INFO_I = "InfoI";
+    public static final String COLUMN_INFO_J = "InfoJ";
 
     public static final String TABLE_INSPECTION = "Inspection";
 
@@ -115,18 +115,18 @@ public class DBHandler extends SQLiteOpenHelper {
                 TABLE_PROJECT_INFO + "("
                 + COLUMN_PROJECT_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_CLIENT_ID + " INTEGER,"
-                + COLUMN_BUILD_TYPE + " TEXT,"
-                + COLUMN_BUILD_PERMIT_NMBR + " TEXT,"
-                + COLUMN_BUILDING_CLASS + " TEXT,"
+                + COLUMN_INFO_A + " TEXT,"
+                + COLUMN_INFO_B + " TEXT,"
+                + COLUMN_INFO_C + " TEXT,"
                 + COLUMN_PROJECT_NOTE + " TEXT,"
                 + COLUMN_ADDRESS_NUMBER + " TEXT,"
                 + COLUMN_PROJECT_ADDRESS + " TEXT,"
                 + COLUMN_PROJECT_SUBURB + " TEXT,"
-                + COLUMN_KEY_REQUIRED + " TEXT,"
-                + COLUMN_NO_LEVELS + " INTEGER,"
-                + COLUMN_ROOF_TYPE + " TEXT,"
-                + COLUMN_WALL_TYPE + " TEXT,"
-                + COLUMN_FLOOR_TYPE + " TEXT,"
+                + COLUMN_INFO_E + " TEXT,"
+                + COLUMN_INFO_D + " TEXT,"
+                + COLUMN_INFO_I+ " TEXT,"
+                + COLUMN_INFO_J + " TEXT,"
+                + COLUMN_INFO_H + " TEXT,"
                 + COLUMN_PROJECT_PHOTO + " TEXT" + ")";
         db.execSQL(CREATE_PROJECT_INFO_TABLE);
 
@@ -307,17 +307,17 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_ADDRESS_NUMBER, projectAttributes.getAddressNumber());
         values.put(COLUMN_PROJECT_ADDRESS, projectAttributes.getprojectAddress());
         values.put(COLUMN_PROJECT_SUBURB, projectAttributes.getprojectSuburb());
-        values.put(COLUMN_BUILD_TYPE, projectAttributes.getbuildType());
-        values.put(COLUMN_BUILD_PERMIT_NMBR, projectAttributes.getbuildPermitNmbr());
-        values.put(COLUMN_BUILDING_CLASS, projectAttributes.getbuildClass());
-        values.put(COLUMN_NO_LEVELS, projectAttributes.getnumberLevels());
+        values.put(COLUMN_INFO_A, projectAttributes.getinfoA());
+        values.put(COLUMN_INFO_B, projectAttributes.getinfoB());
+        values.put(COLUMN_INFO_C, projectAttributes.getinfoC());
+        values.put(COLUMN_INFO_D, projectAttributes.getinfoD());
         values.put(COLUMN_PROJECT_PHOTO, projectAttributes.getprojectPhoto());
-        values.put(COLUMN_KEY_REQUIRED, projectAttributes.getkeyRequired());
+        values.put(COLUMN_INFO_E, projectAttributes.getinfoE());
         //       values.put(COLUMN_OC_DATE, projectAttributes.getocDate());
         //       values.put(COLUMN_OC_NUMBER, projectAttributes.getocNmbr());
-        values.put(COLUMN_FLOOR_TYPE, projectAttributes.getfloorType());
-        values.put(COLUMN_ROOF_TYPE, projectAttributes.getroofType());
-        values.put(COLUMN_WALL_TYPE, projectAttributes.getwallType());
+        values.put(COLUMN_INFO_H, projectAttributes.getinfoH());
+        values.put(COLUMN_INFO_I, projectAttributes.getinfoI());
+        values.put(COLUMN_INFO_J, projectAttributes.getinfoJ());
         values.put(COLUMN_PROJECT_NOTE, projectAttributes.getprojectNote());
         ;
 
@@ -494,43 +494,43 @@ public class DBHandler extends SQLiteOpenHelper {
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Build Type":{
-                contentValues.put(COLUMN_BUILD_TYPE, txt);
+            case "infoA":{
+                contentValues.put(COLUMN_INFO_A, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Building Permit Number":{
-                contentValues.put(COLUMN_BUILD_PERMIT_NMBR, txt);
+            case "infoB":{
+                contentValues.put(COLUMN_INFO_B, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Building Class":{
-                contentValues.put(COLUMN_BUILDING_CLASS, txt);
+            case "infoC":{
+                contentValues.put(COLUMN_INFO_C, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "No. of levels":{
-                contentValues.put(COLUMN_NO_LEVELS, txt);
+            case "infoD":{
+                contentValues.put(COLUMN_INFO_D, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Access key/code":{
-                contentValues.put(COLUMN_BUILD_TYPE, num);
+            case "infoE":{
+                contentValues.put(COLUMN_INFO_E, num);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Floor Type":{
-                contentValues.put(COLUMN_FLOOR_TYPE, txt);
+            case "infoH":{
+                contentValues.put(COLUMN_INFO_H, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Wall Type":{
-                contentValues.put(COLUMN_WALL_TYPE, txt);
+            case "infoJ":{
+                contentValues.put(COLUMN_INFO_J, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Roof Type":{
-                contentValues.put(COLUMN_ROOF_TYPE, txt);
+            case "infoI":{
+                contentValues.put(COLUMN_INFO_I, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
@@ -1769,9 +1769,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT "+COLUMN_ADDRESS_NUMBER+", " +  COLUMN_PROJECT_ADDRESS + ", " + COLUMN_PROJECT_SUBURB + ", " + COLUMN_BUILD_TYPE
-                + ", " + COLUMN_BUILD_PERMIT_NMBR + ", " + COLUMN_BUILDING_CLASS + ", " + COLUMN_NO_LEVELS + ", "+COLUMN_PROJECT_PHOTO+ ", "
-                + COLUMN_KEY_REQUIRED+", "+COLUMN_FLOOR_TYPE+ ", "+COLUMN_ROOF_TYPE+", "+COLUMN_WALL_TYPE+", "+COLUMN_PROJECT_NOTE
+        String selectQuery = "SELECT "+COLUMN_ADDRESS_NUMBER+", " +  COLUMN_PROJECT_ADDRESS + ", " + COLUMN_PROJECT_SUBURB + ", " + COLUMN_INFO_A
+                + ", " + COLUMN_INFO_B + ", " + COLUMN_INFO_C + ", " + COLUMN_INFO_D + ", "+COLUMN_PROJECT_PHOTO+ ", "
+                + COLUMN_INFO_E+", "+COLUMN_INFO_H + ", "+COLUMN_INFO_I+", "+COLUMN_INFO_J+", "+COLUMN_PROJECT_NOTE
 
                 + " FROM " + TABLE_PROJECT_INFO
 
@@ -1787,15 +1787,15 @@ public class DBHandler extends SQLiteOpenHelper {
                 ProjectInfo.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(0));
                 ProjectInfo.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(1));
                 ProjectInfo.put(MyConfig.TAG_PROJECT_SUBURB, cursor.getString(2));
-                ProjectInfo.put(MyConfig.TAG_BUILD_TYPE, cursor.getString(3));
-                ProjectInfo.put(MyConfig.TAG_BUILD_PERMIT_NMBR, cursor.getString(4));
-                ProjectInfo.put(MyConfig.TAG_BUILD_CLASS, cursor.getString(5));
-                ProjectInfo.put(MyConfig.TAG_NMBR_LEVELS, (String.valueOf(cursor.getInt(6))));
+                ProjectInfo.put(MyConfig.TAG_INFO_A, cursor.getString(3));
+                ProjectInfo.put(MyConfig.TAG_INFO_B, cursor.getString(4));
+                ProjectInfo.put(MyConfig.TAG_INFO_C, cursor.getString(5));
+                ProjectInfo.put(MyConfig.TAG_INFO_D, (String.valueOf(cursor.getInt(6))));
                 ProjectInfo.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(7));
-                ProjectInfo.put(MyConfig.TAG_KEY_REQUIRED, cursor.getString(8));
-                ProjectInfo.put(MyConfig.TAG_FLOOR_TYPE, cursor.getString(9));
-                ProjectInfo.put(MyConfig.TAG_ROOF_TYPE, cursor.getString(10));
-                ProjectInfo.put(MyConfig.TAG_WALL_TYPE, cursor.getString(11));
+                ProjectInfo.put(MyConfig.TAG_INFO_E, cursor.getString(8));
+                ProjectInfo.put(MyConfig.TAG_INFO_H, cursor.getString(9));
+                ProjectInfo.put(MyConfig.TAG_INFO_I, cursor.getString(10));
+                ProjectInfo.put(MyConfig.TAG_INFO_J, cursor.getString(11));
                 ProjectInfo.put(MyConfig.TAG_PROJECT_NOTE, cursor.getString(12));
 
                 ProjectInfoArrayList.add(ProjectInfo);

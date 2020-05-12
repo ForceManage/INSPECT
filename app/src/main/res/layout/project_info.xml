@@ -102,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="Build type:  "
+                        android:text="Project Info. 1  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Building Permit No.:  "
+                        android:text="Project Info. 2  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Levels:  "
+                        android:text="Project Info. 3  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Access key/code:  "
+                        android:text="Project Info. 4  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -152,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Floor:  "
+                        android:text="Project Info. 5  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -162,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Walls:  "
+                        android:text="Project Info. 6  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 
@@ -172,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="Roof:  "
+                        android:text="Project Info. 7  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal" />
 

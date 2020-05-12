@@ -21,14 +21,16 @@ public class MyConfig {
     public static final String TAG_ADDRESS_NO = "AddressNo";
     public static final String TAG_PROJECT_ADDRESS = "ProjectAddress";
     public static final String TAG_PROJECT_SUBURB = "ProjectSuburb";
-    public static final String TAG_BUILD_PERMIT_NMBR = "BuildPermitNmbr";
-    public static final String TAG_BUILD_TYPE = "BuildType";
-    public static final String TAG_BUILD_CLASS = "BuildingClass";
-    public static final String TAG_KEY_REQUIRED = "KeyRequired";
-    public static final String TAG_NMBR_LEVELS = "NoLevels";
-    public static final String TAG_FLOOR_TYPE = "FloorType";
-    public static final String TAG_ROOF_TYPE = "RoofType";
-    public static final String TAG_WALL_TYPE = "WallType";
+    public static final String TAG_INFO_B = "InfoB";
+    public static final String TAG_INFO_A = "InfoA";
+    public static final String TAG_INFO_C = "InfoC";
+    public static final String TAG_INFO_E = "InfoE";
+    public static final String TAG_INFO_D = "InfoD";
+    public static final String TAG_INFO_F = "InfoF";
+    public static final String TAG_INFO_G = "InfoG";
+    public static final String TAG_INFO_H = "InfoH";
+    public static final String TAG_INFO_I = "InfoI";
+    public static final String TAG_INFO_J = "InfoJ";
     public static final String TAG_PROJECT_NOTE = "ProjectNote";
     public static final String TAG_PROJECT_PHOTO = "ProjectPhoto";
 
