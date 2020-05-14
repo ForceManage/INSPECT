@@ -516,7 +516,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         // String serviceDate = inspectionDate.getText().toString();
         // work out the next service date in three months time
         if (FragDisplay == "BaseFragment") {
-            dbHandler.updateBranchNote(projId, aID, branchNote, photoBranch);
+            dbHandler.updateBranchPhoto(projId, aID, photoBranch);
         }
 
 
@@ -631,13 +631,16 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         if(aID == 0) aID = 1;
-        HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID);
+        HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
+
+        String MapBranch;
 
         catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
         Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
         Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
         photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
-        branchLabel = mapItem.get(MyConfig.TAG_LABEL);
+        branchLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
+        MapBranch = mapItem.get("MAP_LABEL"); //This is the Map label column
         branchNote = mapItem.get(MyConfig.TAG_NOTES);
         branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
 
@@ -645,12 +648,17 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         switch (branchCode) {
 
+
             case 0: {
+
+
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("inspection", branchLabel);
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
+                bundle.putString("image", photoBranch);
+                bundle.putString("MAP_LABEL", MapBranch);
                 bundle.putInt("aID", aID);
                 bundle.putString("notes", branchNote);
                 bundle.putString("com2", com2);
@@ -660,6 +668,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 doFragmentTransaction(fragment, "BaseFragment", false, "");
 
                 photo1 = photoBranch;
+                photos[0] = photoBranch;
+
                 break;
             }
             case 1: {
@@ -1542,6 +1552,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                 case 0:
                     photoBranch = photos[0];
+                    break;
 
                 case 1:
                     photo1 = photos[0];

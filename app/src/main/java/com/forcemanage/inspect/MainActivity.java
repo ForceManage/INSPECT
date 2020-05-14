@@ -385,12 +385,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         switch (node.getNodeLevel()) {
 
+
+
+
             case 0: {
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
-
                 mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
                 String propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
@@ -465,8 +467,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
 
                 Bundle bundle = new Bundle();
-             //   bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                //               bundle.putString("branchLabel", branchLabel);
+                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+                bundle.putString("projectId",projectId);
+                bundle.putString("inspectionId", inspectionId);
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                 bundle.putString("dateInspected", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));

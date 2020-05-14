@@ -216,8 +216,10 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         del_img5 = (ImageView) view.findViewById(R.id.imageView5_del);
         del_img5.setOnClickListener(this);
 
-        if(!globalVariables.photo1.equals(""))
-        cam1.setBackgroundResource(R.drawable.edit_border_solid);
+
+
+         if(!globalVariables.photo1.equals(""))
+            cam1.setBackgroundResource(R.drawable.edit_border_solid);
         if(!globalVariables.photo2.equals(""))
             cam2.setBackgroundResource(R.drawable.edit_border_solid);
         if(!globalVariables.photo3.equals(""))

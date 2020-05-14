@@ -553,12 +553,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateInspection(String projId, String iId, String Notes) {
+    public void updateInspection(String projId, String iId, String Label, String Notes) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NOTE, Notes);
+        contentValues.put(COLUMN_LABEL, Label);
 
 
         db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
@@ -567,6 +568,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void updateMap(String projId, int aId, String image, String Notes) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_NOTES, Notes);
+        contentValues.put(COLUMN_IMG1, image);
+
+
+        db.update(TABLE_MAP, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_A_ID + " = ? " , new String[]{projId, Integer.toString(aId)});
+        db.close();
+
+
+    }
 
 
     public void updateInspectionItem(int projId, int iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
@@ -783,13 +798,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateBranchNote(int projId, int aId, String Note, String photo) {
+    public void updateBranchPhoto(int projId, int aId, String photo) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_IMG1, photo);
-        values.put(COLUMN_NOTES, Note);
+
 
 
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
@@ -1302,8 +1317,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT I." + COLUMN_INSPECTION_DATE + ", I." + COLUMN_INSPECTION_TYPE + ", I." + COLUMN_INSPECTOR
                 + ", I." + COLUMN_INSPECTION_STATUS+ ", I." + COLUMN_DATE_TIME_START+ ", I." + COLUMN_DATE_TIME_FINISH
-                + ", I."+ COLUMN_IMAGE+ ", I."+ COLUMN_NOTE
+                + ", I."+ COLUMN_IMAGE+ ", I."+ COLUMN_NOTE+ ", I."+ COLUMN_LABEL+ ", P."+ COLUMN_ADDRESS_NUMBER
                 + " FROM " + TABLE_INSPECTION + " I "
+                + " JOIN " + TABLE_PROJECT_INFO + " P "
+                + " ON I."+ COLUMN_PROJECT_ID + " =  P."+COLUMN_PROJECT_ID
                 + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId;
 
 
@@ -1322,6 +1339,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_END_DATE_TIME, cursor.getString(5));
                 inspectionItem.put(MyConfig.TAG_IMAGE, cursor.getString(6));
                 inspectionItem.put(MyConfig.TAG_NOTE, cursor.getString(7));
+                inspectionItem.put(MyConfig.TAG_LABEL, cursor.getString(8));
+                inspectionItem.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(9));
+
 
                 inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());
@@ -1908,7 +1928,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public HashMap<String, String> getMapItem(int projID, int aId) {
+    public HashMap<String, String> getMapItem(int projID, int aId, int iId) {
 
 
         HashMap<String, String> SiteMap = new HashMap<String, String>();
@@ -1920,11 +1940,12 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
-                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
-
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES + ", I."+COLUMN_LABEL
                 + " FROM " + TABLE_MAP + " M"
+                + " JOIN " + TABLE_INSPECTION + " I"
+                + " ON M." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
 
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_A_ID + " = " + aId;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_A_ID + " = " + aId+ " AND I." + COLUMN_INSPECTION_ID + " = " + iId;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -1936,11 +1957,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(0))));
                 SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
                 SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(2))));
-                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(3));
+                SiteMap.put("MAP_LABEL", cursor.getString(3));
                 SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(4))));
                 SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(5))));
                 SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(6));
                 SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
+                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(8));
 
 
                 SiteMapArrayList.add(SiteMap);

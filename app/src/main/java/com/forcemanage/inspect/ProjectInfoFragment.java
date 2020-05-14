@@ -118,6 +118,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
               editProject("Project ID",TVprojectID.getText().toString());
             }
         });
+
         projAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

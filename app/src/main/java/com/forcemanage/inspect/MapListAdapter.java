@@ -5,6 +5,9 @@ package com.forcemanage.inspect;
  */
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,23 +83,35 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         holder.content.setText(node.getNodeName());
 
 
+
        int node_branchCat = node.getbranchCat();
 
         switch (node_branchCat){
 
             case 0:{
+
+                holder.content.setTextColor(Color.DKGRAY);
+                holder.content.setTextSize(17);
+
                 if (node.getIsExpanded() == GlobalVariables.TRUE)
                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
                 else
                     holder.arrow.setImageResource(R.drawable.ic_chevron_right);
                 break;
            }
-            case 1: holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
-            break;
-
-            case 2: holder.arrow.setImageResource(R.drawable.ic_note_text);
+            case 1: {
+                holder.content.setTextColor(Color.GRAY);
+                holder.content.setTextSize(17);
+                holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
                 break;
+            }
+            case 2: {
+                holder.content.setTextColor(Color.GRAY);
+                holder.content.setTextSize(17);
+                holder.arrow.setImageResource(R.drawable.ic_note_text);
 
+                break;
+                }
         }
 
 

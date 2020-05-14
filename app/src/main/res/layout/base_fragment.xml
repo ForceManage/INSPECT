@@ -33,18 +33,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/head_frame"
-                    android:paddingBottom="20dp">
+                    android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/page"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="Navigation Mode "
-
+                        android:text="Project Branch "
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="normal|bold" />
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
                  android:text="Item Title:  "
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
+                android:layout_marginBottom="5dp"
                 android:textStyle="normal|bold" />
 
                 <TextView
@@ -73,6 +74,29 @@
                     android:layout_height="0dp"
                     android:orientation="vertical"
                     android:layout_weight="0.7">
+
+                    <TextView
+                        android:id="@+id/Service"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Map branch name:  "
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="normal|bold" />
+
+
+                    <TextView
+                        android:id="@+id/Text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Project Map Branch Name - "
+                        android:textSize="16sp"/>
 
 
 
@@ -108,19 +132,7 @@
                     android:layout_weight="0.1"
                     android:layout_gravity="bottom">
 
-                    <Button
-                        android:id="@+id/btnViewReport"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_gravity="bottom|left"
-                        android:backgroundTint="#0B2459"
-                        android:drawableTint="@color/white"
-                        android:drawableStart="@drawable/ic_format_list_bulleted"
-                        android:drawablePadding="15dp"
-                        android:text="VIEW REPORT"
-                        android:textColor="@android:color/white" />
+
 
                 </FrameLayout>
 

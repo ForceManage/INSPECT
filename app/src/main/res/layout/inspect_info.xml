@@ -46,12 +46,12 @@
                         android:orientation="vertical"
                         android:layout_weight="0.9">
 
-                    <TextView
+                         <TextView
                         android:id="@+id/page"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="Information Branch  "
+                        android:text="Project "
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="normal|bold" />
@@ -75,7 +75,7 @@
                         android:layout_gravity="top"
                         android:paddingTop="6dp"
                         android:paddingLeft="10dp"
-                        android:text="Collated Information  "
+                        android:text="Activity Information  "
                         android:textColor="@android:color/white"
                         android:textStyle="normal" />
 
@@ -93,8 +93,30 @@
 
                 </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/Service"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Activity title:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+                    <TextView
+                        android:id="@+id/Text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Activity Title - Eg. Inspection/audit/test, etc"
+                        android:textSize="16sp"/>
+
                         <TextView
-                            android:id="@+id/Text1"
+                            android:id="@+id/Text2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
@@ -104,7 +126,7 @@
                             android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/Text2"
+                        android:id="@+id/Text3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
@@ -114,7 +136,7 @@
                         android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/Text3"
+                        android:id="@+id/Text4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
@@ -124,7 +146,7 @@
                         android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/Text4"
+                        android:id="@+id/Text5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"

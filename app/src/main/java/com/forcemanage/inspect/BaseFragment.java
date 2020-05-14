@@ -39,6 +39,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     private static final int ACTIVITY_DRAW_FILE = 2;
     private TextView title;
     private TextView branch;
+    private TextView activity;
     private EditText bNote;
     private ImageView photoA;
     private ImageView photo_cam;
@@ -46,12 +47,14 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     private ImageView photo_file;
     private Button reportBtn;
 
-
+    private Boolean Edited = false;
     private String branchHead = "";
     private String branchLabel = "";
     private String branchNote = "";
+    private String inspection;
     private String projectId;
     private String inspectionId;
+    private String image;
     private int aId;
 
 
@@ -62,10 +65,12 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             branchHead = bundle.getString("branchHead");
-            branchLabel = bundle.getString("branchLabel");
+            branchLabel = bundle.getString("MAP_LABEL");
+            inspection = bundle.getString("inspection");
             branchNote = bundle.getString("notes");
             projectId = bundle.getString("projectID");
             inspectionId = bundle.getString("inspectionID");
+            image = bundle.getString("image");
             aId = bundle.getInt("aID");
         }
 
@@ -89,7 +94,15 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "oncreateview: started");
 
         title = (TextView) view.findViewById(R.id.title);
-        branch = (TextView) view.findViewById(R.id.level);
+        activity = (TextView) view.findViewById(R.id.level);
+        branch = (TextView) view.findViewById(R.id.Text1);
+        branch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editLabel("Label",branch.getText().toString());
+            }
+        });
+
         bNote = (EditText) view.findViewById(R.id.note);
         photoA = (ImageView) view.findViewById(R.id.imageView);
         photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
@@ -101,7 +114,6 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
         photo_file.setOnClickListener(this);
 
-        reportBtn = (Button) view.findViewById(R.id.btnViewReport);
 
         setText();
 
@@ -110,27 +122,21 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) globalVariables.Edited = true;
-
             }
         });
 
 
-        if (globalVariables.photoBranch.length() > 12) {
-            String dirName = globalVariables.photoBranch.substring(6, 14);
-            String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
-            Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
-            photoA.setImageBitmap(myBitmap);
-        }
+
 
 
         photo_cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 1;
+                globalVariables.photoframe = 0;
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
                 globalVariables.Edited = true;
+
 
             }
         });
@@ -193,6 +199,17 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
         });
 
+        if (globalVariables.photos[0] == null)
+            globalVariables.photos[0] = "";
+
+        if (globalVariables.photos[0].length() > 12) {
+            String dirName = globalVariables.photos[0].substring(6, 14);
+            String root = Environment.getExternalStorageDirectory().toString();
+            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photos[0]);
+            Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
+            photoA.setImageBitmap(myBitmap);
+        }
+
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,20 +246,14 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         });
 
 
-        reportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                globalVariables.reportMenu();
-            }
-        });
-
-        return view;
+         return view;
     }
 
     private void setText() {
 
         if (!branchHead.equals("")) {
             title.setText(branchHead);
+            activity.setText("Activity title:  "+inspection);
             branch.setText(branchLabel);
             bNote.setText(branchNote);
         }
@@ -254,11 +265,59 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
+    public void editLabel(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText(item);//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        switch (item) {
+
+                            case "Label":{
+                                branchLabel = branchText.getText().toString();
+                                dbHandler.updateBranchLabel(Integer.parseInt(projectId), aId, branchLabel);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (globalVariables.Edited == true) {
+        if (globalVariables.Edited) {
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
@@ -266,13 +325,10 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             // work out the next service date in three months time
 
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "20200101", "",
-                    "", "", "1"
-                    , "reportImage",  globalVariables.photos[0], "", "", "", "",
-                    "", "", "",
-                    "", "", "Img6", " com6", "Img7", "com7", "p", bNote.getText().toString());
+            dbHandler.updateMap(projectId, aId, globalVariables.photos[0], bNote.getText().toString());
 
-            globalVariables.Edited = false;
+
+
 
         }
     }

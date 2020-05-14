@@ -1,7 +1,9 @@
 package com.forcemanage.inspect;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +30,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private static final String TAG = "Project Info Fragment";
 
     private TextView title;
-    private TextView branch;
+    private TextView Label;
     private EditText bNote;
 
     private String branchHead ="";
@@ -52,10 +54,11 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-      //      branchHead = bundle.getString("branchHead");
-      //      branchLabel = bundle.getString("branchLabel");
-      //      branchNote = bundle.getString("notes");
+            branchHead = bundle.getString("branchHead");
+            branchLabel = bundle.getString("branchLabel");
             inspectionDate = bundle.getString("date");
+            projectId = bundle.getString("projectId");
+            inspectionId = bundle.getString("inspectionId");
             note = bundle.getString("note");
             auditor = bundle.getString("auditor");
             typeInspection = bundle.getString("inspectType");
@@ -64,9 +67,6 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             Edited = false;
 
         }
-
-        projectId = globalVariables.projectId;
-        inspectionId = globalVariables.inspectionId;
 
     }
 
@@ -86,27 +86,36 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         Log.d(TAG, "oncreateview: started");
 
-        title = (TextView) view.findViewById(R.id.title);
-        branch = (TextView) view.findViewById(R.id.level);
+        title = (TextView) view.findViewById(R.id.branchTitle);
+ //       branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
-        TextView inspectDate = (TextView) view.findViewById(R.id.Text1);
-        TextView inspectionType = (TextView) view.findViewById(R.id.Text2);
-        TextView inspectedDate = (TextView) view.findViewById(R.id.Text3);
-        TextView inspector = (TextView) view.findViewById(R.id.Text4);
+
+        Label = (TextView) view.findViewById(R.id.Text1);
+        Label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editLabel("Label",Label.getText().toString());
+            }
+        });
+        TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
+        TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
+        TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
+        TextView inspector = (TextView) view.findViewById(R.id.Text5);
         Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
 
-
-        inspectionBtn.setOnClickListener(this);
 
 
          setText();
          if (!endTime.equals("null"))
          endTime = stringdate(endTime,3);
+
          inspectDate.setText("Activity raised:  "+stringdate(inspectionDate,1));
          inspectionType.setText("Type of Activity:  "+typeInspection);
          if(!dateInspected.equals("null"))
          inspectedDate.setText("Activity recorded: "+stringdate(dateInspected,2)+"  -  "+endTime);
+
          inspector.setText("Auditor:  "+ auditor);
+         Label.setText(branchLabel);
          bNote.setText(note);
 
         inspectionBtn.setOnClickListener(new View.OnClickListener() {
@@ -149,9 +158,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         if (!branchHead.equals("")){
            title.setText(branchHead);
-           branch.setText(branchLabel);
-           bNote.setText(branchNote);
-        }
+  //         branch.setText(branchLabel);
+           }
     }
 
 
@@ -211,12 +219,61 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         return date;
     }
 
+
+    public void editLabel(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText(item);//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        switch (item) {
+
+                            case "Label":{
+                                branchLabel = branchText.getText().toString();
+                                dbHandler.updateInspection(projectId, inspectionId, branchLabel, note);
+                                globalVariables.OnSelectionChanged(0);
+                                break;
+                            }
+
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
+
+    }
+
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
 
-        dbHandler.updateInspection(projectId, inspectionId, note);
+        dbHandler.updateInspection(projectId, inspectionId, branchLabel, note);
+
 }
 
     @Override
