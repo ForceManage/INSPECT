@@ -288,7 +288,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
-                                dbHandler.updateBranchLabel(Integer.parseInt(projectId), aId, branchLabel);
+                                dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }

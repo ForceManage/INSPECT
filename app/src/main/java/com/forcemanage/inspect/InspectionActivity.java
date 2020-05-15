@@ -244,8 +244,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 switch (which) {
                     case 0: {
                         logTime = true;
-
-
                         break;
                     }
 
@@ -441,23 +439,19 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             fragmentTransaction.commit();
             FragmentManager fm = getSupportFragmentManager();
 
-
             //fm.popBackStack(DF,0);
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStackImmediate();
             }
 
-
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
 
             GlobalVariables.modified = false;
 
             OnSelectionChanged(GlobalVariables.pos);
-
         }
 
-
+/*
         try {
             if (FragDisplay == "BaseFragment") {
                 fragment_obj = (BaseFragment) getSupportFragmentManager().findFragmentByTag("BaseFragment");
@@ -493,6 +487,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         }
 
         if (Edited == true) saveInspectionItem();
+
+ */
 
         aID = detailFragment.aID;
 
@@ -621,7 +617,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public void editLocation(String branchLabel) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        dbHandler.updateBranchLabel(projId, aID, branchLabel);
+        dbHandler.updateMapLabel(projId, aID, branchLabel);
         loadMap();
     }
 
@@ -761,12 +757,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
                 photos[0] = list.get(MyConfig.TAG_IMAGE1);
-
+                photo1 = photos[0];
 
                 //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
                 String tag = list.get(MyConfig.TAG_IMAGE1);
 
-                photo1 = photos[0];
+
 
                 break;
 

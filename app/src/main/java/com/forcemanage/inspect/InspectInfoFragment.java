@@ -1,24 +1,29 @@
 package com.forcemanage.inspect;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +37,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private TextView title;
     private TextView Label;
     private EditText bNote;
-
+    private ImageView mPhotoImageView;
+    private ImageView photo_cam;
+    private ImageView info_file;
     private String branchHead ="";
     private String branchLabel = "";
     private String branchNote = "";
@@ -45,6 +52,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String inspectionId;
     private String dateInspected;
     private String endTime;
+    private Button reportBtn;
 
 
 
@@ -102,14 +110,68 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
         TextView inspector = (TextView) view.findViewById(R.id.Text5);
         Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
+        Button reportBtn = (Button) view.findViewById(R.id.btnViewReport);
+        reportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.reportMenu();
+            }
+        });
 
+        mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
+        photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
+        photo_cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 globalVariables.mPhotoImageView = mPhotoImageView;
+                 globalVariables.takeImageFromCamera(null);
+
+             }
+        });
+
+        info_file = (ImageView) view.findViewById(R.id.imageView_info);
+        info_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String root = Environment.getExternalStorageDirectory().getPath();
+                File propImage = new File(root + "/" + projectId + "INFO/");
+                //  File propImage = new File(root, propId+"INFO/");
+                //  File propImage = new File(root, "ESM/test.jpg");
+                //  String dir = propId+"INFO/";
+                //  File propImage = new File(root);
+                Intent galleryIntent = new Intent(Intent.ACTION_VIEW);
+
+                Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", propImage);
+                // Uri data = Uri.parse(propImage.getAbsolutePath());
+                galleryIntent.setDataAndType(data, "*/*");
+
+                // galleryIntent.setDataAndType(Uri.withAppendedPath(Uri.fromFile(propImage) ,dir),"image/*" );
+                // galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                // galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                try {
+
+                    //    startActivityForResult(Intent.createChooser(galleryIntent, "SELECT FILE"), REQUEST_OPEN_RESULT_CODE);
+                    //  startActivity(galleryIntent);
+                    startActivity(Intent.createChooser(galleryIntent, "OPEN"));
+                    // startActivity(galleryIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("tag", "Exception found while listing " + e);
+
+
+                }
+
+            }
+        });
 
 
          setText();
          if (!endTime.equals("null"))
          endTime = stringdate(endTime,3);
 
-         inspectDate.setText("Activity raised:  "+stringdate(inspectionDate,1));
+         inspectDate.setText("Activity created:  "+stringdate(inspectionDate,1));
          inspectionType.setText("Type of Activity:  "+typeInspection);
          if(!dateInspected.equals("null"))
          inspectedDate.setText("Activity recorded: "+stringdate(dateInspected,2)+"  -  "+endTime);
@@ -117,6 +179,18 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
          inspector.setText("Auditor:  "+ auditor);
          Label.setText(branchLabel);
          bNote.setText(note);
+
+
+        if (globalVariables.propPhoto == null)
+            globalVariables.propPhoto = "";
+
+        if (globalVariables.propPhoto.length() > 12) {
+            String dirName = globalVariables.propPhoto.substring(6, 14);
+            String root = Environment.getExternalStorageDirectory().toString();
+            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.propPhoto);
+            Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
+            mPhotoImageView.setImageBitmap(myBitmap);
+        }
 
         inspectionBtn.setOnClickListener(new View.OnClickListener() {
             @Override

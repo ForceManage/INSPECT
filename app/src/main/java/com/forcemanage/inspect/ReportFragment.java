@@ -25,7 +25,8 @@ import java.util.List;
 
 public class ReportFragment extends Fragment {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
+
 
     private static final String TAG = "Report Fragment";
     private RecyclerView recyclerView;
@@ -49,7 +50,8 @@ public class ReportFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+
+       globalVariables = (MainActivity) getActivity();
     }
 
     @Override

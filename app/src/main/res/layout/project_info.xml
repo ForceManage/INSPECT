@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
+
+
+
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="@drawable/image_border"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+             >
 
-
-            <ScrollView
-
-                android:id="@+id/scroll_view1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.05"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/image_border"
                     android:orientation="vertical"
-                    android:layout_weight="0.2">
+                    >
 
 
                 <LinearLayout
@@ -72,158 +71,214 @@
 
 
 
-                        <TextView
-                            android:id="@+id/Service"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:layout_marginTop="25dp"
-                            android:text="Project:  "
-                            android:textColor="@android:color/black"
-                            android:textStyle="normal|bold" />
+                <TextView
+                    android:id="@+id/Service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="25dp"
+                    android:text="Project:  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal|bold" />
 
 
-                    <TextView
-                        android:id="@+id/Text1"
+                <TextView
+                    android:id="@+id/Text1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:hint="Project Title - Eg. Project Address/Project name/ etc"
+                    android:textSize="16sp"/>
+
+
+
+                <TextView
+                    android:id="@+id/Text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Info. 1  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 2  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Building Class:  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 3  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 4  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 5  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 6  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/Text9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Project Info. 7  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/notetitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Notes:  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal|bold" />
+
+
+
+                <EditText
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:hint="Author notes (text not printed)"
+                    android:textColor="@color/cardview_shadow_start_color"
+                    android:textSize="16sp"/>
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/edit_border"
+                android:orientation="vertical"
+                >
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="10dp"
-                        android:hint="Project Title - Eg. Project Address/Project name/ etc"
-                        android:textSize="16sp"/>
+                        >
 
+                        <ImageView
+                            android:id="@+id/imageView_cam"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="bottom|left"
+                            android:layout_marginTop="10dp"
+                            android:saveEnabled="false"
+                            app:srcCompat="@android:drawable/ic_menu_camera" />
 
-
-                    <TextView
-                        android:id="@+id/Text2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Project Info. 1  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 2  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Building Class:  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 3  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 4  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 5  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 6  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/Text9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Project Info. 7  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal" />
-
-
-                    <TextView
-                        android:id="@+id/notetitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="10dp"
-                        android:text="Notes:  "
-                        android:textColor="@android:color/black"
-                        android:textStyle="normal|bold" />
-
-
-
-                    <EditText
-                        android:id="@+id/note"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="10dp"
-                        android:hint="Author notes (text not printed)"
-                        android:textColor="@color/cardview_shadow_start_color"
-                        android:textSize="16sp"/>
-
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
+                        <ImageView
+                            android:id="@+id/imageView_info"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginTop="10dp"
+                            android:saveEnabled="false"
+                            app:srcCompat="@android:drawable/ic_menu_info_details" />
+                    </FrameLayout>
 
                 </LinearLayout>
 
-            </ScrollView>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:baselineAlignBottom="true"
+                        android:cropToPadding="false"
+                        android:layout_marginTop="5dp"
+                        android:padding="3dp"
+                        app:srcCompat="@drawable/ic_camera"
+                        ></ImageView>
 
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="bottom">
+                </FrameLayout>
 
-
-            </FrameLayout>
-
-
-
+            </LinearLayout>
 
 
     </LinearLayout>
@@ -232,3 +287,5 @@
 
 
 </RelativeLayout>
+
+

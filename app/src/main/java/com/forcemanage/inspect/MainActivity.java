@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -19,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,23 +116,28 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private ListView listView;
     private CheckBox checkBox;
     private Switch ToggleTB;
-    private ImageView mPhotoImageView;
+    public ImageView mPhotoImageView;
     private ImageView info_icon;
     private ImageView photo_cam;
     private File photo;
     private String dirName;
     public String inspectionId;
     public String projectId;
+    private int projId;
+    private int iId;
     private String fname;
     private String cat;
     private List<MapViewData> listItems;
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
     private static final int ACTIVITY_START_CAMERA_APP = 0;
+    private static final int PICK_CONTACT = 3;
     private RecyclerView recyclerView;
   //  private List<Joblistdata> jobList;
     private String FragDisplay;
     private Fragment fragment_obj;
+    public ArrayList reportlistItems;
+    public String propPhoto;
 
 
     AmazonS3 s3Client;
@@ -151,16 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         setContentView(R.layout.activity_main);
         ESMdb = new DBHandler(this, null, null, 1);
 
-        //prop_name = (textView) findViewById(R.id.textView4);
-// Spinner element
         Spinner spinInspector = (Spinner) findViewById(R.id.spinnerInspectorID);
 
-        // Spinner click listener
-        // spinInspector.setOnClickListener(this);
 
-        // Spinner Drop down elements
-
-        // callback method to call credentialsProvider method.
         s3credentialsProvider();
 
         // callback method to call the setTransferUtility method
@@ -168,11 +168,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
-
-
-        //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
-        //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
-
 
         init();
 
@@ -220,14 +215,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .add(R.id.fragment_container, treeFragment)
                     .commit();
 
-
-
         }
 
 
         List<String> inspectors = new ArrayList<String>();
         inspectors.add("AP");
-        inspectors.add("NP");
+  //      inspectors.add("NP");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, inspectors);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -256,10 +249,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         btnAddActivity = (Button) findViewById(R.id.addProject);
         btnAddActivity.setOnClickListener(this);
    //     buttonLoadNotes.setOnClickListener(this);
-        info_icon = (ImageView) findViewById(R.id.imageView_info);
-        info_icon.setOnClickListener(this);
-        photo_cam =(ImageView) findViewById(R.id.imageView_cam);
-        photo_cam.setOnClickListener(this);
+ //       info_icon = (ImageView) findViewById(R.id.imageView_info);
+  //      info_icon.setOnClickListener(this);
+  //      photo_cam =(ImageView) findViewById(R.id.imageView_cam);
+  //      photo_cam.setOnClickListener(this);
         buttonClearAll.setEnabled(false);
         // listView = (ListView)findViewById(R.id.lstMain);
 
@@ -378,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
         inspectionId = Integer.toString(node.getiID());
+        projId = node.getprojId();
+        iId = node.getiID();
 
 
         TextView projlist = (TextView) findViewById(R.id.ProjectList);
@@ -393,10 +388,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
-                mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                String propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
+  //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
-                if(propPhoto.length() > 14)
+/*                if(propPhoto.length() > 14)
                 {
                     dirName = propPhoto.substring(6, 14);
                     root = Environment.getExternalStorageDirectory().toString();
@@ -412,6 +407,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     Integer draw = android.R.drawable.ic_menu_camera;
                     mPhotoImageView.setImageDrawable(getDrawable(draw));
                 }
+
+ */
 
 
                 Bundle bundle = new Bundle();
@@ -436,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
                 fragment.setArguments(bundle);
-                fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+    //            fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 break;
             }
 
@@ -446,10 +443,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
 
-                mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                String propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+ //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                 propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
 
-                if(propPhoto.length() > 14)
+ /*               if(propPhoto.length() > 14)
                 {
                     dirName = propPhoto.substring(6, 14);
                     root = Environment.getExternalStorageDirectory().toString();
@@ -465,6 +462,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     Integer draw = android.R.drawable.ic_menu_camera;
                     mPhotoImageView.setImageDrawable(getDrawable(draw));
                 }
+
+  */
 
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
@@ -784,8 +783,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (v == photo_cam) {
 
-            mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-            takeImageFromCamera(null);
+
 
         }
 
@@ -829,7 +827,129 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
+    public void reportMenu() {
 
+
+
+        // setup the alert builder
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Choose an action");
+        // add a list
+        String[] actions = {"Compile and review the inspection report.",
+                "Compile and email report to user",
+                "Compile and email report to Contact List entity",
+                "Compile inspection certificate",
+                "Cancel this operation."};
+        builder.setItems(actions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("projectId", projId);
+                        bundle.putInt("iId", iId);
+
+                        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iId);
+
+                        //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
+                        //     recyclerView.setHasFixedSize(true);
+                        //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+                        reportlistItems = new ArrayList<>();
+                        ReportItem listItem;
+
+                        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
+                            listItem = new ReportItem(
+                                    listItemsmap.get(i).get("BranchHead"),
+                                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
+                                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
+                                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
+                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
+                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL)
+
+
+                            );
+
+                            reportlistItems.add(listItem);
+
+                            Log.v("report list", listItemsmap.get(i).get("BranchHead")+", ");
+                        }
+
+                        ReportFragment fragment = new ReportFragment();
+                        fragment.setArguments(bundle);
+                        doFragmentTransaction(fragment, "ReportFragment", false, "");
+                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
+
+
+                        break;
+                    }
+                    case 1: {
+
+                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                        startActivityForResult(intentContact, PICK_CONTACT);
+
+                        break;
+
+                    } //
+                    case 2: {
+
+               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
+
+
+
+
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                         deleteInspectionItem();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+                */
+                        break;
+                    }
+
+                }
+                //end of case 0
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+    }
 
 
 
@@ -893,7 +1013,94 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             photo.delete();
 
         }
+
+
+
+        if (requestCode == PICK_CONTACT) {
+
+            final String emailAdress;
+            emailAdress = getContactInfo(data);
+
+
+            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+            View promptView = layoutInflater.inflate(R.layout.email_accept, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertDialogBuilder.setView(promptView);
+            final TextView locationText = (TextView) promptView.findViewById(R.id.email);
+            locationText.setText(emailAdress);//location.getText().toString());
+
+            alertDialogBuilder.setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            class Send_Report extends AsyncTask<Void, Void, Void> {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    RequestHandler_ rh = new RequestHandler_();
+                                    rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+                                    return null;
+                                }
+
+                            }
+                            Send_Report rep = new Send_Report();
+                            rep.execute();
+                        }
+                    })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create an alert dialog
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+
+
+
+        }
+
     }
+
+    protected String getContactInfo(Intent data)
+    {
+
+        Cursor cursor = null;
+        String email = "", name = "";
+        try {
+            Uri result = data.getData();
+            Log.v(" Email", "Got a contact result: " + result.toString());
+
+            // get the contact id from the Uri
+            String id = result.getLastPathSegment();
+
+            // query for everything email
+            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,  null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id }, null);
+
+            int nameId = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+            int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+
+            // let's just get the first email
+            if (cursor.moveToFirst()) {
+                email = cursor.getString(emailIdx);
+                name = cursor.getString(nameId);
+                Log.v(" Email", "Got email: " + email);
+            } else {
+                Log.w(" Email", "No results");
+            }
+        } catch (Exception e) {
+            Log.e(" Email", "Failed to get email data", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+
+
+        }
+        return email;
+    }//getContactInfo
 
     File createPhotoFile()throws IOException {
 
@@ -2220,7 +2427,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void upLoadPhotos(View view) {
 
 
-
         // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
         //    getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
 
@@ -2228,8 +2434,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
-        DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+        ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos();
+        ArrayList<HashMap<String, String>> actionlist = dbHandler.getActionPhotos();
+
 
         String photo_name;
         root = Environment.getExternalStorageDirectory().toString();
@@ -2255,10 +2463,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE4);
             if(!photo_name.equals("photo4")) uploadFileToS3(view, photo_name);
 
-            photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE);
+            photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE5);
             if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
 
-            photo_name = photolist.get(i).get("ActionImage");
+            i++;
+        }
+
+        i = 0;
+
+        while (i  < inspectphotolist.size() ) {   //photolist.size()
+
+             photo_name = inspectphotolist.get(i).get(MyConfig.TAG_IMAGE);
+            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
+
+              i++;
+        }
+
+        i = 0;
+
+        while (i  < actionlist.size() ) {   //photolist.size()
+
+            photo_name = actionlist.get(i).get("ActionImage");
             if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
 
             i++;

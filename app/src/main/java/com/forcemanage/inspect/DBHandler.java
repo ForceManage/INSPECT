@@ -781,7 +781,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateBranchLabel(int projId, int aId, String label) {
+    public void updateMapLabel(int projId, int aId, String label) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -1532,45 +1532,25 @@ public class DBHandler extends SQLiteOpenHelper {
         photoArrayList = new ArrayList<HashMap<String, String>>();
 
         String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
-                +", E."+COLUMN_IMAGE+", A."+COLUMN_IMG1
-
 
                 + " FROM " + TABLE_INSPECTION_ITEM +" I "
-                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
-                + " JOIN " + TABLE_ACTION_ITEM+ " A ON A." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
-                + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
+ //               + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
+                + " WHERE I." + COLUMN_ITEM_STATUS + " = 'p'";
 
-   /*     String selectQuery = "SELECT "+
-                TABLE_ESM_INSPECTION+"."+COLUMN_JOB_ID+", "+COLUMN_IMG1+", "+
-                COLUMN_IMG2+", "+COLUMN_IMG3+", "+COLUMN_IMG4+", "+COLUMN_IMG5
-                +" FROM "+TABLE_ESM_INSPECTION
-                +" INNER JOIN "+TABLE_ESM_INSPECTION_ITEM
-                +" ON "+TABLE_ESM_INSPECTION+"."+COLUMN_JOB_ID+" = "+TABLE_ESM_INSPECTION_ITEM+"."+COLUMN_JOB_ID
-                +" WHERE "+COLUMN_ESM_INSPECTION_STATUS+" = 'c' OR "+COLUMN_ESM_INSPECTION_STATUS+" = 'p'";
-*/
+
 
         // Open a database for reading and writing
 
         SQLiteDatabase database = this.getWritableDatabase();
 
-        // Cursor provides read and write access for the
-        // data returned from a database query
-
-        // rawQuery executes the query and returns the result as a Cursor
-
         Cursor cursor = database.rawQuery(selectQuery, null);
+
 
         // Move to the first row
 
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> photoMap = new HashMap<String, String>();
-
-                // Store the key / value pairs in a HashMap
-                // Access the Cursor data by index that is in the same order
-                // as query
-
-
                 if (cursor.getString(0) != "")
                     photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
                 if (cursor.getString(1) != "")
@@ -1581,20 +1561,107 @@ public class DBHandler extends SQLiteOpenHelper {
                     photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
                 if (cursor.getString(4) != "")
                     photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
-                if (cursor.getString(5) != "")
-                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(5));
-                if (cursor.getString(6) != "")
-                    photoMap.put("ActionImage", cursor.getString(6));
 
                 photoArrayList.add(photoMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
         }
         cursor.close();
+
         database.close();
         // return contact list
         return photoArrayList;
     }
 
+
+    public ArrayList<HashMap<String, String>> getInspectionPhotos() {
+
+        // ArrayList that contains every row in the database
+        // and each row key / value stored in a HashMap
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        String selectQuery = "SELECT E." + COLUMN_IMAGE
+                + " FROM " + TABLE_INSPECTION +" E "
+                + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
+
+
+
+        // Open a database for reading and writing
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+
+        // Move to the first row
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+
+
+    public ArrayList<HashMap<String, String>> getActionPhotos() {
+
+        // ArrayList that contains every row in the database
+        // and each row key / value stored in a HashMap
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+
+
+
+        String selectQuery = "SELECT A." + COLUMN_IMG1
+
+                + " FROM " + TABLE_ACTION_ITEM +" A ";
+      //          + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = A." + COLUMN_PROJECT_ID
+      //          + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
+
+
+
+        // Open a database for reading and writing
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+
+
+
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+                if (cursor.getString(0) != "")
+                    photoMap.put("ActionImage", cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
 
     //Select inspection items for syncing to server
     public ArrayList<HashMap<String, String>> getInspections() {

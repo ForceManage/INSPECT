@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    tools:context="com.forcemanage.inspect.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="0dp"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:background="@drawable/image_border"
+            android:layout_weight="0.25"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnDownloadJobs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#0B2459"
+                    android:text="Download"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_cloud_download_outline"
+                    />
+
+
+                <Button
+                    android:id="@+id/btnSyncAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#0B2459"
+                    android:text="Upload"
+                    android:textSize="11sp"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:drawableStart="@drawable/ic_cloud_upload_outline"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <Switch
+                    android:id="@+id/switch2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:text="TABLET" />
+
+                <TextView
+                    android:id="@+id/inspectorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="Author"
+                         />
+
+                <Spinner
+                    android:id="@+id/spinnerInspectorID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/ProjectList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Projects"
+                />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:layout_weight="0.5"
+                android:paddingTop="10dp"
+                android:orientation="horizontal">
+
+
+                <fragment
+                    android:id="@+id/tree_fragment"
+                    android:name="com.forcemanage.inspect.MapViewFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <fragment
+                    android:id="@+id/detail_text"
+                    android:name="com.forcemanage.inspect.DetailFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
+
+
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <Button
+                    android:id="@+id/addProject"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="Add"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_text_box_plus_outline"
+
+                    />
+
+                <Button
+                    android:id="@+id/btnloadJobs"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="List"
+                    android:textSize="11sp"
+                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                     />
+
+            </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <ProgressBar
+                        android:id="@+id/progressBar1"
+                        style="?android:progressBarStyleHorizontal"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:progress="100"
+                        android:progressDrawable="@drawable/circle" />
+
+                    <Button
+                        android:id="@+id/btnClearData"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@android:color/holo_orange_dark"
+                        android:enabled="false"
+                        android:text="@string/clear_tablet_data"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/mainfragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:paddingLeft="5dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
