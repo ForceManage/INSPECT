@@ -121,7 +121,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) globalVariables.Edited = true;
+                if (hasFocus) Edited = true;
             }
         });
 
@@ -135,7 +135,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 globalVariables.photoframe = 0;
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
+
 
 
             }
@@ -144,8 +144,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         photo_draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!globalVariables.photo1.equals("")) {
-                    String dirName = globalVariables.photo1.substring(6, 14);
+                if (!globalVariables.photoBranch.equals("")) {
+                    String dirName = globalVariables.photoBranch.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
                     File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
 
@@ -199,13 +199,13 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
         });
 
-        if (globalVariables.photos[0] == null)
-            globalVariables.photos[0] = "";
+        if (globalVariables.photoBranch == null)
+            globalVariables.photoBranch = "";
 
-        if (globalVariables.photos[0].length() > 12) {
-            String dirName = globalVariables.photos[0].substring(6, 14);
+        if (globalVariables.photoBranch.length() > 12) {
+            String dirName = globalVariables.photoBranch.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photos[0]);
+            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             photoA.setImageBitmap(myBitmap);
         }
@@ -317,7 +317,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
 
-        if (globalVariables.Edited) {
+        if (Edited) {
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
@@ -325,7 +325,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             // work out the next service date in three months time
 
 
-            dbHandler.updateMap(projectId, aId, globalVariables.photos[0], bNote.getText().toString());
+            dbHandler.updateMap(projectId, aId, bNote.getText().toString());
 
 
 

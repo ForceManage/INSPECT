@@ -109,6 +109,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String projectId;
     private String inspectionId;
     private int aId;
+    private int projId;
+    private int iId;
 
 
     @Override
@@ -160,6 +162,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
         Log.d(TAG, "oncreateview: started");
+
+        projId = Integer.parseInt(projectId);
+        iId= Integer.parseInt(inspectionId);
 
         title = (TextView) view.findViewById(R.id.branchTitle);
         branch = (TextView) view.findViewById(R.id.branchName);
@@ -277,7 +282,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 1;
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
                 cam1.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
@@ -289,7 +293,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 2;
                 globalVariables.mPhotoImageView = photoB;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
                 cam2.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
@@ -301,7 +304,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 3;
                 globalVariables.mPhotoImageView = photoC;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
                 cam3.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
@@ -313,7 +315,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 4;
                 globalVariables.mPhotoImageView = photoD;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
                 cam4.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
@@ -325,7 +326,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 5;
                 globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
                 cam5.setBackgroundResource(R.drawable.edit_border_solid);
 
             }
@@ -338,17 +338,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 if(!globalVariables.photo1.equals("")) {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
+               //     File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
 
 
                     Intent galleryIntent = new Intent();
                     galleryIntent.setAction(Intent.ACTION_VIEW);
 
-
-                    Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", photo_image);
+              //      Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", photo_image);
                     // Uri data = Uri.parse(photo_image.getAbsolutePath());
 
-                    galleryIntent.setDataAndType(data, "image/*");
+                    galleryIntent.setType("image/*");
                     startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
                 }
 
@@ -361,7 +360,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 1;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -390,10 +388,54 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 2;
-                globalVariables.mPhotoImageView = photoB;
-                globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
+
+
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+              //   galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                 galleryIntent.setAction(Intent.ACTION_VIEW);
+              //  galleryIntent.setAction(Intent.ACTION_EDIT);
+               // galleryIntent.setAction(Intent.ACTION_PICK);
+             //   galleryIntent.setType("image/*");
+              //     String[] mimetypes = {"image/*"};
+               //    galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                try {
+                    String dirName = globalVariables.photo2.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo2);//+ photos[0]
+
+
+                galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+                  //  galleryIntent.setData(data);
+                  //  String[] mimeTypes = {"image/jpeg", "image/png"};
+
+               //  galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+               // galleryIntent.putExtra(galleryIntent.ACTION_EDIT,mimeTypes);
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
+
+
+               // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
+               //  startActivityForResult(new Intent(galleryIntent.ACTION_VIEW, Uri.parse(root + "/ESM_" + dirName + "/"+ globalVariables.photos[1])));
+
+               //  startActivityForResult(galleryIntent, ACTIVITY_DRAW_FILE);
+               // globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+
+
+
+                // galleryIntent.setDataAndType(Uri.withAppendedPath(Uri.fromFile(propImage) ,dir),"image/*" );
+
+
+
+
+
             }
         });
 
@@ -401,7 +443,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 2;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -435,11 +476,13 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                globalVariables.Edited = true;
+                                DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
                                 com2Text.setText("");
                                 globalVariables.photo2 ="";
+                                Edited = true;
                                 photoB.setImageResource(R.drawable.ic_camera);
-
+                                dbHandler.updateInspectionItemPhoto(projId,iId,aId,globalVariables.photo1,"",globalVariables.photo3,
+                                                                    globalVariables.photo4, globalVariables.photo5,"Img6", "Img7");
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
                                 break;
@@ -456,10 +499,22 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 3;
-                globalVariables.mPhotoImageView = photoC;
-                globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                String dirName = globalVariables.photo3.substring(6, 14);
+                String root = Environment.getExternalStorageDirectory().toString();
+                File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo3 );//+ photos[0]
+                galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
 
             }
         });
@@ -468,7 +523,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 3;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -502,8 +556,11 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                globalVariables.Edited = true;
-                                com3Text.setText("");
+                                DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+                                dbHandler.updateInspectionItemPhoto(projId,iId,aId,globalVariables.photo1,globalVariables.photo2,"",
+                                        globalVariables.photo4, globalVariables.photo5,"Img6", "Img7");
+                               com3Text.setText("");
                                 globalVariables.photo3 ="";
                                 photoC.setImageResource(R.drawable.ic_camera);
 
@@ -523,11 +580,22 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 4;
-                globalVariables.mPhotoImageView = photoD;
-                globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                String dirName = globalVariables.photo4.substring(6, 14);
+                String root = Environment.getExternalStorageDirectory().toString();
+                File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo4 );//+ photos[0]
+                galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
+
+                Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
             }
         });
 
@@ -535,7 +603,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 4;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -569,7 +636,10 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                globalVariables.Edited = true;
+                                DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+                                dbHandler.updateInspectionItemPhoto(projId,iId,aId,globalVariables.photo1,globalVariables.photo2,
+                                        globalVariables.photo3,"", globalVariables.photo5,"Img6", "Img7");
                                 com4Text.setText("");
                                 globalVariables.photo4 ="";
                                 photoD.setImageResource(R.drawable.ic_camera);
@@ -590,11 +660,22 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 5;
-                globalVariables.mPhotoImageView = photoE;
-                globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                String dirName = globalVariables.photo5.substring(6, 14);
+                String root = Environment.getExternalStorageDirectory().toString();
+                File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo5 );//+ photos[0]
+                galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
+
+                Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
             }
         });
 
@@ -602,7 +683,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 5;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -636,7 +716,10 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                globalVariables.Edited = true;
+                                DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+                                dbHandler.updateInspectionItemPhoto(projId,iId,aId,globalVariables.photo1,globalVariables.photo2,
+                                        globalVariables.photo3, globalVariables.photo4,"","Img6", "Img7");
                                 com5Text.setText("");
                                 globalVariables.photo5 ="";
                                 photoE.setImageResource(R.drawable.ic_camera);
@@ -657,7 +740,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         ServiceCont.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
 
             }
@@ -666,7 +749,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         RelevantInfo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -674,7 +757,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
          Overview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus) globalVariables.Edited = true;
+                    if(hasFocus) Edited = true;
 
                 }
             });
@@ -682,7 +765,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com1Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -690,7 +773,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com2Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -698,7 +781,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com3Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -706,7 +789,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com4Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -714,7 +797,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com5Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -723,7 +806,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         notes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -814,12 +897,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
         }//End of loop
 
-        reportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            globalVariables.reportMenu();
-            }
-        });
 
         return view;
     }
@@ -884,7 +961,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
 
-       if(globalVariables.Edited == true){
+       if(Edited){
 
            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
@@ -894,11 +971,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
                dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
-                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage", globalVariables.photos[0],
-                       com1, globalVariables.photos[1], com2, globalVariables.photos[2],com3, globalVariables.photos[3], com4, globalVariables.photos[4],
-                       com5, "Img6", " com6", "Img7", "com7", "p", notes.getText().toString());
+                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage",
+                       com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
+                       ,  com4Text.getText().toString(),
+                       com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
 
-               globalVariables.Edited = false;
+               Edited = false;
 
 
 

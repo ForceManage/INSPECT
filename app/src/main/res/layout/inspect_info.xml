@@ -34,6 +34,7 @@
                     android:layout_weight="0.2">
 
 
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -88,13 +89,7 @@
                     </LinearLayout>
 
 
-                    <ScrollView
 
-                        android:id="@+id/scroll_view1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.05"
-                        android:fillViewport="true">
 
 
                     <TextView
@@ -183,10 +178,30 @@
                         android:hint="Author notes (text not printed)"
                         android:textSize="16sp"/>
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom">
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+
+                        >
+
+
+                         <Button
+                            android:id="@+id/btnViewReport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="20dp"
+                            android:backgroundTint="#008577"
+                            android:layout_gravity="bottom|left"
+                            android:drawableTint="@color/white"
+                            android:drawableStart="@drawable/ic_format_list_bulleted"
+                            android:drawablePadding="5dp"
+                            android:text="VIEW REPORT"
+                            android:textSize="15sp"
+                            android:textColor="@android:color/white" />
 
 
                         <Button
@@ -196,39 +211,20 @@
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="20dp"
+                            android:layout_gravity="bottom|right"
                             android:paddingLeft="10dp"
                             android:backgroundTint="#0B2459"
-                            android:layout_gravity="bottom|right"
                             android:drawableTint="@color/white"
                             android:textColor="@color/white"
                             android:drawablePadding="5dp"
-                            android:text=" CONDUCT ACTIVITY"
+                            android:text="VIEW ACTIVITY"
                             android:textSize="15sp"
                             android:drawableStart="@drawable/ic_chevron_right_box"/>
 
 
-                        <Button
-                            android:id="@+id/btnViewReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="20dp"
-                            android:layout_gravity="bottom|left"
-                            android:backgroundTint="#008577"
-                            android:drawableTint="@color/white"
-                            android:drawableStart="@drawable/ic_format_list_bulleted"
-                            android:drawablePadding="5dp"
-                            android:text="VIEW REPORT"
-                            android:textSize="15sp"
-                            android:textColor="@android:color/white" />
+                    </LinearLayout>
 
 
-
-
-                    </FrameLayout>
-
-
-                    </ScrollView>
 
 
                 </LinearLayout>
@@ -256,6 +252,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#0B2459"
                         >
 
                         <ImageView

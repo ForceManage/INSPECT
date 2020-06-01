@@ -231,7 +231,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private void setText(){
 
         if (!branchHead.equals("")){
-           title.setText(branchHead);
+           title.setText("Project ID:  "+branchHead);
   //         branch.setText(branchLabel);
            }
     }
@@ -301,9 +301,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
+        itemTitle.setText("Activity Information ");//Integer.parseInt(locationId)
         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-        locationText.setText(item);//Integer.parseInt(locationId)
+        locationText.setText("Activity Title");//Integer.parseInt(locationId)
         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
         branchText.setHint(value);
         // setup a dialog window

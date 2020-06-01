@@ -73,8 +73,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
     public ImageView mPhotoImageView;
-    public String photoBranch = "";
-    public String photo1 = "";
+    public String photoBranch;
+    public String photo1;
     public String photo2;
     public String photo3;
     public String photo4;
@@ -451,44 +451,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             OnSelectionChanged(GlobalVariables.pos);
         }
 
-/*
-        try {
-            if (FragDisplay == "BaseFragment") {
-                fragment_obj = (BaseFragment) getSupportFragmentManager().findFragmentByTag("BaseFragment");
-                branchNote = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
-                //     Toast.makeText(this, "BranchNote from Inspection Acvtivity: " + branchNote, Toast.LENGTH_SHORT).show();
-            }
-            if (FragDisplay == "InspectionFragment") {
-                fragment_obj = (InspectionFragment) getSupportFragmentManager().findFragmentByTag("InspectionFragment");
-                com1 = ((TextView) fragment_obj.getView().findViewById(R.id.com1)).getText().toString();
-                com2 = ((TextView) fragment_obj.getView().findViewById(R.id.com2)).getText().toString();
-                com3 = ((TextView) fragment_obj.getView().findViewById(R.id.com3)).getText().toString();
-                com4 = ((TextView) fragment_obj.getView().findViewById(R.id.com4)).getText().toString();
-                com5 = ((TextView) fragment_obj.getView().findViewById(R.id.com5)).getText().toString();
-                aProvider = ((TextView) fragment_obj.getView().findViewById(R.id.textServicedBy)).getText().toString();
-                Overview = ((TextView) fragment_obj.getView().findViewById(R.id.Overview)).getText().toString();
-                relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.RelevantInfo)).getText().toString();
-                Notes = ((TextView) fragment_obj.getView().findViewById(R.id.note)).getText().toString();
 
-                //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
-            }
-
-            if (FragDisplay == "ActionItemFragment") {
-                fragment_obj = (ActionItemFragment) getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
-                Overview = ((TextView) fragment_obj.getView().findViewById(R.id.desc)).getText().toString();
-                com1 = ((TextView) fragment_obj.getView().findViewById(R.id.scope)).getText().toString();
-                relevantInfo = ((TextView) fragment_obj.getView().findViewById(R.id.perform)).getText().toString();
-                Notes = ((TextView) fragment_obj.getView().findViewById(R.id.notes)).getText().toString();
-
-                //    Toast.makeText(this, "Provider and Overview: " + aProvider+" , "+Overview, Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            System.out.println("Something went wrong.");
-        }
-
-        if (Edited == true) saveInspectionItem();
-
- */
 
         aID = detailFragment.aID;
 
@@ -523,15 +486,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
         if (FragDisplay == "InspectionFragment") {
-            dbHandler.updateInspectionItem(projId, iID, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
-                    , "reportImage", photo1, com1, photo2, com2, photo3, com3, photo4, com4,
-                    photo5, com5, "Img6", " com6", "Img7", "com7", ItemStatus, Notes);
+            dbHandler.updateInspectionItemPhoto(projId, iID, aID, photo1, photo2, photo3,photo4,
+                    photo5, "Img6", "Img7");
 
         }
 
         if (FragDisplay == "ActionItemFragment") {
-            dbHandler.updateActionItem(projectId, inspectionId, aID, date, Overview, aProvider, relevantInfo, ServiceLevel
-                    , photo1, com1, ItemStatus, Notes);
+            dbHandler.updateActionItemPhoto(projectId, inspectionId, aID,  photo1);
 
         }
 
@@ -663,10 +624,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                 doFragmentTransaction(fragment, "BaseFragment", false, "");
 
-                photo1 = photoBranch;
-                photos[0] = photoBranch;
-
-                break;
+                 break;
             }
             case 1: {
 
@@ -702,12 +660,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 bundle.putString("com4", com4);
                 bundle.putString("com5", com5);
 
-                InspectionFragment fragment = new InspectionFragment();
-                fragment.setArguments(bundle);
-
-                doFragmentTransaction(fragment, "InspectionFragment", false, "");
-
-                int itemNos = dbHandler.getSubItemMap(projId, aID);
 
                 photos[0] = list.get(MyConfig.TAG_IMAGE1);
                 photos[1] = list.get(MyConfig.TAG_IMAGE2);
@@ -723,6 +675,16 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 photo3 = photos[2];
                 photo4 = photos[3];
                 photo5 = photos[4];
+
+
+                InspectionFragment fragment = new InspectionFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment, "InspectionFragment", false, "");
+
+             //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+
 
                 break;
 
@@ -1103,7 +1065,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
             builder.setTitle("Choose an action");
             // add a list
-            String[] actions = {"Delete the current inspection item.",
+            String[] actions = {"Delete the current Report item.",
                     "Delete this Branch",
                     "Cancel this operation."};
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1541,7 +1503,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             photo.delete();
             if (cameraSnap != "1") {
                 cameraSnap = "0";
-                Edited = true;
+            //    Edited = true;
             }
 
             switch (photoframe) {
@@ -1690,7 +1652,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
            case 0:
                 photoBranch = image.getName();
-
+                break;
             case 1:
                 photo1 = image.getName();
                  break;

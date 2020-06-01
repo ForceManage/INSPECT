@@ -391,29 +391,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
   //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
                 propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
-/*                if(propPhoto.length() > 14)
-                {
-                    dirName = propPhoto.substring(6, 14);
-                    root = Environment.getExternalStorageDirectory().toString();
-                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
-
-                    if (propImage.exists()) {
-
-                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                        mPhotoImageView.setImageBitmap(myBitmap);
-                    }
-                }
-                else {
-                    Integer draw = android.R.drawable.ic_menu_camera;
-                    mPhotoImageView.setImageDrawable(getDrawable(draw));
-                }
-
- */
 
 
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
- //             bundle.putString("branchLabel", branchLabel);
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
                 bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
@@ -422,9 +403,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
                 bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
                 bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
+                bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
+                bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
-                bundle.putString("infoI", projectItem.get(MyConfig.TAG_INFO_I));
-                bundle.putString("infoJ", projectItem.get(MyConfig.TAG_INFO_J));
 
 
 
@@ -539,13 +520,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    private void addLevel(int Level, String levelName){
+    private void requestProject(final String levelName){
 
-        DBHandler dbHandler = new DBHandler(this, null, null, 1);
-    //    int result = dbHandler.addLevel(projectId);
-    //    if(result == 0 ) Toast.makeText(this, "Cannot place navigation branch at this position",Toast.LENGTH_SHORT).show();
-    //    else
-    //        loadMap();
+        class reqAct extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... params) {
+                RequestHandler_ rh = new RequestHandler_();
+                rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName);
+                return null;
+            }
+
+        }
+        reqAct req = new reqAct();
+        req.execute();
     }
 
 
@@ -578,16 +565,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: ");//Integer.parseInt(locationId)
+                            itemTitle.setText("New Project Request  ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : ");//Integer.parseInt(locationId)
+                            locationText.setText("Project ID : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
+                            branchText.setHint("Enter a Project identification - e.g PA2020/2765");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
 
-                                            addLevel(0, branchText.getText().toString());
+                                            requestProject(branchText.getText().toString());
 
 
                                         }
@@ -702,25 +689,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             updatePropList();
         }
 
-/*
-        if (v == buttonLoadNotes) {
-            ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
-            if (nInfo != null && nInfo.isConnected()) {
-                get_AOR_JSON();
-               // get_BOR_JSON();
-               // get_COR_JSON();
-               // get_DOR_JSON();
-               // get_EOR_JSON();
 
-            } else {
-                buttonLoadNotes.setEnabled(false);
-                Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
-            }
-        }
-
-
-*/
         //Loads jobs from the tablet database
         if (v == buttonLoadJobList) {
 
@@ -851,6 +820,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         bundle.putInt("projectId", projId);
                         bundle.putInt("iId", iId);
 
+
                         DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
                         ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iId);
 
@@ -887,6 +857,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             Log.v("report list", listItemsmap.get(i).get("BranchHead")+", ");
                         }
+
 
                         ReportFragment fragment = new ReportFragment();
                         fragment.setArguments(bundle);
@@ -1243,7 +1214,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     //Update the list to choose from by selecting the information from the SQLite db
-    private void updatePropList() {
+    public void updatePropList() {
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -1350,6 +1321,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String projectNote = jo.getString(MyConfig.TAG_PROJECT_NOTE);
                 String projectPhoto = jo.getString(MyConfig.TAG_PROJECT_PHOTO);
                 String infoE = jo.getString(MyConfig.TAG_INFO_E);
+                String infoF = jo.getString(MyConfig.TAG_INFO_F);
+                String infoG = jo.getString(MyConfig.TAG_INFO_G);
                 String infoH = jo.getString(MyConfig.TAG_INFO_H);
                 String infoI = jo.getString(MyConfig.TAG_INFO_I);
                 String infoJ = jo.getString(MyConfig.TAG_INFO_J);
@@ -1376,7 +1349,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int p_Id = parseInt(pID);
 
                 ProjectAttributes projectrow =
-                        new ProjectAttributes(projId, addressNo, address, suburb, infoA, infoB, infoC, infoD, projectPhoto, infoE, infoH, infoI, infoJ, projectNote );
+                        new ProjectAttributes(projId, addressNo, address, suburb, infoA, infoB, infoC, infoD, projectPhoto, infoE, infoF, infoG, infoH, infoI, infoJ, projectNote );
                 // editTextMessage.setText("Test 1");
 
 
@@ -2342,7 +2315,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
 
-                message = inspItemsToServer();
+                message = inspToServer();
 
                 if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&& (actionsSaved.equals(yes))){
 

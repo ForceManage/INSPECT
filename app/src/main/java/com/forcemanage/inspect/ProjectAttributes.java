@@ -19,6 +19,8 @@ public class ProjectAttributes {
     private String _infoE;
  //   private String _ocDate;
  //   private String _ocNmbr;
+    private String _infoF;
+    private String _infoG;
     private String _infoH;
     private String _infoI;
     private String _infoJ;
@@ -28,7 +30,7 @@ public class ProjectAttributes {
     public ProjectAttributes() {
     }
     public ProjectAttributes(int projectId,  String addressNumber, String projectAddress, String projectSuburb, String infoA, String infoB, String infoC, String infoD,
-                             String projectPhoto, String infoE, String infoH, String infoI, String infoJ, String projectNote) {
+                             String projectPhoto, String infoE, String infoF, String infoG, String infoH, String infoI, String infoJ, String projectNote) {
         this._projectId = projectId;
         this._addressNumber = addressNumber;
         this._projectAddress = projectAddress;
@@ -41,6 +43,8 @@ public class ProjectAttributes {
         this._infoE = infoE;
  //       this._ocDate = ocDate;
   //      this._ocNmbr = ocNmbr;
+        this._infoF = infoF;
+        this._infoG = infoG;
         this._infoH = infoH;
         this._infoI = infoI;
         this._infoJ = infoJ;
@@ -72,6 +76,10 @@ public class ProjectAttributes {
  //   public String getocDate () {return this._ocDate; }
  //   public void setocNmbr (String ocNmbr) {this._ocNmbr = ocNmbr; }
  //   public String getocNmbr () {return this._ocNmbr; }
+    public void setinfoF (String infoF) {this._infoF = infoF; }
+    public String getinfoF () {return this._infoF; }
+    public void setinfoG (String infoG) {this._infoG = infoG; }
+    public String getinfoG () {return this._infoG; }
     public void setflooytype (String infoH) {this._infoH = infoH; }
     public String getinfoH () {return this._infoH; }
     public void setinfoI (String infoI) {this._infoI = infoI; }

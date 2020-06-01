@@ -49,9 +49,9 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private String infoC;
     private String infoD;
     private String infoE;
+    private String infoF;
+    private String infoG;
     private String infoH;
-    private String infoI;
-    private String infoJ;
 
 
 
@@ -73,8 +73,9 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
             infoC = bundle.getString("infoC");
             infoD = bundle.getString("infoD");
             infoE = bundle.getString("infoE");
-            infoI = bundle.getString("infoI");
-            infoJ = bundle.getString("infoJ");
+            infoF = bundle.getString("infoF");
+            infoG = bundle.getString("infoG");
+            infoH = bundle.getString("infoH");
 
          }
 
@@ -100,18 +101,12 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         Log.d(TAG, "oncreateview: started");
 
         title = (TextView) view.findViewById(R.id.title);
-        branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
-
-       final TextView projAddress = (TextView) view.findViewById(R.id.Text1);
-       TextView projNumber = (TextView) view.findViewById(R.id.branchTitle);
-
-       projAddress.setText(ProjAddress);
-       projNumber.setText("Project ID:  "+branchHead);
-       bNote.setText(note);
+        bNote.setText(note);
 
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
+        TVprojectID.setText("Project ID:  "+branchHead);
         TVprojectID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +114,12 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        final TextView projAddress = (TextView) view.findViewById(R.id.Text1);
+        projAddress.setText(ProjAddress);
         projAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Project Address",projAddress.getText().toString());
+                editProject("Project Title",projAddress.getText().toString());
             }
         });
 
@@ -130,7 +127,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         TVinfoA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoA",TVinfoA.getText().toString());
+                editProject("Note A",TVinfoA.getText().toString());
             }
         });
 
@@ -138,7 +135,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         TVinfoB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoB",TVinfoB.getText().toString());
+                editProject("Note B",TVinfoB.getText().toString());
             }
         });
 
@@ -146,7 +143,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         TVinfoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoC",TVinfoC.getText().toString());
+                editProject("Note C",TVinfoC.getText().toString());
             }
         });
 
@@ -154,38 +151,38 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         TVinfoD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoD",TVinfoD.getText().toString());
+                editProject("Note D",TVinfoD.getText().toString());
             }
         });
         final TextView TVinfoE = (TextView) view.findViewById(R.id.Text6);
         TVinfoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoE",TVinfoE.getText().toString());
+                editProject("Note E",TVinfoE.getText().toString());
             }
         });
 
-        final TextView TVinfoH = (TextView) view.findViewById(R.id.Text7);
+        final TextView TVinfoF = (TextView) view.findViewById(R.id.Text7);
+        TVinfoF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Note F", TVinfoF.getText().toString());
+            }
+        });
+
+        final TextView TVinfoG = (TextView) view.findViewById(R.id.Text8);
+        TVinfoG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Note G", TVinfoG.getText().toString());
+            }
+        });
+
+        final TextView TVinfoH = (TextView) view.findViewById(R.id.Text9);
         TVinfoH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("infoH", TVinfoH.getText().toString());
-            }
-        });
-
-        final TextView TVinfoI = (TextView) view.findViewById(R.id.Text8);
-        TVinfoI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editProject("infoI", TVinfoI.getText().toString());
-            }
-        });
-
-        final TextView TVinfoJ = (TextView) view.findViewById(R.id.Text9);
-        TVinfoJ.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editProject("infoJ", TVinfoJ.getText().toString());
+                editProject("Note H", TVinfoH.getText().toString());
             }
         });
 
@@ -238,15 +235,15 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         });
 
 
-         setText();
-        TVinfoA.setText(infoA);
-        TVinfoB.setText(infoB);
-        TVinfoC.setText(infoC);
-        TVinfoD.setText(infoD);
-        TVinfoE.setText(infoE);
-        TVinfoH.setText(infoH);
-        TVinfoI.setText(infoI);
-        TVinfoJ.setText(infoJ);
+        if(infoA == "null")TVinfoA.setText("Note A"); else TVinfoA.setText(infoA);
+        if(infoB == "null")TVinfoB.setText("Note B"); else TVinfoB.setText(infoB);
+        if(infoC == "null")TVinfoC.setText("Note C"); else TVinfoC.setText(infoC);
+        if(infoD == "null")TVinfoD.setText("Note D"); else TVinfoD.setText(infoD);
+        if(infoE == "null")TVinfoE.setText("Note E"); else TVinfoE.setText(infoE);
+        if(infoF == "null")TVinfoF.setText("Note F"); else TVinfoF.setText(infoF);
+        if(infoG == "null")TVinfoG.setText("Note G"); else TVinfoG.setText(infoG);
+        if(infoH == "null")TVinfoH.setText("Note H"); else TVinfoH.setText(infoH);
+
 
         if (globalVariables.propPhoto == null)
             globalVariables.propPhoto = "";
@@ -273,14 +270,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
-    private void setText(){
 
-        if (!branchHead.equals("")){
-   //        title.setText(branchHead);
-   //        branch.setText(branchLabel);
-   //        bNote.setText(branchNote);
-        }
-    }
 
 
     @Override
@@ -296,7 +286,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Project Details ");//Integer.parseInt(locationId)
+        itemTitle.setText("Project Information ");//Integer.parseInt(locationId)
         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
         locationText.setText(item);//Integer.parseInt(locationId)
         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -309,7 +299,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                         switch (item) {
 
-                            case "Project Address":{
+                            case "Project Title":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
@@ -319,36 +309,40 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "infoA":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note A":{
+                                dbHandler.updateProject(projectId,"infoA" ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "infoB":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note B":{
+                                dbHandler.updateProject(projectId,"infoB" ,branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "infoC":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0 );
+                            case "Note C":{
+                                dbHandler.updateProject(projectId,"infoC",branchText.getText().toString(),0 );
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "infoD":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note D":{
+                                dbHandler.updateProject(projectId,"infoD",branchText.getText().toString(),0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "infoE":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note E":{
+                                dbHandler.updateProject(projectId,"infoE",branchText.getText().toString(),0);
                                 break;
                             }
-                            case "infoH":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note F":{
+                                dbHandler.updateProject(projectId,"infoF",branchText.getText().toString(),0);
                                 break;
                             }
-                            case "infoI":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Note G":{
+                                dbHandler.updateProject(projectId,"infoG",branchText.getText().toString(),0);
+                                break;
+                            }
+                            case "Note H":{
+                                dbHandler.updateProject(projectId,"infoH",branchText.getText().toString(),0);
                                 break;
                             }
                         }

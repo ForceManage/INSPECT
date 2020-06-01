@@ -149,9 +149,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                 globalVariables.photoframe = 1;
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
-                globalVariables.Edited = true;
-
-            }
+             }
         });
 
         photo_draw.setOnClickListener(new View.OnClickListener() {
@@ -176,15 +174,38 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
             }
                 else  Toast.makeText(getActivity(), "Function requires a photograph",Toast.LENGTH_SHORT).show();
 
+
+
             }
         });
 
+
+        photoA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo1.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
+            }
+        });
 
         photo_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 globalVariables.filephoto = 1;
-                globalVariables.Edited = true;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -215,7 +236,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
         descriptionE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
 
             }
@@ -224,7 +245,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
         scopeE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -232,7 +253,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
          performE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus) globalVariables.Edited = true;
+                    if(hasFocus) Edited = true;
 
                 }
             });
@@ -240,7 +261,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
         notesE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) globalVariables.Edited = true;
+                if(hasFocus) Edited = true;
 
             }
         });
@@ -346,7 +367,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
 
-        if(globalVariables.Edited == true){
+        if(Edited){
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
@@ -355,7 +376,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
             dbHandler.updateActionItem(projectId, inspectionId, aId, dayTime(1), descriptionE.getText().toString(),
                                       "", performE.getText().toString(), ""
-                    , globalVariables.photo1, scopeE.getText().toString(), "p", notesE.getText().toString());
+                    , scopeE.getText().toString(), "p", notesE.getText().toString());
 
             globalVariables.Edited = false;
 

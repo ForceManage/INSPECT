@@ -204,6 +204,7 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#0B2459"
             >
 
             <ImageView
@@ -216,7 +217,7 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
                 android:paddingBottom="2dp"
                 android:layout_margin="2dp"
                 android:layout_gravity="top|left"
-                app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+                app:srcCompat="@android:drawable/ic_menu_camera" />
 
             <ImageView
                 android:id="@+id/imageView_draw"

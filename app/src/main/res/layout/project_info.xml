@@ -93,15 +93,24 @@
                     android:hint="Project Title - Eg. Project Address/Project name/ etc"
                     android:textSize="16sp"/>
 
-
+                <TextView
+                    android:id="@+id/infotitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:paddingLeft="10dp"
+                    android:text="Project Information:  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal|bold" />
 
                 <TextView
                     android:id="@+id/Text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="Project Info. 1  "
+                    android:text="Project Note "
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -109,9 +118,9 @@
                     android:id="@+id/Text3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 2  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note"
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -119,9 +128,9 @@
                     android:id="@+id/Text4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Building Class:  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note"
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -129,9 +138,9 @@
                     android:id="@+id/Text5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 3  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note"
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -139,9 +148,9 @@
                     android:id="@+id/Text6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 4  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note"
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -149,9 +158,9 @@
                     android:id="@+id/Text7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 5  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note"
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -159,9 +168,9 @@
                     android:id="@+id/Text8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 6  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Project Note "
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -169,9 +178,10 @@
                     android:id="@+id/Text9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Project Info. 7  "
+                    android:paddingLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="Project Note "
                     android:textColor="@android:color/black"
                     android:textStyle="normal" />
 
@@ -181,6 +191,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
                     android:paddingLeft="10dp"
                     android:text="Notes:  "
                     android:textColor="@android:color/black"
@@ -233,6 +244,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#0B2459"
                         >
 
                         <ImageView
