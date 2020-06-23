@@ -1257,6 +1257,64 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public Integer addCertificate(int projId, int iId, int CatID, int Level, int aId, String Label) {
+        // Open a database for reading and writing
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int result = 0;
+        int a_id = 1; //aId of the branch which has the parent branch clicked
+        int maxAId = 1;
+
+        //First check if current branch is a location branch
+        selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 500 ";
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+            if (cursor.getCount() == 0) {
+
+                selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                        + TABLE_MAP + " M"
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    maxAId = cursor.getInt(0);
+
+                    maxAId = maxAId + 1;
+
+                }
+
+
+                        ContentValues values = new ContentValues();
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, -1);
+                        values.put(COLUMN_PROJECT_ID, projId);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, 0);
+                        values.put(COLUMN_CHILD,0);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        db.insert(TABLE_MAP, null, values);
+
+
+
+            }
+
+
+
+
+
+        return result;
+    }
+
+
+
+
     //Check if a location contains any sublocations
     public int itemNum(String propId, int aId) {
         // Open a database for reading and writing

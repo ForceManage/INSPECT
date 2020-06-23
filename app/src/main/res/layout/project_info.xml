@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:layout_marginTop="25dp"
-                    android:text="Project:  "
+                    android:text="Project Name:  "
                     android:textColor="@android:color/black"
                     android:textStyle="normal|bold" />
 
@@ -193,7 +193,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:paddingLeft="10dp"
-                    android:text="Notes:  "
+                    android:text="Project Notes:  "
                     android:textColor="@android:color/black"
                     android:textStyle="normal|bold" />
 

@@ -26,12 +26,21 @@
                     android:orientation="vertical"
                     >
 
+                <ScrollView
+
+                    android:id="@+id/scroll_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.05"
+                    android:fillViewport="true">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="0.2">
+
 
 
 
@@ -42,11 +51,15 @@
                         android:background="@drawable/head_frame"
                         >
 
+
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="0.9">
+
+
 
                             <TextView
                                 android:id="@+id/page"
@@ -161,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="10dp"
-                        android:text="Notes:  "
+                        android:text="Activity brief/description:  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal|bold" />
 
@@ -175,8 +188,9 @@
                         android:paddingLeft="10dp"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:hint="Author notes (text not printed)"
+                        android:hint="Activity Brief/description (Output)"
                         android:textSize="16sp"/>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -186,6 +200,7 @@
                         android:orientation="horizontal"
 
                         >
+
 
 
                          <Button
@@ -228,7 +243,11 @@
 
 
                 </LinearLayout>
+
+                </ScrollView>
+
             </LinearLayout>
+
 
 
             <LinearLayout

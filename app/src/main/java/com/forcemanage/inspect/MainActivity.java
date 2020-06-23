@@ -523,17 +523,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void requestProject(final String levelName){
 
         class reqAct extends AsyncTask<Void, Void, Void> {
+
             @Override
             protected Void doInBackground(Void... params) {
                 RequestHandler_ rh = new RequestHandler_();
                 rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName);
+
                 return null;
+
             }
 
         }
         reqAct req = new reqAct();
         req.execute();
+
+        DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+
+
+
     }
+
+
 
 
     @Override
@@ -551,6 +561,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             // add a list
             String[] actions = {"Request New Project",
                     "Request New Activity for Project ",
+                    "Attach Certificate Inspection",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -569,13 +580,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Project ID : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Enter a Project identification - e.g PA2020/2765");
+                            branchText.setHint("Enter your reference Project identification.");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
 
                                             requestProject(branchText.getText().toString());
-
+                                            downloadprojects();
 
                                         }
                                     })
@@ -589,6 +600,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             // create an alert dialog
                             AlertDialog alert = alertDialogBuilder.create();
                             alert.show();
+
 
                             break;
 
@@ -611,11 +623,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             }
                             reqAct req = new reqAct();
                             req.execute();
+
                             break;
 
                         }
 
                         case 2: {
+
+
+                            break;
+                        }
+
+                        case 3: {
 
 
                             break;
@@ -1004,17 +1023,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
-                            class Send_Report extends AsyncTask<Void, Void, Void> {
-                                @Override
-                                protected Void doInBackground(Void... params) {
-                                    RequestHandler_ rh = new RequestHandler_();
-                                    rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
-                                    return null;
-                                }
-
-                            }
-                            Send_Report rep = new Send_Report();
-                            rep.execute();
+                        reportMailer();
                         }
                     })
                     .setNegativeButton("Cancel",
@@ -2270,6 +2279,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
+    //Upload tablet inspection data to the server
+    private String compileReport()  {
+        String res = "initiated";
+
+        RequestHandler_ rh = new RequestHandler_();
+        res = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+
+
+        return res;
+
+    }
+
+
 
     //Syncing to the server
     private void syncToServer() {
@@ -2280,7 +2302,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             private String res = "Before try";
 
 
-            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+           // DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
             //dbHandler.getInspections();
 
             @Override
@@ -2306,14 +2328,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String projSaved;
                 String actionsSaved;
 
+
                 String yes = "y";
                 String message = "initiated";
+
 
                 inspSaved = inspToServer();
                 itemSaved = inspItemsToServer();
                 MapSaved = MapToServer();
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
+
 
                 message = inspToServer();
 
@@ -2334,6 +2359,40 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         syncInspections ue = new syncInspections();
         ue.execute();
+
+    }
+
+
+
+    private void reportMailer() {
+
+        class Send_Report extends AsyncTask<Void, Void, String> {
+            private ProgressDialog loading;
+            private String res = "Before try";
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MainActivity.this, "Compiling and sending report...", "Processing.... this may take several minutes", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+            }
+            @Override
+            protected String doInBackground(Void... params) {
+
+                RequestHandler_ rh = new RequestHandler_();
+                String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+                return message;
+            }
+
+        }
+        Send_Report rep = new Send_Report();
+        rep.execute();
 
     }
 

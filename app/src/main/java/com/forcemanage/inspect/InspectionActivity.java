@@ -157,6 +157,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         cameraSnap = "0";
         projectId = getIntent().getExtras().getString("PROJECT_ID");
         inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
+        logTime = getIntent().getExtras().getBoolean("logTime");
         buttonInsert = (Button) findViewById(R.id.button2);
         buttonInsert.setOnClickListener(this);
         buttonDelete = (Button) findViewById(R.id.button4);
@@ -232,31 +233,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-        builder.setTitle("Select Activity Method");
-        // add a list
-        String[] actions = {"Data collection and Log time",
-                "View/Edit collected information",
-        };
-        builder.setItems(actions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0: {
-                        logTime = true;
-                        break;
-                    }
-
-                    case 1: //
-                        logTime = false;
-                        break;
-                }
-            }
-        });
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
 
 
         esm_cat = new String[]{
@@ -574,7 +550,16 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
     }
 
+    private void addCertificateBranch(int Level, String levelName) {
 
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int result = dbHandler.addCertificate(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place navigation branch at this position", Toast.LENGTH_SHORT).show();
+        else
+            loadMap();
+
+    }
     public void editLocation(String branchLabel) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -887,6 +872,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     "Add Navigation Branch",
                     "Add Report Branch ",
                     "Add Action Branch",
+                    "Add Certificate Inspection Branch",
                     "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1040,6 +1026,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         }
 
                         case 4: {
+
+                            addCertificateBranch(500, "Certificates");
+                            break;
+                        }
+
+                        case 5: {
 
 
                             break;
@@ -1809,10 +1801,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         endTime = dayTime(4);
 
         if(logTime==true) {
+
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
             dbHandler.updateStatus(Integer.parseInt(projectId), Integer.parseInt(inspectionId),"p",dayTime(1));
         }
+
 
     }
 

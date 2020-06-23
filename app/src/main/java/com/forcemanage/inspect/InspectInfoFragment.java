@@ -32,6 +32,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
     private MainActivity globalVariables;
 
+
     private static final String TAG = "Project Info Fragment";
 
     private TextView title;
@@ -196,13 +197,54 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-                Bundle bundle = new Bundle();
-               Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
-                saveData();
-                bundle.putString("PROJECT_ID", globalVariables.projectId);
-                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
-                theIntent.putExtras(bundle);
-                startActivity(theIntent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Select Activity Method");
+                // add a list
+                String[] actions = {"Data collection and Log time",
+                        "View/Edit collected information",
+                };
+
+                builder.setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: {
+                                Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
+                                Bundle bundle = new Bundle();
+
+                                //               saveData();
+                                bundle.putString("PROJECT_ID", globalVariables.projectId);
+                                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                                bundle.putBoolean("logTime", true);
+                                theIntent.putExtras(bundle);
+                                startActivity(theIntent);
+
+
+                                break;
+                            }
+
+                            case 1: //
+                                Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
+                                Bundle bundle = new Bundle();
+
+                                //               saveData();
+                                bundle.putString("PROJECT_ID", globalVariables.projectId);
+                                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                                bundle.putBoolean("logTime", false);
+                                theIntent.putExtras(bundle);
+                                startActivity(theIntent);
+
+                                break;
+                        }
+
+
+                    }
+                });
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
 
             }
         });

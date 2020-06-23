@@ -40,7 +40,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="Project Branch "
+                        android:text="Activity MAP branch "
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="normal|bold" />

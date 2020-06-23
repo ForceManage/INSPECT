@@ -301,7 +301,8 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
                             case "Project Title":{
                                 dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.updatePropList();
+                        //        globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Project ID":{

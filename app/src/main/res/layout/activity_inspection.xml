@@ -48,7 +48,7 @@
                     android:layout_marginTop="6dp"
                     android:padding="2dp"
                     android:paddingStart="2dp"
-                    android:text="Project Tree"
+                    android:text="Structured Activity map  "
                     android:paddingBottom="15dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"

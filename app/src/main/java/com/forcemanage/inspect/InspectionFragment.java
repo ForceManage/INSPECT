@@ -111,6 +111,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private int aId;
     private int projId;
     private int iId;
+    private boolean logTime;
 
 
     @Override
@@ -147,6 +148,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
            inspectionDate = dayTime(1);
            startTime = dayTime(2);
+
 
     }
 
@@ -327,6 +329,29 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
                 cam5.setBackgroundResource(R.drawable.edit_border_solid);
+
+            }
+        });
+
+        photoA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo1.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
 
             }
         });
@@ -898,6 +923,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         }//End of loop
 
 
+
+
         return view;
     }
 
@@ -975,6 +1002,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                        com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                        ,  com4Text.getText().toString(),
                        com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
+
+
 
                Edited = false;
 
