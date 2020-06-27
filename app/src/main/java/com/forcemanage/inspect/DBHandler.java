@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -52,10 +52,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public static final String TABLE_INSPECTION_ITEM = "InspectionItem";
     public static final String TABLE_ACTION_ITEM = "ActionItem";
+    public static final String TABLE_CERTIFICATE_INSPECTION = "CertificateInsp";
 
     public static final String COLUMN_DATE_TIME_START = "DateTimeStart";
     public static final String COLUMN_DATE_TIME_FINISH = "DateTimeFinish";
     public static final String COLUMN_DATE_INSPECTED = "DateInspected";
+    public static final String COLUMN_DATE_TIME = "DateTime";
     public static final String COLUMN_OVERVIEW = "Overview";
     public static final String COLUMN_RELEVANT_INFO = "RelevantInfo";
     public static final String COLUMN_SERVICE_LEVEL = "ServiceLevel";
@@ -87,6 +89,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_LABEL = "Label";
     public static final String COLUMN_CHILD = "Child";
     public static final String COLUMN_A_ID = "aID";
+
+    public static final String COLUMN_PERMIT_NO = "Permit";
+    public static final String COLUMN_STAGE = "Stage";
 
 
     public static final String TABLE_A_OR = "A_OR";
@@ -220,6 +225,22 @@ public class DBHandler extends SQLiteOpenHelper {
         //If ESM recommendation  is not nil print photo on report
         db.execSQL(CREATE_ACTION_ITEM_TABLE);
 
+
+        String CREATE_CERTIFICATE_INSPECTION_TABLE = "CREATE TABLE " +
+                TABLE_CERTIFICATE_INSPECTION + "("
+                + COLUMN_INSPECTION_ID + " INTEGER,"
+                + COLUMN_PROJECT_ID + " INTEGER,"
+                + COLUMN_DATE_TIME + " INTEGER,"
+                + COLUMN_OVERVIEW + " TEXT,"
+                + COLUMN_PERMIT_NO + " TEXT,"
+                + COLUMN_PROJECT_ADDRESS + " TEXT,"
+                + COLUMN_STAGE + " TEXT,"
+                + COLUMN_NOTES + " TEXT,"
+                + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "))";
+        //If ESM recommendation  is not nil print photo on report
+        db.execSQL(CREATE_CERTIFICATE_INSPECTION_TABLE);
+
+
         String CREATE_A_OR_TABLE = "CREATE TABLE " +
                 TABLE_A_OR + "("
                 + COLUMN_NUM + " INTEGER PRIMARY KEY,"
@@ -274,6 +295,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSPECTION_ITEM);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION_ITEM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CERTIFICATE_INSPECTION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_A_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_B_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_C_OR);
@@ -288,6 +310,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_INSPECTION, null, null);
         db.delete(TABLE_INSPECTION_ITEM, null, null);
         db.delete(TABLE_ACTION_ITEM, null, null);
+        db.delete(TABLE_CERTIFICATE_INSPECTION, null, null);
         db.delete(TABLE_MAP, null, null);
         db.delete(TABLE_A_OR, null, null);
         db.delete(TABLE_B_OR, null, null);
@@ -714,67 +737,25 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     }
-    //start inspection (clone previous inspection and put status "p": in progress)
-    public void createNewInspection(int projectId, int inspectionId) {
-        // Open a database for reading and writing
 
-        /*
-        SQLiteDatabase database = this.getWritableDatabase();
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-        String inspectionStatus = "n";
-        String testmessage = "Start";
 
-        // SELECT * FROM `ESMInspection` WHERE JobId = 1067
-        selectQuery= "SELECT "+COLUMN_INSPECTION_STATUS
-                +" FROM "+TABLE_INSPECTION
-                +" WHERE "+COLUMN_PROJECT_ID+" = "+projectId;
 
-        cursor = database.rawQuery(selectQuery, null);
+    public void updateCertificateInspection(String projId, String iId, String datetime, String overview, String permit, String address,
+                                            String stage, String notes) {
 
-        if (cursor.moveToFirst()) {
-            jobStatus = cursor.getString(0);
-            prevJobId = cursor.getInt(1);
-        }
 
-        if (jobStatus.equals("n")){
-            //clone previous job
-            selectQuery= "SELECT "+COLUMN_ASSET_ID+", "+COLUMN_RECOMMEND_NO+", "+COLUMN_SERVICED_BY+", "+COLUMN_SERVICE_LEVEL
-                    +" FROM "+TABLE_ESM_INSPECTION_ITEM
-                    +" WHERE "+COLUMN_JOB_ID+" = "+prevJobId;
-            cursor = database.rawQuery(selectQuery, null);
+         SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_DATE_TIME, datetime);
+        contentValues.put(COLUMN_OVERVIEW, overview);
+        contentValues.put(COLUMN_PERMIT_NO, permit);
+        contentValues.put(COLUMN_PROJECT_ADDRESS, address);
+        contentValues.put(COLUMN_STAGE, stage );
+        contentValues.put(COLUMN_NOTES, notes);
+        db.update(TABLE_CERTIFICATE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
+        db.close();
 
-            if (cursor.moveToFirst()) {
-                do {
-                    ContentValues valuesItem = new ContentValues();
-                    valuesItem.put(COLUMN_JOB_ID, jobId);
-                    valuesItem.put(COLUMN_ASSET_ID, cursor.getInt(0));
-                    valuesItem.put(COLUMN_RECOMMEND_NO, cursor.getInt(1));
-                    valuesItem.put(COLUMN_SERVICED_BY, cursor.getString(2));
-                    valuesItem.put(COLUMN_SERVICE_LEVEL, cursor.getString(3));
-                    db.replace(TABLE_ESM_INSPECTION_ITEM, null, valuesItem);
-                } while (cursor.moveToNext());
-            }
-            //put status to P (in progress) and record start time and inspection date
 
-            //UPDATE `ESMInspection` SET `JobStatus`= "p" WHERE JobId = jobId set ESM_JOB_DATE = current date
-            Calendar c = Calendar.getInstance();
-            System.out.println("Current time => " + c.getTime());
-
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = df.format(c.getTime());
-            String status = "p";
-            String jobIdSQL = String.valueOf(jobId);
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_ESM_INSPECTION_STATUS, status);
-            contentValues.put(COLUMN_ESM_JOB_DATE, formattedDate);
-            db.update(TABLE_ESM_INSPECTION, contentValues, COLUMN_JOB_ID+" = ?",new String[] { jobIdSQL });
-            db.close();
-            database.close();
-        }
-
-         */
     }
 
 
@@ -936,16 +917,25 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst())
             branchType = cursor.getInt(0);
 
-        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + "), MAX(M." + COLUMN_CAT_ID + ") FROM "
+        selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
                 + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
+                + " AND "+ COLUMN_CAT_ID+ " < 500 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            maxcatID = cursor.getInt(0);
+            maxcatID = maxcatID + 1;
+        }
+
+        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             maxAId = cursor.getInt(0);
-            maxcatID = cursor.getInt(1);
             maxAId = maxAId + 1;
-            maxcatID = maxcatID + 1;
         }
 
 
@@ -1263,6 +1253,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
+        String address = "";
         int result = 0;
         int a_id = 1; //aId of the branch which has the parent branch clicked
         int maxAId = 1;
@@ -1273,7 +1264,23 @@ public class DBHandler extends SQLiteOpenHelper {
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
-            if (cursor.getCount() == 0) {
+            //certificates tab exists
+            {
+
+                selectQuery = "SELECT  " + COLUMN_LABEL + " FROM "
+                        + TABLE_MAP + " WHERE " + COLUMN_LABEL + " = 'Certificate Inspection' ";
+
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+
+                }
+                else{
+
+                }
+
+            }
+            //if certificates tab doesn't exist
+            else {
 
                 selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
                         + TABLE_MAP + " M"
@@ -1287,24 +1294,64 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 }
 
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_CAT_ID, CatID);
+                values.put(COLUMN_PARENT, -1);
+                values.put(COLUMN_PROJECT_ID, projId);
+                values.put(COLUMN_LABEL, Label);
+                values.put(COLUMN_LEVEL, Level);
+                values.put(COLUMN_A_ID, maxAId);
+                values.put(COLUMN_INSPECTION_ID, 0);
+                values.put(COLUMN_CHILD,0);
+                values.put(COLUMN_IMG1, "");
+                values.put(COLUMN_NOTES, "");
+                db.insert(TABLE_MAP, null, values);
 
-                        ContentValues values = new ContentValues();
-                        values.put(COLUMN_CAT_ID, CatID);
-                        values.put(COLUMN_PARENT, -1);
-                        values.put(COLUMN_PROJECT_ID, projId);
-                        values.put(COLUMN_LABEL, Label);
-                        values.put(COLUMN_LEVEL, Level);
-                        values.put(COLUMN_A_ID, maxAId);
-                        values.put(COLUMN_INSPECTION_ID, 0);
-                        values.put(COLUMN_CHILD,0);
-                        values.put(COLUMN_IMG1, "");
-                        values.put(COLUMN_NOTES, "");
-                        db.insert(TABLE_MAP, null, values);
 
 
+
+            ContentValues values2 = new ContentValues();
+            values2.put(COLUMN_CAT_ID, CatID);
+            values2.put(COLUMN_PARENT, maxAId);
+            values2.put(COLUMN_PROJECT_ID, projId);
+            values2.put(COLUMN_LABEL, "Certificate Inspection");
+            values2.put(COLUMN_LEVEL, 1);
+            values2.put(COLUMN_A_ID, maxAId+1);
+            values2.put(COLUMN_INSPECTION_ID, iId);
+            values2.put(COLUMN_CHILD,10);
+            values2.put(COLUMN_IMG1, "");
+            values2.put(COLUMN_NOTES, "");
+            db.insert(TABLE_MAP, null, values2);
+
+
+            selectQuery = "SELECT  " + COLUMN_PROJECT_ADDRESS + " FROM "
+                    + TABLE_PROJECT_INFO + " WHERE " + COLUMN_PROJECT_ID + " = "+projId;
+
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()){
+                address = cursor.getString(0);
 
             }
 
+
+            SQLiteDatabase db_2 = this.getWritableDatabase();
+
+            ContentValues values3 = new ContentValues();
+
+            values3.put(COLUMN_PROJECT_ID, projId);
+            values3.put(COLUMN_INSPECTION_ID, iId);
+            values3.put(COLUMN_DATE_TIME, dayTime(4));
+            values3.put(COLUMN_OVERVIEW, "");
+            values3.put(COLUMN_PERMIT_NO, "");
+            values3.put(COLUMN_PROJECT_ADDRESS, address);
+            values3.put(COLUMN_STAGE, "");
+            values3.put(COLUMN_NOTES, "");
+
+            db_2.insert(TABLE_CERTIFICATE_INSPECTION, null, values3);
+            db_2.close();
+
+                result = 1;
+            }
 
 
 
@@ -1541,6 +1588,49 @@ public class DBHandler extends SQLiteOpenHelper {
         // return inspection data for propertyid, Jobid, inspection id
         database.close();
         return actionItem;
+
+
+    }
+
+
+    public HashMap<String, String> getCert_Inspection(int projId, int iId) {
+        // Open a database for reading and writing
+
+        HashMap<String, String> certItem = new HashMap<String, String>();
+
+        ArrayList<HashMap<String, String>> certItemList;
+        certItemList = new ArrayList<HashMap<String, String>>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+
+        String selectQuery = "SELECT C." + COLUMN_DATE_TIME + ", C." + COLUMN_OVERVIEW + ", C." + COLUMN_PERMIT_NO
+                + ", C." + COLUMN_PROJECT_ADDRESS + ", C." + COLUMN_STAGE + ", C." + COLUMN_NOTES
+                + " FROM " + TABLE_CERTIFICATE_INSPECTION + " C "
+                + " WHERE C." + COLUMN_PROJECT_ID + " = " + projId + " AND C." + COLUMN_INSPECTION_ID + " = " + iId;
+
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+                certItem = new HashMap<String, String>();
+                certItem.put(MyConfig.TAG_DATE_TIME, cursor.getString(0));
+                certItem.put(MyConfig.TAG_OVERVIEW, cursor.getString(1));
+                certItem.put(MyConfig.TAG_PERMIT, cursor.getString(2));
+                certItem.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(3));
+                certItem.put(MyConfig.TAG_STAGE, cursor.getString(4));
+                certItem.put(MyConfig.TAG_NOTES, cursor.getString(5));
+                certItemList.add(certItem);
+            } while (cursor.moveToNext());
+        }
+
+
+        // return inspection data for propertyid, Jobid, inspection id
+        database.close();
+        return certItem;
 
 
     }
@@ -2461,6 +2551,13 @@ public class DBHandler extends SQLiteOpenHelper {
             case (3): {
 
                 java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date_ = Calendar.getInstance().getTime();
+                daytime = (dateFormat.format(date_));
+                break;
+            }
+            case (4): {
+
+                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;

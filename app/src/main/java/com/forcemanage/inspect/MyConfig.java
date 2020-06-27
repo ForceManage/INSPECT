@@ -81,7 +81,10 @@ public class MyConfig {
     public static final String TAG_LABEL = "Label";
     public static final String TAG_CHILD = "Child";
 
-
+    //Certificate Inspection
+    public static final String TAG_DATE_TIME = "DateTime";
+    public static final String TAG_PERMIT = "Permit";
+    public static final String TAG_STAGE = "Stage";
 
 
 

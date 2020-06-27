@@ -29,7 +29,7 @@ import java.util.Date;
 
 public class CertificateInspectionFragment extends Fragment implements View.OnClickListener {
 
-    private MainActivity globalVariables;
+    private InspectionActivity globalVariables;
 
     private static final String TAG = "ActionItem Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -50,25 +50,29 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
+    private EditText time;
     private EditText descriptionE;
-    private EditText scopeE;
-    private EditText performE;
+    private EditText permit;
+    private EditText address;
+    private EditText stage;
     private EditText notesE;
     private boolean Edited = false;
     private String branchTitle = "Title";
     private String branchName = "Branch";
     private String desciption = "Desc";
-    private String scope = "Desc";
-    private String perform = "Desc";
-    private String notes = "Desc";
+    private String Time = "Time";
+    private String Permit = "Permit No.";
+    private String Address = "Address";
+
+    private String Notes = "Notes";
     private String projectId;
     private String inspectionId;
-    private int aId;
+    private String Stage;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (MainActivity) getActivity();
+        globalVariables = (InspectionActivity) getActivity();
     }
 
     @Override
@@ -79,13 +83,14 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
         if(bundle != null){
             projectId = bundle.getString("projectID");
             inspectionId = bundle.getString("inspectionID");
-            aId = bundle.getInt("aID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             desciption = bundle.getString("description");
-            scope = bundle.getString("scope");
-            perform = bundle.getString("perform");
-            notes = bundle.getString("notes");
+            Time = bundle.getString("time");
+            Permit = bundle.getString("permit");
+            Address = bundle.getString("address");
+            Stage = bundle.getString("stage");
+            Notes = bundle.getString("notes");
          }
 
 
@@ -96,7 +101,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.action_fragment, container, false);
+        View view = inflater.inflate(R.layout.certificate_inspection, container, false);
         //       btnInspection = (Button) view.findViewById(R.id.btnInspection);
 
 
@@ -106,23 +111,11 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
         branch = (TextView) view.findViewById(R.id.level);
         notesE = (EditText) view.findViewById(R.id.note);
 
-        photoA = (ImageView) view.findViewById(R.id.imageView);
-        //photoA.setOnClickListener(this);
-
-        photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
-        photo_cam.setOnClickListener(this);
-
-        photo_draw = (ImageView) view.findViewById(R.id.imageView_draw);
-        photo_draw.setOnClickListener(this);
-
-        photo_file = (ImageView) view.findViewById(R.id.imageView_file);
-        photo_file.setOnClickListener(this);
-
-
-
+        time  = (EditText) view.findViewById(R.id.time);
          descriptionE = (EditText) view.findViewById(R.id.desc);
-         scopeE = (EditText) view.findViewById(R.id.scope);
-         performE = (EditText) view.findViewById(R.id.perform);
+         permit = (EditText) view.findViewById(R.id.buildp);
+         address = (EditText) view.findViewById(R.id.address);
+         stage = (EditText) view.findViewById(R.id.stage);
          notesE = (EditText) view.findViewById(R.id.notes);
 
   //       final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
@@ -133,22 +126,16 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
         title.setText(branchTitle);
         branch.setText(branchName);
+        time.setText(stringdate(Time));
         descriptionE.setText(desciption);
-        scopeE.setText(scope);
-        performE.setText(perform);
-        notesE.setText(notes);
+        permit.setText(Permit);
+        address.setText(Address);
+        stage.setText(Stage);
+        notesE.setText(Notes);
 
 
 
-
-
-
-
-
-
-
-
-        descriptionE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) Edited = true;
@@ -157,7 +144,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             }
         });
 
-        scopeE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) Edited = true;
@@ -165,7 +152,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             }
         });
 
-         performE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+         descriptionE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus) Edited = true;
@@ -198,17 +185,36 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
     public String stringdate(String date){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d = null;
         try {
             d = sdf.parse(date);
         } catch (ParseException ex) {
             Log.v("Exception", ex.getLocalizedMessage());
         }
-        sdf.applyPattern("dd MMM yyyy");
+        sdf.applyPattern("dd MMM yyyy, hh:mm:a");
         date = sdf.format(d);
 
         return date;
+
+    }
+
+
+    public String dateString (String date){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, hh:mm:a");
+        Date d = null;
+        try {
+            d = sdf.parse(date);
+        } catch (ParseException ex) {
+            date = stringdate(Time);
+            Log.v("Exception", ex.getLocalizedMessage());
+        }
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
+        date = sdf.format(d);
+
+        return date;
+
     }
 
     private String dayTime(int Type) {
@@ -256,9 +262,9 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
 
-            dbHandler.updateActionItem(projectId, inspectionId, aId, dayTime(1), descriptionE.getText().toString(),
-                                      "", performE.getText().toString(), ""
-                    , scopeE.getText().toString(), "p", notesE.getText().toString());
+            dbHandler.updateCertificateInspection(projectId, inspectionId, dateString(time.getText().toString()), descriptionE.getText().toString(),
+                                      permit.getText().toString(), address.getText().toString()
+                    , stage.getText().toString(), notesE.getText().toString());
 
            Edited = false;
 

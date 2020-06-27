@@ -715,6 +715,52 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
             }
+
+            case 10: {
+
+                HashMap<String, String> list = dbHandler.getCert_Inspection(projId, iID);
+
+                String DateTime;
+                String permit;
+                String address;
+                String stage;
+
+                DateTime = list.get(MyConfig.TAG_DATE_TIME);
+                if(DateTime == null) DateTime = dayTime(4);
+
+                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                Overview = list.get(MyConfig.TAG_OVERVIEW);
+                permit = list.get(MyConfig.TAG_PERMIT);
+                address = list.get(MyConfig.TAG_PROJECT_ADDRESS);
+                stage = list.get(MyConfig.TAG_STAGE);
+                Notes = list.get(MyConfig.TAG_NOTES);
+
+
+
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("description", Overview);
+                bundle.putString("time", DateTime);
+                bundle.putString("address", address);
+                bundle.putString("address", address);
+                bundle.putString("stage", stage);
+                bundle.putString("notes", Notes);
+
+                CertificateInspectionFragment fragment = new CertificateInspectionFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment, "CertificateInspectionFragment", false, "");
+
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                break;
+
+
+            }
+
         }
 
 
@@ -1026,7 +1072,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         }
 
                         case 4: {
-
+                            photoBranch = "";
                             addCertificateBranch(500, "Certificates");
                             break;
                         }

@@ -86,6 +86,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
        int node_branchCat = node.getbranchCat();
 
+
         switch (node_branchCat){
 
             case 0:{
@@ -97,6 +98,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
                 else
                     holder.arrow.setImageResource(R.drawable.ic_chevron_right);
+                if( node.getNodeName().equals("Certificates")){
+                    holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
+                    holder.content.setTextColor(Color.BLUE);
+                }
                 break;
            }
             case 1: {
@@ -111,7 +116,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_note_text);
 
                 break;
-                }
+            }
+            case 10: {
+                holder.content.setTextColor(Color.BLUE);
+                holder.content.setTextSize(17);
+                holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
+
+                break;
+            }
         }
 
 
