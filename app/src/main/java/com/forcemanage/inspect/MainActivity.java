@@ -1589,6 +1589,58 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
+    // Get ActionItems from the server
+    private void updateCertificateInspection() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_ACTION);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //  editTextMessage.setText("Test begin");
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                //  String imsg = Integer.toString(i);
+                //  String rmsg = Integer.toString(result.length());
+                //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
+                //  TextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
+                String datetime = datetoString(jo.getString(MyConfig.TAG_DATE_TIME));
+                String overview = jo.getString(MyConfig.TAG_OVERVIEW);
+                String permit = jo.getString(MyConfig.TAG_PERMIT);
+                String projectaddress = jo.getString(MyConfig.TAG_PROJECT_ADDRESS);
+                String stage = jo.getString(MyConfig.TAG_STAGE);
+                String notes = jo.getString(MyConfig.TAG_NOTES);
+
+
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int projId = parseInt(projid);
+                int InspectionId = parseInt(iId);
+
+                CertificateInspectionAttributes certinsprow = new CertificateInspectionAttributes(InspectionId, projId, datetime, overview, permit, projectaddress, stage, notes);
+
+
+
+                dbHandler.updateCertificateInspectionFromServer(certinsprow);
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("ESM", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
 
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
@@ -1796,6 +1848,47 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 RequestHandler_ rh = new RequestHandler_();
                 String s = rh.sendGetRequestParam(MyConfig.URL_GET_ACTION, ServicePerson);
+                return s;
+            }
+
+
+
+        }
+        GetActionJSON gj = new GetActionJSON();
+        gj.execute();
+    }
+
+
+    private void getCertInspJSON() {
+        class GetActionJSON extends AsyncTask<Void, Void, String> {
+
+            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
+
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                JSON_STRING_ACTION = s;
+                //    TextMessage.setText("JSON_STRING " + s);
+
+                updateAction();
+                // testing only - editTextMessage.setText(JSON_STRING);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                RequestHandler_ rh = new RequestHandler_();
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_CERT_INSPECTION, ServicePerson);
                 return s;
             }
 
@@ -2280,6 +2373,58 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     //Upload tablet inspection data to the server
+    private String certInspToServer() throws IOError {
+        String res = "initiated";
+        HashMap<String, String> CertificateInspectionList = new HashMap<String, String>();
+        DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+        //           dbHandler.puTestData();
+        ArrayList<HashMap<String, String>> CertInspectionList = dbHandler.getCertInspections();
+        String testString = "";
+        String tempString = "";
+
+        JSONObject json;
+        JSONArray jsonArray = new JSONArray();
+        int j = 0;
+
+        if (CertificateInspectionList.size() == 0) {
+            //no items toupdatelist
+            res = "No Locations to upload";
+        } else {
+            for (int i = 0; i < CertificateInspectionList.size(); i++) {
+                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
+                testString = testString + tempString;
+
+
+                try {
+                    json = new JSONObject();
+                    json.put("Iteration", Integer.toString(j));
+                    json.put(MyConfig.TAG_INSPECTION_ID, CertInspectionList.get(i).get(MyConfig.TAG_INSPECTION_ID));
+                    json.put(MyConfig.TAG_PROJECT_ID, CertInspectionList.get(i).get(MyConfig.TAG_PROJECT_ID));
+                    json.put(MyConfig.TAG_DATE_TIME, CertInspectionList.get(i).get(MyConfig.TAG_DATE_TIME));
+                    json.put(MyConfig.TAG_OVERVIEW, CertInspectionList.get(i).get(MyConfig.TAG_OVERVIEW));
+                    json.put(MyConfig.TAG_PERMIT, CertInspectionList.get(i).get(MyConfig.TAG_PERMIT));
+                    json.put(MyConfig.TAG_PROJECT_ADDRESS, CertInspectionList.get(i).get(MyConfig.TAG_PROJECT_ADDRESS));
+                    json.put(MyConfig.TAG_STAGE, CertInspectionList.get(i).get(MyConfig.TAG_STAGE));
+                    json.put(MyConfig.TAG_NOTES, CertInspectionList.get(i).get(MyConfig.TAG_NOTES));
+                    jsonArray.put(json);
+                    j = j + 1;
+
+                } catch (Throwable t) {
+                    res = "Request failed: " + t.toString();
+                    return res;
+                }
+            }
+            RequestHandler_ rh = new RequestHandler_();
+            String jsonString = jsonArray.toString();
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_CERT_INSPECTION_TO_SERVER, jsonString);
+//                res = jsonString;
+        }
+        return res;
+
+    }
+
+
+    //Upload tablet inspection data to the server
     private String compileReport()  {
         String res = "initiated";
 
@@ -2327,6 +2472,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String MapSaved;
                 String projSaved;
                 String actionsSaved;
+                String CertInspSaved;
 
 
                 String yes = "y";
@@ -2338,11 +2484,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 MapSaved = MapToServer();
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
+                CertInspSaved = certInspToServer();
 
 
                 message = inspToServer();
 
-                if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&& (actionsSaved.equals(yes))){
+                if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&&
+                        (actionsSaved.equals(yes) && (CertInspSaved.equals(yes) ))){
 
                     message = "Inspections uploaded successfully";
 

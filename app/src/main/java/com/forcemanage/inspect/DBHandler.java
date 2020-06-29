@@ -473,6 +473,28 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void updateCertificateInspectionFromServer(CertificateInspectionAttributes certificateInspectionAttributes) {
+
+        ContentValues valuesAction = new ContentValues();
+        valuesAction.put(COLUMN_INSPECTION_ID, certificateInspectionAttributes.getinspectionId());
+        valuesAction.put(COLUMN_PROJECT_ID, certificateInspectionAttributes.getprojectId());
+        valuesAction.put(COLUMN_DATE_TIME, certificateInspectionAttributes.getdatetime());
+        valuesAction.put(COLUMN_OVERVIEW, certificateInspectionAttributes.getoverview());
+        valuesAction.put(COLUMN_PERMIT_NO, certificateInspectionAttributes.getpermit());
+        valuesAction.put(COLUMN_PROJECT_ADDRESS, certificateInspectionAttributes.getaddress());
+        valuesAction.put(COLUMN_STAGE, certificateInspectionAttributes.getstage());
+        valuesAction.put(COLUMN_NOTES, certificateInspectionAttributes.getnotes());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+
+        db.replace(TABLE_CERTIFICATE_INSPECTION, null, valuesAction);
+
+        db.close();
+    }
+
+
     public void update_OR_FromServer(A_Attributes a_attributes, String CAT) {
 
         //replace will delete the row if the category already exists
@@ -1260,7 +1282,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 500 ";
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 500 "
+                +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
@@ -1268,7 +1291,8 @@ public class DBHandler extends SQLiteOpenHelper {
             {
 
                 selectQuery = "SELECT  " + COLUMN_LABEL + " FROM "
-                        + TABLE_MAP + " WHERE " + COLUMN_LABEL + " = 'Certificate Inspection' ";
+                        + TABLE_MAP + " WHERE " + COLUMN_LABEL + " = 'Certificate Inspection' "
+                        +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -2272,6 +2296,47 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         return locationList;
+
+    }
+
+
+    public ArrayList<HashMap<String, String>> getCertInspections() {
+
+
+        HashMap<String, String> CertificateItemMap;
+        ArrayList<HashMap<String, String>> CertificateList;
+
+        CertificateList = new ArrayList<HashMap<String, String>>();
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * "
+                + " FROM " + TABLE_CERTIFICATE_INSPECTION
+                + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_INSPECTION_ID;
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+                CertificateItemMap = new HashMap<String, String>();
+                CertificateItemMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(0))));
+                CertificateItemMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                CertificateItemMap.put(MyConfig.TAG_DATE_TIME, cursor.getString(2));
+                CertificateItemMap.put(MyConfig.TAG_OVERVIEW, cursor.getString(3));
+                CertificateItemMap.put(MyConfig.TAG_PERMIT, cursor.getString(4));
+                CertificateItemMap.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(5));
+                CertificateItemMap.put(MyConfig.TAG_STAGE, cursor.getString(6));
+                CertificateItemMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
+
+                CertificateList.add(CertificateItemMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+
+        return CertificateList;
 
     }
 
