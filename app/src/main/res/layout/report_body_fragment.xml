@@ -40,6 +40,19 @@
         android:textStyle="normal|bold" />
 
     <TextView
+        android:id="@+id/parentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:paddingTop="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="25dp"
+        android:text="Label:  "
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:textStyle="normal|bold" />
+
+    <TextView
         android:id="@+id/branchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

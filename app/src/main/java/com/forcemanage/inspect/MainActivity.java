@@ -1,10 +1,8 @@
 package com.forcemanage.inspect;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,7 +12,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,17 +22,13 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,42 +38,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.handlers.RequestHandler;
-import com.amazonaws.handlers.RequestHandler2;
 import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobileconnectors.s3.transfermanager.TransferManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.gson.JsonArray;
+
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOError;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,10 +74,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import static com.amazonaws.regions.Regions.AP_SOUTHEAST_2;
 import static java.lang.Integer.parseInt;
-import static java.util.Objects.isNull;
 
 
 public class MainActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener,  View.OnClickListener {
@@ -111,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING;
     private String JSON_STRING_ADDITIONAL;
     private String JSON_STRING_ACTION;
+    private String JSON_STRING_CERTINSP;
     private String JSON_STRING_PROJECT_LIST;
     private String JSON_STRING_OR;
     private ListView listView;
@@ -656,7 +645,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (v == buttonDownload) {
 
-
+            final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Cloud Storage Data Download Options");
             // add a list
@@ -667,10 +656,40 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     switch (which) {
 
                         case 0: {
-                                    downloadprojects();
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                            passDialog.setView(promptView);
+                            passDialog.setTitle("Enter User Code");
+                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    if(passText.getText().toString().equals("1234")) {
+
+                                        if(dbHandler.checkstatus(projId)==0)
+                                            downloadprojects();
+                                        else
+                                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading",Toast.LENGTH_SHORT).show();
+                                        downloadprojects();
+
+                                    }
+                                    else
+                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+
+
+                                }
+                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = passDialog.create();
+                            alert.show();
+
 
                             break;
 
@@ -696,6 +715,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             });
 
             AlertDialog dialog = builder.create();
+
+
 
             dialog.show();
 
@@ -732,15 +753,66 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     switch (which) {
 
                         case 0: {
-                            uploaddata();
-                            uploadphotos();
+
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                            passDialog.setView(promptView);
+                            passDialog.setTitle("Enter User Code");
+                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    if(passText.getText().toString().equals("1234")) {
+                                        uploaddata();
+                                        uploadphotos();
+                                    }
+                                    else
+                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+
+
+                                }
+                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = passDialog.create();
+                            alert.show();
+
+
                             break;
+
 
                         }
 
                         case 1: {
 
-                            uploaddata();
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                            passDialog.setView(promptView);
+                            passDialog.setTitle("Enter User Code");
+                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    if(passText.getText().toString().equals("1234")) uploaddata();
+                                    else
+                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+
+
+                                }
+                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = passDialog.create();
+                            alert.show();
+
+
+
+
+
+
                             break;
 
                         }
@@ -815,6 +887,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
+
+
     public void reportMenu() {
 
 
@@ -854,6 +928,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
                             listItem = new ReportItem(
                                     listItemsmap.get(i).get("BranchHead"),
+                                    listItemsmap.get(i).get("ParentLabel"),
                                     listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
                                     listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
                                     listItemsmap.get(i).get(MyConfig.TAG_NOTES),
@@ -867,7 +942,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     listItemsmap.get(i).get(MyConfig.TAG_COM4),
                                     listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
                                     listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL)
+                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
+                                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
+                                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
+                                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
+                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE)
 
 
                             );
@@ -1596,7 +1675,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //editTextMessage.setText("Print String: " + JSON_STRING);
         //editTextMessage.setText("Test");
         try {
-            jsonObject = new JSONObject(JSON_STRING_ACTION);
+            jsonObject = new JSONObject(JSON_STRING_CERTINSP);
             JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
             //  editTextMessage.setText("Test begin");
 
@@ -1860,7 +1939,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     private void getCertInspJSON() {
-        class GetActionJSON extends AsyncTask<Void, Void, String> {
+        class GetCertInspJSON extends AsyncTask<Void, Void, String> {
 
             Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
             String ServicePerson = String.valueOf(spinner1.getSelectedItem());
@@ -1877,10 +1956,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                JSON_STRING_ACTION = s;
+                JSON_STRING_CERTINSP = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
-                updateAction();
+                updateCertificateInspection();
                 // testing only - editTextMessage.setText(JSON_STRING);
             }
 
@@ -1895,7 +1974,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         }
-        GetActionJSON gj = new GetActionJSON();
+        GetCertInspJSON gj = new GetCertInspJSON();
         gj.execute();
     }
 
@@ -2037,9 +2116,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         Get_DOR_JSON gj = new Get_DOR_JSON();
         gj.execute();
     }
-    private void get_requestActivity_JSON() {
 
-        class Get_EOR_JSON extends AsyncTask<Void, Void, String> {
+    private void get_user_JSON() {
+
+        class Get_USER_JSON extends AsyncTask<Void, Void, String> {
 
             ProgressDialog loading;
 
@@ -2062,12 +2142,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_OR_INFO,"E_OR");
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_USER_INFO,"1");
                 return s;
             }
 
         }
-        Get_EOR_JSON gj = new Get_EOR_JSON();
+        Get_USER_JSON gj = new Get_USER_JSON();
         gj.execute();
     }
 
@@ -2105,7 +2185,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
-                    json.put(MyConfig.TAG_INSPECTION_STATUS, inspList.get(i).get(MyConfig.TAG_INSPECTION_STATUS));
+                    json.put(MyConfig.TAG_INSPECTION_STATUS, "p"); //
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
@@ -2121,7 +2201,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_IMAGE, inspList.get(i).get(MyConfig.TAG_IMAGE));
                     json.put(MyConfig.TAG_NOTE, inspList.get(i).get(MyConfig.TAG_NOTE));
 
+
                     jsonArray.put(json);
+
                     j = j + 1;
 
                 } catch (Throwable t) {
@@ -2130,16 +2212,24 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
+
+            String regex = "\\/'";   //,?\s*"a[^"]*z"\s*:[^\}]+
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
+
+
+
+
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_TO_SERVER, jsonString);
             //       res = jsonString;
-            Log.v("MAP JSON", jsonString);
+         //   Log.v("MAP JSON", jsonString);
         }
 
         return res;
 
     }
+
 
     //Upload tablet inspection data to the server
     private String inspItemsToServer() throws IOError {
@@ -2196,11 +2286,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
 
+            String regex = "'";
 
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
 
-            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
+            Log.v("INSPECTION ITEM JSON", jsonString);
+
+              res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
 //            res = jsonString;
 //            res = testString;
 //            TextView propertyPhoto;
@@ -2386,11 +2479,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         JSONArray jsonArray = new JSONArray();
         int j = 0;
 
-        if (CertificateInspectionList.size() == 0) {
+        if (CertInspectionList.size() == 0) {
             //no items toupdatelist
-            res = "No Locations to upload";
+            res = "No Certificate Inspections to upload";
         } else {
-            for (int i = 0; i < CertificateInspectionList.size(); i++) {
+            for (int i = 0; i < CertInspectionList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
                 testString = testString + tempString;
 
@@ -2418,7 +2511,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             String jsonString = jsonArray.toString();
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_CERT_INSPECTION_TO_SERVER, jsonString);
 //                res = jsonString;
+            Log.v("CERTIFICATE JSON", jsonString);
         }
+
         return res;
 
     }
@@ -2447,7 +2542,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             private String res = "Before try";
 
 
-           // DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
             //dbHandler.getInspections();
 
             @Override
@@ -2487,16 +2582,28 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 CertInspSaved = certInspToServer();
 
 
-                message = inspToServer();
+            //    message = inspToServer();
 
                 if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&&
                         (actionsSaved.equals(yes) && (CertInspSaved.equals(yes) ))){
+
+                    dbHandler.statusUploaded();
 
                     message = "Inspections uploaded successfully";
 
                     //Disable the cleartablet function for August 2019 inspections.
                     //   clearTablet();
 
+
+                }
+                else {
+
+                 if(!inspSaved.equals("y")) message = "Activity process ";
+                 if(!itemSaved.equals("y")) message = message + "  Activity Item process ";
+                 if(!MapSaved.equals("y")) message = message + "  Map process ";
+                 if(!projSaved.equals("y")) message = message + "  Project process ";
+                 if(!actionsSaved.equals("y")) message = message + "  Action process ";
+                 if(!CertInspSaved.equals("y")) message = message + "  Certificate process ";
 
                 }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ReportAdapter extends ArrayAdapter<ReportItem> {
@@ -48,9 +52,12 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
     ReportItem listItem = (ReportItem) reportlistItems.get(position);
     View row = convertView;
     if (listItem.getOverview() != null) {
-        if (!listItem.getBranchHead().equals("ActionItemOject")) {
+        if (!listItem.getBranchHead().equals("ActionItemOject"))
+            if(!listItem.getBranchHead().equals("CertInspectionObject"))
+            {
             row = inflater.inflate(R.layout.report_body_fragment, null, true);
             TextView title = (TextView) row.findViewById(R.id.branchTitle);
+            TextView parentLabel = (TextView) row.findViewById(R.id.parentLabel);
             TextView overview = (TextView) row.findViewById(R.id.Overview);
             TextView com1 = (TextView) row.findViewById(R.id.Observation1);
             TextView com2 = (TextView) row.findViewById(R.id.Observation2);
@@ -68,6 +75,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
 
             title.setText(listItem.getBranchHead());
+            parentLabel.setText(listItem.getParentLabel());
             overview.setText(listItem.getOverview());
             String itemNo = Integer.toString(position + 1);
             if (!listItem.getImage1().equals(""))
@@ -197,55 +205,130 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
 
         }
-        else {
+          if(listItem.getBranchHead().equals("ActionItemOject")) {
 
-            row = inflater.inflate(R.layout.report_actionitem_fragment, null, true);
-            TextView title = (TextView) row.findViewById(R.id.branchTitle);
-            TextView overview = (TextView) row.findViewById(R.id.desc);
-            TextView scope = (TextView) row.findViewById(R.id.scope);
-            TextView perform = (TextView) row.findViewById(R.id.perform);
-            TextView notes = (TextView) row.findViewById(R.id.notes);
-            TextView label = (TextView) row.findViewById(R.id.branchName);
-
-
-            title.setText("Action Item Scope");
-            overview.setText(listItem.getOverview());
-            label.setText(listItem.getLabel());
-            scope.setText(listItem.getCom1());
-            perform.setText(listItem.getRelevantInfo());
-            notes.setText(listItem.getNotes());
+                row = inflater.inflate(R.layout.report_actionitem_fragment, null, true);
+                TextView title = (TextView) row.findViewById(R.id.branchTitle);
+                TextView overview = (TextView) row.findViewById(R.id.desc);
+                TextView scope = (TextView) row.findViewById(R.id.scope);
+                TextView perform = (TextView) row.findViewById(R.id.perform);
+                TextView notes = (TextView) row.findViewById(R.id.notes);
+                TextView label = (TextView) row.findViewById(R.id.branchName);
 
 
-            String[] photos = {listItem.getImage1()};
-            ImageView image1 = (ImageView) row.findViewById(R.id.imageView1);
+                title.setText("Action Item Scope");
+                overview.setText(listItem.getOverview());
+                label.setText(listItem.getLabel());
+                scope.setText(listItem.getCom1());
+                perform.setText(listItem.getRelevantInfo());
+                notes.setText(listItem.getNotes());
 
 
-            for (int i = 0; i < 1; i++) {
+                String[] photos = {listItem.getImage1()};
+                ImageView image1 = (ImageView) row.findViewById(R.id.imageView1);
 
-                if (photos[i].length() > 12) {
 
-                    String dirName = photos[i].substring(6, 14);
-                    String root = Environment.getExternalStorageDirectory().toString();
-                    File propImage = new File(root + "/ESM_" + dirName + "/" + photos[i]);
+                for (int i = 0; i < 1; i++) {
 
-                    if (propImage.exists()) {
+                    if (photos[i].length() > 12) {
 
-                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                        if (i == 0) {
-                            image1.setImageBitmap(myBitmap);
-                         }
-                 }
+                        String dirName = photos[i].substring(6, 14);
+                        String root = Environment.getExternalStorageDirectory().toString();
+                        File propImage = new File(root + "/ESM_" + dirName + "/" + photos[i]);
+
+                        if (propImage.exists()) {
+
+                            Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
+                            if (i == 0) {
+                                image1.setImageBitmap(myBitmap);
+                            }
+                        }
+                    }
                 }
             }
 
 
 
+
+        if (listItem.getBranchHead().equals("CertInspectionObject")) {
+
+            row = inflater.inflate(R.layout.cert_inspection_fragment, null, true);
+            TextView title = (TextView) row.findViewById(R.id.branchTitle);
+            TextView date_time = (TextView) row.findViewById(R.id.date_time);
+            TextView overview = (TextView) row.findViewById(R.id.desc);
+            TextView permit = (TextView) row.findViewById(R.id.permit);
+            TextView address = (TextView) row.findViewById(R.id.address);
+            TextView stage = (TextView) row.findViewById(R.id.stage);
+            TextView notes = (TextView) row.findViewById(R.id.notes);
+
+
+            title.setText("Certificate Inspection");
+            date_time.setText(stringdate(listItem.getDate_time(),2));
+            overview.setText(listItem.getOverview());
+            permit.setText(listItem.getPermit());
+            address.setText(listItem.getAddress());
+            stage.setText(listItem.getStage());
+            notes.setText(listItem.getNotes());
         }
+
+
+
     }
 
    return row;
 
 }
+
+    public String stringdate(String date, int type){
+
+        switch (type) {
+
+            case 1: {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy");
+                date = sdf.format(d);
+                break;
+            }
+            case 2: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy, HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+            case 3: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+        }
+
+        return date;
+    }
     }
 
 

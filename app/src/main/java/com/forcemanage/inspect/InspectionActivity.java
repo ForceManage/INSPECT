@@ -486,15 +486,42 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-        if (Level > 0) {
+        int type = dbHandler.getMapNodeType(projId, aID);
 
-            dbHandler.deleteInspectionItem(projId, aID);
-            loadMap();
+        switch (type){
 
-        } else {
-            Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
+            case (0): {
+                Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case (1):{
+
+                dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteInspectionItem(projId, aID);
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
+            case (2):{
+
+                dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteInspectionItem(projId, aID);
+                dbHandler.deleteActionItem(projId,aID);
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
+            case (10):{
+
+                dbHandler.deleteCertificate(projId,iID,aID);
+                dbHandler.deleteMapBranch(projId, aID);
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
         }
-    }
+
+     }
 
 
     public void deleteMapBranch() {
@@ -1233,6 +1260,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
                             listItem = new ReportItem(
                                     listItemsmap.get(i).get("BranchHead"),
+                                    listItemsmap.get(i).get("ParentLabel"),
                                     listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
                                     listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
                                     listItemsmap.get(i).get(MyConfig.TAG_NOTES),
@@ -1246,8 +1274,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                                     listItemsmap.get(i).get(MyConfig.TAG_COM4),
                                     listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
                                     listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL)
-
+                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
+                                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
+                                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
+                                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
+                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE)
 
                             );
 

@@ -389,6 +389,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         note = bNote.getText().toString();
 
         dbHandler.updateInspection(projectId, inspectionId, branchLabel, note);
+        dbHandler.statusChanged(Integer.parseInt(projectId));
 
 }
 

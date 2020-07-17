@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -98,12 +98,18 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String TABLE_B_OR = "B_OR";
     public static final String TABLE_C_OR = "C_OR";
     public static final String TABLE_D_OR = "D_OR";
-    public static final String TABLE_E_OR = "E_OR";
+    public static final String TABLE_USER_LIST = "UserList";
 
     public static final String COLUMN_NUM = "Num";
     public static final String COLUMN_SUB_CAT = "Subcat";
     public static final String COLUMN_TYPE = "Type";
     public static final String COLUMN_NOTE = "Note";
+
+    public static final String COLUMN_U_ID = "UserID";
+    public static final String COLUMN_U_NAME = "UserName";
+    public static final String COLUMN_U_CODE = "UserCode";
+    public static final String COLUMN_CLIENT_NAME = "ClientName";
+
 
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -277,14 +283,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_D_OR_TABLE);
 
-        String CREATE_E_OR_TABLE = "CREATE TABLE " +
-                TABLE_E_OR + "("
-                + COLUMN_NUM + " INTEGER PRIMARY KEY,"
-                + COLUMN_SUB_CAT + " TEXT,"
-                + COLUMN_TYPE + " INTEGER,"
-                + COLUMN_NOTE + " TEXT )";
+        String CREATE_USER_LIST_TABLE = "CREATE TABLE " +
+                TABLE_USER_LIST + "("
+                + COLUMN_U_ID + " INTEGER PRIMARY KEY,"
+                + COLUMN_U_NAME + " TEXT,"
+                + COLUMN_U_CODE + " TEXT,"
+                + COLUMN_CLIENT_NAME + " TEXT )";
 
-        db.execSQL(CREATE_E_OR_TABLE);
+        db.execSQL(CREATE_USER_LIST_TABLE);
 
     }
 
@@ -300,7 +306,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_B_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_C_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_D_OR);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_E_OR);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LIST);
         onCreate(db);
     }
 
@@ -316,7 +322,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_B_OR, null, null);
         db.delete(TABLE_C_OR, null, null);
         db.delete(TABLE_D_OR, null, null);
-        db.delete(TABLE_E_OR, null, null);
+        db.delete(TABLE_USER_LIST, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -527,6 +533,24 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    public void update_USER_FromServer(USER_Attributes user_attributes) {
+
+        //replace will delete the row if the category already exists
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_U_ID, user_attributes.getuID());
+        values.put(COLUMN_U_NAME, user_attributes.getuName());
+        values.put(COLUMN_U_CODE, user_attributes.getuCode());
+        values.put(COLUMN_CLIENT_NAME, user_attributes.getClientName());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        //replace will delete the row if the OR already exists
+
+                db.replace(TABLE_USER_LIST, null, values);
+
+        db.close();
+    }
+
 
     public void updateProject(String projId, String item, String txt, int num) {
 
@@ -853,6 +877,73 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public int getMapNodeType(Integer projId, Integer aId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int type = 0;
+
+        selectQuery = "SELECT M." + COLUMN_CHILD + " FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + aId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            type = cursor.getInt(0);
+        }
+        db.close();
+        return type;
+    }
+
+
+    public void statusChanged(Integer projId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_INSPECTION_STATUS, "m");
+
+        db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId , null);
+
+        db.close();
+
+    }
+
+    public void statusUploaded() {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_INSPECTION_STATUS, "p");
+
+        db.update(TABLE_INSPECTION, values, null , null);
+
+        db.close();
+
+    }
+
+    public int checkstatus(Integer projId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int type = 0;
+
+        selectQuery = "SELECT M." + COLUMN_INSPECTION_ID + " FROM "
+                + TABLE_INSPECTION + " M"
+                + " WHERE M." + COLUMN_INSPECTION_STATUS + " = 'm'";
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            type = cursor.getCount();
+        }
+        db.close();
+        return type;
+
+    }
+
 
     public void deleteInspectionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
@@ -865,9 +956,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public void deleteActionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
+        //column reportimage holds the aId in the Map table
 
-
-        db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+        db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId, null);
         db.close();
     }
 
@@ -875,11 +966,15 @@ public class DBHandler extends SQLiteOpenHelper {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
-        db.delete(TABLE_INSPECTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
         db.delete(TABLE_MAP, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+        db.close();
+    }
 
+    public void deleteCertificate(int projId, int iId, int aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(TABLE_CERTIFICATE_INSPECTION, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId, null);
         db.close();
     }
 
@@ -1277,6 +1372,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor;
         String address = "";
         int result = 0;
+        int certId = 0;
         int a_id = 1; //aId of the branch which has the parent branch clicked
         int maxAId = 1;
 
@@ -1289,10 +1385,9 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst())
             //certificates tab exists
             {
-
-                selectQuery = "SELECT  " + COLUMN_LABEL + " FROM "
-                        + TABLE_MAP + " WHERE " + COLUMN_LABEL + " = 'Certificate Inspection' "
-                        +" AND "+COLUMN_PROJECT_ID+" = "+projId;
+                selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
+                        + TABLE_MAP + " WHERE " + COLUMN_CHILD + " = 10 "
+                        +" AND "+COLUMN_PROJECT_ID+" = "+projId+" AND "+COLUMN_INSPECTION_ID+" = "+iId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -1300,9 +1395,74 @@ public class DBHandler extends SQLiteOpenHelper {
                 }
                 else{
 
+                    selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                            + TABLE_MAP + " M"
+                            + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.moveToFirst()) {
+                        maxAId = cursor.getInt(0);
+
+                        maxAId = maxAId + 1;
+
+                    }
+
+                    selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
+                            + TABLE_MAP + " M"
+                            + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 500";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.moveToFirst()) {
+                        certId = cursor.getInt(0);
+
+                   }
+
+                    ContentValues values = new ContentValues();
+                    values.put(COLUMN_CAT_ID, CatID);
+                    values.put(COLUMN_PARENT, certId);
+                    values.put(COLUMN_PROJECT_ID, projId);
+                    values.put(COLUMN_LABEL, "Certificate Inspection");
+                    values.put(COLUMN_LEVEL, 1);
+                    values.put(COLUMN_A_ID, maxAId);
+                    values.put(COLUMN_INSPECTION_ID, iId);
+                    values.put(COLUMN_CHILD,10);
+                    values.put(COLUMN_IMG1, "");
+                    values.put(COLUMN_NOTES, "");
+                    db.insert(TABLE_MAP, null, values);
+
+
+                    selectQuery = "SELECT  " + COLUMN_PROJECT_ADDRESS + " FROM "
+                            + TABLE_PROJECT_INFO + " WHERE " + COLUMN_PROJECT_ID + " = "+projId;
+
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.moveToFirst()){
+                        address = cursor.getString(0);
+
+                    }
+
+
+                    SQLiteDatabase db_2 = this.getWritableDatabase();
+
+                    ContentValues values3 = new ContentValues();
+
+                    values3.put(COLUMN_PROJECT_ID, projId);
+                    values3.put(COLUMN_INSPECTION_ID, iId);
+                    values3.put(COLUMN_DATE_TIME, dayTime(4));
+                    values3.put(COLUMN_OVERVIEW, "");
+                    values3.put(COLUMN_PERMIT_NO, "");
+                    values3.put(COLUMN_PROJECT_ADDRESS, address);
+                    values3.put(COLUMN_STAGE, "");
+                    values3.put(COLUMN_NOTES, "");
+
+                    db_2.insert(TABLE_CERTIFICATE_INSPECTION, null, values3);
+                    db_2.close();
+
+                    result = 1;
+
+
                 }
 
-            }
+            }  //end if certificate does exist
             //if certificates tab doesn't exist
             else {
 
@@ -2409,7 +2569,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (CAT_TAB.equals("B")) CAT_TAB = TABLE_B_OR;
         if (CAT_TAB.equals("C")) CAT_TAB = TABLE_C_OR;
         if (CAT_TAB.equals("D")) CAT_TAB = TABLE_D_OR;
-        if (CAT_TAB.equals("E")) CAT_TAB = TABLE_E_OR;
+
 
         String selectQuery = "SELECT " + COLUMN_NOTE
                 + " FROM " + CAT_TAB
@@ -2504,7 +2664,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 String selectQueryB = "SELECT  I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_NOTES +
                         ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3
-                        + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", M." + COLUMN_LABEL
+                        + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", M." + COLUMN_LABEL+ ", M."+ COLUMN_PARENT
+                        + ", M."+ COLUMN_A_ID
                         + " FROM " + TABLE_INSPECTION_ITEM + " I " +
                         " JOIN " + TABLE_MAP + " M ON M." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
                                                             " AND M."+COLUMN_A_ID+" = I."+COLUMN_A_ID+
@@ -2521,12 +2682,25 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 if (cursorB.moveToFirst()) {
                     do {
+
+                        //get the parent Label for the inspection item
+                        int parentId = cursorB.getInt(14);
+                        String selectQueryB1 = "SELECT  " + COLUMN_LABEL
+                                + " FROM " + TABLE_MAP
+                                +  " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + parentId ;
+
+                        Cursor cursorB1 = dbase.rawQuery(selectQueryB1, null);
+                        cursorB1.moveToFirst();
+
+
+
                         HashMap<String, String> inspectionItemMap = new HashMap<String, String>();
 
                         // Store the key / value pairs in a HashMap
                         // Access the Cursor data by index that is in the same order
                         // as query
                         inspectionItemMap.put("BranchHead", BranchHead);
+                        inspectionItemMap.put("ParentLabel",cursorB1.getString(0));
                         inspectionItemMap.put(MyConfig.TAG_OVERVIEW, cursorB.getString(0));
                         inspectionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursorB.getString(1));
                         inspectionItemMap.put(MyConfig.TAG_NOTES, cursorB.getString(2));
@@ -2550,7 +2724,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 + " FROM " + TABLE_ACTION_ITEM + " I " +
                                 " JOIN " + TABLE_MAP + " M ON M." + COLUMN_A_ID + " = I." + COLUMN_REPORT_IMAGE + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
                                 " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId+
-                                " AND M."+COLUMN_CAT_ID+" = "+catId
+                                " AND M."+COLUMN_A_ID+" = "+ cursorB.getString(13) //this is aID of the MAP table
                                 + " ORDER BY I." + COLUMN_A_ID;
 
                         Cursor cursorC = dbase.rawQuery(selectQueryC, null);
@@ -2583,6 +2757,43 @@ public class DBHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
+            //Add certificate to the inspection
+
+
+
+
+            String selectQueryCI = "SELECT  CI." + COLUMN_DATE_TIME + ", CI."  + COLUMN_OVERVIEW + ", CI." + COLUMN_PERMIT_NO
+                    + ", CI." + COLUMN_PROJECT_ADDRESS + ", CI." + COLUMN_STAGE + ", CI." + COLUMN_NOTES
+                    + " FROM " + TABLE_CERTIFICATE_INSPECTION + " CI "
+                    +  " WHERE CI." + COLUMN_PROJECT_ID + " = " + projId + " AND CI." + COLUMN_INSPECTION_ID + " = " + iId ;
+
+            Cursor cursorCI = dbase.rawQuery(selectQueryCI, null);
+
+            // Move to the first row
+
+            if (cursorCI.moveToFirst()) {
+                do {
+                    HashMap<String, String> CIItemMap = new HashMap<String, String>();
+                    // Store the key / value pairs in a HashMap
+                    // Access the Cursor data by index that is in the same order
+                    // as query
+                    CIItemMap.put("BranchHead", "CertInspectionObject");
+                    CIItemMap.put(MyConfig.TAG_DATE_TIME, cursorCI.getString(0));
+                    CIItemMap.put(MyConfig.TAG_OVERVIEW, cursorCI.getString(1));
+                    CIItemMap.put(MyConfig.TAG_PERMIT, cursorCI.getString(2));
+                    CIItemMap.put(MyConfig.TAG_PROJECT_ADDRESS, cursorCI.getString(3));
+                    CIItemMap.put(MyConfig.TAG_STAGE, cursorCI.getString(4));
+                    CIItemMap.put(MyConfig.TAG_NOTES, cursorCI.getString(5));
+                    inspectedItemsList.add(CIItemMap);
+
+
+                } while (cursorCI.moveToNext()); // Move Cursor to the next row
+
+
+            }
+
+
+
 
         dbase.close();
 
