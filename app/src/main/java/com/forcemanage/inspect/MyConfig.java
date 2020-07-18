@@ -14,7 +14,7 @@ public class MyConfig {
     public static final String URL_SYNC_PROJECT_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncProjectToServer.php";
     public static final String URL_SYNC_ACTIONS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncActionsToServer.php";
     public static final String URL_SYNC_CERT_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncCertInspToServer.php";
-    public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_USER_info.php";
+    public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_USER_info.php?";
 
     public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php?projId=";
     public static final String URL_REQUEST_PROJECT= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestProject.php?projId=";
@@ -97,4 +97,10 @@ public class MyConfig {
     public static final String TAG_SUBCAT = "subCat";
     public static final String TAG_TYPE = "type";
     public static final String TAG_NOTE = "Note";
+
+    //Users
+    public static final String TAG_USER_ID = "userID";
+    public static final String TAG_USER_NAME = "userName";
+    public static final String TAG_USER_CODE = "userCode";
+    public static final String TAG_CLIENT_NAME = "clientName";
 }

@@ -65,6 +65,8 @@
                     />
 
 
+
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -161,6 +163,17 @@
                     android:textSize="11sp"
                     android:drawableLeft="@drawable/ic_format_list_checkbox"
                      />
+
+                <Button
+                    android:id="@+id/btnlogin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="Login"
+                    android:textSize="11sp"
+                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                    />
 
             </LinearLayout>
 

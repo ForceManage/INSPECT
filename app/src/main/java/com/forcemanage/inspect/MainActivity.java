@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private Button buttonSyncPhotos;
     private Button buttonInspection;
     private Button buttonLoadJobList;
-    private Button buttonLoadNotes;
+    private Button btnLogin;
     private Button btnAddActivity;
     private EditText TextMessage;
     DBHandler ESMdb;
@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING_CERTINSP;
     private String JSON_STRING_PROJECT_LIST;
     private String JSON_STRING_OR;
+    private String JSON_STRING_USER;
+    private String USER_NAME = "";
+    private String PASS_WORD = "";
     private ListView listView;
     private CheckBox checkBox;
     private Switch ToggleTB;
@@ -233,8 +236,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
    //     buttonInspection.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
-   //     buttonLoadNotes = (Button) findViewById(R.id.btnDownload_O_R);
-  //      buttonLoadNotes.setOnClickListener(this);
+        btnLogin = (Button) findViewById(R.id.btnlogin);
+        btnLogin.setOnClickListener(this);
         btnAddActivity = (Button) findViewById(R.id.addProject);
         btnAddActivity.setOnClickListener(this);
    //     buttonLoadNotes.setOnClickListener(this);
@@ -720,6 +723,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             dialog.show();
 
+        }
+
+        if (v == btnLogin) {
+
+            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+            View promptView = layoutInflater.inflate(R.layout.login, null);
+            AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
+            final EditText user = (EditText) promptView.findViewById(R.id.username);
+            final EditText password = (EditText) promptView.findViewById(R.id.password);
+            loginDialog.setView(promptView);
+            loginDialog.setTitle("Login");
+            loginDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+                    USER_NAME=user.getText().toString();
+                    PASS_WORD=password.getText().toString();
+                    get_user_JSON();
+                }
+            });
+            AlertDialog alert = loginDialog.create();
+            alert.show();
         }
 
 
@@ -1720,6 +1744,55 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
+    private void update_USER_Info() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_USER);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //    editTextMessage.setText("Test begin Category " + result);
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                String imsg = Integer.toString(i);
+                String rmsg = Integer.toString(result.length());
+                String msg = "Testing Loop category " + imsg + " result no " + rmsg;
+                //       editTextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String userID = jo.getString(MyConfig.TAG_USER_ID);
+                String userName = jo.getString(MyConfig.TAG_USER_NAME);
+                String userCode = jo.getString(MyConfig.TAG_USER_CODE);
+
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int uID = parseInt(userID);
+                int uCode = parseInt(userCode);
+
+                USER_Attributes user_attributes = new USER_Attributes(uID,userName, uCode,"");
+
+
+                //editTextMessage.setText("Test 5");
+
+                dbHandler.update_USER_FromServer(user_attributes);
+
+                // testing only -
+                //   editTextMessage.setText("Test Category end");
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("ESM", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
 
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
@@ -1939,6 +2012,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     private void getCertInspJSON() {
+
         class GetCertInspJSON extends AsyncTask<Void, Void, String> {
 
             Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
@@ -2134,15 +2208,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                JSON_STRING_OR = s;
+                JSON_STRING_USER = s;
 
-                update_OR_Info("E");
+                update_USER_Info();
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_USER_INFO,"1");
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_USER_INFO,USER_NAME+"&password="+PASS_WORD);
                 return s;
             }
 
