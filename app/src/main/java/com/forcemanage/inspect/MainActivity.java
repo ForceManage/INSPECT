@@ -50,6 +50,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.internal.Constants;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -103,8 +106,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING_PROJECT_LIST;
     private String JSON_STRING_OR;
     private String JSON_STRING_USER;
+    private int USER_ID = 0;
     private String USER_NAME = "";
     private String PASS_WORD = "";
+    private String CLIENT;
     private ListView listView;
     private CheckBox checkBox;
     private Switch ToggleTB;
@@ -210,17 +215,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        List<String> inspectors = new ArrayList<String>();
-        inspectors.add("AP");
-  //      inspectors.add("NP");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, inspectors);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinInspector.setAdapter(dataAdapter);
-
-        // editTextMessage.setText("Inspector: " + String.valueOf(spinInspector.getSelectedItem()));
-
-        // Toast.makeText(this, "Inspector: "+ String.valueOf(spinInspector.getSelectedItem()), Toast.LENGTH_LONG).show();
 
         buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
         buttonDownload.setOnClickListener(this);
@@ -236,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
    //     buttonInspection.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
+
         btnLogin = (Button) findViewById(R.id.btnlogin);
         btnLogin.setOnClickListener(this);
         btnAddActivity = (Button) findViewById(R.id.addProject);
@@ -448,7 +443,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
                 bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                bundle.putString("auditor",projectItem.get(MyConfig.TAG_INSPECTOR));
+                bundle.putString("auditor",projectItem.get(MyConfig.TAG_USER_ID));
 
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
@@ -529,11 +524,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         reqAct req = new reqAct();
         req.execute();
 
-        DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
-
-
-
-    }
+       }
 
 
 
@@ -541,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void onClick(View v) {
 
-        Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+        Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
         String selectedItem = "Sync All: " + String.valueOf(spinner1.getSelectedItem());
 
 
@@ -672,14 +663,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setTitle("Enter User Code");
                             passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-
-                                    if(passText.getText().toString().equals("1234")) {
-
-                                        if(dbHandler.checkstatus(projId)==0)
+                                    USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                    if(USER_ID>0){
+                                       if(dbHandler.checkstatus(projId)==0)
                                             downloadprojects();
                                         else
                                             Toast.makeText(MainActivity.this, "Upload current data prior to downloading",Toast.LENGTH_SHORT).show();
-                                        downloadprojects();
+
 
                                     }
                                     else
@@ -762,7 +752,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         if (v == buttonSyncAll) {
-
+            final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Cload Storage Upload Options");
             // add a list
@@ -788,7 +778,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    if(passText.getText().toString().equals("1234")) {
+                                    USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                    if(USER_ID>0){
                                         uploaddata();
                                         uploadphotos();
                                     }
@@ -820,7 +811,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
-                                    if(passText.getText().toString().equals("1234")) uploaddata();
+                                    USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                    if(USER_ID>0)  uploaddata();
                                     else
                                         Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
 
@@ -843,7 +835,45 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 2: {
 
-                            uploadphotos();
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                            passDialog.setView(promptView);
+                            passDialog.setTitle("Enter User Code");
+                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                    if(USER_ID>0) {
+                                        CLIENT = dbHandler.getClient(passText.getText().toString());
+
+                                        Thread thread = new Thread(new Runnable() {
+
+                                            @Override
+                                            public void run() {
+                                                boolean exists = s3Client.doesBucketExist(CLIENT);
+                                                if(!exists)
+                                                    s3Client.createBucket(CLIENT);
+
+                                            }
+
+                                        });
+                                        thread.start();
+                                        uploadphotos();
+                                    }
+                                    else
+                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+
+
+                                }
+                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = passDialog.create();
+                            alert.show();
+
+
                             break;
                         }
 
@@ -1441,7 +1471,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String inspectionId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String inspectionType = jo.getString(MyConfig.TAG_INSPECTION_TYPE);
                 String inspectionDate = datetoString(jo.getString(MyConfig.TAG_INSPECTION_DATE));
-                String inspector = jo.getString(MyConfig.TAG_INSPECTOR);
+                String inspector = jo.getString(MyConfig.TAG_USER_ID);
                 String inspectionStatus = jo.getString(MyConfig.TAG_INSPECTION_STATUS);
                 String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
                 String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
@@ -1765,6 +1795,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String userID = jo.getString(MyConfig.TAG_USER_ID);
                 String userName = jo.getString(MyConfig.TAG_USER_NAME);
                 String userCode = jo.getString(MyConfig.TAG_USER_CODE);
+                String clientName = jo.getString(MyConfig.TAG_CLIENT_NAME);
 
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -1772,7 +1803,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int uID = parseInt(userID);
                 int uCode = parseInt(userCode);
 
-                USER_Attributes user_attributes = new USER_Attributes(uID,userName, uCode,"");
+                USER_Attributes user_attributes = new USER_Attributes(uID,userName, uCode,clientName);
 
 
                 //editTextMessage.setText("Test 5");
@@ -1880,7 +1911,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECTS, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECTS, Integer.toString(USER_ID));
                 return s;
             }
 
@@ -1894,7 +1925,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void getJSON() {
         class GetJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
             String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
@@ -1920,7 +1951,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECT_INFO, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECT_INFO, Integer.toString(USER_ID));
                 return s;
             }
 
@@ -1930,9 +1961,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     private void getAdditionalJSON() {
+
         class GetAdditionalJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
             String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
@@ -1958,7 +1990,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_ADDITIONAL_INFO, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_ADDITIONAL_INFO, Integer.toString(USER_ID));
                 return s;
             }
 
@@ -1973,7 +2005,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void getActionJSON() {
         class GetActionJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
+            Spinner spinner1 =  findViewById(R.id.spinnerInspectorID);
             String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
@@ -1999,7 +2031,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_ACTION, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_ACTION, Integer.toString(USER_ID));
                 return s;
             }
 
@@ -2041,7 +2073,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_CERT_INSPECTION, ServicePerson);
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_CERT_INSPECTION, Integer.toString(USER_ID));
                 return s;
             }
 
@@ -2123,73 +2155,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         gj.execute();
     }
 
-    private void get_COR_JSON() {
-
-        class Get_COR_JSON extends AsyncTask<Void, Void, String> {
-
-            ProgressDialog loading;
-
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-                JSON_STRING_OR = s;
-
-                update_OR_Info("C");
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_OR_INFO,"C_OR");
-                return s;
-            }
-
-        }
-        Get_COR_JSON gj = new Get_COR_JSON();
-        gj.execute();
-    }
-
-    private void get_DOR_JSON() {
-
-        class Get_DOR_JSON extends AsyncTask<Void, Void, String> {
-
-            ProgressDialog loading;
-
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-                JSON_STRING_OR = s;
-
-                update_OR_Info("D");
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                RequestHandler_ rh = new RequestHandler_();
-                String s = rh.sendGetRequestParam(MyConfig.URL_GET_OR_INFO,"D_OR");
-                return s;
-            }
-
-        }
-        Get_DOR_JSON gj = new Get_DOR_JSON();
-        gj.execute();
-    }
 
     private void get_user_JSON() {
 
@@ -2209,9 +2174,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING_USER = s;
-
-                update_USER_Info();
-                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                if(s == "User not found" || s == "incorrect password") {
+                    Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    update_USER_Info();
+                    Toast.makeText(MainActivity.this, "logged in", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -2262,7 +2231,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
                     json.put(MyConfig.TAG_INSPECTION_STATUS, "p"); //
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
-                    json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
+                    json.put(MyConfig.TAG_INSPECTOR, USER_ID);
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
                     else
                     json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
@@ -2441,7 +2410,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         HashMap<String, String> propMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> propList = dbHandler.getAllProjects();
+        ArrayList<HashMap<String, String>> propList = dbHandler.getAllProjects(USER_ID);
         String testString = "";
         String tempString = "";
 
@@ -2794,7 +2763,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
+        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
         //Get a list of all the images for the properties to inspect
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
         ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos();
@@ -2806,7 +2775,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         int i = 0;
         while (i < list.size()) {
             photo_name = list.get(i).get(MyConfig.TAG_PROJECT_PHOTO);
-            if(!photo_name.equals("1")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
             i++;
         }
 
@@ -2815,18 +2784,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         while (i  < photolist.size() ) {   //photolist.size()
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE1);
-            if(!photo_name.equals("photo1")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE2);
-            if(!photo_name.equals("photo2")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE3);
-            if(!photo_name.equals("photo3")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE4);
-            if(!photo_name.equals("photo4")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE5);
-            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             i++;
         }
@@ -2836,20 +2805,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         while (i  < inspectphotolist.size() ) {   //photolist.size()
 
              photo_name = inspectphotolist.get(i).get(MyConfig.TAG_IMAGE);
-            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
               i++;
         }
 
-        i = 0;
-
-        while (i  < actionlist.size() ) {   //photolist.size()
-
-            photo_name = actionlist.get(i).get("ActionImage");
-            if(!photo_name.equals("photo5")) uploadFileToS3(view, photo_name);
-
-            i++;
-        }
 
     }
 
@@ -2866,34 +2826,58 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 if (F.exists()) {
 
 
-                    Thread thread = new Thread(new Runnable() {
+
+                    class upload_photo extends AsyncTask<Void, Void, String> {
+                        private ProgressDialog loading;
+                        private String res = "Before try";
+
 
                         @Override
-                        public void run() {
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+            //                loading = ProgressDialog.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
+                        }
 
+                        @Override
+                        protected void onPostExecute(final String s) {
+                            super.onPostExecute(s);
+                            Thread thread = new Thread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    boolean exists = s3Client.doesObjectExist(CLIENT, s);
+                                            if(exists){
+
+                                               s3Client.setObjectAcl(CLIENT,s,CannedAccessControlList.PublicRead);
+
+                                    //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
+                                            }
+
+                                }
+                                });
+                            thread.start();
+                //            Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        protected String doInBackground(Void... params) {
 
                             try {
-                                boolean exists = s3Client.doesObjectExist(bucket, photo_name);
+
+                                boolean exists = s3Client.doesObjectExist(CLIENT, "images/"+photo_name);
                                 if(exists){
 
-                                    Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
+                                    //    s3Client.setObjectAcl("iapp-apted","images/"+photo_name,CannedAccessControlList.PublicRead);
+
+                                    //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
                                 }
                                 else {
-                                    //          s3Client.putObject(bucket,photo_name,F);
 
 
-                                    //      TransferUtility transferUtility = TransferUtility.builder().defaultBucket(bucket).context(getApplicationContext()).s3Client(s3Client).build();
-
-                                    TransferUtility transferUtility =
-                                            TransferUtility.builder()
-                                                    .context(getApplicationContext())
-                                                    .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                                                    .s3Client(s3Client)
-                                                    .build();
+                                    TransferUtility transferUtility = TransferUtility.builder().context(getApplicationContext()).s3Client(s3Client).build();
 
                                     TransferObserver transferObserver = transferUtility.upload(
-                                            bucket,    // The bucket to upload to
-                                            photo_name,    // The key for the uploaded object
+                                            CLIENT,    // The bucket to upload to
+                                            "images/"+photo_name,    // The key for the uploaded object
                                             F       // The file where the data to upload exists
                                     );
 
@@ -2904,25 +2888,31 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             } catch (Exception e) {
 
-
+                                Log.e("PUBLIC READ", "PUBLIC READ ERROR ",e );
                             }
+
+                            return "images/"+photo_name;
                         }
 
-                    });
-
-                    thread.start();
-
-                }
+                    }
 
 
-            } else {
+                    upload_photo up_photo = new upload_photo();
+                    up_photo.execute();
 
 
-            }
 
-        }
+                }//if file exists
+
+            } //if folder exists
+
+        }//if name is valid
 
     }
+
+
+
+
 
 
     /**
@@ -3140,6 +3130,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             getAdditionalJSON();
             getProjectsJSON();
             getActionJSON();
+            getCertInspJSON();
             //       getCategoryJSON();
             get_AOR_JSON();
             //   get_BOR_JSON();
@@ -3154,7 +3145,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
+        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
         //Get a list of all the images for the properties to inspect
         DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();

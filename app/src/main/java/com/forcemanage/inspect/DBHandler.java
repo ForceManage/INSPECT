@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -923,6 +923,48 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public int checkCode(String code) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int u_ID = 0;
+
+        selectQuery = "SELECT " + COLUMN_U_ID + " FROM "
+                + TABLE_USER_LIST
+                + " WHERE " + COLUMN_U_CODE + " = "+ code;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            u_ID = cursor.getInt(0);
+        }
+        db.close();
+        return u_ID;
+
+    }
+
+    public String getClient(String code) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String client = "clientName";
+
+        selectQuery = "SELECT " + COLUMN_CLIENT_NAME + " FROM "
+                + TABLE_USER_LIST
+                + " WHERE " + COLUMN_U_CODE + " = "+ code;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            client = cursor.getString(0);
+        }
+        db.close();
+        return client;
+
+    }
+
     public int checkstatus(Integer projId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1820,7 +1862,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getAllProjects() {
+    public ArrayList<HashMap<String, String>> getAllProjects(int code) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -1837,7 +1879,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_PROJECT_INFO + " P "
                 + " JOIN " + TABLE_INSPECTION + " I "
                 + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I." + COLUMN_INSPECTION_STATUS + " = 'n' OR I." + COLUMN_INSPECTION_STATUS + " = 'p' OR I." + COLUMN_INSPECTION_STATUS + " = 'c'"
+                + " WHERE I." + COLUMN_INSPECTION_STATUS + " = 'n' OR I." + COLUMN_INSPECTION_STATUS + " = 'p' AND I." + COLUMN_U_CODE + " = "+ code
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -2039,7 +2081,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " ORDER BY " + COLUMN_PROJECT_ID;
+        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = m  ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
         if (cursor.moveToFirst()) {
