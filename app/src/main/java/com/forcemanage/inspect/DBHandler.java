@@ -883,15 +883,26 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor;
         int type = 0;
 
-        selectQuery = "SELECT M." + COLUMN_CHILD + " FROM "
+        selectQuery = "SELECT M." + COLUMN_PARENT + " FROM "
                 + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + aId;
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_PARENT + " = " + aId;
 
         cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
+        if (cursor.getCount() == 0) {
+            selectQuery = "SELECT M." + COLUMN_CHILD + " FROM "
+                    + TABLE_MAP + " M"
+                    + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + aId;
 
-            type = cursor.getInt(0);
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+
+                type = cursor.getInt(0);
+            }
         }
+        else{
+            type = -1;
+        }
+
         db.close();
         return type;
     }
@@ -1879,7 +1890,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_PROJECT_INFO + " P "
                 + " JOIN " + TABLE_INSPECTION + " I "
                 + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I." + COLUMN_INSPECTION_STATUS + " = 'n' OR I." + COLUMN_INSPECTION_STATUS + " = 'p' AND I." + COLUMN_U_CODE + " = "+ code
+                + " WHERE I." + COLUMN_INSPECTION_STATUS + " = 'n' OR I." + COLUMN_INSPECTION_STATUS + " = 'p' AND I." + COLUMN_INSPECTOR + " = "+ code
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -2320,14 +2331,12 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT P."+COLUMN_PROJECT_ADDRESS+", P." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
-                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE+", I."+COLUMN_P_ID//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE+", I."+COLUMN_P_ID
 
                 + " FROM " + TABLE_PROJECT_INFO + " P"
                 + " JOIN " + TABLE_INSPECTION + " I"
                 + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID;
-            //    + " GROUP BY P."+COLUMN_PROJECT_ID
 
-             //   + " GROUP BY I." + COLUMN_PROJECT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -2766,7 +2775,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 + " FROM " + TABLE_ACTION_ITEM + " I " +
                                 " JOIN " + TABLE_MAP + " M ON M." + COLUMN_A_ID + " = I." + COLUMN_REPORT_IMAGE + " AND M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID +
                                 " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND I." + COLUMN_INSPECTION_ID + " = " + iId+
-                                " AND M."+COLUMN_A_ID+" = "+ cursorB.getString(13) //this is aID of the MAP table
+                                " AND M."+COLUMN_A_ID+" = "+ cursorB.getString(15) //this is aID of the MAP table
                                 + " ORDER BY I." + COLUMN_A_ID;
 
                         Cursor cursorC = dbase.rawQuery(selectQueryC, null);

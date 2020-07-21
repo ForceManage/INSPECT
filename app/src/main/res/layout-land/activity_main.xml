@@ -71,39 +71,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 >
 
-                <Switch
-                    android:id="@+id/switch2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dp"
-                    android:text="TABLET" />
-
-                <TextView
-                    android:id="@+id/inspectorName"
+                 <TextView
+                    android:id="@+id/ProjectList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-                    android:text="Author"
-                         />
+                    android:text="Projects"
+                    />
 
-                <Spinner
-                    android:id="@+id/spinnerInspectorID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
             </LinearLayout>
 
 
 
 
-            <TextView
-                android:id="@+id/ProjectList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="Projects"
-                />
+
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/fragment_container"
@@ -188,11 +172,21 @@
 
                     <ProgressBar
                         android:id="@+id/progressBar1"
-                        style="?android:progressBarStyleHorizontal"
+                        style="?android:attr/progressBarStyleLarge"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:paddingRight="5dp"
                         android:progress="100"
-                        android:progressDrawable="@drawable/circle" />
+                        android:indeterminateOnly="true"
+                        android:visibility="invisible" />
+
+                    <Switch
+                        android:id="@+id/switch2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="TABLET" />
 
                     <Button
                         android:id="@+id/btnClearData"

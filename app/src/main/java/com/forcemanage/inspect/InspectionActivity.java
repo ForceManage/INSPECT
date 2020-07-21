@@ -490,14 +490,25 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         switch (type){
 
+            case(-1):{
+                Toast.makeText(this, "Cannot delete Parent branch, delete child branches first", Toast.LENGTH_SHORT).show();
+
+                break;
+            }
+
             case (0): {
-                Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
+                dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteInspectionItem(projId, aID);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
                 break;
             }
             case (1):{
 
                 dbHandler.deleteMapBranch(projId, aID);
                 dbHandler.deleteInspectionItem(projId, aID);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
                 break;
@@ -507,6 +518,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 dbHandler.deleteMapBranch(projId, aID);
                 dbHandler.deleteInspectionItem(projId, aID);
                 dbHandler.deleteActionItem(projId,aID);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
                 break;
@@ -515,6 +527,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                 dbHandler.deleteCertificate(projId,iID,aID);
                 dbHandler.deleteMapBranch(projId, aID);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
                 break;
@@ -529,16 +542,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-        if (Level > 0) {
 
-            dbHandler.deleteMapBranch(projId, aID);
-            dbHandler.deleteInspectionItem(projId, aID);
-            GlobalVariables.pos = GlobalVariables.pos - 1;
-            loadMap();
-
-        } else {
-            Toast.makeText(this, "Cannot delete Branch Head Title", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -1130,18 +1134,14 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
             builder.setTitle("Choose an action");
             // add a list
-            String[] actions = {"Delete the current Report item.",
-                    "Delete this Branch",
-                    "Cancel this operation."};
+            String[] actions = {"Delete the current branch",
+                    };
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
+
                         case 0: {
-                            deleteInspectionItem();
-                            break;
-                        }
-                        case 1: {
 
                             LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
@@ -1153,7 +1153,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            deleteMapBranch();
+                                            deleteInspectionItem();
 
                                         }
                                     })
@@ -1171,45 +1171,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                             break;
 
-                        } //
-                        case 2: {
-
-               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
-
-
-
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                         deleteInspectionItem();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                */
-                            break;
-                        }
-
+                        } //end of case 0
                     }
-                    //end of case 0
+
                 }
             });
             // create and show the alert dialog
@@ -1222,133 +1186,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
     }
 
-    public void reportMenu() {
-
-        saveInspectionItem();
-
-        // setup the alert builder
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-        builder.setTitle("Choose an action");
-        // add a list
-        String[] actions = {"Compile and review the inspection report.",
-                "Compile and email report to user",
-                "Compile and email report to Contact List entity",
-                "Compile inspection certificate",
-                "Cancel this operation."};
-        builder.setItems(actions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0: {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("projectId", projId);
-                        bundle.putInt("iId", iID);
-
-                        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iID);
-
-                        //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-                        //     recyclerView.setHasFixedSize(true);
-                        //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-                        reportlistItems = new ArrayList<>();
-                        ReportItem listItem;
-
-                        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
-                            listItem = new ReportItem(
-                                    listItemsmap.get(i).get("BranchHead"),
-                                    listItemsmap.get(i).get("ParentLabel"),
-                                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
-                                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
-                                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
-                                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
-                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE)
-
-                            );
-
-                            reportlistItems.add(listItem);
-
-                            Log.v("report list", listItemsmap.get(i).get("BranchHead")+", ");
-                        }
-
-                        ReportFragment fragment = new ReportFragment();
-                        fragment.setArguments(bundle);
-                        doFragmentTransaction(fragment, "ReportFragment", false, "");
-                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
-
-
-                        break;
-                    }
-                    case 1: {
-
-                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                        startActivityForResult(intentContact, PICK_CONTACT);
-
-                        break;
-
-                    } //
-                    case 2: {
-
-               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
-
-
-
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                         deleteInspectionItem();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                */
-                        break;
-                    }
-
-                }
-                //end of case 0
-            }
-        });
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
-
-    }
 
 
 
@@ -1605,100 +1442,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             }
         }
 
-
-        if (requestCode == PICK_CONTACT) {
-
-            final String emailAdress;
-            emailAdress = getContactInfo(data);
-
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.email_accept, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.email);
-                            locationText.setText(emailAdress);//location.getText().toString());
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-
-                                            class Send_Report extends AsyncTask<Void, Void, Void> {
-                                            @Override
-                                            protected Void doInBackground(Void... params) {
-                                                RequestHandler_ rh = new RequestHandler_();
-                                                rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
-                                                return null;
-                                            }
-
-                                            }
-                                            Send_Report rep = new Send_Report();
-                                            rep.execute();
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-
         }
-
-
-
-
-            // Your class variables now have the data, so do something with it.
-
-
-        }
-
-    protected String getContactInfo(Intent data)
-    {
-
-        Cursor cursor = null;
-        String email = "", name = "";
-        try {
-            Uri result = data.getData();
-            Log.v(" Email", "Got a contact result: " + result.toString());
-
-            // get the contact id from the Uri
-            String id = result.getLastPathSegment();
-
-            // query for everything email
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,  null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id }, null);
-
-            int nameId = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-
-            int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-
-            // let's just get the first email
-            if (cursor.moveToFirst()) {
-                email = cursor.getString(emailIdx);
-                name = cursor.getString(nameId);
-                Log.v(" Email", "Got email: " + email);
-            } else {
-                Log.w(" Email", "No results");
-            }
-        } catch (Exception e) {
-            Log.e(" Email", "Failed to get email data", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-
-
-        }
-        return email;
-    }//getContactInfo
-
-
 
 
     File createPhotoFile()throws IOException {

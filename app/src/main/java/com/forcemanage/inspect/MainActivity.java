@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private Fragment fragment_obj;
     public ArrayList reportlistItems;
     public String propPhoto;
+    private ProgressBar progressBar1;
 
 
     AmazonS3 s3Client;
@@ -155,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         setContentView(R.layout.activity_main);
         ESMdb = new DBHandler(this, null, null, 1);
 
-        Spinner spinInspector = (Spinner) findViewById(R.id.spinnerInspectorID);
-
 
         s3credentialsProvider();
 
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         init();
 
         ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects();
-
+        progressBar1 =  findViewById(R.id.progressBar1);
         listItems = new ArrayList<>();
         MapViewData listItem;
 
@@ -532,8 +532,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void onClick(View v) {
 
-        Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
-        String selectedItem = "Sync All: " + String.valueOf(spinner1.getSelectedItem());
+
 
 
         if (v == btnAddActivity) {
@@ -641,7 +640,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Cloud Storage Data Download Options");
+            builder.setTitle("Downloads");
             // add a list
             String[] actions = {"Download Projects",
                     "Download photos ",
@@ -663,6 +662,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setTitle("Enter User Code");
                             passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if(USER_ID>0){
                                        if(dbHandler.checkstatus(projId)==0)
@@ -673,7 +673,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                     }
                                     else
-                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Log in required for downloading",Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -1471,7 +1471,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String inspectionId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String inspectionType = jo.getString(MyConfig.TAG_INSPECTION_TYPE);
                 String inspectionDate = datetoString(jo.getString(MyConfig.TAG_INSPECTION_DATE));
-                String inspector = jo.getString(MyConfig.TAG_USER_ID);
+                String inspector = jo.getString(MyConfig.TAG_INSPECTOR);
                 String inspectionStatus = jo.getString(MyConfig.TAG_INSPECTION_STATUS);
                 String startDateTime = jo.getString(MyConfig.TAG_START_DATE_TIME);
                 String endDateTime = jo.getString(MyConfig.TAG_END_DATE_TIME);
@@ -1489,6 +1489,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int level = parseInt(Level);
                 int parent = parseInt(Parent);
                 int p_Id = parseInt(pID);
+
 
                 ProjectAttributes projectrow =
                         new ProjectAttributes(projId, addressNo, address, suburb, infoA, infoB, infoC, infoD, projectPhoto, infoE, infoF, infoG, infoH, infoI, infoJ, projectNote );
@@ -1885,8 +1886,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void getProjectsJSON() {
         class GetProjectsJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
-            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
 
@@ -1925,8 +1924,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void getJSON() {
         class GetJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
-            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
+
 
             ProgressDialog loading;
 
@@ -1964,8 +1962,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         class GetAdditionalJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = findViewById(R.id.spinnerInspectorID);
-            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
+
 
             ProgressDialog loading;
 
@@ -2005,8 +2002,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void getActionJSON() {
         class GetActionJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 =  findViewById(R.id.spinnerInspectorID);
-            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
 
@@ -2047,8 +2042,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         class GetCertInspJSON extends AsyncTask<Void, Void, String> {
 
-            Spinner spinner1 = (Spinner) findViewById(R.id.spinnerInspectorID);
-            String ServicePerson = String.valueOf(spinner1.getSelectedItem());
 
             ProgressDialog loading;
 
@@ -2814,7 +2807,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    public void uploadFileToS3(View view, final String photo_name) {
+    public void uploadFileToS3(final View view, final String photo_name) {
 
 
 
@@ -2835,23 +2828,36 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
+                            progressBar1.setVisibility(view.VISIBLE);
             //                loading = ProgressDialog.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
                         }
 
                         @Override
                         protected void onPostExecute(final String s) {
                             super.onPostExecute(s);
+                            progressBar1.setVisibility(view.INVISIBLE);
                             Thread thread = new Thread(new Runnable() {
 
                                 @Override
                                 public void run() {
-                                    boolean exists = s3Client.doesObjectExist(CLIENT, s);
-                                            if(exists){
+                                    try {
 
-                                               s3Client.setObjectAcl(CLIENT,s,CannedAccessControlList.PublicRead);
 
-                                    //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
-                                            }
+
+                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
+
+                                        if (exists) {
+
+                                            s3Client.setObjectAcl(CLIENT, s, CannedAccessControlList.PublicRead);
+
+                                            //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
+                                        }
+                                }
+                                    catch (Exception e) {
+
+                                        Log.e("HAND SHAKE AWS", "TIME OUT",e );
+
+                                    }
 
                                 }
                                 });
@@ -2862,7 +2868,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         protected String doInBackground(Void... params) {
 
                             try {
-
+                          //      progressBar1.setVisibility(view.VISIBLE);
                                 boolean exists = s3Client.doesObjectExist(CLIENT, "images/"+photo_name);
                                 if(exists){
 
