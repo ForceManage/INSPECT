@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private int USER_ID = 0;
     private String USER_NAME = "";
     private String PASS_WORD = "";
-    private String CLIENT;
+    private String CLIENT = "no-client";
     private ListView listView;
     private CheckBox checkBox;
     private Switch ToggleTB;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private File photo;
     private String dirName;
     public String inspectionId;
-    public String projectId;
+    public String projectId = "null";
     private int projId;
     private int iId;
     private String fname;
@@ -514,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected Void doInBackground(Void... params) {
                 RequestHandler_ rh = new RequestHandler_();
-                rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName);
+                rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName+"&USERID="+USER_ID);
 
                 return null;
 
@@ -539,11 +539,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Add Project/Activity ");
+            builder.setTitle("Add a new Project or Activity to existing Project ");
             // add a list
             String[] actions = {"Request New Project",
-                    "Request New Activity for Project ",
-                    "Attach Certificate Inspection",
+                    "Request New Activity for Existing Project ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -562,13 +561,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Project ID : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Enter your reference Project identification.");
+                            branchText.setHint("Enter your Project identification.");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
+                                            if(USER_ID > 0) {
+                                                requestProject(branchText.getText().toString());
+                                                downloadprojects();
+                                            }
+                                            else
+                                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
 
-                                            requestProject(branchText.getText().toString());
-                                            downloadprojects();
+
 
                                         }
                                     })
@@ -592,19 +596,30 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
-                            final int pId = dbHandler.getInspectionpId(parseInt(projectId));
+                            if(USER_ID > 0) {
 
-                            class reqAct extends AsyncTask<Void, Void, Void> {
-                                @Override
-                                protected Void doInBackground(Void... params) {
-                                    RequestHandler_ rh = new RequestHandler_();
-                                    rh.sendRequestParam(MyConfig.URL_REQUEST_ACTIVITY, projectId+"&pId="+ Integer.toString(pId));
-                                    return null;
+
+                                final int pId = dbHandler.getInspectionpId(parseInt(projectId));
+                                if(!projectId.equals("null")) {
+
+                                    class reqAct extends AsyncTask<Void, Void, Void> {
+                                        @Override
+                                        protected Void doInBackground(Void... params) {
+                                            RequestHandler_ rh = new RequestHandler_();
+                                            rh.sendRequestParam(MyConfig.URL_REQUEST_ACTIVITY, projectId + "&pId=" + pId + "&USERID=" + USER_ID);
+                                            return null;
+                                        }
+
+                                    }
+                                    reqAct req = new reqAct();
+                                    req.execute();
                                 }
-
+                                else
+                                    Toast.makeText(MainActivity.this, "Select a Project ",Toast.LENGTH_LONG).show();
                             }
-                            reqAct req = new reqAct();
-                            req.execute();
+                            else
+                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
+
 
                             break;
 
@@ -690,7 +705,36 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
-                                    downloadphotos();
+                            if(USER_ID == 0) {
+
+                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                                AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                                final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                                passDialog.setView(promptView);
+                                passDialog.setTitle("Enter User Code");
+                                passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                        if (USER_ID > 0) {
+
+                                                downloadphotos();
+
+                                        } else
+                                            Toast.makeText(MainActivity.this, "incorrect code or not logged in", Toast.LENGTH_LONG).show();
+
+
+                                    }
+                                });
+
+                                // create an alert dialog
+                                AlertDialog alert = passDialog.create();
+                                alert.show();
+                            }
+                            else  downloadphotos();
+
+
                             break;
 
                         }
@@ -717,23 +761,103 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (v == btnLogin) {
 
-            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-            View promptView = layoutInflater.inflate(R.layout.login, null);
-            AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
-            final EditText user = (EditText) promptView.findViewById(R.id.username);
-            final EditText password = (EditText) promptView.findViewById(R.id.password);
-            loginDialog.setView(promptView);
-            loginDialog.setTitle("Login");
-            loginDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
-                public void onClick(DialogInterface dialog, int id) {
-                    USER_NAME=user.getText().toString();
-                    PASS_WORD=password.getText().toString();
-                    get_user_JSON();
-                }
-            });
-            AlertDialog alert = loginDialog.create();
-            alert.show();
+            if(dbHandler.checkstatus(projId)>0){
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Login will delete current unsaved data. Upload data prior to login.");
+
+                builder.setPositiveButton("UPLOAD DATA", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                        View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                        AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                        final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                        passDialog.setView(promptView);
+                        passDialog.setTitle("Enter User Code");
+                        passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                if(USER_ID>0){
+                                    uploaddata();
+                                    uploadphotos();
+                                }
+                                else
+                                    Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+
+
+                            }
+                        });
+
+                        // create an alert dialog
+                        AlertDialog alert = passDialog.create();
+                        alert.show();
+                    }
+                });
+
+                builder.setNegativeButton("PROCEED WITH LOGIN", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                        View promptView = layoutInflater.inflate(R.layout.login, null);
+                        AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
+                        final EditText user = (EditText) promptView.findViewById(R.id.username);
+                        final EditText password = (EditText) promptView.findViewById(R.id.password);
+                        final TextView text = (TextView) promptView.findViewById(R.id.text);
+                        loginDialog.setView(promptView);
+                        loginDialog.setTitle("Login");
+                        loginDialog.setCancelable(true).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+
+
+                            public void onClick(DialogInterface dialog, int id) {
+                                USER_NAME=user.getText().toString();
+                                PASS_WORD=password.getText().toString();
+                                clearTablet();
+                                updatePropList();
+                                get_user_JSON();
+                            }
+                        });
+                        AlertDialog alert = loginDialog.create();
+                        alert.show();
+                    }
+                });
+
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            else {
+
+                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                View promptView = layoutInflater.inflate(R.layout.login, null);
+                AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
+                final EditText user = (EditText) promptView.findViewById(R.id.username);
+                final EditText password = (EditText) promptView.findViewById(R.id.password);
+                final TextView text = (TextView) promptView.findViewById(R.id.text);
+                loginDialog.setView(promptView);
+                loginDialog.setTitle("Login");
+                loginDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        USER_NAME = user.getText().toString();
+                        PASS_WORD = password.getText().toString();
+                        clearTablet();
+                        updatePropList();
+                        get_user_JSON();
+                    }
+                });
+                AlertDialog alert = loginDialog.create();
+                alert.show();
+
+            }
         }
 
 
@@ -2224,7 +2348,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
                     json.put(MyConfig.TAG_INSPECTION_STATUS, "p"); //
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
-                    json.put(MyConfig.TAG_INSPECTOR, USER_ID);
+                    json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
                     else
                     json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
@@ -2561,7 +2685,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String res = "initiated";
 
         RequestHandler_ rh = new RequestHandler_();
-        res = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+        res = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId+"&USERID="+USER_ID);
 
 
         return res;
@@ -2678,7 +2802,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected String doInBackground(Void... params) {
 
                 RequestHandler_ rh = new RequestHandler_();
-                String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId);
+                String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId+"&USERID="+USER_ID);
                 return message;
             }
 
@@ -2758,8 +2882,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
         //Get a list of all the images for the properties to inspect
-        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
-        ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos();
+        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
+        ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos(USER_ID);
         ArrayList<HashMap<String, String>> actionlist = dbHandler.getActionPhotos();
 
 
@@ -2841,10 +2965,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 @Override
                                 public void run() {
                                     try {
-
-
-
-                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
+                                      boolean exists = s3Client.doesObjectExist(CLIENT, s);
 
                                         if (exists) {
 
@@ -2926,7 +3047,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
      *
      * @param view
      **/
-    public void downloadFileFromS3(View view, String img_name) {
+    public void downloadFileFromS3(View view, final String  img_name) {
 
 
 
@@ -2934,7 +3055,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             dirName = img_name.substring(6, 14);
             String info = img_name.substring(5, 9);
             File storageDirectory;
-            File F;
+            final File F;
 
             root = Environment.getExternalStorageDirectory().toString();
 
@@ -2954,14 +3075,32 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
 
             if (F.exists() != true) {
-                TransferObserver transferObserver = transferUtility.download(
-                        bucket,     /* The bucket to download from */
-                        img_name,    /* The key for the object to download */
-                        F      /* The file to download the object to */
+                bucket = CLIENT;
 
-                );
+                Thread thread = new Thread(new Runnable() {
 
-                transferObserverListener(transferObserver);
+                    @Override
+                    public void run() {
+
+                        TransferObserver transferObserver = transferUtility.download(
+                                bucket,     /* The bucket to download from */
+                                "images/"+img_name,    /* The key for the object to download */
+                                F      /* The file to download the object to */
+
+                        );
+
+                        transferObserverListener(transferObserver);
+
+
+                    }
+                });
+                thread.start();
+
+
+
+
+
+
 
             }
         }
@@ -3153,23 +3292,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
         //Get a list of all the images for the properties to inspect
-        DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+        ArrayList<HashMap<String, String>> ilist = dbHandler.getInspectionPhotos(USER_ID);
+        ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
 
         int i = 0;
         while (i < list.size()) {
 
             downloadFileFromS3(view, list.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
+            String s = list.get(i).get(MyConfig.TAG_PROJECT_PHOTO);
             i++;
         }
 
         //for each propertyID call method to search the propertyIDINFO create the directory and download the information
 
         i = 0;
-        while (i < list.size()) {
-
-            getObjectslistFromFolder(bucket,list.get(i).get(MyConfig.TAG_PROJECT_ID)+"INFO");
-
+        while (i < ilist.size()) {
+            downloadFileFromS3(view, ilist.get(i).get(MyConfig.TAG_IMAGE));
             i++;
         }
 

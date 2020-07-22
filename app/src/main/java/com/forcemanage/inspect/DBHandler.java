@@ -960,7 +960,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-        String client = "clientName";
+        String client = "no-client";
 
         selectQuery = "SELECT " + COLUMN_CLIENT_NAME + " FROM "
                 + TABLE_USER_LIST
@@ -1873,7 +1873,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getAllProjects(int code) {
+    public ArrayList<HashMap<String, String>> getAllProjects(int user_id) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -1890,7 +1890,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_PROJECT_INFO + " P "
                 + " JOIN " + TABLE_INSPECTION + " I "
                 + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I." + COLUMN_INSPECTION_STATUS + " = 'n' OR I." + COLUMN_INSPECTION_STATUS + " = 'p' AND I." + COLUMN_INSPECTOR + " = "+ code
+                + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -1943,7 +1943,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getInspectedItemPhotos() {
+    public ArrayList<HashMap<String, String>> getInspectedItemPhotos(int user_id) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -1955,8 +1955,8 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
 
                 + " FROM " + TABLE_INSPECTION_ITEM +" I "
- //               + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I." + COLUMN_ITEM_STATUS + " = 'p'";
+                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID;
+       //         + " WHERE  E."+COLUMN_INSPECTOR+" = "+user_id;
 
 
 
@@ -1994,7 +1994,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getInspectionPhotos() {
+    public ArrayList<HashMap<String, String>> getInspectionPhotos(int user_id) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -2006,7 +2006,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT E." + COLUMN_IMAGE
                 + " FROM " + TABLE_INSPECTION +" E "
-                + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
+                + " WHERE E." + COLUMN_INSPECTOR+ " = " +user_id;
 
 
 
@@ -2092,7 +2092,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = m  ORDER BY " + COLUMN_PROJECT_ID;
+        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm'  ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
         if (cursor.moveToFirst()) {

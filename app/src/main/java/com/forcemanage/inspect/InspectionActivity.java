@@ -235,38 +235,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
 
-        esm_cat = new String[]{
-                "ESM",
-                "Means of egress",
-                "Fire fighting services and equipment",
-                "Signage",
-                "Lighting",
-                "Building fire integrity"
-        };
-
-        final String[] buildcat = new String[]{
-                "Building category",
-                "Division 1, Subdivision 2 (Pre 1994 )",
-                "Division 1, Subdivision 1 (1 July 1994 - 1 May 2004 )",
-                "Division 1, Subdivision 1 (From May 2004.  Post 1994 )",
-        };
-
-        iTitle = new String[]{
-                "Branch Title",
-                "Existing Building",
-                "Movement and Cracking",
-                "Framing",
-                "Reinforcement"
-        };
-
-        final String[] contractor = new String[]{
-                "Contractor",
-                "Building Essentials - 94695294",
-                "FSS",
-                "Northern Fire",
-                "Link Fire",
-        };
-
     }
 
     private void init() {
@@ -795,74 +763,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         }
 
 
-
- /*          HashMap<String, String> list = dbHandler.getInspection(projId, aID, iID);
-
-
-            if(list.isEmpty()) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("branchHead",branchHead);
-                bundle.putString("branchLabel",branchLabel);
-                bundle.putString("notes",branchNote);
-                bundle.putString("com2",com2);
-                BaseFragment fragment = new BaseFragment();
-                fragment.setArguments(bundle);
-
-                  doFragmentTransaction(fragment, "BaseFragment", false, "");
-                }
-
-                else {
-
-                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                Overview = list.get(MyConfig.TAG_OVERVIEW);
-                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                com1 = list.get(MyConfig.TAG_COM1);
-                com2 = list.get(MyConfig.TAG_COM2);
-                com3 = list.get(MyConfig.TAG_COM3);
-                com4 = list.get(MyConfig.TAG_COM4);
-                com5 = list.get(MyConfig.TAG_COM5);
-                Notes = list.get(MyConfig.TAG_NOTES);
-
-
-                Bundle bundle = new Bundle();
-                bundle.putString("branchHead",branchHead);
-                bundle.putString("branchLabel",branchLabel);
-                bundle.putString("aprovider",aProvider);
-                bundle.putString("overview",Overview);
-                bundle.putString("relevantInfo",relevantInfo);
-                bundle.putString("notes",Notes);
-                bundle.putString("com1",com1);
-                bundle.putString("com2",com2);
-                bundle.putString("com3",com3);
-                bundle.putString("com4",com4);
-                bundle.putString("com5",com5);
-
-                InspectionFragment fragment = new InspectionFragment();
-                fragment.setArguments(bundle);
-
-                doFragmentTransaction(fragment,"InspectionFragment",false,"");
-
-            int itemNos = dbHandler.getSubItemMap(projId, aID);
-
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                photos[4] = list.get(MyConfig.TAG_IMAGE5);
-
-                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                String tag = list.get(MyConfig.TAG_IMAGE1);
-
-                photo1 = photos[0];
-                photo2 = photos[1];
-                photo3 = photos[2];
-                photo4 = photos[3];
-                photo5 = photos[4];
-
-            } //list is not empty
-
-  */
     }
 
     public void onClick(View v) {
@@ -877,9 +777,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             // setup the alert builder
 
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setTitle("Choose an action");
+            builder.setTitle("Modify Branch Tabs ");
             // add a list
-            String[] actions = {"Change the Zone or inspection item description",
+            String[] actions = {"Change the Branch tab text",
                     "",
                     "",
                     ""};
@@ -895,7 +795,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Branch Text: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Current label : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -943,13 +843,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Choose an action");
+            builder.setTitle("Add Titles, sub-Titles, Notes, Action Scope, Certificates ");
             // add a list
-            String[] actions = {"Create New Principal Branch Item",
-                    "Add Navigation Branch",
-                    "Add Report Branch ",
-                    "Add Action Branch",
-                    "Add Certificate Inspection Branch",
+            String[] actions = {"Create New Title Branch ",
+                    "Add Sub title Branch",
+                    "Add branch photo and Notes  ",
+                    "Add To-do Action Scope ",
+                    "Add Certificate Inspection",
                     "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
