@@ -2038,7 +2038,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<HashMap<String, String>> getActionPhotos() {
+    public ArrayList<HashMap<String, String>> getActionPhotos(int user_id) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -2051,9 +2051,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT A." + COLUMN_IMG1
 
-                + " FROM " + TABLE_ACTION_ITEM +" A ";
-      //          + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = A." + COLUMN_PROJECT_ID
-      //          + " WHERE E." + COLUMN_INSPECTION_STATUS + " = 'n' OR E." + COLUMN_INSPECTION_STATUS + " = 'p'";
+                + " FROM " + TABLE_ACTION_ITEM +" A "
+                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = A." + COLUMN_PROJECT_ID
+                + " WHERE E." + COLUMN_INSPECTOR + " = "+user_id;
 
 
 
@@ -2319,7 +2319,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getProjects() {
+    public ArrayList<HashMap<String, String>> getProjects(int user_id) {
 
 
         HashMap<String, String> ProjectMap;
@@ -2335,7 +2335,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 + " FROM " + TABLE_PROJECT_INFO + " P"
                 + " JOIN " + TABLE_INSPECTION + " I"
-                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID;
+                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id;
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);

@@ -22,7 +22,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,7 +29,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +40,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
@@ -51,14 +48,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.internal.Constants;
-import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.google.gson.JsonArray;
-
 
 
 import org.json.JSONArray;
@@ -78,8 +71,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 import static com.amazonaws.regions.Regions.AP_SOUTHEAST_2;
@@ -131,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int PICK_CONTACT = 3;
     private RecyclerView recyclerView;
-  //  private List<Joblistdata> jobList;
+    //  private List<Joblistdata> jobList;
     private String FragDisplay;
     private Fragment fragment_obj;
     public ArrayList reportlistItems;
@@ -148,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     String file_name;
     EditText prop_name;
 
-       private View view;
+    private View view;
     private int index;
 
     @Override
@@ -168,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         init();
 
-        ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects();
+        ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects(USER_ID);
         progressBar1 =  findViewById(R.id.progressBar1);
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -218,16 +209,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
         buttonDownload.setOnClickListener(this);
-   //     buttonDownloadPhotos = (Button) findViewById(R.id.btnDownloadPhotos);
-   //     buttonDownloadPhotos.setOnClickListener(this);
+        //     buttonDownloadPhotos = (Button) findViewById(R.id.btnDownloadPhotos);
+        //     buttonDownloadPhotos.setOnClickListener(this);
         buttonClearAll = (Button) findViewById(R.id.btnClearData);
         buttonClearAll.setOnClickListener(this);
         buttonSyncAll = (Button) findViewById(R.id.btnSyncAll);
         buttonSyncAll.setOnClickListener(this);
-   //     buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
-   //     buttonSyncPhotos.setOnClickListener(this);
-   //     buttonInspection = (Button) findViewById(R.id.btnInspection);
-   //     buttonInspection.setOnClickListener(this);
+        //     buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
+        //     buttonSyncPhotos.setOnClickListener(this);
+        //     buttonInspection = (Button) findViewById(R.id.btnInspection);
+        //     buttonInspection.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
 
@@ -235,11 +226,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         btnLogin.setOnClickListener(this);
         btnAddActivity = (Button) findViewById(R.id.addProject);
         btnAddActivity.setOnClickListener(this);
-   //     buttonLoadNotes.setOnClickListener(this);
- //       info_icon = (ImageView) findViewById(R.id.imageView_info);
-  //      info_icon.setOnClickListener(this);
-  //      photo_cam =(ImageView) findViewById(R.id.imageView_cam);
-  //      photo_cam.setOnClickListener(this);
+        //     buttonLoadNotes.setOnClickListener(this);
+        //       info_icon = (ImageView) findViewById(R.id.imageView_info);
+        //      info_icon.setOnClickListener(this);
+        //      photo_cam =(ImageView) findViewById(R.id.imageView_cam);
+        //      photo_cam.setOnClickListener(this);
         buttonClearAll.setEnabled(false);
         // listView = (ListView)findViewById(R.id.lstMain);
 
@@ -308,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             case (3): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -316,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             case (4): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -375,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
-  //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
                 propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
 
@@ -401,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
                 fragment.setArguments(bundle);
-    //            fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                //            fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 break;
             }
 
@@ -411,8 +402,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
 
- //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                 propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+                //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
 
  /*               if(propPhoto.length() > 14)
                 {
@@ -460,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void onResume(){
 
         super.onResume();
-       //    updatePropList();
+        //    updatePropList();
 
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
@@ -524,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         reqAct req = new reqAct();
         req.execute();
 
-       }
+    }
 
 
 
@@ -680,7 +671,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if(USER_ID>0){
-                                       if(dbHandler.checkstatus(projId)==0)
+                                        if(dbHandler.checkstatus(USER_ID)==0)
                                             downloadprojects();
                                         else
                                             Toast.makeText(MainActivity.this, "Upload current data prior to downloading",Toast.LENGTH_SHORT).show();
@@ -719,7 +710,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                         USER_ID = dbHandler.checkCode(passText.getText().toString());
                                         if (USER_ID > 0) {
 
-                                                downloadphotos();
+                                            downloadphotos();
 
                                         } else
                                             Toast.makeText(MainActivity.this, "incorrect code or not logged in", Toast.LENGTH_LONG).show();
@@ -763,14 +754,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
-            if(dbHandler.checkstatus(projId)>0){
+            if(dbHandler.checkstatus(USER_ID)>0){
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setTitle("Confirm");
+                builder.setTitle("LOGIN WARNING");
                 builder.setMessage("Login will delete current unsaved data. Upload data prior to login.");
 
-                builder.setPositiveButton("UPLOAD DATA", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("UPLOAD UNSAVED DATA", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -819,7 +810,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             public void onClick(DialogInterface dialog, int id) {
                                 USER_NAME=user.getText().toString();
                                 PASS_WORD=password.getText().toString();
-                                clearTablet();
+                                //         clearTablet();
                                 updatePropList();
                                 get_user_JSON();
                             }
@@ -849,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     public void onClick(DialogInterface dialog, int id) {
                         USER_NAME = user.getText().toString();
                         PASS_WORD = password.getText().toString();
-                        clearTablet();
+                        //      clearTablet();
                         updatePropList();
                         get_user_JSON();
                     }
@@ -1215,7 +1206,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             e.printStackTrace();
         }
 
-        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this,BuildConfig.APPLICATION_ID + ".provider", photo));
+        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo));
         startActivityForResult(camera_intent, ACTIVITY_START_CAMERA_APP);
 
     }
@@ -1280,7 +1271,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
-                        reportMailer();
+                            reportMailer();
                         }
                     })
                     .setNegativeButton("Cancel",
@@ -1484,11 +1475,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-     //   final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
+        //   final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
         //Get a list of all the images for the properties to inspect
-      //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-     //   ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
-        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects();
+        //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
+        //   ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
+        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
         listItems = new ArrayList<>();
         MapViewData listItem;
 
@@ -1659,10 +1650,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             for (int i = 0; i < result.length(); i++) {
                 // testing only -
-              //  String imsg = Integer.toString(i);
-              //  String rmsg = Integer.toString(result.length());
-              //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
-              //  TextMessage.setText(msg);
+                //  String imsg = Integer.toString(i);
+                //  String rmsg = Integer.toString(result.length());
+                //  String msg = "Testing Loop "+imsg+" result no "+rmsg;
+                //  TextMessage.setText(msg);
 
                 JSONObject jo = result.getJSONObject(i);
                 String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
@@ -1701,18 +1692,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 //                int startDateTime_ = parseInt(startDateTime);
 //                int endDateTime_ = parseInt(endDateTime);
-   //             int ServiceLevel = parseInt(serviceLevel);
+                //             int ServiceLevel = parseInt(serviceLevel);
 
 
                 InspectionItemAttributes itemRow = new InspectionItemAttributes(InspectionId, projId, a_Id, dateInspected, overview, servicedBy, relevantInfo, serviceLevel, reportImg, image1, com1, image2, com2
-                                                      , image3, com3, image4, com4, image5, com5, image6, com6, image7, com7, itemStatus, notes);
+                        , image3, com3, image4, com4, image5, com5, image6, com6, image7, com7, itemStatus, notes);
 
                 //editTextMessage.setText("Test 5");
 
 
                 dbHandler.updateFromServer(itemRow);
 
-              }
+            }
 
         } catch (JSONException e) {
             // editTextMessage.setText(" Exception");
@@ -1721,7 +1712,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
         // testing only -
         // editTextMessage.setText("Test 4");
-     }
+    }
 
 
     //Update the MAP SQLite db with additional from MAP MySQL db
@@ -1737,10 +1728,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             for (int i = 0; i < result.length(); i++) {
                 // testing only -
-              //  String imsg = Integer.toString(i);
-             //   String rmsg = Integer.toString(result.length());
-             //   String msg = "Testing Loop additional " + imsg + " result no " + rmsg;
-             //     editTextMessage.setText(msg);
+                //  String imsg = Integer.toString(i);
+                //   String rmsg = Integer.toString(result.length());
+                //   String msg = "Testing Loop additional " + imsg + " result no " + rmsg;
+                //     editTextMessage.setText(msg);
 
                 JSONObject jo = result.getJSONObject(i);
                 String projId = jo.getString(MyConfig.TAG_PROJECT_ID);
@@ -1769,7 +1760,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, i_Id, Photo, Note);
                 // editTextMessage.setText("Additional Test 1");
 
-                      //editTextMessage.setText("Test 5");
+                //editTextMessage.setText("Test 5");
 
                 dbHandler.updateAdditionalFromServer(mapRow);
 
@@ -1787,7 +1778,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
-// Get ActionItems from the server
+    // Get ActionItems from the server
     private void updateAction() {
         JSONObject jsonObject = null;
 
@@ -2063,7 +2054,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING = s;
-           //    TextMessage.setText("JSON_STRING " + s);
+                //    TextMessage.setText("JSON_STRING " + s);
 
                 updatePropInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -2101,7 +2092,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING_ADDITIONAL = s;
-            //    TextMessage.setText("JSON_STRING " + s);
+                //    TextMessage.setText("JSON_STRING " + s);
 
                 updateAdditionalInfo();
                 // testing only - editTextMessage.setText(JSON_STRING);
@@ -2332,7 +2323,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (inspList.size() == 0) {
             //no items toupdatelist
-            res = "No inspections to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < inspList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_INSPECTION_ID + ", " + inspList.get(i).get(MyConfig.TAG_INSPECTION_ID) + " ^-^ ";
@@ -2351,10 +2342,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
                     else
-                    json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
+                        json.put(MyConfig.TAG_START_DATE_TIME, inspList.get(i).get(MyConfig.TAG_START_DATE_TIME));
                     if(inspList.get(i).get(MyConfig.TAG_END_DATE_TIME)==null) json.put(MyConfig.TAG_END_DATE_TIME, "20200101010101");
                     else
-                    json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
+                        json.put(MyConfig.TAG_END_DATE_TIME, inspList.get(i).get(MyConfig.TAG_END_DATE_TIME));
                     json.put(MyConfig.TAG_LABEL, inspList.get(i).get(MyConfig.TAG_LABEL));
                     json.put(MyConfig.TAG_LEVEL, inspList.get(i).get(MyConfig.TAG_LEVEL));
                     json.put(MyConfig.TAG_PARENT, inspList.get(i).get(MyConfig.TAG_PARENT));
@@ -2384,7 +2375,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_TO_SERVER, jsonString);
             //       res = jsonString;
-         //   Log.v("MAP JSON", jsonString);
+            //   Log.v("MAP JSON", jsonString);
         }
 
         return res;
@@ -2406,7 +2397,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (inspItemList.size() == 0) {
             //display an empty list
-            res = "No inspected items to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < inspItemList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_INSPECTION_ID + ", " + inspItemList.get(i).get(MyConfig.TAG_PROJECT_ID) + " | " + MyConfig.TAG_A_ID + ", " + inspItemList.get(i).get(MyConfig.TAG_A_ID) + " ^-^ ";
@@ -2454,7 +2445,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             Log.v("INSPECTION ITEM JSON", jsonString);
 
-              res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
 //            res = jsonString;
 //            res = testString;
 //            TextView propertyPhoto;
@@ -2483,7 +2474,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (MapList.size() == 0) {
             //no items toupdatelist
-            res = "No SiteMap to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < MapList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_A_ID + " ^-^ ";
@@ -2514,7 +2505,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String jsonString = jsonArray.toString();
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
- //           Log.v("MAP JSON", jsonString);
+            //           Log.v("MAP JSON", jsonString);
 //                res = jsonString;
         }
         return res;
@@ -2537,7 +2528,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (propList.size() == 0) {
             //no items toupdatelist
-            res = "No Assets to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < propList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_PHOTO + " ^-^ ";
@@ -2585,7 +2576,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (ActionList.size() == 0) {
             //no items toupdatelist
-            res = "No Locations to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < ActionList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
@@ -2642,7 +2633,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (CertInspectionList.size() == 0) {
             //no items toupdatelist
-            res = "No Certificate Inspections to upload";
+            res = "no_records";
         } else {
             for (int i = 0; i < CertInspectionList.size(); i++) {
                 tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
@@ -2743,32 +2734,35 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 CertInspSaved = certInspToServer();
 
 
-            //    message = inspToServer();
-
-                if (inspSaved.equals(yes) && (itemSaved.equals(yes)) && (MapSaved.equals(yes)) && (projSaved.equals(yes))&&
-                        (actionsSaved.equals(yes) && (CertInspSaved.equals(yes) ))){
-
-                    dbHandler.statusUploaded();
-
-                    message = "Inspections uploaded successfully";
-
-                    //Disable the cleartablet function for August 2019 inspections.
-                    //   clearTablet();
+                //    message = inspToServer();
 
 
-                }
-                else {
+/*
+                    if ((inspSaved.matches("y|no_records") && (itemSaved.matches("y|no_records")) && (MapSaved.matches("y|no_records")
+                            && projSaved.matches("y|no_records"))&&
+                            (actionsSaved.matches("y|no_records") && (CertInspSaved.matches("y|no_records") )))){
 
-                 if(!inspSaved.equals("y")) message = "Activity process ";
-                 if(!itemSaved.equals("y")) message = message + "  Activity Item process ";
-                 if(!MapSaved.equals("y")) message = message + "  Map process ";
-                 if(!projSaved.equals("y")) message = message + "  Project process ";
-                 if(!actionsSaved.equals("y")) message = message + "  Action process ";
-                 if(!CertInspSaved.equals("y")) message = message + "  Certificate process ";
+                        dbHandler.statusUploaded();
 
-                }
+                        message = "Inspections uploaded successfully";
+
+                        //Disable the cleartablet function for August 2019 inspections.
+                        //   clearTablet();
 
 
+                    }
+                    else {
+
+                        if(!inspSaved.equals("y")) message = "Activity process ";
+                        if(!itemSaved.equals("y")) message = message + "  Activity Item process ";
+                        if(!MapSaved.equals("y")) message = message + "  Map process ";
+                        if(!projSaved.equals("y")) message = message + "  Project process ";
+                        if(!actionsSaved.equals("y")) message = message + "  Action process ";
+                        if(!CertInspSaved.equals("y")) message = message + "  Certificate process ";
+
+                    }
+
+*/
                 return message;
             }
         }
@@ -2884,7 +2878,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //Get a list of all the images for the properties to inspect
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
         ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos(USER_ID);
-        ArrayList<HashMap<String, String>> actionlist = dbHandler.getActionPhotos();
+        ArrayList<HashMap<String, String>> actionlist = dbHandler.getActionPhotos(USER_ID);
 
 
         String photo_name;
@@ -2921,10 +2915,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         while (i  < inspectphotolist.size() ) {   //photolist.size()
 
-             photo_name = inspectphotolist.get(i).get(MyConfig.TAG_IMAGE);
+            photo_name = inspectphotolist.get(i).get(MyConfig.TAG_IMAGE);
             if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
-              i++;
+            i++;
         }
 
 
@@ -2953,19 +2947,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         protected void onPreExecute() {
                             super.onPreExecute();
                             progressBar1.setVisibility(view.VISIBLE);
-            //                loading = ProgressDialog.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
+                            loading = ProgressDialog.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
                         }
 
                         @Override
                         protected void onPostExecute(final String s) {
                             super.onPostExecute(s);
+                            loading.dismiss();
                             progressBar1.setVisibility(view.INVISIBLE);
                             Thread thread = new Thread(new Runnable() {
 
                                 @Override
                                 public void run() {
                                     try {
-                                      boolean exists = s3Client.doesObjectExist(CLIENT, s);
+                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
 
                                         if (exists) {
 
@@ -2973,7 +2968,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                             //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
                                         }
-                                }
+                                    }
                                     catch (Exception e) {
 
                                         Log.e("HAND SHAKE AWS", "TIME OUT",e );
@@ -2981,15 +2976,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     }
 
                                 }
-                                });
+                            });
                             thread.start();
-                //            Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                            //            Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                         }
                         @Override
                         protected String doInBackground(Void... params) {
 
                             try {
-                          //      progressBar1.setVisibility(view.VISIBLE);
+                                //      progressBar1.setVisibility(view.VISIBLE);
                                 boolean exists = s3Client.doesObjectExist(CLIENT, "images/"+photo_name);
                                 if(exists){
 
