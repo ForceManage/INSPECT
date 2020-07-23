@@ -921,14 +921,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void statusUploaded() {
+    public void statusUploaded(int user_id) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_INSPECTION_STATUS, "p");
 
-        db.update(TABLE_INSPECTION, values, null , null);
+        db.update(TABLE_INSPECTION, values, "WHERE "+COLUMN_INSPECTOR+" = "+user_id , null);
 
         db.close();
 
@@ -965,6 +965,27 @@ public class DBHandler extends SQLiteOpenHelper {
         selectQuery = "SELECT " + COLUMN_CLIENT_NAME + " FROM "
                 + TABLE_USER_LIST
                 + " WHERE " + COLUMN_U_CODE + " = "+ code;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            client = cursor.getString(0);
+        }
+        db.close();
+        return client;
+
+    }
+
+    public String getUser(int user_id) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String client = "no-client";
+
+        selectQuery = "SELECT " + COLUMN_U_NAME + " FROM "
+                + TABLE_USER_LIST
+                + " WHERE " + COLUMN_U_ID + " = "+ user_id;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -2085,14 +2106,15 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspections() {
+    public ArrayList<HashMap<String, String>> getInspections(int user_id) {
         HashMap<String, String> inspectionsMap = new HashMap<String, String>();
         ArrayList<HashMap<String, String>> inspectionArrayList = new ArrayList<>();
 
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm'  ORDER BY " + COLUMN_PROJECT_ID;
+        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND" +
+                COLUMN_INSPECTOR+" = "+user_id+" ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
         if (cursor.moveToFirst()) {
@@ -2161,7 +2183,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspectedItems() {
+    public ArrayList<HashMap<String, String>> getInspectedItems(int user_id) {
         HashMap<String, String> inspectionItem;
         ArrayList<HashMap<String, String>> inspectionItemsList;
 
@@ -2176,6 +2198,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_INSPECTION_ID + ", I." + COLUMN_PROJECT_ID + ", I." + COLUMN_A_ID
                 + ", I." + COLUMN_SERVICED_BY + ", I." + COLUMN_SERVICE_LEVEL+", I."+COLUMN_REPORT_IMAGE
                 + " FROM " + TABLE_INSPECTION_ITEM + " I "
+                + " JOIN " + TABLE_INSPECTION+" E ON E."+COLUMN_PROJECT_ID+" = "+"I."+COLUMN_PROJECT_ID
+                + " WHERE E."+COLUMN_INSPECTOR+" = "+user_id
                 + " ORDER BY I."+ COLUMN_PROJECT_ID;
 
 
@@ -2222,7 +2246,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Get a list of sublocations to populate the sub location spinner
-    public int getSubItemMap(int projId, int aId) {
+    public int getSubItemMap(int projId, int aId, int user_id) {
 
         HashMap<String, String> subItemMap;
         ArrayList<HashMap<String, String>> subItemArrayList;
@@ -2231,9 +2255,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT " + COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
-                + " FROM " + TABLE_MAP
-                + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId;
+        String selectQuery = "SELECT M." + COLUMN_LEVEL//+", "+COLUMN_LOCATION_DESCRIPTION
+                + " FROM " + TABLE_MAP+ " M "
+                + " JOIN " + TABLE_INSPECTION+" E ON E."+COLUMN_PROJECT_ID+" = "+"M."+COLUMN_PROJECT_ID
+                + " WHERE E."+COLUMN_INSPECTOR+" = "+user_id+" AND M."+ COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + aId
+                + " ORDER BY I."+ COLUMN_PROJECT_ID;
+
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);

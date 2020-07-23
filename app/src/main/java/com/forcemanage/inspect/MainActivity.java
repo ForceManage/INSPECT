@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // callback method to call the setTransferUtility method
         setTransferUtility();
 
-
+        TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
         DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
 
         init();
@@ -961,6 +961,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 public void onClick(DialogInterface dialog, int id) {
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if(USER_ID>0) {
+
                                         CLIENT = dbHandler.getClient(passText.getText().toString());
 
                                         Thread thread = new Thread(new Runnable() {
@@ -975,16 +976,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                         });
                                         thread.start();
-                                        uploadphotos();
+
                                     }
                                     else
                                         Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
 
-
+                                    uploadphotos();
                                 }
                             });
 
                             // create an alert dialog
+
                             AlertDialog alert = passDialog.create();
                             alert.show();
 
@@ -1483,6 +1485,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         listItems = new ArrayList<>();
         MapViewData listItem;
 
+        TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
+         projectlist_title.setText(dbHandler.getUser(USER_ID)+"    Project list:");
         for (int i = 0; i < (Projects.size()); i++){
 
             listItem = new MapViewData(
@@ -2309,7 +2313,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         HashMap<String, String> inspMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> inspList = dbHandler.getInspections();
+        ArrayList<HashMap<String, String>> inspList = dbHandler.getInspections(USER_ID);
         String testString = "";
         String tempString = "";
 
@@ -2388,7 +2392,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String res = "initiated";
         HashMap<String, String> inspItemMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems();
+        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems(USER_ID);
         String tempString = "";
         String testString = "";
 
@@ -2722,7 +2726,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String CertInspSaved;
 
 
-                String yes = "y";
+       //         String yes = "y";
                 String message = "initiated";
 
 
@@ -2737,12 +2741,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 //    message = inspToServer();
 
 
-/*
+
                     if ((inspSaved.matches("y|no_records") && (itemSaved.matches("y|no_records")) && (MapSaved.matches("y|no_records")
                             && projSaved.matches("y|no_records"))&&
                             (actionsSaved.matches("y|no_records") && (CertInspSaved.matches("y|no_records") )))){
 
-                        dbHandler.statusUploaded();
+                        dbHandler.statusUploaded(USER_ID);
 
                         message = "Inspections uploaded successfully";
 
@@ -2762,7 +2766,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                     }
 
-*/
+
                 return message;
             }
         }
@@ -2946,14 +2950,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
+
+                    //        ProgressDialog loading = new ProgressDialog(getBaseContext());
+                    //       loading.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
                             progressBar1.setVisibility(view.VISIBLE);
-                            loading = ProgressDialog.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
                         }
 
                         @Override
                         protected void onPostExecute(final String s) {
                             super.onPostExecute(s);
-                            loading.dismiss();
                             progressBar1.setVisibility(view.INVISIBLE);
                             Thread thread = new Thread(new Runnable() {
 
