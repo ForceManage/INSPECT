@@ -2081,8 +2081,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         class GetAdditionalJSON extends AsyncTask<Void, Void, String> {
 
-
-
             ProgressDialog loading;
 
             @Override
