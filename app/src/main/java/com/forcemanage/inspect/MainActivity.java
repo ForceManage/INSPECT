@@ -2108,8 +2108,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 return s;
             }
 
-
-
         }
         GetAdditionalJSON gj = new GetAdditionalJSON();
         gj.execute();
