@@ -928,7 +928,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_INSPECTION_STATUS, "p");
 
-        db.update(TABLE_INSPECTION, values, "WHERE "+COLUMN_INSPECTOR+" = "+user_id , null);
+        db.update(TABLE_INSPECTION, values, null , null);
 
         db.close();
 
@@ -1909,9 +1909,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INFO_F + ", P." + COLUMN_INFO_G + ", P." + COLUMN_INFO_H + ", P." + COLUMN_INFO_I + ", P." + COLUMN_INFO_J + ", P."
                 + COLUMN_PROJECT_PHOTO
                 + " FROM " + TABLE_PROJECT_INFO + " P "
-                + " JOIN " + TABLE_INSPECTION + " I "
-                + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id
+              //  + " JOIN " + TABLE_INSPECTION + " I "
+             //   + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
+             //   + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -1973,17 +1973,29 @@ public class DBHandler extends SQLiteOpenHelper {
 
         photoArrayList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
+        String projID;
 
+        SQLiteDatabase database = this.getWritableDatabase();
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = database.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                projID = cursorI.getString(0);
+
+
+        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
                 + " FROM " + TABLE_INSPECTION_ITEM +" I "
-                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID;
-       //         + " WHERE  E."+COLUMN_INSPECTOR+" = "+user_id;
+                + " WHERE  I."+COLUMN_PROJECT_ID+" = "+projID;
 
 
 
         // Open a database for reading and writing
 
-        SQLiteDatabase database = this.getWritableDatabase();
+
 
         Cursor cursor = database.rawQuery(selectQuery, null);
 
@@ -2008,6 +2020,9 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext()); // Move Cursor to the next row
         }
         cursor.close();
+            } while (cursorI.moveToNext()); // Move Cursor to the next row
+        }
+        cursorI.close();
 
         database.close();
         // return contact list
@@ -2068,37 +2083,41 @@ public class DBHandler extends SQLiteOpenHelper {
 
         photoArrayList = new ArrayList<HashMap<String, String>>();
 
+        String projID;
 
+        SQLiteDatabase database = this.getWritableDatabase();
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = database.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                projID = cursorI.getString(0);
 
         String selectQuery = "SELECT A." + COLUMN_IMG1
 
                 + " FROM " + TABLE_ACTION_ITEM +" A "
-                + " JOIN " + TABLE_INSPECTION + " E ON E." + COLUMN_PROJECT_ID + " = A." + COLUMN_PROJECT_ID
-                + " WHERE E." + COLUMN_INSPECTOR + " = "+user_id;
+               + " WHERE A." + COLUMN_PROJECT_ID + " = "+projID;
 
-
-
-        // Open a database for reading and writing
-
-        SQLiteDatabase database = this.getWritableDatabase();
 
         Cursor cursor = database.rawQuery(selectQuery, null);
-
-
-
-
-
 
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> photoMap = new HashMap<String, String>();
                 if (cursor.getString(0) != "")
-                    photoMap.put("ActionImage", cursor.getString(0));
+                    photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
 
                 photoArrayList.add(photoMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
+
         }
         cursor.close();
+            } while (cursorI.moveToNext()); // Move Cursor to the next row
+        }
+        cursorI.close();
 
         database.close();
         // return contact list
@@ -2113,8 +2132,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND" +
-                COLUMN_INSPECTOR+" = "+user_id+" ORDER BY " + COLUMN_PROJECT_ID;
+        String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION
+          //      + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND "
+           //     +  COLUMN_INSPECTOR+" = "+user_id
+                +" ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
         if (cursor.moveToFirst()) {
@@ -2183,60 +2204,73 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Select inspection items for syncing to server
-    public ArrayList<HashMap<String, String>> getInspectedItems(int user_id) {
+    public ArrayList<HashMap<String, String>> getInspectedItems_(int user_id) {
         HashMap<String, String> inspectionItem;
         ArrayList<HashMap<String, String>> inspectionItemsList;
 
         inspectionItemsList = new ArrayList<HashMap<String, String>>();
 
-
+        String projID;
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
-                + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
-                + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
-                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_INSPECTION_ID + ", I." + COLUMN_PROJECT_ID + ", I." + COLUMN_A_ID
-                + ", I." + COLUMN_SERVICED_BY + ", I." + COLUMN_SERVICE_LEVEL+", I."+COLUMN_REPORT_IMAGE
-                + " FROM " + TABLE_INSPECTION_ITEM + " I "
-                + " JOIN " + TABLE_INSPECTION+" E ON E."+COLUMN_PROJECT_ID+" = "+"I."+COLUMN_PROJECT_ID
-                + " WHERE E."+COLUMN_INSPECTOR+" = "+user_id
-                + " ORDER BY I."+ COLUMN_PROJECT_ID;
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id +" AND I."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
 
-
-        //add additional fields: status,  notes, print flag
-        Cursor cursor = dtabase.rawQuery(selectQuery, null);
-
-        // Move to the first row
-        if (cursor.moveToFirst()) {
+        Cursor cursorI = dtabase.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
             do {
-                inspectionItem = new HashMap<String, String>();
-                inspectionItem.put(MyConfig.TAG_DATE_INSPECTED, (String.valueOf(cursor.getInt(0))));
-                inspectionItem.put(MyConfig.TAG_OVERVIEW, cursor.getString(1));
-                inspectionItem.put(MyConfig.TAG_RELEVANT_INFO, cursor.getString(2));
-                inspectionItem.put(MyConfig.TAG_IMAGE1, cursor.getString(3));
-                inspectionItem.put(MyConfig.TAG_COM1, cursor.getString(4));
-                inspectionItem.put(MyConfig.TAG_IMAGE2, cursor.getString(5));
-                inspectionItem.put(MyConfig.TAG_COM2, cursor.getString(6));
-                inspectionItem.put(MyConfig.TAG_IMAGE3, cursor.getString(7));
-                inspectionItem.put(MyConfig.TAG_COM3, cursor.getString(8));
-                inspectionItem.put(MyConfig.TAG_IMAGE4, cursor.getString(9));
-                inspectionItem.put(MyConfig.TAG_COM4, cursor.getString(10));
-                inspectionItem.put(MyConfig.TAG_IMAGE5, cursor.getString(11));
-                inspectionItem.put(MyConfig.TAG_COM5, cursor.getString(12));
-                inspectionItem.put(MyConfig.TAG_IMAGE6, cursor.getString(13));
-                inspectionItem.put(MyConfig.TAG_COM6, cursor.getString(14));
-                inspectionItem.put(MyConfig.TAG_IMAGE7, cursor.getString(15));
-                inspectionItem.put(MyConfig.TAG_COM7, cursor.getString(16));
-                inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
-                inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
-                inspectionItem.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(19));
-                inspectionItem.put(MyConfig.TAG_PROJECT_ID, cursor.getString(20));
-                inspectionItem.put(MyConfig.TAG_A_ID, cursor.getString(21));
-                inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(22));
-                inspectionItem.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(23));
-                inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(24));
-                inspectionItemsList.add(inspectionItem);
-            } while (cursor.moveToNext());
+                projID = cursorI.getString(0);
+
+
+                String selectQuery = "SELECT I.*"
+                        + " FROM " + TABLE_INSPECTION_ITEM + " I "
+                        //   + " JOIN " + TABLE_INSPECTION+" E ON I."+COLUMN_PROJECT_ID+" = E."+COLUMN_PROJECT_ID
+                        //    + " WHERE E."+COLUMN_INSPECTOR+" = "+user_id +" AND E."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                        + " WHERE I." + COLUMN_PROJECT_ID + " = " + projID
+                        + " ORDER BY I." + COLUMN_PROJECT_ID;
+
+
+                //add additional fields: status,  notes, print flag
+                Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+                // Move to the first row
+                if (cursor.moveToFirst()) {
+                    do {
+                        inspectionItem = new HashMap<String, String>();
+                        inspectionItem.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(0));
+                        inspectionItem.put(MyConfig.TAG_PROJECT_ID, cursor.getString(1));
+                        inspectionItem.put(MyConfig.TAG_A_ID, cursor.getString(2));
+                        inspectionItem.put(MyConfig.TAG_DATE_INSPECTED, (String.valueOf(cursor.getInt(3))));
+                        inspectionItem.put(MyConfig.TAG_OVERVIEW, cursor.getString(4));
+                        inspectionItem.put(MyConfig.TAG_RELEVANT_INFO, cursor.getString(5));
+                        inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(6));
+                        inspectionItem.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(7));
+                        inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(8));
+                        inspectionItem.put(MyConfig.TAG_IMAGE1, cursor.getString(9));
+                        inspectionItem.put(MyConfig.TAG_COM1, cursor.getString(10));
+                        inspectionItem.put(MyConfig.TAG_IMAGE2, cursor.getString(11));
+                        inspectionItem.put(MyConfig.TAG_COM2, cursor.getString(12));
+                        inspectionItem.put(MyConfig.TAG_IMAGE3, cursor.getString(13));
+                        inspectionItem.put(MyConfig.TAG_COM3, cursor.getString(14));
+                        inspectionItem.put(MyConfig.TAG_IMAGE4, cursor.getString(15));
+                        inspectionItem.put(MyConfig.TAG_COM4, cursor.getString(16));
+                        inspectionItem.put(MyConfig.TAG_IMAGE5, cursor.getString(17));
+                        inspectionItem.put(MyConfig.TAG_COM5, cursor.getString(18));
+                        inspectionItem.put(MyConfig.TAG_IMAGE6, cursor.getString(19));
+                        inspectionItem.put(MyConfig.TAG_COM6, cursor.getString(20));
+                        inspectionItem.put(MyConfig.TAG_IMAGE7, cursor.getString(21));
+                        inspectionItem.put(MyConfig.TAG_COM7, cursor.getString(22));
+                        inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(23));
+                        inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(24));
+
+                        inspectionItemsList.add(inspectionItem);
+                    }
+                    while (cursor.moveToNext());
+                }
+            }
+                while (cursorI.moveToNext());
         }
 
         dtabase.close();
@@ -2493,7 +2527,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of locations to upload to server
-    public ArrayList<HashMap<String, String>> getActions() {
+    public ArrayList<HashMap<String, String>> getActions(int user_id) {
 
 
         HashMap<String, String> ActionItemMap;
@@ -2501,10 +2535,23 @@ public class DBHandler extends SQLiteOpenHelper {
 
         locationList = new ArrayList<HashMap<String, String>>();
 
+        String projID;
         SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id +" AND I."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = dtabase.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                projID = cursorI.getString(0);
 
         String selectQuery = "SELECT * "
                 + " FROM " + TABLE_ACTION_ITEM
+          //      +" JOIN "+ TABLE_INSPECTION+" I ON A."+ COLUMN_PROJECT_ID+" = I."+COLUMN_PROJECT_ID
+                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID
                 + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_A_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -2530,6 +2577,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 locationList.add(ActionItemMap);
             } while (cursor.moveToNext());
         }
+            } while (cursorI.moveToNext());
+        }
 
         dtabase.close();
 
@@ -2539,7 +2588,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getCertInspections() {
+    public ArrayList<HashMap<String, String>> getCertInspections(int user_id) {
 
 
         HashMap<String, String> CertificateItemMap;
@@ -2547,10 +2596,22 @@ public class DBHandler extends SQLiteOpenHelper {
 
         CertificateList = new ArrayList<HashMap<String, String>>();
 
+        String projID;
         SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id +" AND I."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = dtabase.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                projID = cursorI.getString(0);
 
         String selectQuery = "SELECT * "
                 + " FROM " + TABLE_CERTIFICATE_INSPECTION
+                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID
                 + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_INSPECTION_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -2571,7 +2632,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 CertificateList.add(CertificateItemMap);
             } while (cursor.moveToNext());
         }
-
+            } while (cursorI.moveToNext());
+        }
         dtabase.close();
 
 
@@ -2713,7 +2775,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getInspectedItems(int projId, int iId) {
+    public ArrayList<HashMap<String, String>> getInspectedItems_r(int projId, int iId) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap

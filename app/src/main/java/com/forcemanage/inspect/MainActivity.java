@@ -155,11 +155,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         setTransferUtility();
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
-        DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         init();
 
-        ArrayList<HashMap<String, String>> Projects = dbHandlerA.getProjects(USER_ID);
+        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
         progressBar1 =  findViewById(R.id.progressBar1);
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -264,7 +264,36 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         });
 
+        if(USER_ID ==0) {
 
+            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+            passDialog.setView(promptView);
+            passDialog.setTitle("Enter User Code");
+            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+                    USER_ID = dbHandler.checkCode(passText.getText().toString());
+                    if (USER_ID > 0) {
+                        if (dbHandler.checkstatus(USER_ID) == 0)
+                            downloadprojects();
+                        else
+                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading", Toast.LENGTH_SHORT).show();
+
+
+                    } else
+                        Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
+
+
+                }
+            });
+
+            // create an alert dialog
+            AlertDialog alert = passDialog.create();
+            alert.show();
+        }
     }
 
     private void init(){
@@ -1086,7 +1115,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                         DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems(projId, iId);
+                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iId);
 
                         //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
                         //     recyclerView.setHasFixedSize(true);
@@ -1486,7 +1515,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         MapViewData listItem;
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
-         projectlist_title.setText(dbHandler.getUser(USER_ID)+"    Project list:");
+         projectlist_title.setText("Project list:  "+dbHandler.getUser(USER_ID));
         for (int i = 0; i < (Projects.size()); i++){
 
             listItem = new MapViewData(
@@ -2388,7 +2417,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String res = "initiated";
         HashMap<String, String> inspItemMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems(USER_ID);
+        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems_(USER_ID);
         String tempString = "";
         String testString = "";
 
@@ -2446,6 +2475,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             Log.v("INSPECTION ITEM JSON", jsonString);
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
+
 //            res = jsonString;
 //            res = testString;
 //            TextView propertyPhoto;
@@ -2503,7 +2533,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
+            String regex = "'";
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
             //           Log.v("MAP JSON", jsonString);
 //                res = jsonString;
@@ -2550,7 +2582,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
+            String regex = "'";
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_PROJECT_TO_SERVER, jsonString);
 //                res = jsonString;
 
@@ -2566,7 +2600,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         HashMap<String, String> actionItemList = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> ActionList = dbHandler.getActions();
+        ArrayList<HashMap<String, String>> ActionList = dbHandler.getActions(USER_ID);
         String testString = "";
         String tempString = "";
 
@@ -2608,7 +2642,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
+            String regex = "'";
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            Log.v("INSPECTION ITEM JSON", jsonString);
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_ACTIONS_TO_SERVER, jsonString);
 //                res = jsonString;
         }
@@ -2623,7 +2660,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         HashMap<String, String> CertificateInspectionList = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> CertInspectionList = dbHandler.getCertInspections();
+        ArrayList<HashMap<String, String>> CertInspectionList = dbHandler.getCertInspections(USER_ID);
         String testString = "";
         String tempString = "";
 
@@ -2660,7 +2697,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
-            String jsonString = jsonArray.toString();
+            String regex = "'";
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_CERT_INSPECTION_TO_SERVER, jsonString);
 //                res = jsonString;
             Log.v("CERTIFICATE JSON", jsonString);
@@ -2700,13 +2739,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Syncing...", "Wait...", false, false);
+ //               loading = ProgressDialog.show(MainActivity.this, "Syncing...", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+ //               loading.dismiss();
                 Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
             }
 
@@ -2738,9 +2777,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
-                    if ((inspSaved.matches("y|no_records") && (itemSaved.matches("y|no_records")) && (MapSaved.matches("y|no_records")
-                            && projSaved.matches("y|no_records"))&&
-                            (actionsSaved.matches("y|no_records") && (CertInspSaved.matches("y|no_records") )))){
+                    if ((inspSaved.matches("y|no_records")) && (itemSaved.matches("y|no_records")) && (MapSaved.matches("y|no_records"))
+                            && (projSaved.matches("y|no_records"))&&
+                            (actionsSaved.matches("y|no_records")) && (CertInspSaved.matches("y|no_records"))){
 
                         dbHandler.statusUploaded(USER_ID);
 
@@ -2921,7 +2960,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             i++;
         }
 
+        while (i  < actionlist.size() ) {   //photolist.size()
 
+            photo_name = actionlist.get(i).get(MyConfig.TAG_IMAGE1);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
+
+            i++;
+        }
     }
 
 
