@@ -272,16 +272,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             final EditText passText = (EditText) promptView.findViewById(R.id.code);
             passDialog.setView(promptView);
             passDialog.setTitle("Enter User Code");
-            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            passDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                     if (USER_ID > 0) {
-                        if (dbHandler.checkstatus(USER_ID) == 0)
-                            downloadprojects();
-                        else
-                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading", Toast.LENGTH_SHORT).show();
-
+                        CLIENT = dbHandler.getClient(USER_ID);
+                           updatePropList();
 
                     } else
                         Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
@@ -529,22 +526,36 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     private void requestProject(final String levelName){
 
-        class reqAct extends AsyncTask<Void, Void, Void> {
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                RequestHandler_ rh = new RequestHandler_();
-                rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName+"&USERID="+USER_ID);
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
 
-                return null;
+            class reqAct extends AsyncTask<Void, Void, Void> {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    RequestHandler_ rh = new RequestHandler_();
+                    rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName + "&USERID=" + USER_ID);
+
+                    return null;
+
+                }
 
             }
+            reqAct req = new reqAct();
+            req.execute();
 
+
+        } else {
+            //          buttonDownload.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
         }
-        reqAct req = new reqAct();
-        req.execute();
-
     }
+
+
+
+
 
 
 
@@ -557,7 +568,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (v == btnAddActivity) {
 
-
+            final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add a new Project or Activity to existing Project ");
             // add a list
@@ -615,11 +626,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         case 1: {
 
                             DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+                            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+                            if (nInfo != null && nInfo.isConnected()) {
+                                //    editTextMessage.setText("Sync Inspected Only");
+                                //Upload photos to Bucket
+
+                                // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
+                                //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
+
+
 
                             if(USER_ID > 0) {
-
-
-                                final int pId = dbHandler.getInspectionpId(parseInt(projectId));
+                              final int pId = dbHandler.getInspectionpId(parseInt(projectId));
                                 if(!projectId.equals("null")) {
 
                                     class reqAct extends AsyncTask<Void, Void, Void> {
@@ -640,6 +658,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             else
                                 Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
 
+
+                            } else {
+                                //          buttonDownload.setEnabled(false);
+                                Toast.makeText(getApplicationContext(), "No internet available", Toast.LENGTH_LONG).show();
+                            }
 
                             break;
 
@@ -979,7 +1002,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 2: {
 
-
+/*
                             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.call_log, null);
                             AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
@@ -1018,8 +1041,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             AlertDialog alert = passDialog.create();
                             alert.show();
-
-
+*/
+                            uploadphotos();
                             break;
                         }
 
@@ -1892,7 +1915,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 JSONObject jo = result.getJSONObject(i);
                 String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
                 String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
-                String datetime = datetoString(jo.getString(MyConfig.TAG_DATE_TIME));
+                String datetime = jo.getString(MyConfig.TAG_DATE_TIME);
                 String overview = jo.getString(MyConfig.TAG_OVERVIEW);
                 String permit = jo.getString(MyConfig.TAG_PERMIT);
                 String projectaddress = jo.getString(MyConfig.TAG_PROJECT_ADDRESS);
@@ -2722,8 +2745,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
-
-
     //Syncing to the server
     private void syncToServer() {
 
@@ -2887,17 +2908,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // Set the region of your S3 bucket
         s3Client.setRegion(Region.getRegion(AP_SOUTHEAST_2));
 
-
-
-
-
     }
 
     public void setTransferUtility() {
-
         transferUtility = new TransferUtility(s3Client, getApplicationContext());
-
-
     }
 
     /**
@@ -2960,11 +2974,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             i++;
         }
 
+        i = 0;
         while (i  < actionlist.size() ) {   //photolist.size()
-
             photo_name = actionlist.get(i).get(MyConfig.TAG_IMAGE1);
             if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
-
             i++;
         }
     }
@@ -2984,23 +2997,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                     class upload_photo extends AsyncTask<Void, Void, String> {
-                        private ProgressDialog loading;
-                        private String res = "Before try";
-
 
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
-
-                    //        ProgressDialog loading = new ProgressDialog(getBaseContext());
-                    //       loading.show(MainActivity.this, "uploading images...", "Processing.... this may take several minutes", false, false);
-                            progressBar1.setVisibility(view.VISIBLE);
+                            progressBar1.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         protected void onPostExecute(final String s) {
                             super.onPostExecute(s);
-                            progressBar1.setVisibility(view.INVISIBLE);
+                            progressBar1.setVisibility(View.GONE);
+
                             Thread thread = new Thread(new Runnable() {
 
                                 @Override
@@ -3030,7 +3038,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         protected String doInBackground(Void... params) {
 
                             try {
-                                //      progressBar1.setVisibility(view.VISIBLE);
+
                                 boolean exists = s3Client.doesObjectExist(CLIENT, "images/"+photo_name);
                                 if(exists){
 
@@ -3322,7 +3330,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             //   get_BOR_JSON();
             //    get_OR_JSON("TABLE_B_OR");
         } else {
-            buttonDownload.setEnabled(false);
+  //          buttonDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
         }
     }
@@ -3387,8 +3395,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             //editTextMessage.setText(selectedItem ); // possibly intended to use this tocheckwhat was uploaded....
             syncToServer();
 
-
-
         } else {
 //                buttonUpdatePropInfo.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
@@ -3408,7 +3414,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             upLoadPhotos(null);
 
         } else {
-            buttonDownload.setEnabled(false);
+  //          buttonDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
         }
     }

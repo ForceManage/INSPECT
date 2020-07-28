@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -844,21 +845,26 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateMapLabel(int projId, int aId, String label) {
+    public int updateMapLabel(int projId, int aId, String label) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        int success = 0;
+        try {
+            values.put(COLUMN_LABEL, label);
 
 
-        values.put(COLUMN_LABEL, label);
+            db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
+                    COLUMN_A_ID + " = " + aId, null);
+            success = 1;
+        }
+        catch (Exception e){
 
-
-        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
-                COLUMN_A_ID + " = " + aId, null);
+        }
 
         db.close();
-
+        return success;
     }
 
     public void updateBranchPhoto(int projId, int aId, String photo) {
@@ -955,7 +961,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public String getClient(String code) {
+    public String getClient(int user_id) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
@@ -964,7 +970,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         selectQuery = "SELECT " + COLUMN_CLIENT_NAME + " FROM "
                 + TABLE_USER_LIST
-                + " WHERE " + COLUMN_U_CODE + " = "+ code;
+                + " WHERE " + COLUMN_U_ID + " = "+ user_id;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

@@ -178,7 +178,8 @@
                         android:paddingRight="5dp"
                         android:progress="100"
                         android:indeterminateOnly="true"
-                        android:visibility="invisible" />
+                        android:visibility="gone"
+                        />
 
                     <Switch
                         android:id="@+id/switch2"

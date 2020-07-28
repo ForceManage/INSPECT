@@ -1,5 +1,7 @@
 package com.forcemanage.inspect;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,7 +54,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
-    private EditText time;
+    private TextView time;
     private EditText descriptionE;
     private EditText permit;
     private EditText address;
@@ -60,10 +64,10 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     private String branchTitle = "Title";
     private String branchName = "Branch";
     private String desciption = "Desc";
-    private String Time = "Time";
+    private String dTime = "Time";
     private String Permit = "Permit No.";
     private String Address = "Address";
-
+    private TextView timetxt;
     private String Notes = "Notes";
     private String projectId;
     private String inspectionId;
@@ -86,7 +90,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             desciption = bundle.getString("description");
-            Time = bundle.getString("time");
+            dTime = bundle.getString("time");
             Permit = bundle.getString("permit");
             Address = bundle.getString("address");
             Stage = bundle.getString("stage");
@@ -111,22 +115,23 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
         branch = (TextView) view.findViewById(R.id.level);
         notesE = (EditText) view.findViewById(R.id.note);
 
-        time  = (EditText) view.findViewById(R.id.time);
+         time  = (TextView) view.findViewById(R.id.time);
          descriptionE = (EditText) view.findViewById(R.id.desc);
          permit = (EditText) view.findViewById(R.id.buildp);
          address = (EditText) view.findViewById(R.id.address);
          stage = (EditText) view.findViewById(R.id.stage);
          notesE = (EditText) view.findViewById(R.id.notes);
+         timetxt = (TextView) view.findViewById(R.id.Time);
+
 
   //       final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
-
 
 
          //Fill in the edittext with saved data fro Bundle
 
         title.setText(branchTitle);
         branch.setText(branchName);
-        time.setText(stringdate(Time));
+        time.setText(stringdate(dTime));
         descriptionE.setText(desciption);
         permit.setText(Permit);
         address.setText(Address);
@@ -144,11 +149,48 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             }
         });
 
-        time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
 
+         time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                final int date_time = cldr.get(Calendar.HOUR_OF_DAY);
+                final int date_min = cldr.get(Calendar.MINUTE);
+                final int date_sec = cldr.get(Calendar.SECOND);
+                 // date picker dialog
+                DatePickerDialog picker = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                time.setText(stringdate(year + "-" + (monthOfYear + 1) + "-" +dayOfMonth+ " "+date_time+":"+date_min+":"+date_sec));
+                            }
+                        }, year, month, day);
+                Edited = true;
+                picker.show();
+
+            }
+        });
+
+        timetxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int hour = cldr.get(Calendar.HOUR_OF_DAY);
+                int minutes = cldr.get(Calendar.MINUTE);
+                // time picker dialog
+                TimePickerDialog picker = new TimePickerDialog(getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
+                                String date = time.getText().toString().substring(0,11);
+                                time.setText(date+", " +sHour + ":" + sMinute);
+                            }
+                        }, hour, minutes, false);
+                Edited = true;
+                picker.show();
             }
         });
 
@@ -159,6 +201,22 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
                 }
             });
+
+        permit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
+
+            }
+        });
+
+        stage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
+
+            }
+        });
 
         notesE.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -202,12 +260,12 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
     public String dateString (String date){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, hh:mm:a");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, hh:mm");
         Date d = null;
         try {
             d = sdf.parse(date);
         } catch (ParseException ex) {
-            date = stringdate(Time);
+            date = stringdate(dTime);
             Log.v("Exception", ex.getLocalizedMessage());
         }
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
@@ -265,6 +323,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             dbHandler.updateCertificateInspection(projectId, inspectionId, dateString(time.getText().toString()), descriptionE.getText().toString(),
                                       permit.getText().toString(), address.getText().toString()
                     , stage.getText().toString(), notesE.getText().toString());
+            dbHandler.statusChanged(Integer.parseInt(projectId));
 
            Edited = false;
 

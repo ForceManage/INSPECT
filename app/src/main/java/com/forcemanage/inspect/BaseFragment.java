@@ -121,20 +121,23 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) Edited = true;
-            }
+                    if (hasFocus) Edited = true;
+              }
         });
-
-
-
 
 
         photo_cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 0;
-                globalVariables.mPhotoImageView = photoA;
-                globalVariables.takeImageFromCamera(null);
+                if(aId > 0) {
+                    globalVariables.photoframe = 0;
+                    globalVariables.mPhotoImageView = photoA;
+                    globalVariables.takeImageFromCamera(null);
+                }
+                else
+                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+
+
 
 
 
@@ -227,10 +230,12 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 alertDialogBuilder.setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                globalVariables.editLocation(LocationText.getText().toString());
-
-
-                            }
+                                if(aId > 0) {
+                                    globalVariables.editLocation(LocationText.getText().toString());
+                                }
+                                else
+                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+                           }
                         })
                         .setNegativeButton("Cancel",
                                 new DialogInterface.OnClickListener() {
@@ -288,8 +293,12 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
-                                dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
-                                globalVariables.OnSelectionChanged(0);
+                                if(aId > 0) {
+                                    dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
+                                    globalVariables.OnSelectionChanged(0);
+                                }
+                                else
+                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
                                 break;
                             }
 

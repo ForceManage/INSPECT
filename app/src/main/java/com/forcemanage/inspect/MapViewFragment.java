@@ -14,15 +14,10 @@ import androidx.fragment.app.ListFragment;
 
 public class MapViewFragment extends ListFragment {
 
-
-
-
     MapListAdapter mAdapter;
 
     public MapViewFragment() {
     }
-
-
 
     @Override
      public void onActivityCreated(Bundle savedInstanceState){

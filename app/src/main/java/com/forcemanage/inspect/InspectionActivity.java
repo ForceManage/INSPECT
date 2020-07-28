@@ -45,6 +45,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.amazonaws.services.cognitoidentityprovider.model.AttributeDataType.DateTime;
+
 
 public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, View.OnClickListener {
 
@@ -128,7 +130,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public List<ReportItem> reportlistItems;
     private int projId;
     public int aID = 1;
-    public int Level;
+    public int Level = 0;
     public int Parent;
     public int Child;
     public int iID = 1;
@@ -562,8 +564,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public void editLocation(String branchLabel) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        dbHandler.updateMapLabel(projId, aID, branchLabel);
-        loadMap();
+        int success = dbHandler.updateMapLabel(projId, aID, branchLabel);
+        if(success == 1) loadMap();
+        else Toast.makeText(this, "Create/select a MAP branch", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -719,13 +722,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                 HashMap<String, String> list = dbHandler.getCert_Inspection(projId, iID);
 
-                String DateTime;
+                String Date_Time;
                 String permit;
                 String address;
                 String stage;
 
-                DateTime = list.get(MyConfig.TAG_DATE_TIME);
-                if(DateTime == null) DateTime = dayTime(4);
+                Date_Time = list.get(MyConfig.TAG_DATE_TIME);
+                if(Date_Time == null) Date_Time = dayTime(4);
 
                 relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                 Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -742,8 +745,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 bundle.putString("branchHead", branchHead);
                 bundle.putString("branchLabel", branchLabel);
                 bundle.putString("description", Overview);
-                bundle.putString("time", DateTime);
-                bundle.putString("address", address);
+                bundle.putString("time", Date_Time);
+                bundle.putString("permit", permit);
                 bundle.putString("address", address);
                 bundle.putString("stage", stage);
                 bundle.putString("notes", Notes);
@@ -845,11 +848,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Add Titles, sub-Titles, Notes, Action Scope, Certificates ");
             // add a list
-            String[] actions = {"Create New Title Branch ",
-                    "Add Sub title Branch",
-                    "Add branch photo and Notes  ",
-                    "Add To-do Action Scope ",
-                    "Add Certificate Inspection",
+            String[] actions = {"Create a New Title Branch ",
+                    "Add Sub Title to the current Branch",
+                    "Attach NotePad to the current Title/Sub Title ",
+                    "Attach a Scope to the current NotePad",
+                    "Attach a Certificate for this Activity",
                     "Cancel Add/Create "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -911,7 +914,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                                             photoBranch = "";
                                             addLevel((Level + 1), branchText.getText().toString());
 
-
                                         }
                                     })
                                     .setNegativeButton("Cancel",
@@ -939,7 +941,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                             itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Attach a NoteBook to the : " + branchLabel+" Title ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)

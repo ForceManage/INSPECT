@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -297,55 +298,62 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
                     public void onClick(DialogInterface dialog, int id) {
 
                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        if(projectId == "" | projectId.equals(null))
+                            Toast.makeText(getContext(), "Select a Project ",Toast.LENGTH_LONG).show();
+                            else{
                         switch (item) {
 
-                            case "Project Title":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Project Title": {
+                                dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
+                                if(branchText.getText().toString()=="")
+                                    Toast.makeText(getContext(), "Retry with valid text ",Toast.LENGTH_LONG).show();
+                                else
                                 globalVariables.updatePropList();
-                        //        globalVariables.OnSelectionChanged(0);
+                                //        globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Project ID":{
-                                dbHandler.updateProject(projectId,item ,branchText.getText().toString(),0);
+                            case "Project ID": {
+                                dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Note A":{
-                                dbHandler.updateProject(projectId,"infoA" ,branchText.getText().toString(),0);
+                            case "Note A": {
+                                dbHandler.updateProject(projectId, "infoA", branchText.getText().toString(), 0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Note B":{
-                                dbHandler.updateProject(projectId,"infoB" ,branchText.getText().toString(),0);
+                            case "Note B": {
+                                dbHandler.updateProject(projectId, "infoB", branchText.getText().toString(), 0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Note C":{
-                                dbHandler.updateProject(projectId,"infoC",branchText.getText().toString(),0 );
+                            case "Note C": {
+                                dbHandler.updateProject(projectId, "infoC", branchText.getText().toString(), 0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Note D":{
-                                dbHandler.updateProject(projectId,"infoD",branchText.getText().toString(),0);
+                            case "Note D": {
+                                dbHandler.updateProject(projectId, "infoD", branchText.getText().toString(), 0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Note E":{
-                                dbHandler.updateProject(projectId,"infoE",branchText.getText().toString(),0);
+                            case "Note E": {
+                                dbHandler.updateProject(projectId, "infoE", branchText.getText().toString(), 0);
                                 break;
                             }
-                            case "Note F":{
-                                dbHandler.updateProject(projectId,"infoF",branchText.getText().toString(),0);
+                            case "Note F": {
+                                dbHandler.updateProject(projectId, "infoF", branchText.getText().toString(), 0);
                                 break;
                             }
-                            case "Note G":{
-                                dbHandler.updateProject(projectId,"infoG",branchText.getText().toString(),0);
+                            case "Note G": {
+                                dbHandler.updateProject(projectId, "infoG", branchText.getText().toString(), 0);
                                 break;
                             }
-                            case "Note H":{
-                                dbHandler.updateProject(projectId,"infoH",branchText.getText().toString(),0);
+                            case "Note H": {
+                                dbHandler.updateProject(projectId, "infoH", branchText.getText().toString(), 0);
                                 break;
                             }
+                        } // if there is a valid project
                         }
 
 

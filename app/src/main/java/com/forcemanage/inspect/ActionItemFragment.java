@@ -378,6 +378,8 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                                       "", performE.getText().toString(), ""
                     , scopeE.getText().toString(), "p", notesE.getText().toString());
 
+            dbHandler.statusChanged(Integer.parseInt(projectId));
+
             globalVariables.Edited = false;
 
         }
