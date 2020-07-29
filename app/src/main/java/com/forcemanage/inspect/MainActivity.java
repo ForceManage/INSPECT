@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         transaction.replace(R.id.mainfragment_container,fragment,name);
         if(addToBackStack){
             transaction.addToBackStack(name);
-        }
+          }
         transaction.commit();
     }
 
@@ -451,12 +451,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
   */
 
                 Bundle bundle = new Bundle();
+
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
                 bundle.putString("projectId",projectId);
                 bundle.putString("inspectionId", inspectionId);
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
-                bundle.putString("dateInspected", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+                bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
                 bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
@@ -464,8 +465,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
-                doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
+                doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
                 fragment.setArguments(bundle);
+
+
                 break;
             }
         }
@@ -476,8 +479,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void onResume(){
 
-        super.onResume();
-        //    updatePropList();
+     super.onResume();
+
+        updatePropList();
 
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
@@ -504,13 +508,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-            FragmentManager fm = getSupportFragmentManager();
+        //    FragmentManager fm = getSupportFragmentManager();
 
 
             //fm.popBackStack(DF,0);
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
-            }
+       //     if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+       //         getSupportFragmentManager().popBackStackImmediate();
+       //     }
 
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             GlobalVariables.modified = false;
@@ -1114,8 +1118,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     public void reportMenu() {
 
-
-
         // setup the alert builder
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -1180,13 +1182,31 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         }
 
 
-                        ReportFragment fragment = new ReportFragment();
-                        fragment.setArguments(bundle);
-                        doFragmentTransaction(fragment, "ReportFragment", false, "");
-                        //    fragment_obj = (ReportFragment)getSupportFragmentManager().findFragmentByTag("ReportFragment");
+                       HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+
+                        //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                        propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+
+                        bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                        bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+                        bundle.putString("projectId",projectId);
+                        bundle.putString("inspectionId", inspectionId);
+                        bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+                        bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+                        bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
+                        bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
+                        bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+                        bundle.putString("auditor",projectItem.get(MyConfig.TAG_USER_ID));
 
 
-                        break;
+
+
+                        ReportFragment reportfragment = new ReportFragment();
+                        reportfragment.setArguments(bundle);
+                               doFragmentTransaction(reportfragment, "ReportFragment", false, "");
+                        reportfragment.setArguments(bundle);
+
+                         break;
                     }
                     case 1: {
 
@@ -1240,6 +1260,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         AlertDialog dialog = builder.create();
 
         dialog.show();
+
+
+
 
     }
 
@@ -1566,6 +1589,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
         //   OnSelectionChanged(0);
+
+
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
@@ -1584,19 +1609,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+    /*
             FragmentManager fm = getSupportFragmentManager();
 
 
-            //fm.popBackStack(DF,0);
+     //        fm.popBackStack();
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStackImmediate();
             }
 
-            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+             fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             GlobalVariables.modified = false;
             //       MapListAdapter mapListAdapter = new MapListAdapter(this);
             //       mapListAdapter.notifyDataSetChanged();
             //   OnSelectionChanged(0);
+
+     */
         }
 
 

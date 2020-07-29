@@ -26,12 +26,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
     private Context context;
 
 
-
     public MapListAdapter(Context context) {    //,int resource, List<TreeViewNode> items
         super(context, android.R.layout.simple_gallery_item);
 
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     @Override
@@ -47,9 +45,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         return position;
     }
 
-
-
-
     /**
      * Populate new items in the list.
      */
@@ -57,7 +52,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
     public View getView(int position, View convertView, ViewGroup parent) {
 
         MapListViewHolder holder = null;
-
 
         if (convertView == null)
         {
@@ -127,8 +121,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         }
 
 
-
-
         holder.arrow.setTag(position);
         holder.content.setTag(position);
 
@@ -138,10 +130,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         ((TextView) convertView.findViewById(R.id.spacer)).getLayoutParams().width = newWidth;
         ((TextView) convertView.findViewById(R.id.spacer)).requestLayout();
 
-
         showMessage("TreelistAdapter pos:  "+position);
-
-
 
         return convertView;
     }
@@ -186,8 +175,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
         MapViewNode node = GlobalVariables.displayNodes.get(0);
-
-
 
         if (node.getIsExpanded() == GlobalVariables.TRUE) {
             node.setIsExpanded(GlobalVariables.FALSE);

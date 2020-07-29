@@ -3,19 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_weight="0.15"
         android:background="@drawable/head_frame"
-        android:paddingBottom="20dp">
+        android:paddingBottom="10dp"
+         >
 
 
         <TextView
             android:id="@+id/branchTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
+            android:layout_gravity="center|left"
+            android:layout_weight="0.85"
             android:paddingTop="6dp"
             android:paddingLeft="10dp"
             android:text="Project Activity Report  "
@@ -24,13 +29,33 @@
             android:textStyle="normal|bold" />
 
 
+        <Button
+            android:id="@+id/btncloseReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:layout_marginLeft="5dp"
+            android:backgroundTint="#008577"
+            android:drawableTint="@color/white"
+            android:drawableStart="@drawable/ic_format_list_bulleted"
+            android:drawablePadding="5dp"
+            android:text="CLOSE REPORT VIEW"
+            android:textSize="15sp"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0.9"
         android:layout_alignParentBottom="true"
         android:id="@+id/list"/>
+
+
+
+
+
+
 
 </LinearLayout>

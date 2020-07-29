@@ -15,8 +15,6 @@ public class MapViewLists
 {
 
 
-
-
     public static ArrayList<MapViewData> LoadInitialData() {
 
 
@@ -46,21 +44,12 @@ public class MapViewLists
 */
 
 
-
-
-
-
      //   MapViewLists.LoadDisplayList();
         return GlobalVariables.dataList;
 
         // return GlobalVariables.dataList;
 
-
       }
-
-
-
-
 
 
     public static ArrayList<MapViewNode> LoadInitialNodes(ArrayList<MapViewData> dataList)
@@ -183,14 +172,6 @@ public class MapViewLists
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

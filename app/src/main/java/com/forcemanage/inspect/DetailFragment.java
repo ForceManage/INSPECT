@@ -96,7 +96,7 @@ public class DetailFragment extends Fragment
         super.onSaveInstanceState(outState);
 
         // Save the current description selection in case we need to recreate the fragment
-        outState.putInt(KEY_POSITION,mCurrentPosition);
+       outState.putInt(KEY_POSITION,mCurrentPosition);
     //    outState.clear();
      //   onSaveInstanceState(Bundle.EMPTY);
 

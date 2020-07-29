@@ -381,7 +381,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the backStack so the User can navigate back
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
+          //  fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             FragmentManager fm = getSupportFragmentManager();
 

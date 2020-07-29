@@ -52,6 +52,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String projectId;
     private String inspectionId;
     private String dateInspected;
+    private String startTime;
     private String endTime;
     private Button reportBtn;
 
@@ -70,8 +71,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             inspectionId = bundle.getString("inspectionId");
             note = bundle.getString("note");
             auditor = bundle.getString("auditor");
+            dateInspected = bundle.getString("date");
             typeInspection = bundle.getString("inspectType");
-            dateInspected = bundle.getString("dateInspected");
+            startTime = bundle.getString("startTime");
             endTime = bundle.getString("endTime");
             Edited = false;
 
@@ -115,7 +117,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.reportMenu();
+               globalVariables.reportMenu();
+
             }
         });
 
@@ -169,13 +172,13 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
 
          setText();
-         if (!endTime.equals("null"))
-         endTime = stringdate(endTime,3);
+   //      if (!endTime.equals("null"))
+  //       endTime = "2020-01-01 01:01:00";
 
          inspectDate.setText("Activity created:  "+stringdate(inspectionDate,1));
          inspectionType.setText("Type of Activity:  "+typeInspection);
-         if(!dateInspected.equals("null"))
-         inspectedDate.setText("Activity recorded: "+stringdate(dateInspected,2)+"  -  "+endTime);
+         if(!startTime.equals("null"))
+         inspectedDate.setText("Activity recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
 
          inspector.setText("Auditor:  "+ auditor);
          Label.setText(branchLabel);

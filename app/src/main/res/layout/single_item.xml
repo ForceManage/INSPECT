@@ -42,6 +42,7 @@
         android:textStyle="normal"
         android:text="test case"
         android:textSize="14dp"
+        android:choiceMode="singleChoice"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
