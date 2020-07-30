@@ -1113,95 +1113,95 @@ public class DBHandler extends SQLiteOpenHelper {
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
             branchType = cursor.getInt(0);
+            if(branchType == 0) {
+                selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
+                        + TABLE_MAP + " M"
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
+                        + " AND " + COLUMN_CAT_ID + " < 500 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
-        selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
-                + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
-                + " AND "+ COLUMN_CAT_ID+ " < 500 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            maxcatID = cursor.getInt(0);
-            maxcatID = maxcatID + 1;
-        }
-
-        selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
-                + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            maxAId = cursor.getInt(0);
-            maxAId = maxAId + 1;
-        }
-
-
-        switch(type){
-
-            case(0):{
-                ContentValues values = new ContentValues();
-
-                if (Level == 0) {
-                    values.put(COLUMN_CAT_ID, maxcatID);
-                    values.put(COLUMN_PARENT, -1);
-                } else {
-                    values.put(COLUMN_CAT_ID, CatID);
-                    values.put(COLUMN_PARENT, parent);
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    maxcatID = cursor.getInt(0);
+                    maxcatID = maxcatID + 1;
                 }
-                values.put(COLUMN_PROJECT_ID, projID);
-                values.put(COLUMN_LABEL, Label);
-                values.put(COLUMN_LEVEL, Level);
-                values.put(COLUMN_A_ID, maxAId);
-                values.put(COLUMN_INSPECTION_ID, 0);
-                values.put(COLUMN_CHILD,type);
-                values.put(COLUMN_IMG1, "");
-                values.put(COLUMN_NOTES, "");
-                db.insert(TABLE_MAP, null, values);
 
-                break;
-                //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
+                selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                        + TABLE_MAP + " M"
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID;
+
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    maxAId = cursor.getInt(0);
+                    maxAId = maxAId + 1;
                 }
-            case(1):{
-
-                ContentValues values = new ContentValues();
-
-                values.put(COLUMN_CAT_ID, CatID);
-                values.put(COLUMN_PARENT, parent);
-                values.put(COLUMN_PROJECT_ID, projID);
-                values.put(COLUMN_LABEL, Label);
-                values.put(COLUMN_LEVEL, Level);
-                values.put(COLUMN_A_ID, maxAId);
-                values.put(COLUMN_INSPECTION_ID, iId);
-                values.put(COLUMN_CHILD,type);
-                values.put(COLUMN_IMG1, "");
-                values.put(COLUMN_NOTES, "");
-                db.insert(TABLE_MAP, null, values);
-
-                break;
-            }
-
-            case(2):{
-
-                ContentValues values = new ContentValues();
-
-                values.put(COLUMN_CAT_ID, CatID);
-                values.put(COLUMN_PARENT, parent);
-                values.put(COLUMN_PROJECT_ID, projID);
-                values.put(COLUMN_LABEL, Label);
-                values.put(COLUMN_LEVEL, Level);
-                values.put(COLUMN_A_ID, maxAId);
-                values.put(COLUMN_INSPECTION_ID, iId);
-                values.put(COLUMN_CHILD,type);
-                values.put(COLUMN_IMG1, "");
-                values.put(COLUMN_NOTES, "");
-                db.insert(TABLE_MAP, null, values);
-
-                break;
-            }
-
-        }
 
 
+                switch (type) {
+
+                    case (0): {
+                        ContentValues values = new ContentValues();
+
+                        if (Level == 0) {
+                            values.put(COLUMN_CAT_ID, maxcatID);
+                            values.put(COLUMN_PARENT, -1);
+                        } else {
+                            values.put(COLUMN_CAT_ID, CatID);
+                            values.put(COLUMN_PARENT, parent);
+                        }
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, 0);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                        //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
+                    }
+                    case (1): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+
+                    case (2): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+
+                }
+
+            }//end of branch type is 0 or else return 0
         db.close();
 
         return maxAId;
@@ -1566,7 +1566,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put(COLUMN_LEVEL, Level);
                 values.put(COLUMN_A_ID, maxAId);
                 values.put(COLUMN_INSPECTION_ID, 0);
-                values.put(COLUMN_CHILD,0);
+                values.put(COLUMN_CHILD,10);
                 values.put(COLUMN_IMG1, "");
                 values.put(COLUMN_NOTES, "");
                 db.insert(TABLE_MAP, null, values);

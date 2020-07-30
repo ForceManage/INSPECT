@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.StyleRes;
+
 
 public class MapListAdapter extends ArrayAdapter<MapViewNode>
 {
@@ -79,15 +81,16 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
        int node_branchCat = node.getbranchCat();
-
+        int base_node = node.getNodeLevel();
 
         switch (node_branchCat){
 
             case 0:{
 
                 holder.content.setTextColor(Color.DKGRAY);
-                holder.content.setTextSize(17);
-
+              //  holder.content.setTextSize(17);
+                if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
+                if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 if (node.getIsExpanded() == GlobalVariables.TRUE)
                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
                 else
@@ -100,20 +103,23 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
            }
             case 1: {
                 holder.content.setTextColor(Color.GRAY);
-                holder.content.setTextSize(17);
+            //    holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
                 break;
             }
             case 2: {
                 holder.content.setTextColor(Color.GRAY);
-                holder.content.setTextSize(17);
+           //     holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_note_text);
 
                 break;
             }
             case 10: {
                 holder.content.setTextColor(Color.BLUE);
-                holder.content.setTextSize(17);
+          //      holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
 
                 break;

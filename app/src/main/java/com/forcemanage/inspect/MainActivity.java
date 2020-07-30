@@ -1210,45 +1210,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     }
                     case 1: {
 
-                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                        startActivityForResult(intentContact, PICK_CONTACT);
+                        reportMailer(0,"");
 
                         break;
 
                     } //
                     case 2: {
 
-               /*          LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the zone and associated data");//location.getText().toString());
-
-
-
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                         deleteInspectionItem();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                */
+                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                        startActivityForResult(intentContact, PICK_CONTACT);
                         break;
                     }
 
@@ -1333,8 +1303,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (requestCode == PICK_CONTACT) {
 
-            final String emailAdress;
-            emailAdress = getContactInfo(data);
+            final ArrayList emailAdress;
+            emailAdress = getContactInfo( data);
 
 
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
@@ -1342,13 +1312,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
             alertDialogBuilder.setView(promptView);
             final TextView locationText = (TextView) promptView.findViewById(R.id.email);
-            locationText.setText(emailAdress);//location.getText().toString());
+            if(emailAdress.size() > 0)
+            locationText.setText(emailAdress.get(0).toString());//location.getText().toString());
 
             alertDialogBuilder.setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
 
-                            reportMailer();
+                            reportMailer(1, emailAdress.get(0).toString());
                         }
                     })
                     .setNegativeButton("Cancel",
@@ -1362,14 +1333,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
 
-
-
-        }
+       }
 
     }
 
-    protected String getContactInfo(Intent data)
+
+    protected  ArrayList<String> getContactInfo(Intent data)
     {
+        ArrayList<String> contactInfo = new ArrayList<>();
+
 
         Cursor cursor = null;
         String email = "", name = "";
@@ -1389,9 +1361,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             // let's just get the first email
             if (cursor.moveToFirst()) {
-                email = cursor.getString(emailIdx);
-                name = cursor.getString(nameId);
-                Log.v(" Email", "Got email: " + email);
+                do {
+                    contactInfo = new ArrayList<>();
+                    contactInfo.add(cursor.getString(emailIdx));
+
+                    email = contactInfo.get(0);
+         //           name = cursor.getString(nameId);
+                    Log.v(" Email", "Got email: " + email);
+                }
+                while (cursor.moveToNext());
             } else {
                 Log.w(" Email", "No results");
             }
@@ -1404,7 +1382,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         }
-        return email;
+        return contactInfo;
     }//getContactInfo
 
     File createPhotoFile()throws IOException {
@@ -2862,11 +2840,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
-    private void reportMailer() {
+    private void reportMailer(final int type, final String email) {
 
         class Send_Report extends AsyncTask<Void, Void, String> {
             private ProgressDialog loading;
             private String res = "Before try";
+            private String message = "fail";
 
             @Override
             protected void onPreExecute() {
@@ -2883,8 +2862,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected String doInBackground(Void... params) {
 
-                RequestHandler_ rh = new RequestHandler_();
-                String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId+"&USERID="+USER_ID);
+                    RequestHandler_ rh = new RequestHandler_();
+
+                       String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);
+
                 return message;
             }
 

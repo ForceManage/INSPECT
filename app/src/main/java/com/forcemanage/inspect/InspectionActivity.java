@@ -381,7 +381,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the backStack so the User can navigate back
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-          //  fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             FragmentManager fm = getSupportFragmentManager();
 
@@ -521,7 +521,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName, 0);  //this is the ESM category
         if (result == 0)
-            Toast.makeText(this, "Cannot place navigation branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place branch at this position", Toast.LENGTH_SHORT).show();
         else
             loadMap();
     }
@@ -617,60 +617,61 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
                 HashMap<String, String> list = dbHandler.getInspectionItem(projId, iID, aID);
-
-                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                Overview = list.get(MyConfig.TAG_OVERVIEW);
-                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                com1 = list.get(MyConfig.TAG_COM1);
-                com2 = list.get(MyConfig.TAG_COM2);
-                com3 = list.get(MyConfig.TAG_COM3);
-                com4 = list.get(MyConfig.TAG_COM4);
-                com5 = list.get(MyConfig.TAG_COM5);
-                Notes = list.get(MyConfig.TAG_NOTES);
-                String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
-
-
-                Bundle bundle = new Bundle();
-                bundle.putString("projectID", projectId);
-                bundle.putString("inspectionID", inspectionId);
-                bundle.putInt("aID", aID);
-                bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", branchLabel);
-                bundle.putString("aprovider", aProvider);
-                bundle.putString("overview", Overview);
-                bundle.putString("date", dateInspected);
-                bundle.putString("relevantInfo", relevantInfo);
-                bundle.putString("notes", Notes);
-                bundle.putString("com1", com1);
-                bundle.putString("com2", com2);
-                bundle.putString("com3", com3);
-                bundle.putString("com4", com4);
-                bundle.putString("com5", com5);
+                if(list.size() > 0) {
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
+                    com3 = list.get(MyConfig.TAG_COM3);
+                    com4 = list.get(MyConfig.TAG_COM4);
+                    com5 = list.get(MyConfig.TAG_COM5);
+                    Notes = list.get(MyConfig.TAG_NOTES);
+                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
 
 
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putInt("aID", aID);
+                    bundle.putString("branchHead", branchHead);
+                    bundle.putString("branchLabel", branchLabel);
+                    bundle.putString("aprovider", aProvider);
+                    bundle.putString("overview", Overview);
+                    bundle.putString("date", dateInspected);
+                    bundle.putString("relevantInfo", relevantInfo);
+                    bundle.putString("notes", Notes);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("com3", com3);
+                    bundle.putString("com4", com4);
+                    bundle.putString("com5", com5);
 
-                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                String tag = list.get(MyConfig.TAG_IMAGE1);
 
-                photo1 = photos[0];
-                photo2 = photos[1];
-                photo3 = photos[2];
-                photo4 = photos[3];
-                photo5 = photos[4];
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                    photos[4] = list.get(MyConfig.TAG_IMAGE5);
+
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+                    photo3 = photos[2];
+                    photo4 = photos[3];
+                    photo5 = photos[4];
 
 
-                InspectionFragment fragment = new InspectionFragment();
-                fragment.setArguments(bundle);
+                    InspectionFragment fragment = new InspectionFragment();
+                    fragment.setArguments(bundle);
 
-                doFragmentTransaction(fragment, "InspectionFragment", false, "");
+                    doFragmentTransaction(fragment, "InspectionFragment", false, "");
 
-             //   int itemNos = dbHandler.getSubItemMap(projId, aID);
-
+                    //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+                }
+                else Toast.makeText(this, "No associated data found",Toast.LENGTH_SHORT).show();
 
 
                 break;
