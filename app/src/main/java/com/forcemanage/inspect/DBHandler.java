@@ -1094,7 +1094,79 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Get the current max AssetID Number for the property
+    public void addProject(int user_id, String projID, String label, String pID){
 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PROJECT_ID, projID);
+        values.put(COLUMN_PROJECT_ADDRESS, label);
+        values.put(COLUMN_ADDRESS_NUMBER,"");
+        db.insert(TABLE_PROJECT_INFO, null, values);
+
+        ContentValues valuesi = new ContentValues();
+        valuesi.put(COLUMN_INSPECTION_ID, "0");
+        valuesi.put(COLUMN_INSPECTION_TYPE, "QE");
+        valuesi.put(COLUMN_INSPECTION_STATUS, "n");
+        valuesi.put(COLUMN_PROJECT_ID, projID);
+        valuesi.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi.put(COLUMN_INSPECTOR, user_id );
+        valuesi.put(COLUMN_DATE_TIME_START, dayTime(4));
+        valuesi.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
+        valuesi.put(COLUMN_LABEL, label);
+        valuesi.put(COLUMN_LEVEL, "0");
+        valuesi.put(COLUMN_PARENT, "-1");
+        valuesi.put(COLUMN_P_ID, pID);
+        valuesi.put(COLUMN_IMAGE, "");
+        valuesi.put(COLUMN_NOTE, "");
+
+        db.insert(TABLE_INSPECTION, null, valuesi);
+
+        ContentValues valuesi2 = new ContentValues();
+        valuesi2.put(COLUMN_INSPECTION_ID, "1");
+        valuesi2.put(COLUMN_INSPECTION_TYPE, "QE");
+        valuesi2.put(COLUMN_INSPECTION_STATUS, "n");
+        valuesi2.put(COLUMN_PROJECT_ID, projID);
+        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi2.put(COLUMN_INSPECTOR, user_id );
+        valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
+        valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
+        valuesi2.put(COLUMN_LABEL, label);
+        valuesi2.put(COLUMN_LEVEL, "1");
+        valuesi2.put(COLUMN_PARENT,  pID );
+        valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID)+1);
+        valuesi2.put(COLUMN_IMAGE, "");
+        valuesi2.put(COLUMN_NOTE, "");
+
+        db.insert(TABLE_INSPECTION, null, valuesi2);
+
+      db.close();
+    }
+
+    public void addActivity(int user_id, String projID, String iId, String label, String pID, String cpID){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues valuesi2 = new ContentValues();
+        valuesi2.put(COLUMN_INSPECTION_ID, iId);
+        valuesi2.put(COLUMN_INSPECTION_TYPE, "QE");
+        valuesi2.put(COLUMN_INSPECTION_STATUS, "n");
+        valuesi2.put(COLUMN_PROJECT_ID, projID);
+        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi2.put(COLUMN_INSPECTOR, user_id );
+        valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
+        valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
+        valuesi2.put(COLUMN_LABEL, label);
+        valuesi2.put(COLUMN_LEVEL, "1");
+        valuesi2.put(COLUMN_PARENT,  cpID );
+        valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID));
+        valuesi2.put(COLUMN_IMAGE, "");
+        valuesi2.put(COLUMN_NOTE, "");
+
+        db.insert(TABLE_INSPECTION, null, valuesi2);
+
+        db.close();
+    }
 
     //Add sublocation to the location
     public int addLevel(int projID, int aId, int iId, int CatID, int Level, int parent, String Label, int type) {
@@ -1113,7 +1185,7 @@ public class DBHandler extends SQLiteOpenHelper {
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
             branchType = cursor.getInt(0);
-            if(branchType == 0) {
+
                 selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
                         + TABLE_MAP + " M"
                         + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
@@ -1140,26 +1212,28 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     case (0): {
                         ContentValues values = new ContentValues();
+                        if(branchType == 0) {
 
-                        if (Level == 0) {
-                            values.put(COLUMN_CAT_ID, maxcatID);
-                            values.put(COLUMN_PARENT, -1);
-                        } else {
-                            values.put(COLUMN_CAT_ID, CatID);
-                            values.put(COLUMN_PARENT, parent);
+                            if (Level == 0) {
+                                values.put(COLUMN_CAT_ID, maxcatID);
+                                values.put(COLUMN_PARENT, -1);
+                            } else {
+                                values.put(COLUMN_CAT_ID, CatID);
+                                values.put(COLUMN_PARENT, parent);
+                            }
+                            values.put(COLUMN_PROJECT_ID, projID);
+                            values.put(COLUMN_LABEL, Label);
+                            values.put(COLUMN_LEVEL, Level);
+                            values.put(COLUMN_A_ID, maxAId);
+                            values.put(COLUMN_INSPECTION_ID, 0);
+                            values.put(COLUMN_CHILD, type);
+                            values.put(COLUMN_IMG1, "");
+                            values.put(COLUMN_NOTES, "");
+                            db.insert(TABLE_MAP, null, values);
                         }
-                        values.put(COLUMN_PROJECT_ID, projID);
-                        values.put(COLUMN_LABEL, Label);
-                        values.put(COLUMN_LEVEL, Level);
-                        values.put(COLUMN_A_ID, maxAId);
-                        values.put(COLUMN_INSPECTION_ID, 0);
-                        values.put(COLUMN_CHILD, type);
-                        values.put(COLUMN_IMG1, "");
-                        values.put(COLUMN_NOTES, "");
-                        db.insert(TABLE_MAP, null, values);
-
+                        else maxAId = 0;  //return 0 value
                         break;
-                        //  int  maxvalues[] = new int[]{maxSublocation, maxAssetId};
+
                     }
                     case (1): {
 
@@ -1201,7 +1275,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 }
 
-            }//end of branch type is 0 or else return 0
+
         db.close();
 
         return maxAId;

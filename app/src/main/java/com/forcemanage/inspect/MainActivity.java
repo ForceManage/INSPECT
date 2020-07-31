@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING_ACTION;
     private String JSON_STRING_CERTINSP;
     private String JSON_STRING_PROJECT_LIST;
+    private String JSON_STRING_NEW_PROJECT;
+    private String JSON_STRING_NEW_ACTIVITY;
     private String JSON_STRING_OR;
     private String JSON_STRING_USER;
     private int USER_ID = 0;
@@ -528,26 +530,42 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    private void requestProject(final String levelName){
+    private void requestProject(final String project_Name){
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
         if (nInfo != null && nInfo.isConnected()) {
 
-            class reqAct extends AsyncTask<Void, Void, Void> {
+            class reqproj extends AsyncTask<Void, Void, String> {
+                ProgressDialog loading;
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+                    progressBar1.setVisibility(View.VISIBLE);
+                }
 
                 @Override
-                protected Void doInBackground(Void... params) {
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    JSON_STRING_NEW_PROJECT = s;
+                    update_NewProject();
+                    updatePropList();
+                    loading.dismiss();
+                    progressBar1.setVisibility(View.GONE);
+                }
+                @Override
+                protected String doInBackground(Void... params) {
                     RequestHandler_ rh = new RequestHandler_();
-                    rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, levelName + "&USERID=" + USER_ID);
+                    String s = rh.sendRequestParam(MyConfig.URL_REQUEST_PROJECT, project_Name + "&USERID=" + USER_ID);
 
-                    return null;
+                    return s;
 
                 }
 
             }
-            reqAct req = new reqAct();
+            reqproj req = new reqproj();
             req.execute();
 
 
@@ -558,7 +576,60 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
+    private void requestActivity(final String activity_Name){
 
+
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
+            //    editTextMessage.setText("Sync Inspected Only");
+            //Upload photos to Bucket
+
+            // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
+            //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
+            if(USER_ID > 0) {
+                  if(!projectId.equals("null")) {
+
+                    class reqAct extends AsyncTask<Void, Void, String> {
+
+                        ProgressDialog loading;
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+                            super.onPostExecute(s);
+                            JSON_STRING_NEW_ACTIVITY = s;
+                            update_NewActivity();
+                            updatePropList();
+                            loading.dismiss();
+                        }
+                        @Override
+                        protected String doInBackground(Void... params) {
+                            RequestHandler_ rh = new RequestHandler_();
+                            String s = rh.sendRequestParam(MyConfig.URL_REQUEST_ACTIVITY, projectId + "&label=" + activity_Name + "&USERID=" + USER_ID);
+                            return s;
+                        }
+
+                    }
+                    reqAct req = new reqAct();
+                    req.execute();
+                }
+                else
+                    Toast.makeText(MainActivity.this, "Select a Project ",Toast.LENGTH_LONG).show();
+            }
+            else
+                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
+
+
+        } else {
+            //          buttonDownload.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+        }
+    }
 
 
 
@@ -594,15 +665,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                             itemTitle.setText("New Project Request  ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Project ID : ");//Integer.parseInt(locationId)
+                            locationText.setText("Project Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Enter your Project identification.");
+                            branchText.setHint("Enter the Project Name/description.");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             if(USER_ID > 0) {
                                                 requestProject(branchText.getText().toString());
-                                                downloadprojects();
+                                            //    downloadprojects();
                                             }
                                             else
                                                 Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
@@ -629,44 +700,40 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
-                            DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
-                            NetworkInfo nInfo = cManager.getActiveNetworkInfo();
-                            if (nInfo != null && nInfo.isConnected()) {
-                                //    editTextMessage.setText("Sync Inspected Only");
-                                //Upload photos to Bucket
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("New Activity Request  ");//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Activity Name : ");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Activity Name ");
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if(USER_ID > 0) {
+                                                requestActivity(branchText.getText().toString());
+                                                //    downloadprojects();
+                                            }
+                                            else
+                                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
 
-                                // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
-                                //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
 
 
-
-                            if(USER_ID > 0) {
-                              final int pId = dbHandler.getInspectionpId(parseInt(projectId));
-                                if(!projectId.equals("null")) {
-
-                                    class reqAct extends AsyncTask<Void, Void, Void> {
-                                        @Override
-                                        protected Void doInBackground(Void... params) {
-                                            RequestHandler_ rh = new RequestHandler_();
-                                            rh.sendRequestParam(MyConfig.URL_REQUEST_ACTIVITY, projectId + "&pId=" + pId + "&USERID=" + USER_ID);
-                                            return null;
                                         }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
 
-                                    }
-                                    reqAct req = new reqAct();
-                                    req.execute();
-                                }
-                                else
-                                    Toast.makeText(MainActivity.this, "Select a Project ",Toast.LENGTH_LONG).show();
-                            }
-                            else
-                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
-
-
-                            } else {
-                                //          buttonDownload.setEnabled(false);
-                                Toast.makeText(getApplicationContext(), "No internet available", Toast.LENGTH_LONG).show();
-                            }
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
 
                             break;
 
@@ -2003,6 +2070,89 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
+    private void update_NewProject() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_NEW_PROJECT);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //    editTextMessage.setText("Test begin Category " + result);
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                String imsg = Integer.toString(i);
+                String rmsg = Integer.toString(result.length());
+                String msg = "Testing Loop category " + imsg + " result no " + rmsg;
+                //       editTextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String projID = jo.getString("ProjectID");
+                String label = jo.getString("Label");
+                String pId = jo.getString("pID");
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                dbHandler.addProject(USER_ID,projID,label,pId);
+
+                // testing only -
+                //   editTextMessage.setText("Test Category end");
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("New Project ", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
+    private void update_NewActivity() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_NEW_ACTIVITY);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //    editTextMessage.setText("Test begin Category " + result);
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                String imsg = Integer.toString(i);
+                String rmsg = Integer.toString(result.length());
+                String msg = "Testing Loop category " + imsg + " result no " + rmsg;
+                //       editTextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String cpID = jo.getString("cpID");
+                String label = jo.getString("Label");
+                String pId = jo.getString("pID");
+                String iId = jo.getString("iID");
+                String projID = jo.getString("ProjectID");
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                dbHandler.addActivity(USER_ID, projID, iId,label,pId,cpID);
+
+                // testing only -
+                //   editTextMessage.setText("Test Category end");
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("New Project ", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
+
     private void update_OR_Info(String CAT) {
         JSONObject jsonObject = null;
         cat = "a";
@@ -2090,8 +2240,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String s = rh.sendGetRequestParam(MyConfig.URL_GET_PROJECTS, Integer.toString(USER_ID));
                 return s;
             }
-
-
 
         }
         GetProjectsJSON gj = new GetProjectsJSON();
