@@ -1150,7 +1150,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues valuesi2 = new ContentValues();
         valuesi2.put(COLUMN_INSPECTION_ID, iId);
         valuesi2.put(COLUMN_INSPECTION_TYPE, "QE");
-        valuesi2.put(COLUMN_INSPECTION_STATUS, "n");
+        valuesi2.put(COLUMN_INSPECTION_STATUS, "m");
         valuesi2.put(COLUMN_PROJECT_ID, projID);
         valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(0) );
         valuesi2.put(COLUMN_INSPECTOR, user_id );

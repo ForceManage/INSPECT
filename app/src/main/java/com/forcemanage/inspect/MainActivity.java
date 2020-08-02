@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         });
 
-        if(USER_ID ==0) {
+        if(USER_ID == 0) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
             View promptView = layoutInflater.inflate(R.layout.call_log, null);
@@ -280,7 +280,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                     if (USER_ID > 0) {
                         CLIENT = dbHandler.getClient(USER_ID);
-                           updatePropList();
+                         updatePropList();
+                        if(CLIENT.equals("no-client")) {
+                            CLIENT = CLIENT + "-" + USER_ID;
+                            }
+                        Thread thread = new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                boolean exists = s3Client.doesBucketExist(CLIENT);
+                                if(!exists)
+                                    s3Client.createBucket(CLIENT);
+
+                            }
+
+                        });
+                        thread.start();
 
                     } else
                         Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
@@ -794,7 +809,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if(USER_ID>0){
-                                        if(dbHandler.checkstatus(USER_ID)==0)
+                                        CLIENT = dbHandler.getClient(USER_ID);
+                                         if(dbHandler.checkstatus(USER_ID)==0)
                                             downloadprojects();
                                         else
                                             Toast.makeText(MainActivity.this, "Upload current data prior to downloading",Toast.LENGTH_SHORT).show();
@@ -832,7 +848,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                         USER_ID = dbHandler.checkCode(passText.getText().toString());
                                         if (USER_ID > 0) {
-
                                             downloadphotos();
 
                                         } else
@@ -1186,7 +1201,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void reportMenu() {
 
         // setup the alert builder
-
+        final DBHandler  dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Choose an action");
         // add a list
@@ -1206,7 +1221,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         bundle.putInt("iId", iId);
 
 
-                        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
                         ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iId);
 
                         //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
@@ -1265,9 +1280,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
                         bundle.putString("auditor",projectItem.get(MyConfig.TAG_USER_ID));
 
-
-
-
                         ReportFragment reportfragment = new ReportFragment();
                         reportfragment.setArguments(bundle);
                                doFragmentTransaction(reportfragment, "ReportFragment", false, "");
@@ -1277,15 +1289,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     }
                     case 1: {
 
-                        reportMailer(0,"");
+
+                        if(dbHandler.checkstatus(projId) == 0) reportMailer(0,"");
+                        else
+                        Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
+
 
                         break;
 
                     } //
                     case 2: {
-
+                        if(dbHandler.checkstatus(projId) == 0) {
                         Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                         startActivityForResult(intentContact, PICK_CONTACT);
+                        }
+                        else
+                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
                         break;
                     }
 
@@ -3078,9 +3097,23 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
      */
     public void upLoadPhotos(View view) {
 
-
         // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
         //    getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
+
+        if(CLIENT.equals("no-client")) CLIENT=CLIENT+"-"+USER_ID;
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                boolean exists = s3Client.doesBucketExist(CLIENT);
+                if(!exists)
+                    s3Client.createBucket(CLIENT);
+
+            }
+
+        });
+        thread.start();
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -3171,9 +3204,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 @Override
                                 public void run() {
                                     try {
-                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
 
-                                        if (exists) {
+                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
+                                       if (exists) {
 
                                             s3Client.setObjectAcl(CLIENT, s, CannedAccessControlList.PublicRead);
 
@@ -3493,6 +3526,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     public void downloadphotos(){
+
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
