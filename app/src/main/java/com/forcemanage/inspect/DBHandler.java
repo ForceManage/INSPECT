@@ -426,7 +426,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.replace(TABLE_INSPECTION_ITEM, null, valuesItem);
 
-
+        db.close();
 
     }
 
@@ -1003,24 +1003,35 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public int checkstatus(Integer projId) {
+    public int checkstatus(String type, int projId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         Cursor cursor;
-        int type = 0;
+        int status = 0;
 
-        selectQuery = "SELECT M." + COLUMN_INSPECTION_ID + " FROM "
-                + TABLE_INSPECTION + " M"
-                + " WHERE M." + COLUMN_INSPECTION_STATUS + " = 'm'";
+        if(type == "all"){
 
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
+                   selectQuery = "SELECT M." + COLUMN_INSPECTION_ID + " FROM "
+                        + TABLE_INSPECTION + " M"
+                        + " WHERE M." + COLUMN_INSPECTION_STATUS + " = 'm'";
+                cursor = db.rawQuery(selectQuery, null);
 
-            type = cursor.getCount();
+                status = cursor.getCount();
         }
+
+        //select status of the specific project
+            if(type == "project") {
+                selectQuery = "SELECT M." + COLUMN_INSPECTION_ID + " FROM "
+                        + TABLE_INSPECTION + " M"
+                        + " WHERE M." + COLUMN_INSPECTION_STATUS + " = 'm' AND " + COLUMN_PROJECT_ID + " = " + projId;
+                cursor = db.rawQuery(selectQuery, null);
+
+                status = cursor.getCount();
+            }
+
         db.close();
-        return type;
+        return status;
 
     }
 
@@ -1091,6 +1102,8 @@ public class DBHandler extends SQLiteOpenHelper {
         ;
 
         cursor = db.rawQuery(selectQuery, null);
+
+        db.close();
     }
 
     //Get the current max AssetID Number for the property
@@ -1102,6 +1115,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_PROJECT_ID, projID);
         values.put(COLUMN_PROJECT_ADDRESS, label);
         values.put(COLUMN_ADDRESS_NUMBER,"");
+        values.put(COLUMN_PROJECT_PHOTO,"");
         db.insert(TABLE_PROJECT_INFO, null, values);
 
         ContentValues valuesi = new ContentValues();
@@ -1452,7 +1466,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         }*///close if first query did not return a position branch
-
+        db.close();
         return result;
     }
 
@@ -1513,7 +1527,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 db_2.close();
 
             }//close if first query did not return a position branch
-
+        db.close();
         return result;
     }
 
@@ -1692,7 +1706,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
 
 
-
+        db.close();
 
         return result;
     }

@@ -1,10 +1,13 @@
 package com.forcemanage.inspect;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +22,9 @@ import android.os.Environment;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -71,9 +78,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static com.amazonaws.regions.Regions.AP_SOUTHEAST_2;
+import static com.forcemanage.inspect.InspectionActivity.copy;
 import static java.lang.Integer.parseInt;
 
 
@@ -122,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
     private static final int ACTIVITY_START_CAMERA_APP = 0;
+    private static final int ACTIVITY_GET_FILE = 1;
     private static final int PICK_CONTACT = 3;
     private RecyclerView recyclerView;
     //  private List<Joblistdata> jobList;
@@ -162,11 +173,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         init();
 
         ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
-        progressBar1 =  findViewById(R.id.progressBar1);
+        progressBar1 = findViewById(R.id.progressBar1);
         listItems = new ArrayList<>();
         MapViewData listItem;
 
-        for (int i = 0; i < (Projects.size()); i++){
+        for (int i = 0; i < (Projects.size()); i++) {
 
             listItem = new MapViewData(
 
@@ -190,11 +201,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //     TreeViewLists.LoadDisplayList();
 
 
-        if (findViewById(R.id.fragment_container) != null){
+        if (findViewById(R.id.fragment_container) != null) {
 
             // However if we are being restored from a previous state, then we don't
             // need to do anything and should return or we could end up with overlapping Fragments
-            if (savedInstanceState != null){
+            if (savedInstanceState != null) {
                 return;
             }
 
@@ -206,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .commit();
 
         }
-
 
 
         buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
@@ -237,7 +247,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // listView = (ListView)findViewById(R.id.lstMain);
 
 
-
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
         if (nInfo != null && nInfo.isConnected()) {
@@ -249,11 +258,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //   updatePropList();
 
 
-
         dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
         Integer date = parseInt(dirName) - 7;
 
-        ToggleTB=(Switch)findViewById(R.id.switch2);
+        ToggleTB = (Switch) findViewById(R.id.switch2);
 
         ToggleTB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -266,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         });
 
-        if(USER_ID == 0) {
+        if (USER_ID == 0) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
             View promptView = layoutInflater.inflate(R.layout.call_log, null);
@@ -277,30 +285,47 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             passDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-                    USER_ID = dbHandler.checkCode(passText.getText().toString());
-                    if (USER_ID > 0) {
-                        CLIENT = dbHandler.getClient(USER_ID);
-                         updatePropList();
-                        if(CLIENT.equals("no-client")) {
-                            CLIENT = CLIENT + "-" + USER_ID;
+
+                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
+                        USER_ID = dbHandler.checkCode(passText.getText().toString());
+                        if (USER_ID > 0) {
+                            CLIENT = dbHandler.getClient(USER_ID);
+                            updatePropList();
+                            if (CLIENT.equals("no-client")) {
+                                CLIENT = CLIENT + "-" + USER_ID;
                             }
-                        Thread thread = new Thread(new Runnable() {
+                            Thread thread = new Thread(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                boolean exists = s3Client.doesBucketExist(CLIENT);
-                                if(!exists)
-                                    s3Client.createBucket(CLIENT);
+                                @Override
+                                public void run() {
+                                    boolean exists = s3Client.doesBucketExist(CLIENT);
+                                    if (!exists)
+                                        s3Client.createBucket(CLIENT);
 
+                                }
+
+                            });
+                            thread.start();
+
+                            int PERMISSION_ALL = 1;
+                            String[] PERMISSIONS = {
+                                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    android.Manifest.permission.READ_CONTACTS,
+                                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    android.Manifest.permission.ACCESS_NETWORK_STATE,
+                                    Manifest.permission.INTERNET,
+                                    android.Manifest.permission.CAMERA
+                            };
+
+                            if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
+                                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
                             }
 
-                        });
-                        thread.start();
+                        } else
+                            Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
 
                     } else
-                        Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
-
-
+                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -308,34 +333,46 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog alert = passDialog.create();
             alert.show();
         }
+
     }
 
-    private void init(){
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void init() {
 
         ProjectInfoFragment fragment = new ProjectInfoFragment();
-        doFragmentTransaction(fragment,"ProjectInfoFragment",false,"");
+        doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
 
     }
 
     //returns the date/datetime depending on type required in YYYYMMDD format
-    private String dayTime(int Type){
+    private String dayTime(int Type) {
 
         String daytime = "20000101";
 
-        switch (Type){
+        switch (Type) {
 
-            case (1):{
+            case (1): {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-                Date date_  = Calendar.getInstance().getTime();
+                Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
             }
 
-            case (2):{
+            case (2): {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-                Date date_  = Calendar.getInstance().getTime();
+                Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
             }
@@ -362,24 +399,23 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
-    private String datetoString(String date){
+    private String datetoString(String date) {
         String datestring = "";
 
         String[] idate = date.split("-");
-        datestring = idate[0]+idate[1]+idate[2];
+        datestring = idate[0] + idate[1] + idate[2];
 
         return datestring;
     }
 
 
-
-    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message){
+    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
-        transaction.replace(R.id.mainfragment_container,fragment,name);
-        if(addToBackStack){
+        transaction.replace(R.id.mainfragment_container, fragment, name);
+        if (addToBackStack) {
             transaction.addToBackStack(name);
-          }
+        }
         transaction.commit();
     }
 
@@ -402,16 +438,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         switch (node.getNodeLevel()) {
 
 
-
-
             case 0: {
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                propPhoto =  projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
-
+                propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
 
                 Bundle bundle = new Bundle();
@@ -429,9 +462,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
 
 
-
-
-
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
                 fragment.setArguments(bundle);
@@ -446,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
 
                 //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+                propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
 
  /*               if(propPhoto.length() > 14)
                 {
@@ -471,14 +501,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                bundle.putString("projectId",projectId);
+                bundle.putString("projectId", projectId);
                 bundle.putString("inspectionId", inspectionId);
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                 bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
                 bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                bundle.putString("auditor",projectItem.get(MyConfig.TAG_USER_ID));
+                bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
 
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
@@ -492,11 +522,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-
     @Override
-    public void onResume(){
+    public void onResume() {
 
-     super.onResume();
+        super.onResume();
 
         updatePropList();
 
@@ -525,13 +554,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        //    FragmentManager fm = getSupportFragmentManager();
+            //    FragmentManager fm = getSupportFragmentManager();
 
 
             //fm.popBackStack(DF,0);
-       //     if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-       //         getSupportFragmentManager().popBackStackImmediate();
-       //     }
+            //     if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            //         getSupportFragmentManager().popBackStackImmediate();
+            //     }
 
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
             GlobalVariables.modified = false;
@@ -545,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    private void requestProject(final String project_Name){
+    private void requestProject(final String project_Name) {
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -554,6 +583,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             class reqproj extends AsyncTask<Void, Void, String> {
                 ProgressDialog loading;
+
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
@@ -570,6 +600,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     loading.dismiss();
                     progressBar1.setVisibility(View.GONE);
                 }
+
                 @Override
                 protected String doInBackground(Void... params) {
                     RequestHandler_ rh = new RequestHandler_();
@@ -591,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    private void requestActivity(final String activity_Name){
+    private void requestActivity(final String activity_Name) {
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -602,12 +633,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
             //  getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
-            if(USER_ID > 0) {
-                  if(!projectId.equals("null")) {
+            if (USER_ID > 0) {
+                if (!projectId.equals("null")) {
 
                     class reqAct extends AsyncTask<Void, Void, String> {
 
                         ProgressDialog loading;
+
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
@@ -622,6 +654,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             updatePropList();
                             loading.dismiss();
                         }
+
                         @Override
                         protected String doInBackground(Void... params) {
                             RequestHandler_ rh = new RequestHandler_();
@@ -632,12 +665,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     }
                     reqAct req = new reqAct();
                     req.execute();
-                }
-                else
-                    Toast.makeText(MainActivity.this, "Select a Project ",Toast.LENGTH_LONG).show();
-            }
-            else
-                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(MainActivity.this, "Select a Project ", Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
 
         } else {
@@ -647,13 +678,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-
-
-
     @Override
     public void onClick(View v) {
-
-
 
 
         if (v == btnAddActivity) {
@@ -686,13 +712,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            if(USER_ID > 0) {
+                                            if (USER_ID > 0) {
                                                 requestProject(branchText.getText().toString());
-                                            //    downloadprojects();
-                                            }
-                                            else
-                                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
-
+                                                //    downloadprojects();
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
 
                                         }
@@ -728,13 +752,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            if(USER_ID > 0) {
+                                            if (USER_ID > 0) {
                                                 requestActivity(branchText.getText().toString());
                                                 //    downloadprojects();
-                                            }
-                                            else
-                                                Toast.makeText(MainActivity.this, "Log in required ",Toast.LENGTH_LONG).show();
-
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
 
                                         }
@@ -804,21 +826,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final EditText passText = (EditText) promptView.findViewById(R.id.code);
                             passDialog.setView(promptView);
                             passDialog.setTitle("Enter User Code");
-                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
-                                    if(USER_ID>0){
+                                    if (USER_ID > 0) {
                                         CLIENT = dbHandler.getClient(USER_ID);
-                                         if(dbHandler.checkstatus(USER_ID)==0)
+                                        if (dbHandler.checkstatus("all", USER_ID) == 0)
                                             downloadprojects();
                                         else
-                                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading", Toast.LENGTH_SHORT).show();
 
 
-                                    }
-                                    else
-                                        Toast.makeText(MainActivity.this, "Log in required for downloading",Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -835,7 +856,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
-                            if(USER_ID == 0) {
+                            if (USER_ID == 0) {
 
                                 LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                                 View promptView = layoutInflater.inflate(R.layout.call_log, null);
@@ -860,8 +881,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 // create an alert dialog
                                 AlertDialog alert = passDialog.create();
                                 alert.show();
-                            }
-                            else  downloadphotos();
+                            } else downloadphotos();
 
 
                             break;
@@ -883,7 +903,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog dialog = builder.create();
 
 
-
             dialog.show();
 
         }
@@ -892,7 +911,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
-            if(dbHandler.checkstatus(USER_ID)>0){
+            if (dbHandler.checkstatus("all", 1) > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -909,16 +928,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         final EditText passText = (EditText) promptView.findViewById(R.id.code);
                         passDialog.setView(promptView);
                         passDialog.setTitle("Enter User Code");
-                        passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
                                 USER_ID = dbHandler.checkCode(passText.getText().toString());
-                                if(USER_ID>0){
+                                if (USER_ID > 0) {
                                     uploaddata();
                                     uploadphotos();
-                                }
-                                else
-                                    Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+                                } else
+                                    Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
 
 
                             }
@@ -942,12 +960,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         final TextView text = (TextView) promptView.findViewById(R.id.text);
                         loginDialog.setView(promptView);
                         loginDialog.setTitle("Login");
-                        loginDialog.setCancelable(true).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                        loginDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
-                                USER_NAME=user.getText().toString();
-                                PASS_WORD=password.getText().toString();
+                                USER_NAME = user.getText().toString();
+                                PASS_WORD = password.getText().toString();
                                 //         clearTablet();
                                 updatePropList();
                                 get_user_JSON();
@@ -961,8 +979,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 AlertDialog alert = builder.create();
                 alert.show();
-            }
-            else {
+            } else {
 
                 LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                 View promptView = layoutInflater.inflate(R.layout.login, null);
@@ -1000,7 +1017,69 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //Loads jobs from the tablet database
         if (v == buttonLoadJobList) {
 
-            updatePropList();
+
+            if (USER_ID == 0) {
+
+                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                passDialog.setView(promptView);
+                passDialog.setTitle("Enter User Code");
+                passDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+                        if (Pattern.matches("\\d{4}", passText.getText().toString())) {
+                            USER_ID = dbHandler.checkCode(passText.getText().toString());
+                            if (USER_ID > 0) {
+                                CLIENT = dbHandler.getClient(USER_ID);
+                                updatePropList();
+                                if (CLIENT.equals("no-client")) {
+                                    CLIENT = CLIENT + "-" + USER_ID;
+                                }
+                                Thread thread = new Thread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        boolean exists = s3Client.doesBucketExist(CLIENT);
+                                        if (!exists)
+                                            s3Client.createBucket(CLIENT);
+
+                                    }
+
+                                });
+                                thread.start();
+
+                                int PERMISSION_ALL = 1;
+                                String[] PERMISSIONS = {
+                                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        android.Manifest.permission.READ_CONTACTS,
+                                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        android.Manifest.permission.ACCESS_NETWORK_STATE,
+                                        Manifest.permission.INTERNET,
+                                        android.Manifest.permission.CAMERA
+                                };
+
+                                if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+                                }
+
+                                updatePropList();
+
+                            } else
+                                Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
+
+                        } else
+                            Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                // create an alert dialog
+                AlertDialog alert = passDialog.create();
+                alert.show();
+            }
+
         }
 
 
@@ -1028,16 +1107,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final EditText passText = (EditText) promptView.findViewById(R.id.code);
                             passDialog.setView(promptView);
                             passDialog.setTitle("Enter User Code");
-                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
-                                    if(USER_ID>0){
+                                    if (USER_ID > 0) {
                                         uploaddata();
                                         uploadphotos();
-                                    }
-                                    else
-                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -1061,13 +1139,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final EditText passText = (EditText) promptView.findViewById(R.id.code);
                             passDialog.setView(promptView);
                             passDialog.setTitle("Enter User Code");
-                            passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
-                                    if(USER_ID>0)  uploaddata();
+                                    if (USER_ID > 0) uploaddata();
                                     else
-                                        Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -1076,10 +1154,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             // create an alert dialog
                             AlertDialog alert = passDialog.create();
                             alert.show();
-
-
-
-
 
 
                             break;
@@ -1149,19 +1223,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-
         if (v == photo_cam) {
-
 
 
         }
 
 
-
         if (v == info_icon) {
 
             root = Environment.getExternalStorageDirectory().getPath();
-            File propImage = new File(root+ "/"+projectId+"INFO/");
+            File propImage = new File(root + "/" + projectId + "INFO/");
             //  File propImage = new File(root, propId+"INFO/");
             //  File propImage = new File(root, "ESM/test.jpg");
             //  String dir = propId+"INFO/";
@@ -1181,7 +1252,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 //    startActivityForResult(Intent.createChooser(galleryIntent, "SELECT FILE"), REQUEST_OPEN_RESULT_CODE);
                 //  startActivity(galleryIntent);
-                startActivity(Intent.createChooser(galleryIntent,"OPEN"));
+                startActivity(Intent.createChooser(galleryIntent, "OPEN"));
                 // startActivity(galleryIntent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1195,13 +1266,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-
-
-
     public void reportMenu() {
 
         // setup the alert builder
-        final DBHandler  dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+        final DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Choose an action");
         // add a list
@@ -1219,7 +1287,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         Bundle bundle = new Bundle();
                         bundle.putInt("projectId", projId);
                         bundle.putInt("iId", iId);
-
 
 
                         ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iId);
@@ -1260,50 +1327,49 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             reportlistItems.add(listItem);
 
-                            Log.v("report list", listItemsmap.get(i).get("BranchHead")+", ");
+                            Log.v("report list", listItemsmap.get(i).get("BranchHead") + ", ");
                         }
 
 
-                       HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+                        HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
 
                         //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                        propPhoto =  projectItem.get(MyConfig.TAG_IMAGE);
+                        propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
 
                         bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                         bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                        bundle.putString("projectId",projectId);
+                        bundle.putString("projectId", projectId);
                         bundle.putString("inspectionId", inspectionId);
                         bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                         bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                         bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                         bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
                         bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                        bundle.putString("auditor",projectItem.get(MyConfig.TAG_USER_ID));
+                        bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
 
                         ReportFragment reportfragment = new ReportFragment();
                         reportfragment.setArguments(bundle);
-                               doFragmentTransaction(reportfragment, "ReportFragment", false, "");
+                        doFragmentTransaction(reportfragment, "ReportFragment", false, "");
                         reportfragment.setArguments(bundle);
 
-                         break;
+                        break;
                     }
                     case 1: {
 
 
-                        if(dbHandler.checkstatus(projId) == 0) reportMailer(0,"");
+                        if (dbHandler.checkstatus("project", projId) == 0) reportMailer(0, "");
                         else
-                        Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
 
 
                         break;
 
                     } //
                     case 2: {
-                        if(dbHandler.checkstatus(projId) == 0) {
-                        Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                        startActivityForResult(intentContact, PICK_CONTACT);
-                        }
-                        else
+                        if (dbHandler.checkstatus("project", projId) == 0) {
+                            Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(intentContact, PICK_CONTACT);
+                        } else
                             Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
                         break;
                     }
@@ -1318,10 +1384,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         dialog.show();
 
 
-
-
     }
-
 
 
     public void takeImageFromCamera(View view) {
@@ -1346,24 +1409,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
             MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-            switch (node.getNodeLevel()){
-
-                case 0:{
-
+            switch (node.getNodeLevel()) {
+                case 0: {
                     dbHandler.updatePropPhoto(projectId, photo.getName());
                 }
-
-                case 1:{
-
+                case 1: {
                     dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
-
                 }
             }
 
@@ -1373,24 +1430,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
 
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        }
-        else if (requestCode == ACTIVITY_START_CAMERA_APP) {
+        } else if (requestCode == ACTIVITY_START_CAMERA_APP) {
             photo.delete();
 
         }
 
 
-
         if (requestCode == PICK_CONTACT) {
 
             final ArrayList emailAdress;
-            emailAdress = getContactInfo( data);
+            emailAdress = getContactInfo(data);
 
 
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
@@ -1398,8 +1451,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
             alertDialogBuilder.setView(promptView);
             final TextView locationText = (TextView) promptView.findViewById(R.id.email);
-            if(emailAdress.size() > 0)
-            locationText.setText(emailAdress.get(0).toString());//location.getText().toString());
+            if (emailAdress.size() > 0)
+                locationText.setText(emailAdress.get(0).toString());//location.getText().toString());
 
             alertDialogBuilder.setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -1419,9 +1472,90 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
 
-       }
+        }
 
+
+        if (requestCode == ACTIVITY_GET_FILE && resultCode == RESULT_OK) {
+
+            Uri selectedImage = data.getData();
+
+            Cursor returnCursor = getContentResolver().query(selectedImage, null, null, null, null);
+
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            String name = returnCursor.getString(nameIndex);
+            returnCursor.close();
+
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            // Get the cursor
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            // Move to first row
+            cursor.moveToFirst();
+            //Get the column index of MediaStore.Images.Media.DATA
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            //Gets the String value in the column
+            String path = cursor.getString(columnIndex);
+            cursor.close();
+            // Set the Image in ImageView after decoding the String
+            // photoA.setImageBitmap(BitmapFactory.decodeFile(path));
+
+            if (FragDisplay == "InspectInfoFragment") {
+
+
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectInfoFragment");
+
+
+                ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
+                photoA.setImageURI(selectedImage);
+
+
+
+            }
+
+
+
+            File from = new File(path);
+
+
+            fname = dayTime(3);
+            dirName = dayTime(1);
+            fname = projectId + "_" + fname;
+
+            String root = Environment.getExternalStorageDirectory().toString();
+            String SD = root + "/ESM_" + dirName + "/";
+            File storageDirectory = new File(root + "/ESM_" + dirName + "/");
+            // Toast.makeText(this, "should have made directory",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "string root name = "+root ,Toast.LENGTH_SHORT).show();
+            if (!storageDirectory.exists()) {
+                storageDirectory.mkdirs();
+            }
+
+            File to = new File(SD + fname + ".jpg");
+
+
+            // from.renameTo(to);  This deletes the source file from
+
+            try {
+                copy(from, to);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (FragDisplay == "InspectInfoFragment") {
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                String inspectionPhoto = to.getName();
+                dbHandler.updateInspectionPhoto(projectId, inspectionId, inspectionPhoto);
+            }
+
+
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(to)));
+
+        }
     }
+
+
 
 
     protected  ArrayList<String> getContactInfo(Intent data)
@@ -3138,7 +3272,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         while (i  < photolist.size() ) {   //photolist.size()
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE1);
-            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
+            if(!photo_name.equals("") ) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE2);
             if(!photo_name.equals("")) uploadFileToS3(view, photo_name);

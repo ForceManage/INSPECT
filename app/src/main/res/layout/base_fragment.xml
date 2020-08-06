@@ -166,15 +166,26 @@
                             android:paddingTop="2dp"
                             android:paddingRight="2dp"
                             android:paddingBottom="2dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_margin="2dp"
                             android:layout_gravity="top|left"
                             app:srcCompat="@android:drawable/ic_menu_camera" />
+
+                        <ImageView
+                            android:id="@+id/imageView_file"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginRight="100dp"
+                            android:foreground="@android:drawable/ic_menu_gallery" />
 
                         <ImageView
                             android:id="@+id/imageView_draw"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_gravity="top|right"
+                            android:layout_marginRight="10dp"
                             android:visibility="visible"
                             android:foreground="@android:drawable/ic_menu_edit" />
 
@@ -207,16 +218,6 @@
                         android:paddingRight="5dp"
                         android:paddingBottom="5dp"
                         app:srcCompat="@drawable/ic_camera" />
-
-
-
-                    <ImageView
-                        android:id="@+id/imageView_file"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="bottom|right"
-                        android:layout_marginBottom="10dp"
-                        android:foreground="@android:drawable/ic_menu_gallery" />
 
 
 

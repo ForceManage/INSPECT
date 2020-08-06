@@ -136,12 +136,21 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 }
                 else
                     Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
-
-
-
-
-
             }
+        });
+
+        photoA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.mPhotoImageView = photoA;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
+            }
+
+
         });
 
         photo_draw.setOnClickListener(new View.OnClickListener() {
