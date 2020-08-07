@@ -330,10 +330,25 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
         }
 
 
-        //       endTime = dayTime(2);
-        //       DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-//        dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(Edited){
 
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+            // String serviceDate = inspectionDate.getText().toString();
+            // work out the next service date in three months time
+
+            dbHandler.updateCertificateInspection(projectId, inspectionId, dateString(time.getText().toString()), descriptionE.getText().toString(),
+                    permit.getText().toString(), address.getText().toString()
+                    , stage.getText().toString(), notesE.getText().toString());
+            dbHandler.statusChanged(Integer.parseInt(projectId));
+
+            Edited = false;
+
+        }
     }
 }

@@ -436,4 +436,10 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         if (Edited = true) saveData();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (Edited = true) saveData();
+    }
 }

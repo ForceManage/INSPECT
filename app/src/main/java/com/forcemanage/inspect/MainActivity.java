@@ -24,7 +24,6 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -40,10 +39,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -78,7 +75,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -3333,31 +3329,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             super.onPostExecute(s);
                             progressBar1.setVisibility(View.GONE);
 
-                            Thread thread = new Thread(new Runnable() {
+                                 }
 
-                                @Override
-                                public void run() {
-                                    try {
 
-                                        boolean exists = s3Client.doesObjectExist(CLIENT, s);
-                                       if (exists) {
-
-                                            s3Client.setObjectAcl(CLIENT, s, CannedAccessControlList.PublicRead);
-
-                                            //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                    catch (Exception e) {
-
-                                        Log.e("HAND SHAKE AWS", "TIME OUT",e );
-
-                                    }
-
-                                }
-                            });
-                            thread.start();
-                            //            Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                        }
                         @Override
                         protected String doInBackground(Void... params) {
 
@@ -3366,7 +3340,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 boolean exists = s3Client.doesObjectExist(CLIENT, "images/"+photo_name);
                                 if(exists){
 
-                                    //    s3Client.setObjectAcl("iapp-apted","images/"+photo_name,CannedAccessControlList.PublicRead);
+                                      s3Client.setObjectAcl(CLIENT,"images/"+photo_name,CannedAccessControlList.PublicRead);
 
                                     //     Toast.makeText(MainActivity.this, "Image "+photo_name+ " exists",Toast.LENGTH_LONG).show();
                                 }
@@ -3378,7 +3352,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     TransferObserver transferObserver = transferUtility.upload(
                                             CLIENT,    // The bucket to upload to
                                             "images/"+photo_name,    // The key for the uploaded object
-                                            F       // The file where the data to upload exists
+                                            F ,     // The file where the data to upload exists
+                                            CannedAccessControlList.PublicRead
+
                                     );
 
 
@@ -3409,10 +3385,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }//if name is valid
 
     }
-
-
-
-
 
 
     /**
@@ -3626,7 +3598,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int percentage = (int) percentDonef;
                 Toast.makeText(getApplicationContext(), "Progress in %"
                         + percentage, Toast.LENGTH_SHORT).show();
-            }
+
+             }
 
             @Override
             public void onError(int id, Exception ex) {

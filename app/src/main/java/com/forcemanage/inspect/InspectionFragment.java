@@ -992,11 +992,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-           // String serviceDate = inspectionDate.getText().toString();
-           // work out the next service date in three months time
-
-
-
                dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
                        ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage",
                        com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
@@ -1007,16 +1002,27 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                Edited = false;
 
-
-
            }
 
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(Edited){
 
- //       endTime = dayTime(2);
- //       DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-//        dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
+            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
+                    ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage",
+                    com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
+                    ,  com4Text.getText().toString(),
+                    com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
 
+            dbHandler.statusChanged(Integer.parseInt(projectId));
+
+            Edited = false;
+
+        }
     }
 }

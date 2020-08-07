@@ -336,17 +336,22 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         super.onDestroy();
 
         if (Edited) {
-
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
-
-
             dbHandler.updateMap(projectId, aId, bNote.getText().toString());
 
+        }
+    }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (Edited) {
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+            // String serviceDate = inspectionDate.getText().toString();
+            // work out the next service date in three months time
+            dbHandler.updateMap(projectId, aId, bNote.getText().toString());
 
         }
     }

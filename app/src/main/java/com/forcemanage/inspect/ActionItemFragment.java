@@ -391,4 +391,25 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
 
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(Edited){
+
+            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+            // String serviceDate = inspectionDate.getText().toString();
+            // work out the next service date in three months time
+
+            dbHandler.updateActionItem(projectId, inspectionId, aId, dayTime(1), descriptionE.getText().toString(),
+                    "", performE.getText().toString(), ""
+                    , scopeE.getText().toString(), "p", notesE.getText().toString());
+
+            dbHandler.statusChanged(Integer.parseInt(projectId));
+
+            globalVariables.Edited = false;
+
+        }
+    }
 }
