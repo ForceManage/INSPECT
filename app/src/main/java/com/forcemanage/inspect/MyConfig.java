@@ -7,6 +7,7 @@ public class MyConfig {
     public static final String URL_GET_ADDITIONAL_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getAdditionalInfo.php?InspectorId=";
     public static final String URL_GET_ACTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getActionItem.php?InspectorId=";
     public static final String URL_GET_CERT_INSPECTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getCertInsp.php?InspectorId=";
+    public static final String URL_GET_SUMMARY = "https://dev.force-management.com/TAB_INSPECT/Inspection/getSummary.php?InspectorId=";
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
     public static final String URL_SYNC_INSPECTION_ITEMS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspItemsToServer.php";
@@ -14,6 +15,7 @@ public class MyConfig {
     public static final String URL_SYNC_PROJECT_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncProjectToServer.php";
     public static final String URL_SYNC_ACTIONS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncActionsToServer.php";
     public static final String URL_SYNC_CERT_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncCertInspToServer.php";
+    public static final String URL_SYNC_SUMMARY_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncSummaryToServer.php";
     public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_login.php?user=";
 
     public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php?projId=";
@@ -91,7 +93,13 @@ public class MyConfig {
     public static final String TAG_PERMIT = "Permit";
     public static final String TAG_STAGE = "Stage";
 
-
+    //Summary
+    public static final String TAG_HEAD_A = "headA";
+    public static final String TAG_HEAD_B = "headB";
+    public static final String TAG_HEAD_C = "headC";
+    public static final String TAG_COM_A = "comA";
+    public static final String TAG_COM_B = "comB";
+    public static final String TAG_COM_C = "comC";
 
     //A category Observation and recommendations
     public static final String TAG_NUM = "num";

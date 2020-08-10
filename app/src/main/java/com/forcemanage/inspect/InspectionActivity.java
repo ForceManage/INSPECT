@@ -719,6 +719,48 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             }
 
+
+            case 9: {
+
+                HashMap<String, String> list = dbHandler.getSummary(projId, iID);
+
+
+                String head_A;
+                String head_B;
+                String head_C;
+                String com_A;
+                String com_B;
+                String com_C;
+
+                head_A = list.get(MyConfig.TAG_HEAD_A);
+                head_B = list.get(MyConfig.TAG_HEAD_B);
+                head_C = list.get(MyConfig.TAG_HEAD_C);
+                com_A = list.get(MyConfig.TAG_COM_A);
+                com_B = list.get(MyConfig.TAG_COM_B);
+                com_C = list.get(MyConfig.TAG_COM_C);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putString("head_A", head_A);
+                bundle.putString("head_B", head_B);
+                bundle.putString("head_C", head_C);
+                bundle.putString("com_A", com_A);
+                bundle.putString("com_B", com_B);
+                bundle.putString("com_C", com_C);
+
+                SummaryFragment fragment = new SummaryFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment, "SummaryFragment", false, "");
+
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                break;
+
+
+            }
+
             case 10: {
 
                 HashMap<String, String> list = dbHandler.getCert_Inspection(projId, iID);
@@ -770,7 +812,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     }
 
     public void onClick(View v) {
-
 
         if (v == buttonEdit) {
 
@@ -1097,9 +1138,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         // Toast.makeText(this, "just before cameraintent",Toast.LENGTH_SHORT).show();
         Intent camera_intent = new Intent();
         camera_intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-
-
-
         photo = null;
         try {
             photo = createPhotoFile();
@@ -1126,8 +1164,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_DRAW_FILE && resultCode == 0) {
 
             onClick(photo_file);
@@ -1312,7 +1349,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             photo.delete();
             if (cameraSnap != "1") {
                 cameraSnap = "0";
-            //    Edited = true;
+                //    Edited = true;
             }
 
             switch (photoframe) {
@@ -1345,7 +1382,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             }
         }
 
-        }
+    }
 
 
     File createPhotoFile()throws IOException {

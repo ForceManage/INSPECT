@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING_ADDITIONAL;
     private String JSON_STRING_ACTION;
     private String JSON_STRING_CERTINSP;
+    private String JSON_STRING_SUMMARY;
     private String JSON_STRING_PROJECT_LIST;
     private String JSON_STRING_NEW_PROJECT;
     private String JSON_STRING_NEW_ACTIVITY;
@@ -2168,6 +2169,51 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
+
+    private void updateSummary() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_SUMMARY);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //  editTextMessage.setText("Test begin");
+
+            for (int i = 0; i < result.length(); i++) {
+
+                JSONObject jo = result.getJSONObject(i);
+                String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
+                String headA = jo.getString(MyConfig.TAG_HEAD_A);
+                String headB = jo.getString(MyConfig.TAG_HEAD_B);
+                String headC = jo.getString(MyConfig.TAG_HEAD_C);
+                String comA = jo.getString(MyConfig.TAG_COM_A);
+                String comB = jo.getString(MyConfig.TAG_COM_B);
+                String comC = jo.getString(MyConfig.TAG_COM_C);
+
+
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int projId = parseInt(projid);
+                int InspectionId = parseInt(iId);
+
+                SummaryAttributes summary = new SummaryAttributes(InspectionId, projId, headA, headB, headC, comA, comB, comC);
+                dbHandler.updateSummaryFromServer(summary);
+
+            }
+
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("SUMMARY", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
     private void update_USER_Info() {
         JSONObject jsonObject = null;
 
@@ -2544,6 +2590,46 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
         GetCertInspJSON gj = new GetCertInspJSON();
+        gj.execute();
+    }
+
+
+    private void getSummaryJSON() {
+
+        class GetSummaryJSON extends AsyncTask<Void, Void, String> {
+
+
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                JSON_STRING_SUMMARY = s;
+                //    TextMessage.setText("JSON_STRING " + s);
+
+                updateSummary();
+                // testing only - editTextMessage.setText(JSON_STRING);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                RequestHandler_ rh = new RequestHandler_();
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_SUMMARY, Integer.toString(USER_ID));
+                return s;
+            }
+
+
+
+        }
+        GetSummaryJSON gj = new GetSummaryJSON();
         gj.execute();
     }
 
@@ -3035,6 +3121,60 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    private String summaryToServer() throws IOError {
+        String res = "initiated";
+     //   HashMap<String, String> summaryList = new HashMap<String, String>();
+        DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+        //           dbHandler.puTestData();
+        ArrayList<HashMap<String, String>> SummaryList = dbHandler.getAllSummary(USER_ID);
+        String testString = "";
+        String tempString = "";
+
+        JSONObject json;
+        JSONArray jsonArray = new JSONArray();
+        int j = 0;
+
+        if (SummaryList.size() == 0) {
+            //no items toupdatelist
+            res = "no_records";
+        } else {
+            for (int i = 0; i < SummaryList.size(); i++) {
+                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
+                testString = testString + tempString;
+
+
+                try {
+                    json = new JSONObject();
+                    json.put("Iteration", Integer.toString(j));
+                    json.put(MyConfig.TAG_INSPECTION_ID, SummaryList.get(i).get(MyConfig.TAG_INSPECTION_ID));
+                    json.put(MyConfig.TAG_PROJECT_ID, SummaryList.get(i).get(MyConfig.TAG_PROJECT_ID));
+                    json.put(MyConfig.TAG_HEAD_A, SummaryList.get(i).get(MyConfig.TAG_HEAD_A));
+                    json.put(MyConfig.TAG_COM_A, SummaryList.get(i).get(MyConfig.TAG_COM_A));
+                    json.put(MyConfig.TAG_HEAD_B, SummaryList.get(i).get(MyConfig.TAG_HEAD_B));
+                    json.put(MyConfig.TAG_COM_B, SummaryList.get(i).get(MyConfig.TAG_COM_B));
+                    json.put(MyConfig.TAG_HEAD_C, SummaryList.get(i).get(MyConfig.TAG_HEAD_C));
+                    json.put(MyConfig.TAG_COM_C, SummaryList.get(i).get(MyConfig.TAG_COM_C));
+                    jsonArray.put(json);
+                    j = j + 1;
+
+                } catch (Throwable t) {
+                    res = "Request failed: " + t.toString();
+                    return res;
+                }
+            }
+            RequestHandler_ rh = new RequestHandler_();
+            String regex = "'";
+
+            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_SUMMARY_TO_SERVER, jsonString);
+//                res = jsonString;
+            Log.v("SUMMARY JSON", jsonString);
+        }
+
+        return res;
+
+    }
+
 
     //Upload tablet inspection data to the server
     private String compileReport()  {
@@ -3083,6 +3223,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String projSaved;
                 String actionsSaved;
                 String CertInspSaved;
+                String SummarySaved;
 
 
        //         String yes = "y";
@@ -3095,6 +3236,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 projSaved = projToServer();
                 actionsSaved = actionsToServer();
                 CertInspSaved = certInspToServer();
+                SummarySaved = summaryToServer();
 
 
                 //    message = inspToServer();
@@ -3102,8 +3244,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                     if ((inspSaved.matches("y|no_records")) && (itemSaved.matches("y|no_records")) && (MapSaved.matches("y|no_records"))
-                            && (projSaved.matches("y|no_records"))&&
-                            (actionsSaved.matches("y|no_records")) && (CertInspSaved.matches("y|no_records"))){
+                            && (projSaved.matches("y|no_records")) && (actionsSaved.matches("y|no_records"))
+                            && (SummarySaved.matches("y|no_records")) && (CertInspSaved.matches("y|no_records"))){
 
                         dbHandler.statusUploaded(USER_ID);
 
@@ -3122,6 +3264,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         if(!projSaved.equals("y")) message = message + "  Project process ";
                         if(!actionsSaved.equals("y")) message = message + "  Action process ";
                         if(!CertInspSaved.equals("y")) message = message + "  Certificate process ";
+                        if(!SummarySaved.equals("y")) message = message + "  Summary process ";
 
                     }
 
