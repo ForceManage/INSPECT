@@ -1,8 +1,10 @@
 package com.forcemanage.inspect;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,7 +70,6 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             inspectionId = bundle.getString("inspectionID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
-            desciption = bundle.getString("description");
             headA = bundle.getString("head_A");
             comA = bundle.getString("com_A");
             headB = bundle.getString("head_B");
@@ -97,39 +98,33 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
 
          descriptionE = (EditText) view.findViewById(R.id.desc);
-         ComA = (EditText) view.findViewById(R.id.com1);
-        ComB = (EditText) view.findViewById(R.id.com2);
-        ComC = (EditText) view.findViewById(R.id.com3);
+         ComA = (EditText) view.findViewById(R.id.comA);
+        ComB = (EditText) view.findViewById(R.id.comB);
+        ComC = (EditText) view.findViewById(R.id.comC);
          notesE = (EditText) view.findViewById(R.id.notes);
          HeadA = (TextView) view.findViewById(R.id.Head_A);
         HeadB = (TextView) view.findViewById(R.id.Head_B);
         HeadC = (TextView) view.findViewById(R.id.Head_C);
 
-  //       final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
-
-
-         //Fill in the edittext with saved data fro Bundle
 
         title.setText(branchTitle);
         branch.setText(branchName);
-        descriptionE.setText(desciption);
-        HeadA.setText(headA);
-        ComA.setText(comA);
-        ComB.setText(comB);
-        ComC.setText(comC);
+        if(headA != null) HeadA.setText(headA); else HeadA.setText("TITLE");
+        if(headB != null) HeadB.setText(headB); else HeadB.setText("TITLE");
+        if(headC != null) HeadC.setText(headC); else HeadC.setText("TITLE");
+        if(ComA != null) ComA.setText(comA);
+        if(ComB != null) ComB.setText(comB);
+        if(ComC != null) ComC.setText(comC);
 
 
 
-        HeadA.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        HeadA.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
-
-
+            public void onClick(View v) {
+               editLabel("head_A", "Set Title");
+                Edited = true;
             }
         });
-
-
 
 
          ComA.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -140,11 +135,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
-        HeadB.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        HeadB.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
-
+            public void onClick(View v) {
+                editLabel("head_A", "Set Title");
+                Edited = true;
             }
         });
 
@@ -156,11 +151,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        HeadC.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        HeadC.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
-
+            public void onClick(View v) {
+                editLabel("head_A", "Set Title");
+                Edited = true;
             }
         });
 
@@ -173,17 +168,64 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         });
 
 
-
-
         return view;
     }
-
-
-
 
         @Override
     public void onClick(View v) {
 
+    }
+
+    public void editLabel(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Set Title ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText("Title");//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+
+                        switch (item) {
+
+                            case "head_A":{
+                                headA = branchText.getText().toString();
+                                HeadA.setText(headA);
+                                break;
+                            }
+                            case "head_B":{
+                                headB = branchText.getText().toString();
+                                HeadB.setText(headB);
+                                break;
+                            }
+                            case "head_C":{
+                                headC = branchText.getText().toString();
+                                HeadC.setText(headC);
+                                break;
+                            }
+
+                        }
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
 
@@ -194,17 +236,16 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         if(Edited){
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-
-            dbHandler.updateSummary(projectId, inspectionId, headA, comA,
-                                      headB, comB
-                    , headC, comC);
+            headA = HeadA.getText().toString();
+            headB = HeadB.getText().toString();
+            headC = HeadC.getText().toString();
+            comA = ComA.getText().toString();
+            comB = ComB.getText().toString();
+            comC = ComC.getText().toString();
+            dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(Integer.parseInt(projectId));
-
            Edited = false;
-
         }
-
-
     }
 
     @Override
@@ -212,12 +253,14 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         super.onDestroyView();
         if(Edited){
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-
-            dbHandler.updateSummary(projectId, inspectionId, headA, comA,
-                    headB, comB
-                    , headC, comC);
+            headA = HeadA.getText().toString();
+            headB = HeadB.getText().toString();
+            headC = HeadC.getText().toString();
+            comA = ComA.getText().toString();
+            comB = ComB.getText().toString();
+            comC = ComC.getText().toString();
+            dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(Integer.parseInt(projectId));
-
             Edited = false;
 
         }

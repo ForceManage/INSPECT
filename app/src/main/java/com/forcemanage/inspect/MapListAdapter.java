@@ -116,6 +116,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                 break;
             }
+            case 9: {
+                holder.content.setTextColor(Color.BLUE);
+                //      holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
+
+                break;
+            }
             case 10: {
                 holder.content.setTextColor(Color.BLUE);
           //      holder.content.setTextSize(17);

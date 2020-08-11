@@ -97,7 +97,8 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="HEADER A  "
+            android:text="TITLE"
+            android:textSize="20dp"
             android:layout_marginTop="30dp"
             android:textColor="@android:color/black"
             android:textStyle="normal|bold" />
@@ -126,9 +127,10 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:text="HEADER B  "
+                    android:text="TITLE"
                     android:layout_marginTop="10dp"
                     android:textColor="@android:color/black"
+                    android:textSize="20dp"
                     android:textStyle="normal|bold" />
 
 
@@ -150,7 +152,8 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingTop="20dp"
-            android:text="HEADER C  "
+            android:text="TITLE"
+            android:textSize="20dp"
             android:textColor="@android:color/black"
             android:textStyle="normal|bold" />
 

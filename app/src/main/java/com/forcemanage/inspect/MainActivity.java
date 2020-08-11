@@ -963,9 +963,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             public void onClick(DialogInterface dialog, int id) {
                                 USER_NAME = user.getText().toString();
                                 PASS_WORD = password.getText().toString();
-                                //         clearTablet();
-                                updatePropList();
+                                clearTablet();
                                 get_user_JSON();
+                                updatePropList();
                             }
                         });
                         AlertDialog alert = loginDialog.create();
@@ -992,9 +992,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     public void onClick(DialogInterface dialog, int id) {
                         USER_NAME = user.getText().toString();
                         PASS_WORD = password.getText().toString();
-                        //      clearTablet();
-                        updatePropList();
+                        clearTablet();
                         get_user_JSON();
+                        updatePropList();
                     }
                 });
                 AlertDialog alert = loginDialog.create();
@@ -1747,10 +1747,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        //   final ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects();
-        //Get a list of all the images for the properties to inspect
-        //  DBHandler dbHandlerphoto = new DBHandler(this, null, null, 1);
-        //   ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos();
         ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -2248,7 +2244,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 //editTextMessage.setText("Test 5");
 
-                dbHandler.update_USER_FromServer(user_attributes);
+                USER_ID = dbHandler.update_USER_FromServer(user_attributes);
 
                 // testing only -
                 //   editTextMessage.setText("Test Category end");
@@ -2723,7 +2719,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 super.onPostExecute(s);
                 loading.dismiss();
                 JSON_STRING_USER = s;
-                if(s == "User not found" || s == "incorrect password") {
+                if(s.equals("User not found")  || s.equals("incorrect password")) {
                     Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
                 }
                 else {

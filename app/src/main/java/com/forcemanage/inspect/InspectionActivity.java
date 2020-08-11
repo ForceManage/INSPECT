@@ -493,6 +493,17 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 loadMap();
                 break;
             }
+
+            case (9):{
+
+                dbHandler.deleteSummary(projId,iID,aID);
+                dbHandler.deleteMapBranch(projId, aID);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
+
             case (10):{
 
                 dbHandler.deleteCertificate(projId,iID,aID);
@@ -556,11 +567,23 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addCertificate(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
-            Toast.makeText(this, "Cannot place navigation branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place Certificate branch at this position", Toast.LENGTH_SHORT).show();
         else
             loadMap();
 
     }
+
+    private void addSummaryBranch(int Level, String levelName) {
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int result = dbHandler.addSummary(projId, iID, 499, 0, aID, levelName);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place Summary branch at this position", Toast.LENGTH_SHORT).show();
+        else
+            loadMap();
+
+    }
+
     public void editLocation(String branchLabel) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -742,6 +765,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 Bundle bundle = new Bundle();
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("branchLabel", branchLabel);
                 bundle.putString("head_A", head_A);
                 bundle.putString("head_B", head_B);
                 bundle.putString("head_C", head_C);
@@ -894,6 +919,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     "Add Sub Title to the current Branch",
                     "Attach NotePad to the current Title/Sub Title ",
                     "Attach a Scope to the current NotePad",
+                    "Attach a Summary for this Activity",
                     "Attach a Certificate for this Activity",
                     "Cancel Add/Create "};
 
@@ -1048,13 +1074,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                         case 4: {
                             photoBranch = "";
-                            addCertificateBranch(500, "Certificates");
+                            addSummaryBranch(499, "COMMENTARY");
                             break;
                         }
 
                         case 5: {
-
-
+                            photoBranch = "";
+                            addCertificateBranch(500, "Certificates");
                             break;
                         }
 
