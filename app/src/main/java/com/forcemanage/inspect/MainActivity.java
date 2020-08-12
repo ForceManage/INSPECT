@@ -965,6 +965,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 PASS_WORD = password.getText().toString();
                                 clearTablet();
                                 get_user_JSON();
+                                downloadprojects();
                                 updatePropList();
                             }
                         });
@@ -994,6 +995,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         PASS_WORD = password.getText().toString();
                         clearTablet();
                         get_user_JSON();
+                        downloadprojects();
                         updatePropList();
                     }
                 });
@@ -1298,6 +1300,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
                             listItem = new ReportItem(
+                                    listItemsmap.get(i).get("typeObject"),
                                     listItemsmap.get(i).get("BranchHead"),
                                     listItemsmap.get(i).get("ParentLabel"),
                                     listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
@@ -1317,14 +1320,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
                                     listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
                                     listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
-                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE)
-
+                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE),
+                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_A),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM_A),
+                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_B),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM_B),
+                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_C),
+                                    listItemsmap.get(i).get(MyConfig.TAG_COM_C)
 
                             );
 
                             reportlistItems.add(listItem);
 
-                            Log.v("report list", listItemsmap.get(i).get("BranchHead") + ", ");
+                            Log.v("report list", listItemsmap.get(i).get("typeObject") + ", ");
                         }
 
 

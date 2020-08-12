@@ -3259,6 +3259,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         // Store the key / value pairs in a HashMap
                         // Access the Cursor data by index that is in the same order
                         // as query
+                        inspectionItemMap.put("typeObject", "inspectionObject");
                         inspectionItemMap.put("BranchHead", BranchHead);
                         inspectionItemMap.put("ParentLabel",cursorB1.getString(0));
                         inspectionItemMap.put(MyConfig.TAG_OVERVIEW, cursorB.getString(0));
@@ -3297,7 +3298,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 // Store the key / value pairs in a HashMap
                                 // Access the Cursor data by index that is in the same order
                                 // as query
-                                actionItemMap.put("BranchHead", "ActionItemOject");
+                                actionItemMap.put("typeObject", "ActionItemObject");
                                 actionItemMap.put(MyConfig.TAG_OVERVIEW, cursorC.getString(0));
                                 actionItemMap.put(MyConfig.TAG_COM1, cursorC.getString(1));
                                 actionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursorC.getString(2));
@@ -3316,11 +3317,42 @@ public class DBHandler extends SQLiteOpenHelper {
                 }
 
             } while (cursor.moveToNext());
+
         }
+
+
+        //Add Summary to the inspection
+
+        String selectQueryS = "SELECT  S." + COLUMN_HEAD_A + ", S."  + COLUMN_COM_A + ", S." + COLUMN_HEAD_B
+                + ", S." + COLUMN_COM_B + ", S." + COLUMN_HEAD_C + ", S." + COLUMN_COM_C
+                + " FROM " + TABLE_SUMMARY + " S "
+                +  " WHERE S." + COLUMN_PROJECT_ID + " = " + projId + " AND S." + COLUMN_INSPECTION_ID + " = " + iId ;
+
+        Cursor cursorS = dbase.rawQuery(selectQueryS, null);
+
+        // Move to the first row
+
+        if (cursorS.moveToFirst()) {
+            do {
+                HashMap<String, String> SummaryItemMap = new HashMap<String, String>();
+                // Store the key / value pairs in a HashMap
+                // Access the Cursor data by index that is in the same order
+                // as query
+                SummaryItemMap.put("typeObject", "SummaryObject");
+                SummaryItemMap.put(MyConfig.TAG_HEAD_A, cursorS.getString(0));
+                SummaryItemMap.put(MyConfig.TAG_COM_A, cursorS.getString(1));
+                SummaryItemMap.put(MyConfig.TAG_HEAD_B, cursorS.getString(2));
+                SummaryItemMap.put(MyConfig.TAG_COM_B, cursorS.getString(3));
+                SummaryItemMap.put(MyConfig.TAG_HEAD_C, cursorS.getString(4));
+                SummaryItemMap.put(MyConfig.TAG_COM_C, cursorS.getString(5));
+                inspectedItemsList.add(SummaryItemMap);
+
+
+            } while (cursorS.moveToNext()); // Move Cursor to the next row
+
+        }
+
             //Add certificate to the inspection
-
-
-
 
             String selectQueryCI = "SELECT  CI." + COLUMN_DATE_TIME + ", CI."  + COLUMN_OVERVIEW + ", CI." + COLUMN_PERMIT_NO
                     + ", CI." + COLUMN_PROJECT_ADDRESS + ", CI." + COLUMN_STAGE + ", CI." + COLUMN_NOTES
@@ -3337,7 +3369,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     // Store the key / value pairs in a HashMap
                     // Access the Cursor data by index that is in the same order
                     // as query
-                    CIItemMap.put("BranchHead", "CertInspectionObject");
+                    CIItemMap.put("typeObject", "CertInspectionObject");
                     CIItemMap.put(MyConfig.TAG_DATE_TIME, cursorCI.getString(0));
                     CIItemMap.put(MyConfig.TAG_OVERVIEW, cursorCI.getString(1));
                     CIItemMap.put(MyConfig.TAG_PERMIT, cursorCI.getString(2));
@@ -3369,7 +3401,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
             case (1): {
 
-                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -3377,7 +3409,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
             case (2): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
@@ -3386,14 +3418,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
             case (3): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;
             }
             case (4): {
 
-                java.text.SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date_ = Calendar.getInstance().getTime();
                 daytime = (dateFormat.format(date_));
                 break;

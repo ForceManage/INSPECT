@@ -51,10 +51,8 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     ReportItem listItem = (ReportItem) reportlistItems.get(position);
     View row = convertView;
-    if (listItem.getOverview() != null) {
-        if (!listItem.getBranchHead().equals("ActionItemOject"))
-            if(!listItem.getBranchHead().equals("CertInspectionObject"))
-            {
+
+            if(listItem.getTypeObject().equals("inspectionObject")) {
             row = inflater.inflate(R.layout.report_body_fragment, null, true);
             TextView title = (TextView) row.findViewById(R.id.branchTitle);
             TextView parentLabel = (TextView) row.findViewById(R.id.parentLabel);
@@ -143,39 +141,36 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                                 break;
                             }
                         }
-                    }
-                    else {
+                    } else {
 
-                        switch (i){
+                        switch (i) {
 
                             case 0: {
                                 image1.setVisibility(View.GONE);
                                 break;
                             }
                             case 1: {
-                            image2.setVisibility(View.GONE);
-                            break;
-                        }
-                        case 2: {
-                            image3.setVisibility(View.GONE);
-                            break;
-                        }
-                        case 3: {
-                            image4.setVisibility(View.GONE);
-                            break;
-                        }
-                        case 4: {
-                            image5.setVisibility(View.GONE);
-                            break;
-                        }
+                                image2.setVisibility(View.GONE);
+                                break;
+                            }
+                            case 2: {
+                                image3.setVisibility(View.GONE);
+                                break;
+                            }
+                            case 3: {
+                                image4.setVisibility(View.GONE);
+                                break;
+                            }
+                            case 4: {
+                                image5.setVisibility(View.GONE);
+                                break;
+                            }
 
+                        }
                     }
-                    }
 
 
-
-                }
-                else {
+                } else {
                     switch (i) {
 
                         case 0: {
@@ -202,10 +197,11 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                     }
                 }
             }
-
-
         }
-          if(listItem.getBranchHead().equals("ActionItemOject")) {
+
+
+
+          if(listItem.getTypeObject().equals("ActionItemObject")) {
 
                 row = inflater.inflate(R.layout.report_actionitem_fragment, null, true);
                 TextView title = (TextView) row.findViewById(R.id.branchTitle);
@@ -250,7 +246,50 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
 
 
-        if (listItem.getBranchHead().equals("CertInspectionObject")) {
+        if (listItem.getTypeObject().equals("SummaryObject")) {
+
+            row = inflater.inflate(R.layout.summary_fragment, null, true);
+            TextView Head_A = (TextView) row.findViewById(R.id.Head_A);
+            TextView Com_A = (TextView) row.findViewById(R.id.Com_A);
+            TextView Head_B = (TextView) row.findViewById(R.id.Head_B);
+            TextView Com_B = (TextView) row.findViewById(R.id.Com_B);
+            TextView Head_C = (TextView) row.findViewById(R.id.Head_C);
+            TextView Com_C = (TextView) row.findViewById(R.id.Com_C);
+
+            String headA = listItem.getTitle_A();
+            String headB = listItem.getTitle_B();
+            String headC = listItem.getTitle_C();
+            String comA = listItem.getCom_A();
+            String comB = listItem.getCom_B();
+            String comC = listItem.getCom_C();
+            if(!listItem.getTitle_A().equals("TITLE")) {
+                Head_A.setText(listItem.getTitle_A());
+                Com_A.setText(listItem.getCom_A());
+            }
+            else{
+                Head_A.setText("");
+                Com_A.setText("");
+            }
+            if(!listItem.getTitle_B().equals("TITLE")) {
+                Head_B.setText(listItem.getTitle_B());
+                Com_B.setText(listItem.getCom_B());
+            }
+            else{
+                Head_B.setText("");
+                Com_B.setText("");
+            }
+            if(!listItem.getTitle_C().equals("TITLE")) {
+                Head_C.setText(listItem.getTitle_C());
+                Com_C.setText(listItem.getCom_C());
+            }
+            else{
+                Head_C.setText("");
+                Com_C.setText("");
+            }
+        }
+
+
+        if (listItem.getTypeObject().equals("CertInspectionObject")) {
 
             row = inflater.inflate(R.layout.cert_inspection_fragment, null, true);
             TextView title = (TextView) row.findViewById(R.id.branchTitle);
@@ -273,7 +312,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
 
 
-    }
+
 
    return row;
 

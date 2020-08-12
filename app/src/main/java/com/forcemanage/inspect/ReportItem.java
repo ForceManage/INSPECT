@@ -6,7 +6,7 @@ package com.forcemanage.inspect;
 
 public class ReportItem {
 
-
+    private String typeObject;
     private String BranchHead;
     private String ParentLabel;
     private String overview;
@@ -27,12 +27,20 @@ public class ReportItem {
     private String permit;
     private String address;
     private String stage;
+    private String title_A;
+    private String com_A;
+    private String title_B;
+    private String com_B;
+    private String title_C;
+    private String com_C;
 
 
-    public ReportItem(String BranchHead, String ParentLabel, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
+
+    public ReportItem(String typeObject, String BranchHead, String ParentLabel, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
                       String image3, String com3, String image4, String com4, String image5, String com5, String label, String date_time, String permit,
-                      String address, String stage) {
+                      String address, String stage, String title_A, String com_A, String title_B, String com_B,String title_C, String com_C) {
 
+        this.typeObject = typeObject;
         this.BranchHead = BranchHead;
         this.ParentLabel = ParentLabel;
         this.overview = overview;
@@ -53,7 +61,15 @@ public class ReportItem {
         this.permit = permit;
         this.address = address;
         this.stage = stage;
+        this.title_A = title_A;
+        this.com_A = com_A;
+        this.title_B = title_B;
+        this.com_B = com_B;
+        this.title_C = title_C;
+        this.com_C = com_C;
        }
+
+    public  String getTypeObject() { return  typeObject;}
 
     public String getBranchHead() {
         return BranchHead;
@@ -131,7 +147,18 @@ public class ReportItem {
         return address;
     }
 
-    public String getStage() { return stage;
-    }
+    public String getStage() { return stage; }
+
+    public String getTitle_A() { return title_A; }
+
+    public String getTitle_B() { return title_B; }
+
+    public String getTitle_C() { return title_C; }
+
+    public String getCom_A() { return com_A; }
+
+    public String getCom_B() { return com_B; }
+
+    public String getCom_C() { return com_C; }
 
 }

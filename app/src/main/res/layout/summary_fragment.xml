@@ -27,147 +27,82 @@
             >
 
             <TextView
-                android:id="@+id/branchTitle"
+                android:id="@+id/Head_A"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:paddingTop="6dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="25dp"
-                android:text="Title:  "
+                android:text="TITLE"
                 android:textSize="24sp"
                 android:textColor="@android:color/black"
                 android:textStyle="normal|bold" />
 
             <TextView
-                android:id="@+id/Date_time"
+                android:id="@+id/Com_A"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:text="Text"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/Head_B"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingTop="20dp"
                 android:paddingLeft="10dp"
-                android:text="Date and time of Inspection:  "
-                android:layout_marginTop="30dp"
+                android:paddingRight="25dp"
+                android:text="TITLE"
+                android:textSize="24sp"
                 android:textColor="@android:color/black"
                 android:textStyle="normal|bold" />
 
-            <TextView
-                android:id="@+id/date_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="25dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
-
 
             <TextView
-                android:id="@+id/overview"
+                android:id="@+id/Com_B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Description:  "
+                android:paddingLeft="20dp"
+                android:text="Text"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textStyle="normal|bold" />
+                android:textSize="18dp"
+                android:textStyle="normal" />
+
+
 
 
             <TextView
-                android:id="@+id/desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="25dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/Permit"
+                android:id="@+id/Head_C"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingTop="20dp"
                 android:paddingLeft="10dp"
-                android:text="Permit Number:  "
+                android:paddingRight="25dp"
+                android:text="TITLE"
+                android:textSize="24sp"
                 android:textColor="@android:color/black"
                 android:textStyle="normal|bold" />
 
 
-            <TextView
-                android:id="@+id/permit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="25dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/Address"
+                android:id="@+id/Com_C"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Address where the works are been carried out:  "
+                android:paddingLeft="20dp"
+                android:text="Text"
+                android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="25dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/Stage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Stage of the works:  "
-                android:textColor="@android:color/black"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:id="@+id/stage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="25dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
-
-
-            <TextView
-                android:id="@+id/Notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="10dp"
-                android:text="Outcome of the Inspection:  "
-                android:textColor="@android:color/black"
-                android:textStyle="normal|bold" />
-
-
-            <TextView
-                android:id="@+id/notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="25dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="16sp" />
-
-
+                android:textSize="18dp"
+                android:textStyle="normal" />
 
 
         </LinearLayout>
