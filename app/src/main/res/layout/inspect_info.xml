@@ -47,7 +47,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"
-                                android:text="Project "
+                                android:text="File Information "
                                 android:textColor="@android:color/white"
                                 android:textSize="16sp"
                                 android:textStyle="normal|bold" />
@@ -186,42 +186,43 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                        android:layout_height="wrap_content"
-                       android:orientation="horizontal"
+                       android:orientation="vertical"
                         >
-
-                         <Button
-                            android:id="@+id/btnViewReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="5dp"
-                             android:layout_marginTop="5dp"
-                            android:backgroundTint="#008577"
-                            android:layout_gravity="bottom|left"
-                            android:drawableTint="@color/white"
-                            android:drawableStart="@drawable/ic_format_list_bulleted"
-                            android:drawablePadding="5dp"
-                            android:text="VIEW REPORT"
-                            android:textSize="15sp"
-                            android:textColor="@android:color/white" />
-
 
                         <Button
                             android:id="@+id/InspectionButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginLeft="25dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
-                            android:layout_gravity="bottom|right"
                             android:paddingLeft="10dp"
                             android:backgroundTint="#0B2459"
                             android:drawableTint="@color/white"
                             android:textColor="@color/white"
                             android:drawablePadding="5dp"
-                            android:text="VIEW ACTIVITY"
+                            android:text="OPEN THE PROJECT FILE "
                             android:textSize="15sp"
                             android:drawableStart="@drawable/ic_chevron_right_box"/>
+
+
+                         <Button
+                            android:id="@+id/btnViewReport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="5dp"
+                            android:backgroundTint="#008577"
+                            android:drawableTint="@color/white"
+                            android:drawableStart="@drawable/ic_format_list_bulleted"
+                            android:drawablePadding="5dp"
+                            android:text="BUILD THE FILE DOCUMENT"
+                            android:textSize="15sp"
+                            android:textColor="@android:color/white" />
+
+
+
 
 
                     </LinearLayout>
@@ -288,6 +289,19 @@
 
                 </LinearLayout>
 
+                <ScrollView
+
+                    android:id="@+id/scroll_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -309,6 +323,33 @@
 
 
                 </FrameLayout>
+
+                <TextView
+                    android:id="@+id/Brieftitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="10dp"
+                    android:text="Preamable:  "
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal|bold" />
+
+
+
+                <EditText
+                    android:id="@+id/preamble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:hint="Preamble Notes"
+                    android:textSize="16sp"/>
+
+                    </LinearLayout>
+
+                </ScrollView>
 
             </LinearLayout>
 

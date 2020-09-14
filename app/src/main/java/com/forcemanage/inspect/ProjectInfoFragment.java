@@ -37,6 +37,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
     private ImageView mPhotoImageView;
     private ImageView photo_cam;
     private ImageView info_file;
+    private ImageView photo_file;
     private String branchHead ="";
     private String branchLabel = "";
     private String branchNote = "";
@@ -234,6 +235,42 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
             }
         });
+
+
+        photo_file = (ImageView) view.findViewById(R.id.imageView_file);
+
+        photo_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.mPhotoImageView = mPhotoImageView;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                //   String[] mimetypes = {"image/*"};
+                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
+                //     dirName = photos[0].substring(6, 14);
+                //     String root = Environment.getExternalStorageDirectory().toString();
+                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+
+
+                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
+                //    galleryIntent.setDataAndType(data,"image/*");
+                //    String[] mimeTypes = {"image/jpeg", "image/png"};
+                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
+
+                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
+                // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),1);
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
+            }
+
+
+        });
+
+
 
 
         if(infoA == "null")TVinfoA.setText("Note A"); else TVinfoA.setText(infoA);

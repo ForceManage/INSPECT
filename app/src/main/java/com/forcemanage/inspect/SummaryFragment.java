@@ -138,7 +138,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         HeadB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editLabel("head_A", "Set Title");
+                editLabel("head_B", "Set Title");
                 Edited = true;
             }
         });
@@ -154,7 +154,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         HeadC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editLabel("head_A", "Set Title");
+                editLabel("head_C", "Set Title");
                 Edited = true;
             }
         });

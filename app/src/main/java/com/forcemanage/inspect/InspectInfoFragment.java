@@ -38,6 +38,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private TextView title;
     private TextView Label;
     private EditText bNote;
+    private EditText Note2;
     private ImageView mPhotoImageView;
     private ImageView photo_cam;
     private ImageView photo_file;
@@ -49,6 +50,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String typeInspection;
     private String auditor;
     private String note;
+    private String note_2;
     private Boolean Edited;
     private String projectId;
     private String inspectionId;
@@ -71,6 +73,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             projectId = bundle.getString("projectId");
             inspectionId = bundle.getString("inspectionId");
             note = bundle.getString("note");
+            note_2 = bundle.getString("note_2");
             auditor = bundle.getString("auditor");
             dateInspected = bundle.getString("date");
             typeInspection = bundle.getString("inspectType");
@@ -101,7 +104,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         title = (TextView) view.findViewById(R.id.branchTitle);
  //       branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
-
+        Note2 = (EditText) view.findViewById(R.id.preamble);
         Label = (TextView) view.findViewById(R.id.Text1);
         Label.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +187,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
          inspector.setText("Auditor:  "+ auditor);
          Label.setText(branchLabel);
          bNote.setText(note);
+         Note2.setText(note_2);
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
 
@@ -300,7 +304,17 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         });
 
+        Note2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
 
+                Edited = true;
+                // String serviceDate = inspectionDate.getText().toString();
+                // work out the next service date in three months time
+
+            }
+
+        });
 
         return view;
     }
@@ -380,9 +394,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Activity Information ");//Integer.parseInt(locationId)
+        itemTitle.setText("File Information ");//Integer.parseInt(locationId)
         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-        locationText.setText("Activity Title");//Integer.parseInt(locationId)
+        locationText.setText("File Title");//Integer.parseInt(locationId)
         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
         branchText.setHint(value);
         // setup a dialog window
@@ -395,7 +409,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
-                                dbHandler.updateInspection(projectId, inspectionId, branchLabel, note);
+                                dbHandler.updateInspection(projectId, inspectionId, branchLabel, note, note_2);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
@@ -424,8 +438,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
+        note_2 = Note2.getText().toString();
 
-        dbHandler.updateInspection(projectId, inspectionId, branchLabel, note);
+        dbHandler.updateInspection(projectId, inspectionId, branchLabel, note, note_2);
         dbHandler.statusChanged(Integer.parseInt(projectId));
 
 }

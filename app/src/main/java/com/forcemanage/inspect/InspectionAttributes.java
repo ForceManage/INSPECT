@@ -11,8 +11,6 @@ public class InspectionAttributes {
     private int _projectId;
     private String _inspectionDate;
     private String _inspector;
-
-
     private String _startDateTime;
     private String _endDateTime;
     private String _label;
@@ -21,12 +19,13 @@ public class InspectionAttributes {
     private int _pID;
     private String _image;
     private String _note;
+    private String _note2;
 
     public InspectionAttributes() {
     }
 
     public InspectionAttributes(int inspectionId, String inspectionType, String inspectionStatus, int projectId, String inspectionDate,
-                                String inspector, String startDateTime, String endDateTime, String label, int level, int parent, int pid, String image, String note){  //, int parent, int aID, String img1, String notes) {
+                                String inspector, String startDateTime, String endDateTime, String label, int level, int parent, int pid, String image, String note, String note2){  //, int parent, int aID, String img1, String notes) {
         this._inspectionId = inspectionId;
         this._inspectionType = inspectionType;
         this._inspectionStatus = inspectionStatus;
@@ -40,6 +39,7 @@ public class InspectionAttributes {
         this._pID = pid;
         this._image = image;
         this._note = note;
+        this._note2 = note2;
         this._startDateTime = startDateTime;
         this._endDateTime = endDateTime;
      }
@@ -108,6 +108,10 @@ public class InspectionAttributes {
         return _note;
     }
 
+    public String getnote2() {
+        return _note2;
+    }
+
     public void setimage(String image) {
         this._image = image;
     }
@@ -115,4 +119,6 @@ public class InspectionAttributes {
     public void setnote(String note) {
         this._note = note;
     }
+
+
 }

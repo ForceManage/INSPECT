@@ -504,6 +504,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
+                bundle.putString("note_2", projectItem.get(MyConfig.TAG_NOTE_2));
                 bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
                 bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
 
@@ -683,10 +684,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Add a new Project or Activity to existing Project ");
+            builder.setTitle("Create Folders and files ");
             // add a list
-            String[] actions = {"Request New Project",
-                    "Request New Activity for Existing Project ",
+            String[] actions = {"Create New Project Folder",
+                    "Add a File to the Project Folder ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -701,11 +702,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("New Project Request  ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Create a New Project Document Folder ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Project Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Enter the Project Name/description.");
+                            branchText.setHint("Enter Project title.");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -741,11 +742,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("New Activity Request  ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Add New File to the Project ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Activity Name : ");//Integer.parseInt(locationId)
+                            locationText.setText("File Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Activity Name ");
+                            branchText.setHint("Name the File");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -805,8 +806,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Downloads");
             // add a list
-            String[] actions = {"Download Projects",
-                    "Download photos ",
+            String[] actions = {"Download Project Documents and Files",
+                    "Download Images ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -826,20 +827,24 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
+                                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
+
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if (USER_ID > 0) {
                                         CLIENT = dbHandler.getClient(USER_ID);
                                         if (dbHandler.checkstatus("all", USER_ID) == 0)
                                             downloadprojects();
                                         else
-                                            Toast.makeText(MainActivity.this, "Upload current data prior to downloading", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Upload current file data prior to downloading", Toast.LENGTH_SHORT).show();
 
 
                                     } else
                                         Toast.makeText(MainActivity.this, "Log in required for downloading", Toast.LENGTH_LONG).show();
-
-
                                 }
+                                    else
+                                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
+                                }
+
                             });
 
                             // create an alert dialog
@@ -863,7 +868,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 passDialog.setTitle("Enter User Code");
                                 passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-
+                                        if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                         USER_ID = dbHandler.checkCode(passText.getText().toString());
                                         if (USER_ID > 0) {
                                             downloadphotos();
@@ -871,7 +876,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                         } else
                                             Toast.makeText(MainActivity.this, "incorrect code or not logged in", Toast.LENGTH_LONG).show();
 
-
+                                    } else
+                                            Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
                                     }
                                 });
 
@@ -913,9 +919,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("LOGIN WARNING");
-                builder.setMessage("Login will delete current unsaved data. Upload data prior to login.");
+                builder.setMessage("Login will delete current unsaved file data. Upload data prior to login.");
 
-                builder.setPositiveButton("UPLOAD UNSAVED DATA", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("UPLOAD UNSAVED FILE DATA", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -927,7 +933,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         passDialog.setTitle("Enter User Code");
                         passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
+                                if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                 USER_ID = dbHandler.checkCode(passText.getText().toString());
                                 if (USER_ID > 0) {
                                     uploaddata();
@@ -935,7 +941,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 } else
                                     Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
 
-
+                                } else
+                                    Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -943,6 +950,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         AlertDialog alert = passDialog.create();
                         alert.show();
                     }
+
                 });
 
                 builder.setNegativeButton("PROCEED WITH LOGIN", new DialogInterface.OnClickListener() {
@@ -1087,8 +1095,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Cload Storage Upload Options");
             // add a list
-            String[] actions = {"Upload All Activity Data recorded",
-                    "Upload Text Data only",
+            String[] actions = {"Upload All File Data",
+                    "Upload Text File Data only",
                     "Upload Photo Data only",
                     "Cancel Request "};
 
@@ -1272,10 +1280,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Choose an action");
         // add a list
-        String[] actions = {"Compile and review the inspection report.",
-                "Compile and email report to user",
-                "Compile and email report to Contact List entity",
-                "Compile inspection certificate",
+        String[] actions = {"Compile and review the file output.",
+                "Compile and email document to user",
+                "Compile and email document to Contact List entity",
+                "Compile file certificate",
                 "Cancel this operation."};
         builder.setItems(actions, new DialogInterface.OnClickListener() {
             @Override
@@ -1506,18 +1514,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             // photoA.setImageBitmap(BitmapFactory.decodeFile(path));
 
             if (FragDisplay == "InspectInfoFragment") {
-
-
-
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectInfoFragment");
-
-
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
+             }
 
-
-
+            if (FragDisplay == "ProjectInfoFragment") {
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
+                photoA.setImageURI(selectedImage);
             }
+
 
 
 
@@ -1552,6 +1559,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 String inspectionPhoto = to.getName();
                 dbHandler.updateInspectionPhoto(projectId, inspectionId, inspectionPhoto);
+            }
+
+            if (FragDisplay == "ProjectInfoFragment") {
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                String projectPhoto = to.getName();
+                dbHandler.updatePropPhoto(projectId, projectPhoto);
             }
 
 
@@ -1760,7 +1773,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         MapViewData listItem;
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
-         projectlist_title.setText("Project list:  "+dbHandler.getUser(USER_ID));
+         projectlist_title.setText("Project Folders:  "+dbHandler.getUser(USER_ID));
         for (int i = 0; i < (Projects.size()); i++){
 
             listItem = new MapViewData(
@@ -1879,6 +1892,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String pID = jo.getString(MyConfig.TAG_P_ID);
                 String Image = jo.getString(MyConfig.TAG_IMAGE);
                 String Note = jo.getString(MyConfig.TAG_NOTE);
+                String Note_2 = jo.getString(MyConfig.TAG_NOTE_2);
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1894,7 +1908,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 // editTextMessage.setText("Test 1");
 
 
-                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime, Label, level, parent, p_Id, Image, Note);
+                InspectionAttributes inspectionRow = new InspectionAttributes(InspectionId, inspectionType, inspectionStatus, projId, inspectionDate, inspector, startDateTime, endDateTime, Label, level, parent, p_Id, Image, Note, Note_2);
 
                 // editTextMessage.setText("Test 2");
 
@@ -2026,7 +2040,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String aId = jo.getString(MyConfig.TAG_A_ID);
                 String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
                 String Photo = jo.getString(MyConfig.TAG_IMAGE1);
-                String Note = jo.getString(MyConfig.TAG_NOTES);
+                String Notes = jo.getString(MyConfig.TAG_NOTES);
 
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -2040,7 +2054,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int child = parseInt(Child);
 
 
-                MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, i_Id, Photo, Note);
+                MAPattributes mapRow = new MAPattributes(ProjId, CatId, level, parent, Label, child, a_Id, i_Id, Photo, Notes);
                 // editTextMessage.setText("Additional Test 1");
 
                 //editTextMessage.setText("Test 5");
@@ -2290,7 +2304,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String projID = jo.getString("ProjectID");
                 String label = jo.getString("Label");
                 String pId = jo.getString("pID");
-
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 dbHandler.addProject(USER_ID,projID,label,pId);
@@ -2797,7 +2810,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_P_ID, inspList.get(i).get(MyConfig.TAG_P_ID));
                     json.put(MyConfig.TAG_IMAGE, inspList.get(i).get(MyConfig.TAG_IMAGE));
                     json.put(MyConfig.TAG_NOTE, inspList.get(i).get(MyConfig.TAG_NOTE));
-
+                    json.put(MyConfig.TAG_NOTE_2, inspList.get(i).get(MyConfig.TAG_NOTE_2));
 
                     jsonArray.put(json);
 
@@ -3308,7 +3321,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                     RequestHandler_ rh = new RequestHandler_();
 
-                       String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);
+                       String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, CLIENT+".php?projId="+ projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);
 
                 return message;
             }
@@ -3769,6 +3782,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             getProjectsJSON();
             getActionJSON();
             getCertInspJSON();
+            getSummaryJSON();
             //       getCategoryJSON();
             get_AOR_JSON();
             //   get_BOR_JSON();

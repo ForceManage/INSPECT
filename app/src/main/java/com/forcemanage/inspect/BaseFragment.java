@@ -40,6 +40,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     private TextView title;
     private TextView branch;
     private TextView activity;
+    private TextView TabId;
     private EditText bNote;
     private ImageView photoA;
     private ImageView photo_cam;
@@ -96,6 +97,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         title = (TextView) view.findViewById(R.id.title);
         activity = (TextView) view.findViewById(R.id.level);
         branch = (TextView) view.findViewById(R.id.Text1);
+        TabId = (TextView) view.findViewById(R.id.aId);
         branch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -270,6 +272,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             activity.setText("Activity title:  "+inspection);
             branch.setText(branchLabel);
             bNote.setText(branchNote);
+            TabId.setText(Integer.toString(aId));
         }
     }
 

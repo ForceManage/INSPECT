@@ -20,7 +20,7 @@ public class MyConfig {
 
     public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php?projId=";
     public static final String URL_REQUEST_PROJECT= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestProject.php?projId=";
-    public static final String URL_EMAIL_REPORT= "https://dev.force-management.com/TAB_INSPECT/Inspection/EngReport1.php?projId=";
+    public static final String URL_EMAIL_REPORT= "https://dev.force-management.com/TAB_INSPECT/Inspection/";
 
     //JSON Tags
     //Property informtion
@@ -81,6 +81,7 @@ public class MyConfig {
 
 
 
+
     //Map
     public static final String TAG_CAT_ID = "CatID";
     public static final String TAG_LEVEL = "Level";
@@ -106,6 +107,7 @@ public class MyConfig {
     public static final String TAG_SUBCAT = "subCat";
     public static final String TAG_TYPE = "type";
     public static final String TAG_NOTE = "Note";
+    public static final String TAG_NOTE_2 = "Note_2";
 
     //Users
     public static final String TAG_USER_ID = "userID";

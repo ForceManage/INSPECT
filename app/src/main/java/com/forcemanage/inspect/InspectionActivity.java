@@ -134,6 +134,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public int Parent;
     public int Child;
     public int iID = 1;
+    public String inspLabel = "Inspection";
     public String branchLabel = "Label";
     public String branchNote = "Note";
     private int branchCode = 0;
@@ -532,7 +533,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName, 0);  //this is the ESM category
         if (result == 0)
-            Toast.makeText(this, "Cannot place branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else
             loadMap();
     }
@@ -546,7 +547,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         if (result == 1)
             loadMap();
         else
-            Toast.makeText(this, "Cannot place report branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place document TAB here", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -558,7 +559,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         if (result == 1)
             loadMap();
         else
-            Toast.makeText(this, "Cannot place an Action branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place an Action TAB here", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -567,7 +568,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addCertificate(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
-            Toast.makeText(this, "Cannot place Certificate branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place Certificate TAB here", Toast.LENGTH_SHORT).show();
         else
             loadMap();
 
@@ -578,7 +579,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addSummary(projId, iID, 499, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
-            Toast.makeText(this, "Cannot place Summary branch at this position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot place Summary TAB here", Toast.LENGTH_SHORT).show();
         else
             loadMap();
 
@@ -589,7 +590,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int success = dbHandler.updateMapLabel(projId, aID, branchLabel);
         if(success == 1) loadMap();
-        else Toast.makeText(this, "Create/select a MAP branch", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "Create/select TAB", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -606,8 +607,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
         Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
         photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
-        branchLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
-        MapBranch = mapItem.get("MAP_LABEL"); //This is the Map label column
+        inspLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
+        branchLabel = mapItem.get("MAP_LABEL"); //This is the Map label column
         branchNote = mapItem.get(MyConfig.TAG_NOTES);
         branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
 
@@ -621,11 +622,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", branchHead);
-                bundle.putString("inspection", branchLabel);
+                bundle.putString("inspection", inspLabel);
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
                 bundle.putString("image", photoBranch);
-                bundle.putString("MAP_LABEL", MapBranch);
+                bundle.putString("MAP_LABEL", branchLabel);
                 bundle.putInt("aID", aID);
                 bundle.putString("notes", branchNote);
                 bundle.putString("com2", com2);
@@ -658,7 +659,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     bundle.putString("inspectionID", inspectionId);
                     bundle.putInt("aID", aID);
                     bundle.putString("branchHead", branchHead);
-                    bundle.putString("branchLabel", branchLabel);
+                    bundle.putString("branchLabel", inspLabel);
                     bundle.putString("aprovider", aProvider);
                     bundle.putString("overview", Overview);
                     bundle.putString("date", dateInspected);
@@ -716,7 +717,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 bundle.putString("inspectionID", inspectionId);
                 bundle.putInt("aID", aID);
                 bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("branchLabel", inspLabel);
                 bundle.putString("description", Overview);
                 bundle.putString("scope", com1);
                 bundle.putString("perform", relevantInfo);
@@ -766,7 +767,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
                 bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("branchLabel", inspLabel);
                 bundle.putString("head_A", head_A);
                 bundle.putString("head_B", head_B);
                 bundle.putString("head_C", head_C);
@@ -811,7 +812,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
                 bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", branchLabel);
+                bundle.putString("branchLabel", inspLabel);
                 bundle.putString("description", Overview);
                 bundle.putString("time", Date_Time);
                 bundle.putString("permit", permit);
@@ -840,17 +841,17 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         if (v == buttonEdit) {
 
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            final DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
             final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
 
             // setup the alert builder
 
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setTitle("Modify Branch Tabs ");
+            builder.setTitle("Change File Tree Tab ");
             // add a list
-            String[] actions = {"Change the Branch tab text",
-                    "",
+            String[] actions = {"Change the File TAB name",
+                    "Move Note TAB",
                     "",
                     ""};
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -865,9 +866,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Text: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("File TAB name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Current label : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Current TAB name : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                             LocationText.setText(branchLabel);
                             // setup a dialog window
@@ -893,6 +894,36 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         }
 
                         case 1: //
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Move Current TAB : "+ branchLabel);//Integer.parseInt(locationId)
+                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                            LocationText.setHint("Moveto TAB id ->");
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dbHandler.moveTAB(projId,aID,Integer.parseInt(LocationText.getText().toString()));
+                                            loadMap();
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
                             break;
                     }
                 }
@@ -913,15 +944,15 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Add Titles, sub-Titles, Notes, Action Scope, Certificates ");
+            builder.setTitle("LIST - Add TAB: sub-TABS, Notes, Action Scope, Certificates ");
             // add a list
-            String[] actions = {"Create a New Title Branch ",
-                    "Add Sub Title to the current Branch",
-                    "Attach NotePad to the current Title/Sub Title ",
-                    "Attach a Scope to the current NotePad",
-                    "Attach a Summary for this Activity",
-                    "Attach a Certificate for this Activity",
-                    "Cancel Add/Create "};
+            String[] actions = {"Add new TAB to List",
+                    "Add a TAB Branch",
+                    "Attach Notes to TAB Branch ",
+                    "Attach Action to TAB Branch",
+                    "Add File Summary",
+                    "Add File Certificate  ",
+                    "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
@@ -935,9 +966,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -971,9 +1002,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1007,9 +1038,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Attach a NoteBook to the : " + branchLabel+" Title ");//Integer.parseInt(locationId)
+                            locationText.setText("Attach note to : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1043,9 +1074,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Branch Head Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Relevant Branch : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Attach Action to " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1104,7 +1135,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
             builder.setTitle("Choose an action");
             // add a list
-            String[] actions = {"Delete the current branch",
+            String[] actions = {"Delete the current TAB",
                     };
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
@@ -1118,7 +1149,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the branch and ALL the associated data");//location.getText().toString());
+                            locationText.setText("Warning - this will delete the Branch and ALL the associated data");//location.getText().toString());
 
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {

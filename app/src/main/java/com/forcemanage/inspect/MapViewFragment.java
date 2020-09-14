@@ -40,8 +40,6 @@ public class MapViewFragment extends ListFragment {
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
         GlobalVariables.pos = position;
-
-
             if (position != ListView.INVALID_POSITION) {
                 MapViewNode node = GlobalVariables.displayNodes.get(position);
 
@@ -54,19 +52,12 @@ public class MapViewFragment extends ListFragment {
 
                 }
             }
-
             MapViewLists.LoadDisplayList();
-
             mAdapter.notifyDataSetChanged();
-
-
             MapViewNode node = GlobalVariables.displayNodes.get(position);
-
-
             OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
             listener.OnSelectionChanged(position);
-
-
+   
         v.post(new Runnable() {
             @Override
             public void run() {
@@ -74,13 +65,9 @@ public class MapViewFragment extends ListFragment {
             }
         });
 
-
-
         showMessage(Integer.toString(position));
 
     }
-
-
 
 
     private void showMessage(String message) {

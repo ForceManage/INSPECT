@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 22;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -113,6 +113,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_SUB_CAT = "Subcat";
     public static final String COLUMN_TYPE = "Type";
     public static final String COLUMN_NOTE = "Note";
+    public static final String COLUMN_NOTE_2 = "Note_2";
 
     public static final String COLUMN_U_ID = "UserID";
     public static final String COLUMN_U_NAME = "UserName";
@@ -184,6 +185,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_P_ID + " INTEGER,"
                 + COLUMN_IMAGE + " TEXT,"
                 + COLUMN_NOTE + " TEXT,"
+                + COLUMN_NOTE_2 + " TEXT,"
                 + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_P_ID + "))";
 
         db.execSQL(CREATE_INSPECTION_TABLE);
@@ -402,6 +404,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesInspect.put(COLUMN_P_ID, inspectionAttributes.getpID());
         valuesInspect.put(COLUMN_IMAGE, inspectionAttributes.getimage());
         valuesInspect.put(COLUMN_NOTE, inspectionAttributes.getnote());
+        valuesInspect.put(COLUMN_NOTE_2, inspectionAttributes.getnote2());
 
         db.replace(TABLE_INSPECTION, null, valuesInspect);
 
@@ -468,6 +471,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_INSPECTION_ID, mapAttributes.getiId());
         values.put(COLUMN_IMG1, mapAttributes.getimage1());
         values.put(COLUMN_NOTES, mapAttributes.getnote());
+
 
         SQLiteDatabase db = this.getWritableDatabase();
         //db.execSQL("delete from "+ TABLE_ASSET_REGISTER);
@@ -674,12 +678,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateInspection(String projId, String iId, String Label, String Notes) {
+    public void updateInspection(String projId, String iId, String Label, String Note, String Note_2) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_NOTE, Notes);
+        contentValues.put(COLUMN_NOTE, Note);
+        contentValues.put(COLUMN_NOTE_2, Note_2);
         contentValues.put(COLUMN_LABEL, Label);
 
 
@@ -1002,6 +1007,19 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void moveTAB(int projId, int aId, int m_aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PARENT, m_aId);
+
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId  + " AND " + COLUMN_A_ID+ " = " + aId, null);
+
+        db.close();
+
+    }
+
     public int checkCode(String code) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1062,6 +1080,27 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         db.close();
         return client;
+
+    }
+
+    public int getParentId(int projId, int aid) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int pId = -1;
+
+        selectQuery = "SELECT " + COLUMN_PARENT + " FROM "
+                + TABLE_MAP
+                + " WHERE "+ COLUMN_PROJECT_ID + " = "+ projId+ " AND " + COLUMN_A_ID + " = "+ aid;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            pId = cursor.getInt(0);
+        }
+        db.close();
+        return pId;
 
     }
 
@@ -1193,7 +1232,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi.put(COLUMN_INSPECTION_TYPE, "QE");
         valuesi.put(COLUMN_INSPECTION_STATUS, "n");
         valuesi.put(COLUMN_PROJECT_ID, projID);
-        valuesi.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi.put(COLUMN_INSPECTION_DATE, dayTime(1) );
         valuesi.put(COLUMN_INSPECTOR, user_id );
         valuesi.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
@@ -1211,7 +1250,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTION_TYPE, "QE");
         valuesi2.put(COLUMN_INSPECTION_STATUS, "n");
         valuesi2.put(COLUMN_PROJECT_ID, projID);
-        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(1) );
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
@@ -1236,7 +1275,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTION_TYPE, "QE");
         valuesi2.put(COLUMN_INSPECTION_STATUS, "m");
         valuesi2.put(COLUMN_PROJECT_ID, projID);
-        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(0) );
+        valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(1) );
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
@@ -2025,7 +2064,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT I." + COLUMN_INSPECTION_DATE + ", I." + COLUMN_INSPECTION_TYPE + ", I." + COLUMN_INSPECTOR
                 + ", I." + COLUMN_INSPECTION_STATUS+ ", I." + COLUMN_DATE_TIME_START+ ", I." + COLUMN_DATE_TIME_FINISH
-                + ", I."+ COLUMN_IMAGE+ ", I."+ COLUMN_NOTE+ ", I."+ COLUMN_LABEL+ ", P."+ COLUMN_ADDRESS_NUMBER
+                + ", I."+ COLUMN_IMAGE+ ", I."+ COLUMN_NOTE+ ", I."+ COLUMN_NOTE_2+ ", I."+ COLUMN_LABEL+ ", P."+ COLUMN_ADDRESS_NUMBER
                 + " FROM " + TABLE_INSPECTION + " I "
                 + " JOIN " + TABLE_PROJECT_INFO + " P "
                 + " ON I."+ COLUMN_PROJECT_ID + " =  P."+COLUMN_PROJECT_ID
@@ -2047,8 +2086,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_END_DATE_TIME, cursor.getString(5));
                 inspectionItem.put(MyConfig.TAG_IMAGE, cursor.getString(6));
                 inspectionItem.put(MyConfig.TAG_NOTE, cursor.getString(7));
-                inspectionItem.put(MyConfig.TAG_LABEL, cursor.getString(8));
-                inspectionItem.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(9));
+                inspectionItem.put(MyConfig.TAG_NOTE_2, cursor.getString(8));
+                inspectionItem.put(MyConfig.TAG_LABEL, cursor.getString(9));
+                inspectionItem.put(MyConfig.TAG_ADDRESS_NO, cursor.getString(10));
 
 
                 inspectionItemList.add(inspectionItem);
@@ -2518,6 +2558,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionsMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(11))));
                 inspectionsMap.put(MyConfig.TAG_IMAGE, cursor.getString(12));
                 inspectionsMap.put(MyConfig.TAG_NOTE, cursor.getString(13));
+                inspectionsMap.put(MyConfig.TAG_NOTE_2, cursor.getString(14));
                 //       inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
                 //        inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
                 inspectionArrayList.add(inspectionsMap);
