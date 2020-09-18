@@ -67,6 +67,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private ImageView photoC;
     private ImageView photoD;
     private ImageView photoE;
+    private ImageView photoF;
+    private ImageView photoG;
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
@@ -81,7 +83,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public String photo3;
     public String photo4;
     public String photo5;
-    public String[] photos = new String[5];
+    public String photo6;
+    public String photo7;
+    public String[] photos = new String[7];
     private String mImageFileLocation = "";
     private String fname;
     private String dirName;
@@ -402,8 +406,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         aID = detailFragment.aID;
 
-        //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+             //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
         displayInspectionItem();
+
 
     }
 
@@ -434,7 +439,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         if (FragDisplay == "InspectionFragment") {
             dbHandler.updateInspectionItemPhoto(projId, iID, aID, photo1, photo2, photo3,photo4,
-                    photo5, "Img6", "Img7");
+                    photo5, photo6, photo7);
+
+        }
+
+        if (FragDisplay == "ReferenceFragment") {
+            dbHandler.updateInspectionItemPhoto(projId, iID, aID, photo1, photo2, photo3,photo4,
+                    photo5, photo6, photo7);
 
         }
 
@@ -585,6 +596,17 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
     }
 
+    private void addReferenceBranch(int Level, String levelName) {
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int result = dbHandler.addReference(projId, iID, 501, 0, aID, levelName);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place Reference TAB here", Toast.LENGTH_SHORT).show();
+        else
+            loadMap();
+
+    }
+
     public void editLocation(String branchLabel) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -686,7 +708,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     photo3 = photos[2];
                     photo4 = photos[3];
                     photo5 = photos[4];
-
+                    photo6 = photos[5];
+                    photo7 = photos[6];
 
                     InspectionFragment fragment = new InspectionFragment();
                     fragment.setArguments(bundle);
@@ -832,6 +855,65 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             }
 
+            case 11: {
+
+                if(Level > 0) {
+                    HashMap<String, String> list = dbHandler.getReferenceItem(projId, aID);
+                    //          if(list.size() > 0) {
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
+                    com3 = list.get(MyConfig.TAG_COM3);
+                    com4 = list.get(MyConfig.TAG_COM4);
+                    com5 = list.get(MyConfig.TAG_COM5);
+                    com6 = list.get(MyConfig.TAG_COM6);
+                    com7 = list.get(MyConfig.TAG_COM7);
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putInt("aID", aID);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("com3", com3);
+                    bundle.putString("com4", com4);
+                    bundle.putString("com5", com5);
+                    bundle.putString("com6", com6);
+                    bundle.putString("com7", com7);
+
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                    photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                    photos[5] = list.get(MyConfig.TAG_IMAGE6);
+                    photos[6] = list.get(MyConfig.TAG_IMAGE7);
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+                    photo3 = photos[2];
+                    photo4 = photos[3];
+                    photo5 = photos[4];
+                    photo6 = photos[5];
+                    photo7 = photos[6];
+
+                    ReferenceFragment fragment = new ReferenceFragment();
+                    fragment.setArguments(bundle);
+
+                    doFragmentTransaction(fragment, "ReferenceFragment", false, "");
+
+                    //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+                    //         }
+
+                    //         else Toast.makeText(this, "No associated data found",Toast.LENGTH_SHORT).show();
+                } //Level > 0
+                break;
+
+
+            }
+
         }
 
 
@@ -910,6 +992,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             dbHandler.moveTAB(projId,aID,Integer.parseInt(LocationText.getText().toString()));
+
                                             loadMap();
 
                                         }
@@ -946,12 +1029,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("LIST - Add TAB: sub-TABS, Notes, Action Scope, Certificates ");
             // add a list
-            String[] actions = {"Add new TAB to List",
-                    "Add a TAB Branch",
-                    "Attach Notes to TAB Branch ",
-                    "Attach Action to TAB Branch",
+            String[] actions = {"Add a BASE TAB to List",
+                    "Branch the Current TAB",
+                    "Attach File Note to TAB",
+                    "Attach Action to Note",
                     "Add File Summary",
                     "Add File Certificate  ",
+                    "Add File Information",
                     "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1112,6 +1196,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         case 5: {
                             photoBranch = "";
                             addCertificateBranch(500, "Certificates");
+                            break;
+                        }
+
+                        case 6: {
+                            photoBranch = "";
+                            addReferenceBranch(501, "INFORMATION");
                             break;
                         }
 
@@ -1298,6 +1388,60 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         photoE.setImageURI(selectedImage);
                         break;
 
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                    case 7:
+                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
+                        photoG.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+            if (FragDisplay == "ReferenceFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ReferenceFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                    case 7:
+                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
+                        photoG.setImageURI(selectedImage);
+                        break;
+
                 }
 
             }
@@ -1371,7 +1515,15 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     photo5 = to.getName();
                     break;
 
+                case 6:
+                    //          photoC.setImageURI(selectedImage);
+                    photo6 = to.getName();
+                    break;
 
+                case 7:
+                    //          photoC.setImageURI(selectedImage);
+                    photo7 = to.getName();
+                    break;
             }
 
             saveInspectionItem();
@@ -1435,7 +1587,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     photo5 = photos[4];
                     break;
 
+                case 6:
+                    photo6 = photos[5];
+                    break;
 
+                case 7:
+                    photo7 = photos[6];
+                    break;
             }
         }
 
@@ -1478,6 +1636,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             case 5:
                 photo5 = image.getName();
              break;
+           case 6:
+               photo6 = image.getName();
+               break;
+           case 7:
+               photo7 = image.getName();
+               break;
           }
 
         mImageFileLocation = image.getAbsolutePath();

@@ -99,6 +99,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                     holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
                     holder.content.setTextColor(Color.BLUE);
                 }
+                if( node.getNodeName().equals("Reference")){
+                    holder.arrow.setImageResource(R.drawable.ic_action_name);
+                    holder.content.setTextColor(Color.BLUE);
+                }
                 break;
            }
             case 1: {
@@ -129,6 +133,15 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
           //      holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
+
+                break;
+            }
+
+            case 11: {
+                holder.content.setTextColor(Color.BLUE);
+                //      holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                holder.arrow.setImageResource(R.drawable.ic_action_name);
 
                 break;
             }

@@ -23,6 +23,8 @@ public class DetailFragment extends Fragment
     int id;
     int aID;
     int cat;
+
+
     String Name;
 
     TextView mDetailTextView;
@@ -86,6 +88,7 @@ public class DetailFragment extends Fragment
             Name = node.getNodeName();
             aID = node.getaID();
             cat = node.getbranchCat();
+
         }
         else   Log.v("set Detail ", "index > display Nodes ");
 
