@@ -8,7 +8,7 @@ public class MapViewData
     private int projId;
     private int level;
     private int catId;
-    private int branchCat;
+    private int branchCat; //child
     private String label;
     private int aId;
     private int iId;

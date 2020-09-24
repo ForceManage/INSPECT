@@ -1325,7 +1325,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
                         + TABLE_MAP + " M"
                         + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
-                        + " AND " + COLUMN_CAT_ID + " < 500 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                        + " AND " + COLUMN_CAT_ID + " < 501 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -1666,7 +1666,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 499 "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 500 "
                 +" AND "+COLUMN_PROJECT_ID+" = "+projId+ " AND "+ COLUMN_INSPECTION_ID+ " = "+iId;
 
         cursor = db.rawQuery(selectQuery, null);
@@ -1697,7 +1697,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
                         + TABLE_MAP + " M"
-                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 499";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 500";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -1823,7 +1823,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 500 "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 501 "
                 +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
         cursor = db.rawQuery(selectQuery, null);
@@ -1854,7 +1854,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
                             + TABLE_MAP + " M"
-                            + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 500";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                            + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 501";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                     cursor = db.rawQuery(selectQuery, null);
                     if (cursor.moveToFirst()) {
@@ -1866,7 +1866,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     values.put(COLUMN_CAT_ID, CatID);
                     values.put(COLUMN_PARENT, certId);
                     values.put(COLUMN_PROJECT_ID, projId);
-                    values.put(COLUMN_LABEL, "Certificate Inspection");
+                    values.put(COLUMN_LABEL, "Certificate");
                     values.put(COLUMN_LEVEL, 1);
                     values.put(COLUMN_A_ID, maxAId);
                     values.put(COLUMN_INSPECTION_ID, iId);
@@ -2003,7 +2003,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 501 "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 502 "
                 +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
         cursor = db.rawQuery(selectQuery, null);
@@ -2034,7 +2034,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
                         + TABLE_MAP + " M"
-                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 501";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 502";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {

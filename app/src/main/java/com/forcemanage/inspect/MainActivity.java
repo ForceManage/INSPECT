@@ -1093,7 +1093,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (v == buttonSyncAll) {
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Cload Storage Upload Options");
+      //      final View customLayout = getLayoutInflater().inflate(R.layout.add_item, null);
+      //      builder.setView(customLayout);
+            builder.setTitle("Cloud Storage Upload Options");
             // add a list
             String[] actions = {"Upload All File Data",
                     "Upload Text File Data only",
@@ -2822,6 +2824,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 }
             }
             RequestHandler_ rh = new RequestHandler_();
+
 
             String regex = "\\/'";   //,?\s*"a[^"]*z"\s*:[^\}]+
 

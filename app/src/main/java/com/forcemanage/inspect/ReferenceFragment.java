@@ -1144,7 +1144,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-           dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "", "",
+           dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "20200630", "",
                    "", "", "1", "reportImage",
                    com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                    ,  com4Text.getText().toString(),
@@ -1165,7 +1165,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "", "",
+            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "20200630", "",
                     "", "", "1", "reportImage",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),

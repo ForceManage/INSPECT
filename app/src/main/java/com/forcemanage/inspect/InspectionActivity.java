@@ -577,7 +577,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private void addCertificateBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addCertificate(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addCertificate(projId, iID, 501, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Certificate TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -588,7 +588,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private void addSummaryBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addSummary(projId, iID, 499, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addSummary(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Summary TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -599,7 +599,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private void addReferenceBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addReference(projId, iID, 501, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addReference(projId, iID, 502, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Reference TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -1189,19 +1189,19 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
                         case 4: {
                             photoBranch = "";
-                            addSummaryBranch(499, "COMMENTARY");
+                            addSummaryBranch(500, "COMMENTARY");
                             break;
                         }
 
                         case 5: {
                             photoBranch = "";
-                            addCertificateBranch(500, "Certificates");
+                            addCertificateBranch(501, "CERTIFICATES");
                             break;
                         }
 
                         case 6: {
                             photoBranch = "";
-                            addReferenceBranch(501, "INFORMATION");
+                            addReferenceBranch(502, "INFORMATION");
                             break;
                         }
 

@@ -58,6 +58,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String startTime;
     private String endTime;
     private Button reportBtn;
+    private ImageView printer;
 
 
 
@@ -112,13 +113,13 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                 editLabel("Label",Label.getText().toString());
             }
         });
+        printer = (ImageView) view.findViewById(R.id.printer);
         TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
         TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
         TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
         TextView inspector = (TextView) view.findViewById(R.id.Text5);
         Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
-        Button reportBtn = (Button) view.findViewById(R.id.btnViewReport);
-        reportBtn.setOnClickListener(new View.OnClickListener() {
+        printer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                globalVariables.reportMenu();
@@ -238,53 +239,41 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Select Activity Method");
-                // add a list
-                String[] actions = {"Data collection and Log time",
-                        "View/Edit collected information",
-                };
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                alertDialogBuilder.setTitle("Log Session");
+                alertDialogBuilder.setMessage("Record file session time?");
+                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                builder.setItems(actions, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: {
                                 Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
                                 Bundle bundle = new Bundle();
-
-                                //               saveData();
                                 bundle.putString("PROJECT_ID", globalVariables.projectId);
                                 bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
                                 bundle.putBoolean("logTime", true);
                                 theIntent.putExtras(bundle);
                                 startActivity(theIntent);
+                                dialog.dismiss();
 
-
-                                break;
                             }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("PROJECT_ID", globalVariables.projectId);
+                                        bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                                        bundle.putBoolean("logTime", false);
+                                        theIntent.putExtras(bundle);
+                                        startActivity(theIntent);
+                                        dialog.cancel();
+                                    }
+                                });
 
-                            case 1: //
-                                Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
-                                Bundle bundle = new Bundle();
-
-                                //               saveData();
-                                bundle.putString("PROJECT_ID", globalVariables.projectId);
-                                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
-                                bundle.putBoolean("logTime", false);
-                                theIntent.putExtras(bundle);
-                                startActivity(theIntent);
-
-                                break;
-                        }
+                // create an alert dialog
+                AlertDialog alert = alertDialogBuilder.create();
+                alert.show();
 
 
-                    }
-                });
-                // create and show the alert dialog
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
 
 
             }
@@ -449,12 +438,12 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     public void onDestroy() {
         super.onDestroy();
 
-        if (Edited = true) saveData();
+        if (Edited) saveData();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (Edited = true) saveData();
+        if (Edited) saveData();
     }
 }
