@@ -9,6 +9,9 @@ public class MyConfig {
     public static final String URL_GET_CERT_INSPECTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getCertInsp.php?InspectorId=";
     public static final String URL_GET_SUMMARY = "https://dev.force-management.com/TAB_INSPECT/Inspection/getSummary.php?InspectorId=";
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
+    public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_login.php?user=";
+    public static final String URL_GET_LOG = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_LOG.php?InspectorId=";
+
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
     public static final String URL_SYNC_INSPECTION_ITEMS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspItemsToServer.php";
     public static final String URL_SYNC_MAP_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncMAPToServer.php";
@@ -16,7 +19,7 @@ public class MyConfig {
     public static final String URL_SYNC_ACTIONS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncActionsToServer.php";
     public static final String URL_SYNC_CERT_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncCertInspToServer.php";
     public static final String URL_SYNC_SUMMARY_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncSummaryToServer.php";
-    public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_login.php?user=";
+    public static final String URL_SYNC_LOG_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncLOGToServer.php";
 
     public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php?projId=";
     public static final String URL_REQUEST_PROJECT= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestProject.php?projId=";

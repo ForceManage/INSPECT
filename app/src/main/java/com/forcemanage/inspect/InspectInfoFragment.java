@@ -99,7 +99,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         View view = inflater.inflate(R.layout.inspect_info,container,false);
 
-
+        DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         Log.d(TAG, "oncreateview: started");
 
         title = (TextView) view.findViewById(R.id.branchTitle);
@@ -115,9 +115,11 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         });
         printer = (ImageView) view.findViewById(R.id.printer);
         TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
+        TextView Hrs = (TextView) view.findViewById(R.id.Text5);
+        Hrs.setText("Time allocated :  " + dbHandler.calcTime(projectId, inspectionId));
         TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
         TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
-        TextView inspector = (TextView) view.findViewById(R.id.Text5);
+   //     TextView inspector = (TextView) view.findViewById(R.id.Text5);
         Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
         printer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +187,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
          if(!startTime.equals("null"))
          inspectedDate.setText("Activity recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
 
-         inspector.setText("Auditor:  "+ auditor);
+    //     inspector.setText("Auditor:  "+ auditor);
          Label.setText(branchLabel);
          bNote.setText(note);
          Note2.setText(note_2);

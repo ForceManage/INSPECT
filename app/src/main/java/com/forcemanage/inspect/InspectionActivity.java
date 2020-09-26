@@ -1778,11 +1778,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         super.onDestroy();
     //    GlobalVariables.modified = true;
 
-        if(Edited == true )saveInspectionItem();
+        if(Edited)saveInspectionItem();
 
         endTime = dayTime(4);
 
-        if(logTime==true) {
+        if(logTime) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.logInspection(projectId, inspectionId, startTime, endTime);

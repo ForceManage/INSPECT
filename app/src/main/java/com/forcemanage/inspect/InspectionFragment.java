@@ -164,7 +164,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
         Log.d(TAG, "oncreateview: started");
-
         projId = Integer.parseInt(projectId);
         iId= Integer.parseInt(inspectionId);
 
@@ -1021,7 +1020,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
             dbHandler.statusChanged(Integer.parseInt(projectId));
 
-            Edited = false;
+
 
         }
     }

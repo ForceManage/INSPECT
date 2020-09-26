@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String JSON_STRING_NEW_ACTIVITY;
     private String JSON_STRING_OR;
     private String JSON_STRING_USER;
+    private String JSON_STRING_LOG;
     private int USER_ID = 0;
     private String USER_NAME = "";
     private String PASS_WORD = "";
@@ -2284,6 +2285,57 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
+    private void update_LOG() {
+        JSONObject jsonObject = null;
+
+        //editTextMessage.setText("Print String: " + JSON_STRING);
+        //editTextMessage.setText("Test");
+        try {
+            jsonObject = new JSONObject(JSON_STRING_LOG);
+            JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+            //    editTextMessage.setText("Test begin Category " + result);
+
+            for (int i = 0; i < result.length(); i++) {
+                // testing only -
+                String imsg = Integer.toString(i);
+                String rmsg = Integer.toString(result.length());
+                String msg = "Testing Loop category " + imsg + " result no " + rmsg;
+                //       editTextMessage.setText(msg);
+
+                JSONObject jo = result.getJSONObject(i);
+                String aID = jo.getString(MyConfig.TAG_A_ID);
+                String projId = jo.getString(MyConfig.TAG_PROJECT_ID);
+                String iId = jo.getString(MyConfig.TAG_INSPECTION_ID);
+                String start = jo.getString(MyConfig.TAG_START_DATE_TIME);
+                String end = jo.getString(MyConfig.TAG_END_DATE_TIME);
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                int uID = parseInt(aID);
+                int ProjId = parseInt(projId);
+                int i_Id = parseInt(iId);
+ 
+                LOG_Attributes log_attributes = new LOG_Attributes(uID, ProjId, i_Id, start, end);
+
+
+                //editTextMessage.setText("Test 5");
+
+                dbHandler.update_LOG_FromServer(log_attributes);
+
+                // testing only -
+                //   editTextMessage.setText("Test Category end");
+
+            }
+
+        } catch (JSONException e) {
+            // editTextMessage.setText(" Exception");
+            Log.e("ESM", "unexpected JSON exception", e);
+            //e.printStackTrace();
+        }
+        // testing only -
+        // editTextMessage.setText("Test 4");
+    }
+
 
     private void update_NewProject() {
         JSONObject jsonObject = null;
@@ -2763,6 +2815,41 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         gj.execute();
     }
 
+
+    private void get_LOG_JSON() {
+
+        class Get_LOG_JSON extends AsyncTask<Void, Void, String> {
+
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                JSON_STRING_LOG = s;
+                update_LOG();
+
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                RequestHandler_ rh = new RequestHandler_();
+                String s = rh.sendGetRequestParam(MyConfig.URL_GET_LOG,Integer.toString(USER_ID));
+                return s;
+            }
+
+        }
+        Get_LOG_JSON gj = new Get_LOG_JSON();
+        gj.execute();
+    }
+
     //Upload tablet inspection data to the server
     private String inspToServer() throws IOError {
         String res = "initiated";
@@ -3195,6 +3282,55 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    private String LOGToServer() throws IOError {
+        String res = "initiated";
+        //   HashMap<String, String> summaryList = new HashMap<String, String>();
+        DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+        //           dbHandler.puTestData();
+        ArrayList<HashMap<String, String>> LOGList = dbHandler.getLOG(USER_ID);
+        String testString = "";
+        String tempString = "";
+
+        JSONObject json;
+        JSONArray jsonArray = new JSONArray();
+        int j = 0;
+
+        if (LOGList.size() == 0) {
+            //no items toupdatelist
+            res = "no_records";
+        } else {
+            for (int i = 0; i < LOGList.size(); i++) {
+                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
+                testString = testString + tempString;
+
+
+                try {
+                    json = new JSONObject();
+                    json.put("Iteration", Integer.toString(j));
+                    json.put(MyConfig.TAG_A_ID, LOGList.get(i).get(MyConfig.TAG_A_ID));
+                    json.put(MyConfig.TAG_PROJECT_ID, LOGList.get(i).get(MyConfig.TAG_PROJECT_ID));
+                    json.put(MyConfig.TAG_INSPECTION_ID, LOGList.get(i).get(MyConfig.TAG_INSPECTION_ID));
+                    json.put(MyConfig.TAG_START_DATE_TIME, LOGList.get(i).get(MyConfig.TAG_START_DATE_TIME));
+                    json.put(MyConfig.TAG_END_DATE_TIME, LOGList.get(i).get(MyConfig.TAG_END_DATE_TIME));
+
+                    jsonArray.put(json);
+                    j = j + 1;
+
+                } catch (Throwable t) {
+                    res = "Request failed: " + t.toString();
+                    return res;
+                }
+            }
+            RequestHandler_ rh = new RequestHandler_();
+            String jsonString = jsonArray.toString();
+            res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_LOG_TO_SERVER, jsonString);
+//                res = jsonString;
+
+        }
+
+        return res;
+
+    }
 
     //Upload tablet inspection data to the server
     private String compileReport()  {
@@ -3244,6 +3380,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String actionsSaved;
                 String CertInspSaved;
                 String SummarySaved;
+                String LogSaved;
 
 
        //         String yes = "y";
@@ -3257,6 +3394,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 actionsSaved = actionsToServer();
                 CertInspSaved = certInspToServer();
                 SummarySaved = summaryToServer();
+                LogSaved = LOGToServer();
 
 
                 //    message = inspToServer();
@@ -3788,6 +3926,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             getSummaryJSON();
             //       getCategoryJSON();
             get_AOR_JSON();
+            get_LOG_JSON();
             //   get_BOR_JSON();
             //    get_OR_JSON("TABLE_B_OR");
         } else {

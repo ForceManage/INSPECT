@@ -5,9 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,7 +24,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 24;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -108,6 +114,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String TABLE_C_OR = "C_OR";
     public static final String TABLE_D_OR = "D_OR";
     public static final String TABLE_USER_LIST = "UserList";
+    public static final String TABLE_LOG_TIME = "LogTime";
 
     public static final String COLUMN_NUM = "Num";
     public static final String COLUMN_SUB_CAT = "Subcat";
@@ -291,7 +298,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String CREATE_C_OR_TABLE = "CREATE TABLE " +
                 TABLE_C_OR + "("
-                + COLUMN_NUM + " INTEGER PRIMARY KEY,"
+                + COLUMN_NUM + " INTEGER PRIMARY KEY ,"
                 + COLUMN_SUB_CAT + " TEXT,"
                 + COLUMN_TYPE + " INTEGER,"
                 + COLUMN_NOTE + " TEXT )";
@@ -316,6 +323,16 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_USER_LIST_TABLE);
 
+        String CREATE_LOG_TIME_TABLE = "CREATE TABLE " +
+                TABLE_LOG_TIME + "("
+                + COLUMN_U_ID + " INTEGER PRIMARY KEY,"
+                + COLUMN_PROJECT_ID + " INTEGER,"
+                + COLUMN_INSPECTION_ID + " INTEGER,"
+                + COLUMN_DATE_TIME_START + " INTEGER,"
+                + COLUMN_DATE_TIME_FINISH + " INTEGER)";
+
+        db.execSQL(CREATE_LOG_TIME_TABLE);
+
     }
 
     @Override
@@ -332,6 +349,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_C_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_D_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG_TIME);
         onCreate(db);
     }
 
@@ -349,6 +367,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_C_OR, null, null);
         db.delete(TABLE_D_OR, null, null);
         db.delete(TABLE_USER_LIST, null, null);
+        db.delete(TABLE_LOG_TIME, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -599,6 +618,23 @@ public class DBHandler extends SQLiteOpenHelper {
          return user_attributes.getuID();
     }
 
+    public void  update_LOG_FromServer(LOG_Attributes log_attributes) {
+
+        //replace will delete the row if the category already exists
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_U_ID, log_attributes.getuID());
+        values.put(COLUMN_PROJECT_ID, log_attributes.getProjId());
+        values.put(COLUMN_INSPECTION_ID, log_attributes.getiId());
+        values.put(COLUMN_DATE_TIME_START, log_attributes.getStart());
+        values.put(COLUMN_DATE_TIME_FINISH, log_attributes.getEnd());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        //replace will delete the row if the OR already exists
+
+        db.replace(TABLE_LOG_TIME, null, values);
+        db.close();
+
+    }
 
     public void updateProject(String projId, String item, String txt, int num) {
 
@@ -783,16 +819,44 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public void logInspection(String projID, String iID, String start, String end){
-
-
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_DATE_TIME_START, start);
-        contentValues.put(COLUMN_DATE_TIME_FINISH, end);
+        String Query;
+        Cursor cursor;
+        int maxID =1;
 
-        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ?", new String[]{projID, iID});
+        Query = "SELECT " + COLUMN_DATE_TIME_START + " FROM "
+                + TABLE_INSPECTION
+                + " WHERE " + COLUMN_PROJECT_ID + " = " + projID  + " AND " + COLUMN_INSPECTION_ID+ " = " + iID;
+
+        cursor = db.rawQuery(Query, null);
+        if (cursor.moveToFirst()) {
+            if(cursor.getString(0).equals("null")){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_DATE_TIME_START, start);
+                contentValues.put(COLUMN_DATE_TIME_FINISH, end);
+                db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ?", new String[]{projID, iID});
+            }
+            Query = "SELECT MAX(" + COLUMN_U_ID + ") FROM "
+                    + TABLE_LOG_TIME;
+
+            cursor = db.rawQuery(Query, null);
+            if (cursor.moveToFirst()) {
+                maxID = cursor.getInt(0);
+                maxID = maxID + 1;
+            }
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_U_ID, maxID);
+            values.put(COLUMN_PROJECT_ID, projID);
+            values.put(COLUMN_INSPECTION_ID, iID);
+            values.put(COLUMN_DATE_TIME_START,start);
+            values.put(COLUMN_DATE_TIME_FINISH,end);
+            db.insert(TABLE_LOG_TIME, null, values);
+        }
+
         db.close();
     }
+
+
 
 
     public void updateActionItem(String projId, String iId, int aId, String date, String overview, String servicedBy, String relevantInfo, String ServiceLevel
@@ -1150,6 +1214,54 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+
+    public String calcTime(String projId, String iId){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String diffHours = "0";
+        long mills = 0;
+
+
+            selectQuery = "SELECT " + COLUMN_DATE_TIME_START +", "+COLUMN_DATE_TIME_FINISH+ " FROM "
+                    + TABLE_LOG_TIME
+                    + " WHERE " + COLUMN_PROJECT_ID + " = "+  projId+" AND "+ COLUMN_INSPECTION_ID+" = "+iId;
+
+            cursor = db.rawQuery(selectQuery, null);
+
+           if (cursor.moveToFirst()) {
+               do{
+              SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+               Date date1 = null;
+               Date date2 = null;
+               try {
+
+                   date1 = df.parse(cursor.getString(0));
+                   date2 = df.parse(cursor.getString(1));
+               } catch (ParseException e) {
+                   e.printStackTrace();
+               }
+
+               mills = mills + (date2.getTime() - date1.getTime());
+
+               } while (cursor.moveToNext());
+
+               int hours = (int) (mills/(1000 * 60 * 60));
+               int mins = (int) ((mills/(1000*60)) % 60);
+               diffHours = hours + " Hrs " + mins+" Min";
+        }
+
+
+            return  diffHours;
+
+    }
+
+
+
+
+
+
     public void deleteInspectionItem(Integer projId, Integer aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1290,8 +1402,8 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_PROJECT_ID, projID);
         valuesi2.put(COLUMN_INSPECTION_DATE, dayTime(1) );
         valuesi2.put(COLUMN_INSPECTOR, user_id );
-        valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
-        valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
+        valuesi2.put(COLUMN_DATE_TIME_START, "null");  //valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
+        valuesi2.put(COLUMN_DATE_TIME_FINISH, "null");
         valuesi2.put(COLUMN_LABEL, label);
         valuesi2.put(COLUMN_LEVEL, "1");
         valuesi2.put(COLUMN_PARENT,  cpID );
@@ -3356,6 +3468,44 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<HashMap<String, String>> getLOG(int user_id) {
+
+
+        HashMap<String, String> LOG;
+        ArrayList<HashMap<String, String>> LOG_Time;
+
+        LOG_Time = new ArrayList<HashMap<String, String>>();
+
+        String projID;
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQueryI = "SELECT L.* FROM "+TABLE_LOG_TIME+" L "
+                + " JOIN " + TABLE_INSPECTION + " I "
+                + " ON L." + COLUMN_PROJECT_ID + " = I."+COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id +" AND I."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " GROUP BY L."+ COLUMN_U_ID;
+
+        Cursor cursor = dtabase.rawQuery(selectQueryI, null);
+                 // Move to the first row
+                if (cursor.moveToFirst()) {
+                    do {
+                        LOG = new HashMap<String, String>();
+                        LOG.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(0))));
+                        LOG.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                        LOG.put(MyConfig.TAG_INSPECTION_ID, cursor.getString(2));
+                        LOG.put(MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
+                        LOG.put(MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
+                        LOG_Time.add(LOG);
+                    } while (cursor.moveToNext());
+                }
+
+
+        dtabase.close();
+
+
+        return LOG_Time;
+
+    }
 
     public ArrayList<HashMap<String, String>> getinspectionitemlist(int projId, int aId, int iItem) {
 
