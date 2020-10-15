@@ -1379,7 +1379,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
-        valuesi2.put(COLUMN_LABEL, label);
+        valuesi2.put(COLUMN_LABEL, "File 1");
         valuesi2.put(COLUMN_LEVEL, "1");
         valuesi2.put(COLUMN_PARENT,  pID );
         valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID)+1);
@@ -1437,7 +1437,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 selectQuery = "SELECT  MAX(M." + COLUMN_CAT_ID + ") FROM "
                         + TABLE_MAP + " M"
                         + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID
-                        + " AND " + COLUMN_CAT_ID + " < 501 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                        + " AND " + COLUMN_CAT_ID + " < 500 ";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -1460,7 +1460,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     case (0): {
                         ContentValues values = new ContentValues();
-                        if(branchType == 0) {
+                        if(branchType == 0 || branchType >=9) {
 
                             if (Level == 0) {
                                 values.put(COLUMN_CAT_ID, maxcatID);
@@ -2678,11 +2678,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_PROJECT_ID + ", P." + COLUMN_ADDRESS_NUMBER + ", P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_SUBURB
                 + ", P." + COLUMN_INFO_A + ", P." + COLUMN_INFO_B + ", P." + COLUMN_INFO_C + ", P." + COLUMN_INFO_D + ", P." + COLUMN_INFO_E + ", P."
                 + COLUMN_INFO_F + ", P." + COLUMN_INFO_G + ", P." + COLUMN_INFO_H + ", P." + COLUMN_INFO_I + ", P." + COLUMN_INFO_J + ", P."
-                + COLUMN_PROJECT_PHOTO
+                + COLUMN_PROJECT_PHOTO+ ", P." + COLUMN_PROJECT_NOTE
                 + " FROM " + TABLE_PROJECT_INFO + " P "
-              //  + " JOIN " + TABLE_INSPECTION + " I "
-             //   + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-             //   + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id
+                + " JOIN " + TABLE_INSPECTION + " I "
+                + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
+                + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id+" AND I."+ COLUMN_INSPECTION_STATUS+" = 'm'"
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -2722,6 +2722,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 propertyMap.put(MyConfig.TAG_INFO_I, cursor.getString(12));
                 propertyMap.put(MyConfig.TAG_INFO_J, cursor.getString(13));
                 propertyMap.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(14));
+                propertyMap.put(MyConfig.TAG_PROJECT_NOTE, cursor.getString(15));
 
 
                 propertyArrayList.add(propertyMap);
@@ -2904,8 +2905,8 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION
-          //      + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND "
-           //     +  COLUMN_INSPECTOR+" = "+user_id
+                + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND "
+                +  COLUMN_INSPECTOR+" = "+user_id
                 +" ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
@@ -2927,8 +2928,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionsMap.put(MyConfig.TAG_IMAGE, cursor.getString(12));
                 inspectionsMap.put(MyConfig.TAG_NOTE, cursor.getString(13));
                 inspectionsMap.put(MyConfig.TAG_NOTE_2, cursor.getString(14));
-                //       inspectionsMap.put (MyConfig.TAG_START_DATE_TIME, cursor.getString(3));
-                //        inspectionsMap.put (MyConfig.TAG_END_DATE_TIME, cursor.getString(4));
                 inspectionArrayList.add(inspectionsMap);
 
             } while (cursor.moveToNext());

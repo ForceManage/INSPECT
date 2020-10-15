@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public ArrayList reportlistItems;
     public String propPhoto;
     private ProgressBar progressBar1;
+    private Boolean connected;
 
 
     AmazonS3 s3Client;
@@ -160,10 +161,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         ESMdb = new DBHandler(this, null, null, 1);
 
 
-        s3credentialsProvider();
 
-        // callback method to call the setTransferUtility method
-        setTransferUtility();
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -248,10 +246,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
         if (nInfo != null && nInfo.isConnected()) {
+            s3credentialsProvider();
+
+            // callback method to call the setTransferUtility method
+            setTransferUtility();
+            connected = true;
             //getJSON();
         } else {
             buttonDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+            connected = false;
         }
         //   updatePropList();
 
@@ -292,18 +296,21 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             if (CLIENT.equals("no-client")) {
                                 CLIENT = CLIENT + "-" + USER_ID;
                             }
-                            Thread thread = new Thread(new Runnable() {
+                            if(connected) {
+                                Thread thread = new Thread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    boolean exists = s3Client.doesBucketExist(CLIENT);
-                                    if (!exists)
-                                        s3Client.createBucket(CLIENT);
+                                    @Override
+                                    public void run() {
+                                        boolean exists = s3Client.doesBucketExist(CLIENT);
+                                        if (!exists)
+                                            s3Client.createBucket(CLIENT);
 
-                                }
+                                    }
 
-                            });
-                            thread.start();
+                                });
+                                thread.start();
+
+                            }
 
                             int PERMISSION_ALL = 1;
                             String[] PERMISSIONS = {
@@ -446,6 +453,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 Bundle bundle = new Bundle();
+                bundle.putInt("projId", projId);
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
@@ -525,6 +533,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void onResume() {
 
         super.onResume();
+
+        ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnected()) {
+            buttonDownload.setEnabled(true);
+            connected = true;
+            //getJSON();
+        } else {
+            buttonDownload.setEnabled(false);
+            Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+            connected = false;
+        }
 
         updatePropList();
 
@@ -972,10 +992,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             public void onClick(DialogInterface dialog, int id) {
                                 USER_NAME = user.getText().toString();
                                 PASS_WORD = password.getText().toString();
-                                clearTablet();
                                 get_user_JSON();
-                                downloadprojects();
-                                updatePropList();
+
                             }
                         });
                         AlertDialog alert = loginDialog.create();
@@ -1002,10 +1020,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     public void onClick(DialogInterface dialog, int id) {
                         USER_NAME = user.getText().toString();
                         PASS_WORD = password.getText().toString();
-                        clearTablet();
                         get_user_JSON();
-                        downloadprojects();
-                        updatePropList();
+
+
                     }
                 });
                 AlertDialog alert = loginDialog.create();
@@ -1046,19 +1063,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 if (CLIENT.equals("no-client")) {
                                     CLIENT = CLIENT + "-" + USER_ID;
                                 }
-                                Thread thread = new Thread(new Runnable() {
+                                if(connected) {
+                                    Thread thread = new Thread(new Runnable() {
 
-                                    @Override
-                                    public void run() {
-                                        boolean exists = s3Client.doesBucketExist(CLIENT);
-                                        if (!exists)
-                                            s3Client.createBucket(CLIENT);
+                                        @Override
+                                        public void run() {
+                                            boolean exists = s3Client.doesBucketExist(CLIENT);
+                                            if (!exists)
+                                                s3Client.createBucket(CLIENT);
 
-                                    }
+                                        }
 
-                                });
-                                thread.start();
-
+                                    });
+                                    thread.start();
+                                }
                                 int PERMISSION_ALL = 1;
                                 String[] PERMISSIONS = {
                                         android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -2314,7 +2332,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 int uID = parseInt(aID);
                 int ProjId = parseInt(projId);
                 int i_Id = parseInt(iId);
- 
+
                 LOG_Attributes log_attributes = new LOG_Attributes(uID, ProjId, i_Id, start, end);
 
 
@@ -2798,7 +2816,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
                 }
                 else {
+                    clearTablet();
                     update_USER_Info();
+                    downloadprojects();
+                    updatePropList();
                     Toast.makeText(MainActivity.this, "logged in", Toast.LENGTH_LONG).show();
                 }
             }
@@ -3090,7 +3111,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json = new JSONObject();
                     json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_PROJECT_ID, propList.get(i).get(MyConfig.TAG_PROJECT_ID));
+                    json.put(MyConfig.TAG_ADDRESS_NO, propList.get(i).get(MyConfig.TAG_ADDRESS_NO));
+                    json.put(MyConfig.TAG_PROJECT_ADDRESS, propList.get(i).get(MyConfig.TAG_PROJECT_ADDRESS));
+                    json.put(MyConfig.TAG_PROJECT_SUBURB, propList.get(i).get(MyConfig.TAG_PROJECT_SUBURB));
+                    json.put(MyConfig.TAG_INFO_A, propList.get(i).get(MyConfig.TAG_INFO_A));
+                    json.put(MyConfig.TAG_INFO_B, propList.get(i).get(MyConfig.TAG_INFO_B));
+                    json.put(MyConfig.TAG_INFO_C, propList.get(i).get(MyConfig.TAG_INFO_C));
+                    json.put(MyConfig.TAG_INFO_D, propList.get(i).get(MyConfig.TAG_INFO_D));
+                    json.put(MyConfig.TAG_INFO_E, propList.get(i).get(MyConfig.TAG_INFO_E));
+                    json.put(MyConfig.TAG_INFO_F, propList.get(i).get(MyConfig.TAG_INFO_F));
+                    json.put(MyConfig.TAG_INFO_G, propList.get(i).get(MyConfig.TAG_INFO_G));
+                    json.put(MyConfig.TAG_INFO_H, propList.get(i).get(MyConfig.TAG_INFO_H));
+                    json.put(MyConfig.TAG_INFO_I, propList.get(i).get(MyConfig.TAG_INFO_I));
+                    json.put(MyConfig.TAG_INFO_J, propList.get(i).get(MyConfig.TAG_INFO_J));
+                    json.put(MyConfig.TAG_PROJECT_NOTE, propList.get(i).get(MyConfig.TAG_PROJECT_NOTE));
                     json.put(MyConfig.TAG_PROJECT_PHOTO, propList.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
+
 
                     jsonArray.put(json);
                     j = j + 1;

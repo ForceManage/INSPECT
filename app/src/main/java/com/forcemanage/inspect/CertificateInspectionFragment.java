@@ -325,11 +325,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
                     , stage.getText().toString(), notesE.getText().toString());
             dbHandler.statusChanged(Integer.parseInt(projectId));
 
-           Edited = false;
-
         }
-
-
     }
 
     @Override
@@ -346,8 +342,6 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
                     permit.getText().toString(), address.getText().toString()
                     , stage.getText().toString(), notesE.getText().toString());
             dbHandler.statusChanged(Integer.parseInt(projectId));
-
-            Edited = false;
 
         }
     }

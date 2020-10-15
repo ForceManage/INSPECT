@@ -116,7 +116,6 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         printer = (ImageView) view.findViewById(R.id.printer);
         TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
         TextView Hrs = (TextView) view.findViewById(R.id.Text5);
-        Hrs.setText("Time allocated :  " + dbHandler.calcTime(projectId, inspectionId));
         TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
         TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
    //     TextView inspector = (TextView) view.findViewById(R.id.Text5);
@@ -182,10 +181,11 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
    //      if (!endTime.equals("null"))
   //       endTime = "2020-01-01 01:01:00";
 
-         inspectDate.setText("Activity created:  "+stringdate(inspectionDate,1));
-         inspectionType.setText("Type of Activity:  "+typeInspection);
+         inspectDate.setText("File created:  "+stringdate(inspectionDate,1));
+         inspectionType.setText("Type of File:  "+typeInspection);
          if(!startTime.equals("null"))
-         inspectedDate.setText("Activity recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
+         inspectedDate.setText("Initial log recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
+         Hrs.setText("Recorded allocation:  " + dbHandler.calcTime(projectId, inspectionId));
 
     //     inspector.setText("Auditor:  "+ auditor);
          Label.setText(branchLabel);

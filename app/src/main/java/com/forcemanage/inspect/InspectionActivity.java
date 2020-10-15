@@ -1027,11 +1027,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("LIST - Add TAB: sub-TABS, Notes, Action Scope, Certificates ");
+            builder.setTitle("LIST - Add TAB: sub-TABS, Note TABS, Action Notes, Certificates ");
             // add a list
             String[] actions = {"Add a BASE TAB to List",
-                    "Branch the Current TAB",
-                    "Attach File Note to TAB",
+                    "Add Branch to the Current TAB",
+                    "Attach Note to selected TAB",
                     "Attach Action to Note",
                     "Add File Summary",
                     "Add File Certificate  ",
@@ -1786,7 +1786,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
             dbHandler.logInspection(projectId, inspectionId, startTime, endTime);
-            dbHandler.updateStatus(Integer.parseInt(projectId), Integer.parseInt(inspectionId),"p",dayTime(1));
+            dbHandler.updateStatus(Integer.parseInt(projectId), Integer.parseInt(inspectionId),"m",dayTime(1));
         }
 
 

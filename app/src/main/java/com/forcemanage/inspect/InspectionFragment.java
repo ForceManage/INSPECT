@@ -999,9 +999,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                dbHandler.statusChanged(Integer.parseInt(projectId));
 
-               Edited = false;
-
-           }
+            }
 
     }
 
@@ -1011,7 +1009,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         if(Edited){
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-
             dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
                     ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", "reportImage",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
@@ -1019,8 +1016,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
 
             dbHandler.statusChanged(Integer.parseInt(projectId));
-
-
 
         }
     }

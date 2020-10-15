@@ -244,7 +244,6 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(Integer.parseInt(projectId));
-           Edited = false;
         }
     }
 
@@ -261,7 +260,6 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(Integer.parseInt(projectId));
-            Edited = false;
 
         }
     }
