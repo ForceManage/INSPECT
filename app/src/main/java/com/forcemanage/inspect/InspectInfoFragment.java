@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private TextView Label;
     private EditText bNote;
     private EditText Note2;
+    private EditText DumbV;
     private ImageView mPhotoImageView;
     private ImageView photo_cam;
     private ImageView photo_file;
@@ -52,8 +54,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String note;
     private String note_2;
     private Boolean Edited;
-    private String projectId;
-    private String inspectionId;
+    private Integer projId;
+    private Integer iId;
     private String dateInspected;
     private String startTime;
     private String endTime;
@@ -71,8 +73,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             branchHead = bundle.getString("branchHead");
             branchLabel = bundle.getString("branchLabel");
             inspectionDate = bundle.getString("date");
-            projectId = bundle.getString("projectId");
-            inspectionId = bundle.getString("inspectionId");
+            projId = bundle.getInt("projectId");
+            iId = bundle.getInt("inspectionId");
             note = bundle.getString("note");
             note_2 = bundle.getString("note_2");
             auditor = bundle.getString("auditor");
@@ -102,10 +104,12 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         Log.d(TAG, "oncreateview: started");
 
+
         title = (TextView) view.findViewById(R.id.branchTitle);
  //       branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
         Note2 = (EditText) view.findViewById(R.id.preamble);
+
         Label = (TextView) view.findViewById(R.id.Text1);
         Label.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +148,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 String root = Environment.getExternalStorageDirectory().getPath();
-                File propImage = new File(root + "/" + projectId + "INFO/");
+                File propImage = new File(root + "/" + Integer.toString(projId) + "INFO/");
                 //  File propImage = new File(root, propId+"INFO/");
                 //  File propImage = new File(root, "ESM/test.jpg");
                 //  String dir = propId+"INFO/";
@@ -177,7 +181,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         });
 
 
-         setText();
+
    //      if (!endTime.equals("null"))
   //       endTime = "2020-01-01 01:01:00";
 
@@ -185,13 +189,14 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
          inspectionType.setText("Type of File:  "+typeInspection);
          if(!startTime.equals("null"))
          inspectedDate.setText("Initial log recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
-         Hrs.setText("Recorded allocation:  " + dbHandler.calcTime(projectId, inspectionId));
+         Hrs.setText("Recorded allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
 
     //     inspector.setText("Auditor:  "+ auditor);
-         Label.setText(branchLabel);
+
          bNote.setText(note);
          Note2.setText(note_2);
-
+        Label.setText(branchLabel);
+        setText();
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
 
         photo_file.setOnClickListener(new View.OnClickListener() {
@@ -307,6 +312,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         });
 
+
+
         return view;
     }
 
@@ -400,7 +407,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
-                                dbHandler.updateInspection(projectId, inspectionId, branchLabel, note, note_2);
+                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
@@ -425,21 +432,21 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
     }
 
+
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
         note_2 = Note2.getText().toString();
 
-        dbHandler.updateInspection(projectId, inspectionId, branchLabel, note, note_2);
-        dbHandler.statusChanged(Integer.parseInt(projectId));
+        dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
+        dbHandler.statusChanged(projId, iId);
 
 }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         if (Edited) saveData();
     }
 

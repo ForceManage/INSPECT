@@ -45,6 +45,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     private String desciption = "Desc";
     private String projectId;
     private String inspectionId;
+    private Integer projId;
+    private Integer iId;
     private String headA = "Title A";
     private String comA = "Comments";
     private String headB = "Title B";
@@ -91,6 +93,9 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
 
         Log.d(TAG, "oncreateview: started");
+
+        projId = Integer.parseInt(projectId);
+        iId = Integer.parseInt(inspectionId);
 
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
@@ -243,7 +248,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comB = ComB.getText().toString();
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
         }
     }
 
@@ -259,7 +264,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comB = ComB.getText().toString();
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
         }
     }

@@ -82,7 +82,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
          }
 
             Edited = false;
-        projectId = globalVariables.projectId;
+
 
     }
 
@@ -105,6 +105,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
         title = (TextView) view.findViewById(R.id.title);
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
+
 
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
@@ -305,6 +306,7 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
         });
 
+
         return view;
     }
 
@@ -347,59 +349,59 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
                                 else {
                                     dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
                                     globalVariables.updatePropList();
-                                    dbHandler.statusChanged(projId);
+                                    dbHandler.statusChanged(projId,0);
                                 }
                                 //        globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Project ID": {
                                 dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Note A": {
                                 dbHandler.updateProject(projectId, "infoA", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Note B": {
                                 dbHandler.updateProject(projectId, "infoB", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Note C": {
                                 dbHandler.updateProject(projectId, "infoC", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Note D": {
                                 dbHandler.updateProject(projectId, "infoD", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 globalVariables.OnSelectionChanged(0);
                                 break;
                             }
                             case "Note E": {
                                 dbHandler.updateProject(projectId, "infoE", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 break;
                             }
                             case "Note F": {
                                 dbHandler.updateProject(projectId, "infoF", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 break;
                             }
                             case "Note G": {
                                 dbHandler.updateProject(projectId, "infoG", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 break;
                             }
                             case "Note H": {
                                 dbHandler.updateProject(projectId, "infoH", branchText.getText().toString(), 0);
-                                dbHandler.statusChanged(projId);
+                                dbHandler.statusChanged(projId,0);
                                 break;
                             }
                         } // if there is a valid project
@@ -427,20 +429,20 @@ public class ProjectInfoFragment extends Fragment implements View.OnClickListene
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
-
-        dbHandler.updateProject(projectId, "Project Note" , note, 0);
+        dbHandler.updateProject(Integer.toString(projId), "Project Note" , note, 0);
+        dbHandler.statusChanged(projId,0);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (Edited = true) saveData();
+        if (Edited) saveData();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (Edited = true) saveData();
+        if (Edited) saveData();
     }
 }

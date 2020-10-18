@@ -71,6 +71,8 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     private String Notes = "Notes";
     private String projectId;
     private String inspectionId;
+    private Integer projId;
+    private Integer iId;
     private String Stage;
 
     @Override
@@ -107,7 +109,8 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.certificate_inspection, container, false);
         //       btnInspection = (Button) view.findViewById(R.id.btnInspection);
-
+        projId = Integer.parseInt(projectId);
+        iId = Integer.parseInt(inspectionId);
 
         Log.d(TAG, "oncreateview: started");
 
@@ -323,7 +326,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             dbHandler.updateCertificateInspection(projectId, inspectionId, dateString(time.getText().toString()), descriptionE.getText().toString(),
                                       permit.getText().toString(), address.getText().toString()
                     , stage.getText().toString(), notesE.getText().toString());
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
         }
     }
@@ -341,7 +344,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             dbHandler.updateCertificateInspection(projectId, inspectionId, dateString(time.getText().toString()), descriptionE.getText().toString(),
                     permit.getText().toString(), address.getText().toString()
                     , stage.getText().toString(), notesE.getText().toString());
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
         }
     }

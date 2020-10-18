@@ -613,7 +613,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         //replace will delete the row if the OR already exists
 
-                db.replace(TABLE_USER_LIST, null, values);
+         db.replace(TABLE_USER_LIST, null, values);
          db.close();
          return user_attributes.getuID();
     }
@@ -1045,14 +1045,14 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void statusChanged(Integer projId) {
+    public void statusChanged(Integer projId, Integer iId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_INSPECTION_STATUS, "m");
 
-        db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId , null);
+        db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId + " AND "+COLUMN_INSPECTION_ID+ " = "+ iId , null);
 
         db.close();
 

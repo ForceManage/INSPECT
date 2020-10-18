@@ -67,6 +67,8 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
     private String notes = "Desc";
     private String projectId;
     private String inspectionId;
+    private Integer projId;
+    private Integer iId;
     private int aId;
 
     @Override
@@ -105,7 +107,8 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
 
         Log.d(TAG, "oncreateview: started");
-
+        projId = Integer.parseInt(projectId);
+        iId = Integer.parseInt(inspectionId);
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
         notesE = (EditText) view.findViewById(R.id.note);
@@ -378,7 +381,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                                       "", performE.getText().toString(), ""
                     , scopeE.getText().toString(), "p", notesE.getText().toString());
 
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
             globalVariables.Edited = false;
 
@@ -406,7 +409,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                     "", performE.getText().toString(), ""
                     , scopeE.getText().toString(), "p", notesE.getText().toString());
 
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
             globalVariables.Edited = false;
 

@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ESMdb = new DBHandler(this, null, null, 1);
+      //  ESMdb = new DBHandler(this, null, null, 1);
 
 
 
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void init() {
 
         ProjectInfoFragment fragment = new ProjectInfoFragment();
-        doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+        doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
 
     }
 
@@ -507,8 +507,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                bundle.putString("projectId", projectId);
-                bundle.putString("inspectionId", inspectionId);
+                bundle.putInt("projectId", projId);
+                bundle.putInt("inspectionId", iId);
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                 bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
@@ -519,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
-                doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
+                doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
                 fragment.setArguments(bundle);
 
 
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             connected = false;
         }
 
-        updatePropList();
+   //     updatePropList();
 
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
@@ -566,6 +566,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             args.putInt(DetailFragment.KEY_POSITION, 0);
             newDetailFragment.setArguments(args);
+
             androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             // Replace whatever is in the fragment_container view with this fragment,
@@ -587,7 +588,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             //       mapListAdapter.notifyDataSetChanged();
             //   OnSelectionChanged(0);
 
+
+
+
+
+
         }
+
+
 
 
     }
@@ -1137,13 +1145,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setTitle("Enter User Code");
                             passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
 
-                                    USER_ID = dbHandler.checkCode(passText.getText().toString());
-                                    if (USER_ID > 0) {
-                                        uploaddata();
-                                        uploadphotos();
+                                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
+                                        USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                        if (USER_ID > 0) {
+                                            uploaddata();
+                                            uploadphotos();
+                                        } else
+                                            Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
                                     } else
-                                        Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
+
 
 
                                 }
@@ -1169,11 +1182,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setTitle("Enter User Code");
                             passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
 
+                                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if (USER_ID > 0) uploaddata();
                                     else
-                                        Toast.makeText(MainActivity.this, "Invalid Code", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
 
 
                                 }

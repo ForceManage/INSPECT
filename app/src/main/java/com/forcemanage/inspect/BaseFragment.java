@@ -55,6 +55,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     private String inspection;
     private String projectId;
     private String inspectionId;
+    private Integer projId;
+    private Integer iId;
     private String image;
     private int aId;
 
@@ -93,7 +95,10 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
 
         Log.d(TAG, "oncreateview: started");
-
+        if(projectId != null) {
+            projId = Integer.parseInt(projectId);
+            iId = Integer.parseInt(inspectionId);
+        }
         title = (TextView) view.findViewById(R.id.title);
         activity = (TextView) view.findViewById(R.id.level);
         branch = (TextView) view.findViewById(R.id.Text1);
@@ -356,7 +361,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             // work out the next service date in three months time
             if(projectId != null) {
                 dbHandler.updateMap(projectId, aId, bNote.getText().toString());
-                dbHandler.statusChanged(Integer.parseInt(projectId));
+                dbHandler.statusChanged(projId,iId);
             }
         }
     }

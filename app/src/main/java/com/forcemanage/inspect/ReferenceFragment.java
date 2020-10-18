@@ -156,8 +156,8 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
         Log.d(TAG, "oncreateview: started");
 
-     //   projId = Integer.parseInt(projectId);
-     //   iId= Integer.parseInt(inspectionId);
+        projId = Integer.parseInt(projectId);
+        iId= Integer.parseInt(inspectionId);
 
 
         cam1 = (ImageView) view.findViewById(R.id.cameraClick1);
@@ -1150,7 +1150,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                    ,  com4Text.getText().toString(),
                    com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "p", "");
 
-               dbHandler.statusChanged(Integer.parseInt(projectId));
+               dbHandler.statusChanged(projId,iId);
 
                Edited = false;
 
@@ -1171,7 +1171,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                     ,  com4Text.getText().toString(),
                     com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "p", "");
 
-            dbHandler.statusChanged(Integer.parseInt(projectId));
+            dbHandler.statusChanged(projId, iId);
 
             Edited = false;
 
