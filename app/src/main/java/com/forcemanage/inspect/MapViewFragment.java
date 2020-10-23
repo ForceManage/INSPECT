@@ -11,6 +11,9 @@ import android.widget.ListView;
 
 import androidx.fragment.app.ListFragment;
 
+import com.forcemanage.inspect.adapters.MapListAdapter;
+import com.forcemanage.inspect.attributes.MapViewNode;
+
 
 public class MapViewFragment extends ListFragment {
 

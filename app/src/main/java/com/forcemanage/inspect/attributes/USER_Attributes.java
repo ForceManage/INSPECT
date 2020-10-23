@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.attributes;
 
 public class USER_Attributes {
     private int uID;

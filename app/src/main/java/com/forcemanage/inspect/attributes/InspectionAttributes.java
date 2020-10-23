@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.attributes;
 
        //**
        // * Created by DAP 16.03.2020

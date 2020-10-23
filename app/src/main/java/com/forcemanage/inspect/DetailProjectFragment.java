@@ -3,7 +3,7 @@ package com.forcemanage.inspect;
 /**
  * Created by cindyoakes on 9/23/16.
  */
-
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,23 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-
 import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.attributes.ProjectNode;
 
 
-public class MapDetailFragment extends Fragment
+public class DetailProjectFragment extends Fragment
 {
 
 
     final static String KEY_POSITION = "position";
     int mCurrentPosition = -1;
     int id;
+    int aID;
+    int cat;
+
+
     String Name;
 
     TextView mDetailTextView;
 
-    public MapDetailFragment() {  }
+    public DetailProjectFragment() {  }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class MapDetailFragment extends Fragment
         mDetailTextView = (TextView) view.findViewById(R.id.detail_text);
 
 
-       return view;
+        return view;
     }
 
     @Override
@@ -77,13 +80,16 @@ public class MapDetailFragment extends Fragment
     public void setDetail(int detailIndex) {
 
 
-        if(detailIndex < GlobalVariables.displayNodes.size()) {
+        if(detailIndex < GlobalVariables.projectdisplayNodes.size()) {
 
-            MapViewNode node = GlobalVariables.displayNodes.get(detailIndex);
+            ProjectNode node = GlobalVariables.projectdisplayNodes.get(detailIndex);
 
             mCurrentPosition = detailIndex;
             mDetailTextView.setText(node.getNodeName());
             Name = node.getNodeName();
+            aID = node.getaID();
+            cat = node.getbranchCat();
+
         }
         else   Log.v("set Detail ", "index > display Nodes ");
 
@@ -95,8 +101,8 @@ public class MapDetailFragment extends Fragment
 
         // Save the current description selection in case we need to recreate the fragment
         outState.putInt(KEY_POSITION,mCurrentPosition);
-    //    outState.clear();
-     //   onSaveInstanceState(Bundle.EMPTY);
+        //    outState.clear();
+        //   onSaveInstanceState(Bundle.EMPTY);
 
     }
 
@@ -109,4 +115,3 @@ public class MapDetailFragment extends Fragment
     }
 
 }
-

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.attributes.ProjectData;
+import com.forcemanage.inspect.attributes.ProjectNode;
 
 import java.util.ArrayList;
 
@@ -13,14 +15,14 @@ import java.util.ArrayList;
  * Created by cindyoakes on 9/23/16.
  */
 
-public class MapViewLists
+public class ProjectViewList
 {
 
 
-    public static ArrayList<MapViewData> LoadInitialData() {
+    public static ArrayList<ProjectData> LoadInitialData() {
 
 
-        ArrayList<MapViewData> data = new ArrayList<MapViewData>();
+        ArrayList<ProjectData> data = new ArrayList<ProjectData>();
 
 
 
@@ -46,26 +48,26 @@ public class MapViewLists
 */
 
 
-     //   MapViewLists.LoadDisplayList();
-        return GlobalVariables.dataList;
+        //   MapViewLists.LoadDisplayList();
+        return GlobalVariables.projectList;
 
         // return GlobalVariables.dataList;
 
-      }
+    }
 
 
-    public static ArrayList<MapViewNode> LoadInitialNodes(ArrayList<MapViewData> dataList)
+    public static ArrayList<ProjectNode> LoadInitialNodes(ArrayList<ProjectData> dataList)
     {
-        ArrayList<MapViewNode> nodes = new ArrayList<MapViewNode>();
+        ArrayList<ProjectNode> nodes = new ArrayList<ProjectNode>();
 
         for(int i = 0; i < dataList.size(); i++)
         {
-            MapViewData data = dataList.get(i);
+            ProjectData data = dataList.get(i);
             if (data.getLevel() != 0) continue;
 
             Log.v("LoadInitialNodes", data.getLabel());
 
-            MapViewNode node = new MapViewNode();
+            ProjectNode node = new ProjectNode();
             node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
@@ -75,7 +77,7 @@ public class MapViewLists
             node.setiID(data.getiID());
             int newLevel = data.getLevel() + 1;
             node.setNodeChildern(null);
-            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
+            ArrayList<ProjectNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
             //node.setNodeChildern(LoadChildrenNodes(dataList, newLevel, data.getID()));
             //if (node.getNodeChildren().size() == 0)
             if (children.size() == 0)
@@ -95,18 +97,18 @@ public class MapViewLists
         return nodes;
     }
 
-    private static ArrayList<MapViewNode> LoadChildrenNodes(ArrayList<MapViewData> dataList, int level, int parentID)
+    private static ArrayList<ProjectNode> LoadChildrenNodes(ArrayList<ProjectData> dataList, int level, int parentID)
     {
-        ArrayList<MapViewNode> nodes = new ArrayList<MapViewNode>();
+        ArrayList<ProjectNode> nodes = new ArrayList<ProjectNode>();
 
         for(int i = 0; i < dataList.size(); i++)
         {
-            MapViewData data = dataList.get(i);
+            ProjectData data = dataList.get(i);
             if ((data.getLevel() != level) || (data.getParent() != parentID)) continue;
 
 
 
-            MapViewNode node = new MapViewNode();
+            ProjectNode node = new ProjectNode();
             node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
@@ -116,8 +118,8 @@ public class MapViewLists
             node.setIsExpanded(GlobalVariables.FALSE);
             int newLevel = level + 1;
             node.setNodeChildern(null);
-            ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
-           // node.setNodeChildern(LoadChildrenNodes(dataList, newLevel, data.getID()));
+            ArrayList<ProjectNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
+            // node.setNodeChildern(LoadChildrenNodes(dataList, newLevel, data.getID()));
             if (children.size() == 0)
             {
                 node.setNodeChildern(null);
@@ -139,15 +141,15 @@ public class MapViewLists
 
     public static void LoadDisplayList()
     {
-        GlobalVariables.displayNodes = new ArrayList<MapViewNode>();
-        for(int i = 0; i < GlobalVariables.nodes.size(); i++)
+        GlobalVariables.projectdisplayNodes = new ArrayList<ProjectNode>();
+        for(int i = 0; i < GlobalVariables.projectnodes.size(); i++)
         {
-            MapViewNode node = GlobalVariables.nodes.get(i);
-            GlobalVariables.displayNodes.add(node);
+            ProjectNode node = GlobalVariables.projectnodes.get(i);
+            GlobalVariables.projectdisplayNodes.add(node);
 
             if (node.getIsExpanded() == GlobalVariables.TRUE)
             {
-                ArrayList<MapViewNode> children = node.getNodeChildren();
+                ArrayList<ProjectNode> children = node.getNodeChildren();
                 if (children != null)
                     if (children.size() != 0)
                         AddChildrenToList(children);
@@ -155,20 +157,20 @@ public class MapViewLists
         }
     }
 
-    public static void AddChildrenToList(ArrayList<MapViewNode> children)
+    public static void AddChildrenToList(ArrayList<ProjectNode> children)
     {
         if (children == null) return;
 
         for(int i = 0; i < children.size(); i++)
         {
-            MapViewNode node = children.get(i);
-            GlobalVariables.displayNodes.add(node);
+            ProjectNode node = children.get(i);
+            GlobalVariables.projectdisplayNodes.add(node);
 
             Log.v("addchildrentolist", String.format("%d %s %d", i, node.getNodeName(), children.size()));
 
             if (node.getIsExpanded() == GlobalVariables.TRUE)
             {
-                ArrayList<MapViewNode> grandChildren = node.getNodeChildren();
+                ArrayList<ProjectNode> grandChildren = node.getNodeChildren();
                 if (grandChildren != null)
                     AddChildrenToList(grandChildren);
             }

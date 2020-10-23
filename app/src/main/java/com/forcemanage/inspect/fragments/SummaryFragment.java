@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.fragments;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -19,6 +19,10 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

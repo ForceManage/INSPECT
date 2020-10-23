@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import com.forcemanage.inspect.BuildConfig;
+import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.R;
 
 import java.io.File;
 

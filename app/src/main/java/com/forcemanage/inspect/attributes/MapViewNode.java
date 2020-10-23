@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.attributes;
 
 /**
  * Created by cindyoakes on 9/23/16.

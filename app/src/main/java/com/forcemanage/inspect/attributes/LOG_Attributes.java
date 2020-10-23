@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.attributes;
 
 public class LOG_Attributes {
 

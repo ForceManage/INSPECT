@@ -5,15 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
+import com.forcemanage.inspect.attributes.A_Attributes;
+import com.forcemanage.inspect.attributes.ActionItemAttributes;
+import com.forcemanage.inspect.attributes.CertificateInspectionAttributes;
+import com.forcemanage.inspect.attributes.InspectionAttributes;
+import com.forcemanage.inspect.attributes.InspectionItemAttributes;
+import com.forcemanage.inspect.attributes.LOG_Attributes;
+import com.forcemanage.inspect.attributes.MAPattributes;
+import com.forcemanage.inspect.attributes.ProjectAttributes;
+import com.forcemanage.inspect.attributes.SummaryAttributes;
+import com.forcemanage.inspect.attributes.USER_Attributes;
 
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -601,7 +606,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int update_USER_FromServer(USER_Attributes user_attributes) {
+    public void update_USER_FromServer(USER_Attributes user_attributes) {
 
         //replace will delete the row if the category already exists
         ContentValues values = new ContentValues();
@@ -615,7 +620,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
          db.replace(TABLE_USER_LIST, null, values);
          db.close();
-         return user_attributes.getuID();
+
     }
 
     public void  update_LOG_FromServer(LOG_Attributes log_attributes) {
@@ -1053,6 +1058,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_INSPECTION_STATUS, "m");
 
         db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId + " AND "+COLUMN_INSPECTION_ID+ " = "+ iId , null);
+        db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projId + " AND "+COLUMN_INSPECTION_ID+ " = "+ 0 , null);
 
         db.close();
 
@@ -2665,7 +2671,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getAllProjects(int user_id) {
+    public ArrayList<HashMap<String, String>> getAllProjects(int user_id, String status) {
 
         // ArrayList that contains every row in the database
         // and each row key / value stored in a HashMap
@@ -2682,7 +2688,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_PROJECT_INFO + " P "
                 + " JOIN " + TABLE_INSPECTION + " I "
                 + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id+" AND I."+ COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " WHERE I."+ COLUMN_INSPECTOR + " = "+ user_id+" AND I."+ COLUMN_INSPECTION_STATUS+" = '"+ status+"'"
                 + " ORDER BY P." + COLUMN_PROJECT_ID;
 
 
@@ -2750,7 +2756,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
                 + " FROM " + TABLE_INSPECTION + " I "
-                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id+" AND "+COLUMN_INSPECTION_STATUS+ " = 'm'"
                 + " GROUP BY I."+ COLUMN_PROJECT_ID;
 
         Cursor cursorI = database.rawQuery(selectQueryI, null);

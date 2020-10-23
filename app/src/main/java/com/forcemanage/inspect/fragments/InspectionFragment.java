@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,6 +31,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import com.forcemanage.inspect.BuildConfig;
+import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -345,7 +350,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
 
-                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    Uri data = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".provider",Image);
                     galleryIntent.setDataAndType(data,"image/*");
 
                     startActivity(galleryIntent);

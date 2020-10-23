@@ -1,4 +1,4 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,6 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import com.forcemanage.inspect.BuildConfig;
+import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.R;
 
 import java.io.File;
 import java.text.ParseException;
@@ -169,7 +174,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
 
 
-                Uri data = FileProvider.getUriForFile(getActivity(),BuildConfig.APPLICATION_ID+".provider",photo_image);
+                Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID+".provider",photo_image);
                 // Uri data = Uri.parse(photo_image.getAbsolutePath());
 
                 galleryIntent.setDataAndType(data ,"image/*");

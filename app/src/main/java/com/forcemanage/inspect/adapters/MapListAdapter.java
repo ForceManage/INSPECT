@@ -1,13 +1,11 @@
-package com.forcemanage.inspect;
+package com.forcemanage.inspect.adapters;
 
 /**
  * Created by cindyoakes on 9/23/16.
  */
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.StyleRes;
+import com.forcemanage.inspect.GlobalVariables;
+import com.forcemanage.inspect.MapListViewHolder;
+import com.forcemanage.inspect.MapViewLists;
+import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.R;
 
 
 public class MapListAdapter extends ArrayAdapter<MapViewNode>

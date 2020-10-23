@@ -36,19 +36,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/head_frame"
-                    android:paddingBottom="20dp">
+                    android:paddingBottom="10dp">
 
-                    <TextView
-                        android:id="@+id/page"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="Project Information  "
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="normal|bold" />
 
-                    <TextView
+
+                     <TextView
                         android:id="@+id/branchTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,6 +49,7 @@
                         android:paddingLeft="10dp"
                         android:text="Project:  "
                         android:textSize="20sp"
+                        android:layout_marginBottom="5dp"
                         android:textColor="@android:color/white"
                         android:textStyle="normal|bold" />
 
@@ -64,8 +57,7 @@
                         android:id="@+id/branchName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:paddingTop="6dp"
+                        android:paddingTop="5dp"
                         android:paddingLeft="10dp"
                         android:text="Project Information  "
                         android:textColor="@android:color/white"
@@ -73,168 +65,95 @@
 
                 </LinearLayout>
 
-                <ScrollView
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
 
+    <ImageView
+        android:id="@+id/imageView_folder"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="bottom"
+        android:foreground="@drawable/folder2_red" />
+
+    <TextView
+        android:id="@+id/page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:text="Project Folder TABS  "
+        android:layout_gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="16sp"
+        android:textStyle="normal|bold" />
+
+</LinearLayout>
+
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/fragment_folder"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillViewport="true">
+                    android:layout_height="200dp"
+                    android:layout_gravity="top"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+
+                    <fragment
+                        android:id="@+id/tree_fragment"
+                        android:name="com.forcemanage.inspect.MapViewFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <fragment
+                        android:id="@+id/detail_text"
+                        android:name="com.forcemanage.inspect.DetailFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent" />
+
+
+                </LinearLayout>
 
                 <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                <TextView
-                    android:id="@+id/Service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="25dp"
-                    android:text="Project Name:  "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal|bold" />
+                    android:layout_gravity="bottom">
 
+                    <Button
+                        android:id="@+id/addTab"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:backgroundTint="#DFB005"
+                        android:text="Add"
+                        android:textSize="11sp"
+                        android:drawableStart="@drawable/ic_text_box_plus_outline"
 
-                <TextView
-                    android:id="@+id/Text1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="10dp"
-                    android:hint="Project Title - Eg. Project Address/Project name/ etc"
-                    android:textSize="16sp"/>
+                        />
 
-                <TextView
-                    android:id="@+id/infotitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:paddingLeft="10dp"
-                    android:text="Project Information:  "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal|bold" />
-
-                <TextView
-                    android:id="@+id/Text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Project Note "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/Text9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="Project Note "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-
-                <TextView
-                    android:id="@+id/notetitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:text="Project Notes:  "
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal|bold" />
+                    <Button
+                        android:id="@+id/delTab"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:backgroundTint="#DFB005"
+                        android:text="Delete"
+                        android:textSize="11sp"
+                        android:drawableLeft="@drawable/ic_format_list_checkbox"
+                        />
 
 
 
-                <EditText
-                    android:id="@+id/note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="10dp"
-                    android:hint="Author notes (text not printed)"
-                    android:textColor="@color/cardview_shadow_start_color"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-                </ScrollView>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
+                </LinearLayout>
 
 
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -314,6 +233,171 @@
 
 
                 </FrameLayout>
+
+
+                <ScrollView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:orientation="vertical">
+
+
+
+                        <TextView
+                            android:id="@+id/Service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="25dp"
+                            android:text="Project Name:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+
+                        <TextView
+                            android:id="@+id/Text1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Project Title - Eg. Project Address/Project name/ etc"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/infotitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:paddingLeft="10dp"
+                            android:text="Project Information:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+                        <TextView
+                            android:id="@+id/Text2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/Text9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+
+                        <TextView
+                            android:id="@+id/notetitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:text="Project Notes:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+
+
+                        <EditText
+                            android:id="@+id/note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Author notes (text not printed)"
+                            android:textColor="@color/cardview_shadow_start_color"
+                            android:textSize="16sp"/>
+
+
+
+                    </LinearLayout>
+
+
+
+                </ScrollView>
+
+
+
 
             </LinearLayout>
 

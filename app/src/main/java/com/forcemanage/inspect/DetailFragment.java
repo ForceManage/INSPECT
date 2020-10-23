@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
+import com.forcemanage.inspect.attributes.MapViewNode;
 
 
 public class DetailFragment extends Fragment

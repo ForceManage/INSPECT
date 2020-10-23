@@ -1,7 +1,7 @@
 package com.forcemanage.inspect;
 
 /**
- * Created by cindyoakes on 9/23/16.
+ * Created by AP on 10/23/20.
  */
 
 import android.os.Bundle;
@@ -14,9 +14,10 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.attributes.ProjectNode;
 
 
-public class MapDetailFragment extends Fragment
+public class ProjectDetailFragment extends Fragment
 {
 
 
@@ -27,7 +28,7 @@ public class MapDetailFragment extends Fragment
 
     TextView mDetailTextView;
 
-    public MapDetailFragment() {  }
+    public ProjectDetailFragment() {  }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class MapDetailFragment extends Fragment
         mDetailTextView = (TextView) view.findViewById(R.id.detail_text);
 
 
-       return view;
+        return view;
     }
 
     @Override
@@ -77,9 +78,9 @@ public class MapDetailFragment extends Fragment
     public void setDetail(int detailIndex) {
 
 
-        if(detailIndex < GlobalVariables.displayNodes.size()) {
+        if(detailIndex < GlobalVariables.projectdisplayNodes.size()) {
 
-            MapViewNode node = GlobalVariables.displayNodes.get(detailIndex);
+            ProjectNode node = GlobalVariables.projectdisplayNodes.get(detailIndex);
 
             mCurrentPosition = detailIndex;
             mDetailTextView.setText(node.getNodeName());
@@ -95,8 +96,8 @@ public class MapDetailFragment extends Fragment
 
         // Save the current description selection in case we need to recreate the fragment
         outState.putInt(KEY_POSITION,mCurrentPosition);
-    //    outState.clear();
-     //   onSaveInstanceState(Bundle.EMPTY);
+        //    outState.clear();
+        //   onSaveInstanceState(Bundle.EMPTY);
 
     }
 
@@ -109,4 +110,3 @@ public class MapDetailFragment extends Fragment
     }
 
 }
-

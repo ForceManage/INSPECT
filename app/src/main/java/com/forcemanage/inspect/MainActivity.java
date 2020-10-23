@@ -41,6 +41,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -56,6 +58,24 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.forcemanage.inspect.attributes.A_Attributes;
+import com.forcemanage.inspect.attributes.ActionItemAttributes;
+import com.forcemanage.inspect.attributes.CertificateInspectionAttributes;
+import com.forcemanage.inspect.attributes.InspectionAttributes;
+import com.forcemanage.inspect.attributes.InspectionItemAttributes;
+import com.forcemanage.inspect.attributes.LOG_Attributes;
+import com.forcemanage.inspect.attributes.MAPattributes;
+import com.forcemanage.inspect.attributes.MapViewData;
+import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.attributes.ProjectAttributes;
+import com.forcemanage.inspect.attributes.ProjectData;
+import com.forcemanage.inspect.attributes.ProjectNode;
+import com.forcemanage.inspect.attributes.ReportItem;
+import com.forcemanage.inspect.attributes.SummaryAttributes;
+import com.forcemanage.inspect.attributes.USER_Attributes;
+import com.forcemanage.inspect.fragments.InspectInfoFragment;
+import com.forcemanage.inspect.fragments.ProjectInfoFragment;
+import com.forcemanage.inspect.fragments.ReportFragment;
 
 
 import org.json.JSONArray;
@@ -126,7 +146,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private int iId;
     private String fname;
     private String cat;
-    private List<MapViewData> listItems;
+    private List<MapViewData> maplistItems;
+    private List<ProjectData> projectlistItems;
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -170,12 +191,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
         progressBar1 = findViewById(R.id.progressBar1);
-        listItems = new ArrayList<>();
-        MapViewData listItem;
+        projectlistItems = new ArrayList<>();
+        ProjectData listItem;
 
         for (int i = 0; i < (Projects.size()); i++) {
 
-            listItem = new MapViewData(
+            listItem = new ProjectData(
 
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
 
@@ -190,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     Projects.get(i).get(MyConfig.TAG_NOTES)
 
             );
-            listItems.add(listItem);
+            projectlistItems.add(listItem);
         }
 
-        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
         //     TreeViewLists.LoadDisplayList();
 
 
@@ -206,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
 
             // Create an Instance of Fragment
-            MapViewFragment treeFragment = new MapViewFragment();
+            ProjectViewFragment treeFragment = new ProjectViewFragment();
             treeFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, treeFragment)
@@ -425,10 +446,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     @Override
-    public void OnSelectionChanged(int treeNameIndex) {
-
-
-        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+    public void OnProjectChanged(int treeNameIndex){
+        ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
 
 
         projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
@@ -469,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
-                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
                 fragment.setArguments(bundle);
                 //            fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 break;
@@ -519,13 +538,21 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 InspectInfoFragment fragment = new InspectInfoFragment();
-                doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
+                doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
                 fragment.setArguments(bundle);
 
 
                 break;
             }
         }
+    }
+
+    @Override
+    public void OnSelectionChanged(int treeNameIndex) {
+
+
+
+
     }
 
 
@@ -549,18 +576,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
    //     updatePropList();
 
 
-        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
-        MapViewLists.LoadDisplayList();
+        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
+        ProjectViewList.LoadDisplayList();
         GlobalVariables.modified = true;
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
         //   OnSelectionChanged(0);
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+        DetailProjectFragment detailFragment = (DetailProjectFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
 
         if (GlobalVariables.modified == true) {
-            MapViewFragment newDetailFragment = new MapViewFragment();
+            ProjectViewFragment newDetailFragment = new ProjectViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
 
@@ -1207,7 +1234,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 2: {
 
-/*
+
                             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.call_log, null);
                             AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
@@ -1216,29 +1243,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             passDialog.setTitle("Enter User Code");
                             passDialog.setCancelable(false).setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                 DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+                                 if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
                                     if(USER_ID>0) {
-
-                                        CLIENT = dbHandler.getClient(passText.getText().toString());
-
-                                        Thread thread = new Thread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                boolean exists = s3Client.doesBucketExist(CLIENT);
-                                                if(!exists)
-                                                    s3Client.createBucket(CLIENT);
-
-                                            }
-
-                                        });
-                                        thread.start();
+                                            uploadphotos();
 
                                     }
                                     else
                                         Toast.makeText(MainActivity.this, "Invalid Code",Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
 
-                                    uploadphotos();
                                 }
                             });
 
@@ -1246,8 +1262,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             AlertDialog alert = passDialog.create();
                             alert.show();
-*/
-                            uploadphotos();
+
+
                             break;
                         }
 
@@ -1807,14 +1823,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
-        listItems = new ArrayList<>();
-        MapViewData listItem;
+        projectlistItems = new ArrayList<>();
+        ProjectData listItem;
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
          projectlist_title.setText("Project Folders:  "+dbHandler.getUser(USER_ID));
         for (int i = 0; i < (Projects.size()); i++){
 
-            listItem = new MapViewData(
+            listItem = new ProjectData(
 
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
                     Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
@@ -1827,10 +1843,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     Projects.get(i).get(MyConfig.TAG_IMAGE1),
                     Projects.get(i).get(MyConfig.TAG_NOTES)
             );
-            listItems.add(listItem);
+            projectlistItems.add(listItem);
         }
 
-        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
         //     TreeViewLists.LoadDisplayList();
 
 
@@ -1841,12 +1857,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //   OnSelectionChanged(0);
 
 
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+        DetailProjectFragment detailFragment = (DetailProjectFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
 
         if (GlobalVariables.modified == true) {
-            MapViewFragment newDetailFragment = new MapViewFragment();
+            ProjectViewFragment newDetailFragment = new ProjectViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
 
@@ -2303,8 +2319,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                 //editTextMessage.setText("Test 5");
-
-                USER_ID = dbHandler.update_USER_FromServer(user_attributes);
+                USER_ID = uID;
+                CLIENT = clientName;
+                 dbHandler.update_USER_FromServer(user_attributes);
 
                 // testing only -
                 //   editTextMessage.setText("Test Category end");
@@ -3107,7 +3124,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         HashMap<String, String> propMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
-        ArrayList<HashMap<String, String>> propList = dbHandler.getAllProjects(USER_ID);
+        ArrayList<HashMap<String, String>> propList = dbHandler.getAllProjects(USER_ID, "m");
         String testString = "";
         String tempString = "";
 
@@ -3513,10 +3530,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected String doInBackground(Void... params) {
 
-                    RequestHandler_ rh = new RequestHandler_();
+                RequestHandler_ rh = new RequestHandler_();
+                        if(CLIENT.substring(0,2).equals("no")){
 
-                       String message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, CLIENT+".php?projId="+ projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);
+                        message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, "iapp-NOCLIENT"+".php?projId="+ projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);}
+                               else{
 
+                     message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, CLIENT + ".php?projId=" + projectId + "&iId=" + inspectionId + "&EMAIL=" + email + "&USERID=" + USER_ID + "&TYPE=" + type);
+                }
                 return message;
             }
 
@@ -3583,7 +3604,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         // AWS transfer service - transferutility requires this for restarting if connection is lost during transfer
         //    getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
-
+/*
         if(CLIENT.equals("no-client")) CLIENT=CLIENT+"-"+USER_ID;
 
         Thread thread = new Thread(new Runnable() {
@@ -3599,9 +3620,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         });
         thread.start();
 
+ */
+
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
+        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID, "m");
         //Get a list of all the images for the properties to inspect
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
         ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos(USER_ID);
@@ -3993,7 +4016,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID);
+        ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID, "p");
         //Get a list of all the images for the properties to inspect
         ArrayList<HashMap<String, String>> ilist = dbHandler.getInspectionPhotos(USER_ID);
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
