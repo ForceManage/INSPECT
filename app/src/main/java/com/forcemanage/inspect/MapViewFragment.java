@@ -58,8 +58,8 @@ public class MapViewFragment extends ListFragment {
             MapViewLists.LoadDisplayList();
             mAdapter.notifyDataSetChanged();
             MapViewNode node = GlobalVariables.displayNodes.get(position);
-            OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
-            listener.OnSelectionChanged(position);
+            tabchangelistener listener = (tabchangelistener) getActivity();
+            listener.OnTabChanged(position);
    
         v.post(new Runnable() {
             @Override

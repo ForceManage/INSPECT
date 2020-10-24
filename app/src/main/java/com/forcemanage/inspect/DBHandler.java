@@ -3207,7 +3207,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getMap(int projID, int iID) {
+    public ArrayList<HashMap<String, String>> getMap(int projID, int iID, int Child) {
 
 
         HashMap<String, String> SiteMap;
@@ -3224,7 +3224,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_MAP + " M"
 
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
-                + " ORDER BY M." + COLUMN_CAT_ID;
+                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 

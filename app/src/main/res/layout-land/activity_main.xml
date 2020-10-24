@@ -75,6 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 >
                 <ImageView
                     android:id="@+id/imageView_folder"
@@ -82,7 +84,7 @@
                     android:layout_height="50dp"
                     android:layout_marginRight="5dp"
                     android:layout_gravity="top"
-                    android:foreground="@drawable/folders" />
+                    android:foreground="@drawable/ring_binders" />
 
                  <TextView
                     android:id="@+id/ProjectList"

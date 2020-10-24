@@ -23,6 +23,9 @@ public class GlobalVariables
     public static ArrayList<ProjectNode> projectnodes = new ArrayList<ProjectNode>();
     public static ArrayList<ProjectNode> projectdisplayNodes = new ArrayList<ProjectNode>();
     public static int pos;
+    public static int aId;
+    public static int catId;
+    public static int Level;
     public static String branchType;
 
 

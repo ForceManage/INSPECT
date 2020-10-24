@@ -103,7 +103,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 holder.content.setTextColor(Color.GRAY);
                 //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
+                holder.arrow.setImageResource(R.drawable.folder);
                 break;
             }
             case 2: {

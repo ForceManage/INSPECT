@@ -30,21 +30,20 @@ import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.DetailFragment;
 import com.forcemanage.inspect.GlobalVariables;
-import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
-import com.forcemanage.inspect.OnVerseNameSelectionChangeListener;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.tabchangelistener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectionChangeListener, View.OnClickListener {
+public class ProjectInfoFragment extends Fragment implements tabchangelistener, View.OnClickListener {
 
     private MainActivity globalVariables;
 
@@ -77,6 +76,9 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
     private String infoG;
     private String infoH;
     private List<MapViewData> listItems;
+    private  int aId;
+    private int catId;
+    private int Level;
 
 
     @Override
@@ -87,7 +89,7 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
         if (bundle != null) {
             projId = bundle.getInt("projId");
             branchHead = bundle.getString("branchHead");
-            //      branchLabel = bundle.getString("branchLabel");
+            //branchLabel = bundle.getString("branchLabel");
             //      branchNote = bundle.getString("notes");
             ProjAddress = bundle.getString("address");
             note = bundle.getString("note");
@@ -126,10 +128,15 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
         title = (TextView) view.findViewById(R.id.title);
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
+        TextView folder = (TextView) view.findViewById(R.id.folder);
+        folder.setText(ProjAddress+" Folder TABS");
+
+
+
 
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, 0);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, 0, 9); //child 9 shows only the types <9
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -193,6 +200,14 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
         final TextView projAddress = (TextView) view.findViewById(R.id.Text1);
         projAddress.setText(ProjAddress);
         projAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProject("Project Title", projAddress.getText().toString());
+            }
+        });
+
+        ImageView Folder = (ImageView) view.findViewById(R.id.imageView_folder);
+        Folder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editProject("Project Title", projAddress.getText().toString());
@@ -409,7 +424,7 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
                         case 0: {
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
@@ -422,7 +437,7 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
+                                            //      photoBranch = "";
                                             addLevel(0, branchText.getText().toString());
 
 
@@ -445,9 +460,9 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
                         case 1: {
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                             itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
@@ -458,8 +473,8 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addLevel((Level + 1), branchText.getText().toString());
+                                            //       photoBranch = "";
+                                            addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
 
                                         }
                                     })
@@ -478,96 +493,6 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
                         }
 
-                        case 2: {
-
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Attach note to : " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addReportBranch((Level + 1), branchText.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-                        }
-
-                        case 3: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB name: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Attach Action to " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addActionBranch((Level + 1), branchText.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-                        }
-
-                        case 4: {
-                            photoBranch = "";
-                            addSummaryBranch(500, "COMMENTARY");
-                            break;
-                        }
-
-                        case 5: {
-                            photoBranch = "";
-                            addCertificateBranch(501, "CERTIFICATES");
-                            break;
-                        }
-
-                        case 6: {
-                            photoBranch = "";
-                            addReferenceBranch(502, "INFORMATION");
-                            break;
-                        }
 
                     }
                 }
@@ -577,16 +502,16 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
             dialog.show();
 
+        }
 
 
 
-
-        if (v == buttonDelete) {
+        if (v == btnDelTab) {
 
 
             // setup the alert builder
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Choose an action");
             // add a list
             String[] actions = {"Delete the current TAB",
@@ -598,9 +523,9 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
                         case 0: {
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Warning - this will delete the Branch and ALL the associated data");//location.getText().toString());
@@ -635,24 +560,19 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
             AlertDialog dialog = builder.create();
 
             dialog.show();
-        }
-    }
+         }
 
     }
+
+
 
 
 
     @Override
-    public void OnSelectionChanged(int treeNameIndex) {
+    public void OnTabChanged(int treeNameIndex) {
 
 
-        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-
-        projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
-
-        projId = node.getprojId();
-
+   //     MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
 
         DetailFragment detailFragment = (DetailFragment) getChildFragmentManager()
@@ -711,21 +631,94 @@ public class ProjectInfoFragment extends Fragment implements OnVerseNameSelectio
 
             GlobalVariables.modified = false;
 
-            OnSelectionChanged(GlobalVariables.pos);
+            OnTabChanged(GlobalVariables.pos);
         }
 
     }
 
-    @Override
-    public void OnProjectChanged(int treeNameIndex) {
+
+    private void addLevel(int Level, String levelName) {
+
+        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, 0);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(getContext(), "Cannot place TAB here", Toast.LENGTH_SHORT).show();
+        else
+        loadMap();
+    }
+
+    public void deleteInspectionItem() {
+
+        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+
+        int type = dbHandler.getMapNodeType(projId, GlobalVariables.aId);
+
+        switch (type){
+
+            case(-1):{
+                Toast.makeText(getContext(), "Cannot delete Parent branch, delete child branches first", Toast.LENGTH_SHORT).show();
+
+                break;
+            }
+
+            case (0): {
+                dbHandler.deleteMapBranch(projId, GlobalVariables.aId);
+                dbHandler.deleteInspectionItem(projId, GlobalVariables.aId);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
+                Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
+            case (1):{
+
+                dbHandler.deleteMapBranch(projId, GlobalVariables.aId);
+                dbHandler.deleteInspectionItem(projId, GlobalVariables.aId);
+                GlobalVariables.pos = GlobalVariables.pos - 1;
+                Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                loadMap();
+                break;
+            }
+
+        }
 
     }
 
-    @Override
-    public void onClick(View v) {
+    public void loadMap() {
 
+        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, 0, 9);
+
+        listItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (SiteMapData.size()); i++) {
+
+            listItem = new MapViewData(
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+            );
+            listItems.add(listItem);
+        }
+
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) listItems;
+        GlobalVariables.modified = true;
+
+
+        //    MapListAdapter mAdapter = new MapListAdapter(this);
+        //   mAdapter.notifyDataSetChanged();
+
+        OnTabChanged(GlobalVariables.pos);
     }
-
 
     public void editProject(final String  item, String value){
 

@@ -117,7 +117,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         Note2 = (EditText) view.findViewById(R.id.preamble);
 
         Label = (TextView) view.findViewById(R.id.Text1);
-        Label.setOnClickListener(new View.OnClickListener() {
+        ImageView file = (ImageView) view.findViewById(R.id.file);
+        file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editLabel("Label",Label.getText().toString());

@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, View.OnClickListener {
+public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, tabchangelistener, View.OnClickListener {
 
     DBHandler ESMdb;
     private Button buttonInsert;
@@ -201,7 +201,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         init();
 
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId, iID);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId, iID, 15); //child < 15 includes all types
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -312,7 +312,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     public void loadMap() {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID, 15);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -348,6 +348,73 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     @Override
     public void OnProjectChanged(int treeNameIndex){
 
+    }
+
+    @Override
+    public void OnTabChanged(int treeNameIndex) {
+
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+
+
+        if (detailFragment != null) {
+            // If description is available, we are in two pane layout
+            // so we call the method in DescriptionFragment to update its content
+            detailFragment.setDetail(treeNameIndex);
+
+        } else {
+            DetailFragment newDetailFragment = new DetailFragment();
+            Bundle args = new Bundle();
+
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+            newDetailFragment.setArguments(args);
+
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+
+            //  fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
+        }
+
+        if (GlobalVariables.modified == true) {
+            MapViewFragment newDetailFragment = new MapViewFragment();
+            Bundle args = new Bundle();
+            detailFragment.mCurrentPosition = -1;
+
+
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            FragmentManager fm = getSupportFragmentManager();
+
+            //fm.popBackStack(DF,0);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            GlobalVariables.modified = false;
+
+            OnTabChanged(GlobalVariables.pos);
+        }
+        aID = detailFragment.aID;
+
+        //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
+        displayInspectionItem();
     }
 
     @Override
