@@ -342,7 +342,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
 
-        OnSelectionChanged(GlobalVariables.pos);
+        OnTabChanged(GlobalVariables.pos);
     }
 
     @Override
@@ -417,7 +417,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         displayInspectionItem();
     }
 
-    @Override
+ /*   @Override
     public void OnSelectionChanged(int treeNameIndex) {
 
 
@@ -489,7 +489,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
     }
-
+*/
 
     private void getORArray(String Cat_Table, String subCat) {
 

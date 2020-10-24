@@ -317,7 +317,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                                 branchLabel = branchText.getText().toString();
                                 if(aId > 0) {
                                     dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
-                                    globalVariables.OnSelectionChanged(0);
+                                    globalVariables.OnTabChanged(0);
                                 }
                                 else
                                     Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();

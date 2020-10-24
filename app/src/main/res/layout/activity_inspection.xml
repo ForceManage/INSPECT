@@ -40,6 +40,17 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp">
 
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/printer"
+                        android:layout_width="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/opening_file" />
 
                 <TextView
                     android:id="@+id/SubLocation"
@@ -48,12 +59,13 @@
                     android:layout_marginTop="6dp"
                     android:padding="2dp"
                     android:paddingStart="2dp"
-                    android:text="Project File TABS and Contents "
-                    android:paddingBottom="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="Project Folder Contents "
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="normal|bold" />
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/fragment_container"

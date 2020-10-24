@@ -545,10 +545,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 break;
             }
         }
+
     }
 
     @Override
     public void OnTabChanged(int treeNameIndex){
+
         MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
             GlobalVariables.aId = node.getaID();
@@ -556,76 +558,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         }
-
-    @Override
-    public void OnSelectionChanged(int treeNameIndex) {
-        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-    //    aId = node.getaID();
-    //    catId = node.getbranchCat();
-   //     Level = node.getNodeLevel();
-
-
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_text);
-
-
-        if (detailFragment != null) {
-            // If description is available, we are in two pane layout
-            // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(treeNameIndex);
-
-        } else {
-            DetailFragment newDetailFragment = new DetailFragment();
-            Bundle args = new Bundle();
-
-            //  args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-            newDetailFragment.setArguments(args);
-
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
-
-            //  fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
-        }
-
-        if (GlobalVariables.modified == true) {
-            MapViewFragment newDetailFragment = new MapViewFragment();
-            Bundle args = new Bundle();
-            //      detailFragment.mCurrentPosition = -1;
-
-
-            //     args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-
-            newDetailFragment.setArguments(args);
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            FragmentManager fm = getSupportFragmentManager();
-
-            //fm.popBackStack(DF,0);
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
-            }
-
-            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-            GlobalVariables.modified = false;
-
-            OnSelectionChanged(GlobalVariables.pos);
-        }
-
-    }
 
 
     @Override

@@ -92,6 +92,8 @@
                     android:layout_height="wrap_content"
                      android:layout_gravity="center"
                     android:paddingLeft="5dp"
+                     android:textColor="@android:color/black"
+                     android:textStyle="bold"
                     android:text="Project Folders and files"
                     />
 
@@ -131,7 +133,8 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
+                android:layout_gravity="bottom"
+                android:layout_margin="10dp">
 
                 <Button
                     android:id="@+id/addProject"
@@ -176,6 +179,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
                     >
 
                     <ProgressBar

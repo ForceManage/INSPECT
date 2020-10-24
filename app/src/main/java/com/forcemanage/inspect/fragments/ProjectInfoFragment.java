@@ -129,7 +129,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
         TextView folder = (TextView) view.findViewById(R.id.folder);
-        folder.setText(ProjAddress+" Folder TABS");
+        folder.setText(ProjAddress+" Project Index TABS");
 
 
 
@@ -182,7 +182,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                     .commit();
         }
 
-
+        projectId = Integer.toString(projId);
         btnAddTab = (Button) view.findViewById(R.id.addTab);
         btnAddTab.setOnClickListener(this);
         btnDelTab = (Button) view.findViewById(R.id.delTab);
@@ -758,31 +758,31 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             case "Project ID": {
                                 dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
                                 break;
                             }
                             case "Note A": {
                                 dbHandler.updateProject(projectId, "infoA", branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
                                 break;
                             }
                             case "Note B": {
                                 dbHandler.updateProject(projectId, "infoB", branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
                                 break;
                             }
                             case "Note C": {
                                 dbHandler.updateProject(projectId, "infoC", branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
                                 break;
                             }
                             case "Note D": {
                                 dbHandler.updateProject(projectId, "infoD", branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
                                 break;
                             }
                             case "Note E": {

@@ -415,7 +415,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
                                 dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
-                                globalVariables.OnSelectionChanged(0);
+                                globalVariables.OnProjectChanged(0);
+                                globalVariables.updatePropList();
                                 break;
                             }
 
