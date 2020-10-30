@@ -75,6 +75,7 @@ import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
+import com.forcemanage.inspect.fragments.RegisterFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 
 
@@ -981,7 +982,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 builder.setTitle("LOGIN WARNING");
                 builder.setMessage("Login will delete current unsaved file data. Upload data prior to login.");
 
-                builder.setPositiveButton("UPLOAD UNSAVED FILE DATA", new DialogInterface.OnClickListener() {
+
+                builder.setNeutralButton("UPLOAD UNSAVED FILE DATA", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -1013,6 +1015,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 });
 
+
                 builder.setNegativeButton("PROCEED WITH LOGIN", new DialogInterface.OnClickListener() {
 
                     @Override
@@ -1025,7 +1028,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         final TextView text = (TextView) promptView.findViewById(R.id.text);
                         loginDialog.setView(promptView);
                         loginDialog.setTitle("Login");
-                        loginDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        loginDialog.setCancelable(true).setNegativeButton("LOGIN", new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -1035,6 +1038,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             }
                         });
+
+                        loginDialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                RegisterFragment fragment = new RegisterFragment();
+                                doFragmentTransaction(fragment, "RegisterFragment", true, "");
+
+                            }
+
+                        });
+
                         AlertDialog alert = loginDialog.create();
                         alert.show();
                     }
@@ -1043,31 +1057,63 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 AlertDialog alert = builder.create();
                 alert.show();
-            } else {
-
-                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                View promptView = layoutInflater.inflate(R.layout.login, null);
-                AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
-                final EditText user = (EditText) promptView.findViewById(R.id.username);
-                final EditText password = (EditText) promptView.findViewById(R.id.password);
-                final TextView text = (TextView) promptView.findViewById(R.id.text);
-                loginDialog.setView(promptView);
-                loginDialog.setTitle("Login");
-                loginDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            }
+            else // if all data is saved
+                {
 
 
-                    public void onClick(DialogInterface dialog, int id) {
-                        USER_NAME = user.getText().toString();
-                        PASS_WORD = password.getText().toString();
-                        get_user_JSON();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    builder.setTitle("LOGIN ");
+                    builder.setMessage("Login / Register ");
 
 
-                    }
-                });
-                AlertDialog alert = loginDialog.create();
-                alert.show();
+                    builder.setCancelable(true).setNeutralButton("REGISTER NEW USER", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            RegisterFragment fragment = new RegisterFragment();
+                            doFragmentTransaction(fragment, "RegisterFragment", true, "");
+
+                        }
+
+                    });
+
+
+                    builder.setCancelable(true).setNegativeButton("PROCEED WITH LOGIN", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.login, null);
+                            AlertDialog.Builder loginDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText user = (EditText) promptView.findViewById(R.id.username);
+                            final EditText password = (EditText) promptView.findViewById(R.id.password);
+                            final TextView text = (TextView) promptView.findViewById(R.id.text);
+                            loginDialog.setView(promptView);
+                            loginDialog.setTitle("Login");
+                            loginDialog.setCancelable(true).setNegativeButton("LOGIN", new DialogInterface.OnClickListener() {
+
+
+                                public void onClick(DialogInterface dialog, int id) {
+                                    USER_NAME = user.getText().toString();
+                                    PASS_WORD = password.getText().toString();
+                                    get_user_JSON();
+
+                                }
+                            });
+
+
+                            AlertDialog alert = loginDialog.create();
+                            alert.show();
+                        }
+                    });
+
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
 
             }
+
         }
 
 
@@ -2914,7 +2960,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         String res = "initiated";
         HashMap<String, String> inspMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        //           dbHandler.puTestData();
+
         ArrayList<HashMap<String, String>> inspList = dbHandler.getInspections(USER_ID);
         String testString = "";
         String tempString = "";

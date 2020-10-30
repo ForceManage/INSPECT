@@ -752,6 +752,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     com5 = list.get(MyConfig.TAG_COM5);
                     Notes = list.get(MyConfig.TAG_NOTES);
                     String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                    String prntReport = list.get(MyConfig.TAG_REPORT_IMAGE);
 
 
                     Bundle bundle = new Bundle();
@@ -770,6 +771,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                     bundle.putString("com3", com3);
                     bundle.putString("com4", com4);
                     bundle.putString("com5", com5);
+                    bundle.putString("prnt", prntReport);
 
 
                     photos[0] = list.get(MyConfig.TAG_IMAGE1);
@@ -1107,7 +1109,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("LIST - Add TAB: sub-TABS, Note TABS, Action Notes, Certificates ");
             // add a list
-            String[] actions = {"Add a BASE TAB to List",
+            String[] actions = {"Add New Folder TAB",
                     "Add Branch to the Current TAB",
                     "Attach Note to selected TAB",
                     "Attach Action to Note",

@@ -129,7 +129,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
         TextView folder = (TextView) view.findViewById(R.id.folder);
-        folder.setText(ProjAddress+" Project Index TABS");
+        folder.setText(ProjAddress+" Project Folder TABS");
 
 
 

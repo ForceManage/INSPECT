@@ -70,6 +70,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
 
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

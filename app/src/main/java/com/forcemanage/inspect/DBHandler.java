@@ -729,6 +729,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_LABEL, Label);
 
 
+
         db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
         db.close();
 
@@ -1640,7 +1641,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             values.put(COLUMN_RELEVANT_INFO, "");
                             values.put(COLUMN_SERVICE_LEVEL, "1");
                             values.put(COLUMN_SERVICED_BY, "");
-                            values.put(COLUMN_REPORT_IMAGE, "0");
+                            values.put(COLUMN_REPORT_IMAGE, "1");
                             values.put(COLUMN_IMG1, "");
                             values.put(COLUMN_COM1, "");
                             values.put(COLUMN_IMG2, "");
@@ -2440,7 +2441,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
                 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
                 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
-                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY
+                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY+ ", I." + COLUMN_REPORT_IMAGE
                 + " FROM " + TABLE_INSPECTION_ITEM + " I "
                 + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId + " AND " + COLUMN_A_ID + " = " + aId;
 
@@ -2472,6 +2473,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
                 inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
                 inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(19));
+                inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(20));
                 inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());
         }
@@ -3847,7 +3849,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private String dayTime(int Type) {
 
-        String daytime = "20000101";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String daytime = sdf.format(new Date());
 
         switch (Type) {
 
