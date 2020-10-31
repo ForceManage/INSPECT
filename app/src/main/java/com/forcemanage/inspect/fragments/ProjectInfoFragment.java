@@ -30,12 +30,14 @@ import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.DetailFragment;
 import com.forcemanage.inspect.GlobalVariables;
+import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.attributes.MapViewNode;
+import com.forcemanage.inspect.attributes.ProjectNode;
 import com.forcemanage.inspect.tabchangelistener;
 
 import java.io.File;
@@ -60,6 +62,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String branchLabel = "";
     private String branchNote = "";
     private Button btnAddTab;
+    private Button btnEditTab;
     private Button btnDelTab;
 
     private String ProjAddress = "";
@@ -185,6 +188,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         projectId = Integer.toString(projId);
         btnAddTab = (Button) view.findViewById(R.id.addTab);
         btnAddTab.setOnClickListener(this);
+        btnEditTab = (Button) view.findViewById(R.id.button_edit);
+        btnEditTab.setOnClickListener(this);
         btnDelTab = (Button) view.findViewById(R.id.delTab);
         btnDelTab.setOnClickListener(this);
 
@@ -506,7 +511,107 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
 
-        if (v == btnDelTab) {
+
+            if (v == btnEditTab) {
+
+                final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+                final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+                // setup the alert builder
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Change File Tree Tab ");
+                // add a list
+                String[] actions = {"Change the File TAB name",
+                        "Move Note TAB",
+                        "",
+                        ""};
+                builder.setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: {
+
+
+                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                alertDialogBuilder.setView(promptView);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("File TAB name: " + branchTitle);//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("Current TAB name : " + branchLabel);//Integer.parseInt(locationId)
+                                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                LocationText.setText(branchLabel);
+                                // setup a dialog window
+                                alertDialogBuilder.setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                editLocation(LocationText.getText().toString());
+
+
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                                break;
+                            }
+
+                            case 1: //
+
+                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                alertDialogBuilder.setView(promptView);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("Move Current TAB : " + branchLabel);//Integer.parseInt(locationId)
+                                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                LocationText.setHint("Moveto TAB id ->");
+                                // setup a dialog window
+                                alertDialogBuilder.setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dbHandler.moveTAB(projId, GlobalVariables.aId, Integer.parseInt(LocationText.getText().toString()));
+
+                                                loadMap();
+
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                                break;
+                        }
+                    }
+                });
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
+            }
+
+
+
+            if (v == btnDelTab) {
 
 
             // setup the alert builder
@@ -572,7 +677,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     public void OnTabChanged(int treeNameIndex) {
 
 
-   //     MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+       MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
 
         DetailFragment detailFragment = (DetailFragment) getChildFragmentManager()
@@ -824,6 +929,14 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
 
+    }
+
+    public void editLocation(String branchLabel) {
+
+        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+        int success = dbHandler.updateMapLabel(projId, GlobalVariables.aId, branchLabel);
+        if(success == 1) loadMap();
+        else Toast.makeText(getContext(), "Create/select TAB", Toast.LENGTH_SHORT).show();
     }
 
     public void saveData(){

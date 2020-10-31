@@ -132,7 +132,7 @@
                         android:id="@+id/addTab"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.33"
                         android:backgroundTint="#DFB005"
                         android:text="Add"
                         android:textSize="11sp"
@@ -141,10 +141,21 @@
                         />
 
                     <Button
+                        android:id="@+id/button_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.33"
+                        android:backgroundTint="#DFB005"
+                        android:drawableLeft="@android:drawable/ic_input_get"
+                        android:enabled="true"
+                        android:text=" EDIT "
+                        android:textColor="@android:color/white" />
+
+                    <Button
                         android:id="@+id/delTab"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.33"
                         android:backgroundTint="#DFB005"
                         android:text="Delete"
                         android:textSize="11sp"

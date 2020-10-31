@@ -270,7 +270,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
          final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
 
-         reportBtn = (Button) view.findViewById(R.id.btnViewReport);
+       //  reportBtn = (Button) view.findViewById(R.id.btnViewReport);
 
          //Fill in the edittext with saved data fro Bundle
 

@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:layout_weight="0.15"
         android:background="@drawable/head_frame"
-        android:paddingBottom="10dp"
+        android:paddingBottom="5dp"
          >
 
 
@@ -34,12 +34,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:layout_marginLeft="5dp"
-            android:backgroundTint="#008577"
+            android:layout_marginRight="15dp"
+            android:backgroundTint="@color/red"
             android:drawableTint="@color/white"
-            android:drawableStart="@drawable/ic_format_list_bulleted"
+            android:drawableStart="@drawable/ic_remove"
             android:drawablePadding="5dp"
-            android:text="CLOSE REPORT VIEW"
+            android:text="CLOSE"
             android:textSize="15sp"
             android:textColor="@android:color/white" />
 

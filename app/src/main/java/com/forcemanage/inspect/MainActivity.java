@@ -1529,7 +1529,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
-            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+            ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
             switch (node.getNodeLevel()) {

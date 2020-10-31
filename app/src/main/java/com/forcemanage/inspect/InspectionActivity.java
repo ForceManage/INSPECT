@@ -900,7 +900,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                 String stage;
 
                 Date_Time = list.get(MyConfig.TAG_DATE_TIME);
-                if(Date_Time == null) Date_Time = dayTime(4);
+                if(Date_Time == "") Date_Time = dayTime(4);
 
                 relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                 Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -1109,13 +1109,13 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("LIST - Add TAB: sub-TABS, Note TABS, Action Notes, Certificates ");
             // add a list
-            String[] actions = {"Add New Folder TAB",
+            String[] actions = {"Add New TAB",
                     "Add Branch to the Current TAB",
-                    "Attach Note to selected TAB",
+                    "Add Pages to TAB",
                     "Attach Action to Note",
-                    "Add File Summary",
-                    "Add File Certificate  ",
-                    "Add File Information",
+                    "Attach Summary",
+                    "Attach Certificate ",
+                    "Attach Information",
                     "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
