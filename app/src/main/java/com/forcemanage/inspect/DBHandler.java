@@ -1069,13 +1069,34 @@ public class DBHandler extends SQLiteOpenHelper {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
 
+        String proj_id;
+
+
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id +" AND I."+COLUMN_INSPECTION_STATUS+" = 'm'"
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = db.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                proj_id = cursorI.getString(0);
+                ContentValues values1 = new ContentValues();
+                values1.put(COLUMN_ITEM_STATUS, "p");
+                db.update(TABLE_INSPECTION_ITEM, values1, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
+
+                ContentValues values2 = new ContentValues();
+                values2.put(COLUMN_ITEM_STATUS, "p");
+                db.update(TABLE_ACTION_ITEM, values2, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
+
+            } while (cursorI.moveToNext());
+        }
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_INSPECTION_STATUS, "p");
-
-        db.update(TABLE_INSPECTION, values, null , null);
+        db.update(TABLE_INSPECTION, values, COLUMN_INSPECTOR + " = " + user_id , null);
 
         db.close();
-
     }
 
     public void moveTAB(int projId, int aId, int m_aId) {
@@ -2769,7 +2790,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
                 + " FROM " + TABLE_INSPECTION_ITEM +" I "
-                + " WHERE  I."+COLUMN_PROJECT_ID+" = "+projID;
+                + " WHERE  I."+COLUMN_PROJECT_ID+" = "+projID+" AND "+ COLUMN_ITEM_STATUS+" = 'm'";
 
 
 
@@ -2879,7 +2900,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT A." + COLUMN_IMG1
 
                 + " FROM " + TABLE_ACTION_ITEM +" A "
-               + " WHERE A." + COLUMN_PROJECT_ID + " = "+projID;
+               + " WHERE A." + COLUMN_PROJECT_ID + " = "+projID+" AND "+COLUMN_ITEM_STATUS+" = 'm'";
 
 
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -3007,7 +3028,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         + " FROM " + TABLE_INSPECTION_ITEM + " I "
                         //   + " JOIN " + TABLE_INSPECTION+" E ON I."+COLUMN_PROJECT_ID+" = E."+COLUMN_PROJECT_ID
                         //    + " WHERE E."+COLUMN_INSPECTOR+" = "+user_id +" AND E."+COLUMN_INSPECTION_STATUS+" = 'm'"
-                        + " WHERE I." + COLUMN_PROJECT_ID + " = " + projID
+                        + " WHERE I." + COLUMN_PROJECT_ID + " = " + projID+" AND "+COLUMN_ITEM_STATUS+" = 'm'"
                         + " ORDER BY I." + COLUMN_PROJECT_ID;
 
 

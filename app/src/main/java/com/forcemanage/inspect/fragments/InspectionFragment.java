@@ -300,6 +300,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
                 cam1.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
 
             }
         });
@@ -311,6 +312,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoB;
                 globalVariables.takeImageFromCamera(null);
                 cam2.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
 
             }
         });
@@ -322,6 +324,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoC;
                 globalVariables.takeImageFromCamera(null);
                 cam3.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
 
             }
         });
@@ -333,6 +336,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoD;
                 globalVariables.takeImageFromCamera(null);
                 cam4.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
 
             }
         });
@@ -344,6 +348,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 globalVariables.mPhotoImageView = photoE;
                 globalVariables.takeImageFromCamera(null);
                 cam5.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
 
             }
         });
@@ -420,7 +425,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
+                Edited=true;
             }
         });
 
@@ -503,7 +508,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
+                Edited=true;
             }
         });
 
@@ -583,7 +588,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
+                Edited=true;
             }
         });
 
@@ -602,6 +607,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                         globalVariables.photo4, globalVariables.photo5,"Img6", "Img7");
                                com3Text.setText("");
                                 globalVariables.photo3 ="";
+                                Edited=true;
                                 photoC.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -663,7 +669,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
+                Edited=true;
             }
         });
 
@@ -682,6 +688,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                         globalVariables.photo3,"", globalVariables.photo5,"Img6", "Img7");
                                 com4Text.setText("");
                                 globalVariables.photo4 ="";
+                                Edited=true;
                                 photoD.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -743,7 +750,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                 //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
+                Edited=true;
             }
         });
 
@@ -762,6 +769,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                         globalVariables.photo3, globalVariables.photo4,"","Img6", "Img7");
                                 com5Text.setText("");
                                 globalVariables.photo5 ="";
+                                Edited=true;
                                 photoE.setImageResource(R.drawable.ic_camera);
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -1011,7 +1019,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                        ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", Prnt,
                        com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                        ,  com4Text.getText().toString(),
-                       com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
+                       com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());
 
                dbHandler.statusChanged(projId,iId);
 

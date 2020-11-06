@@ -1564,6 +1564,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             try {
                 copy(from, to);
+                if(to.length()/1048576 > 1) resizeImage(to);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1728,6 +1729,70 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         return image;
     }
 
+    private Bitmap resizeImage(File image) throws IOException {
+
+        String root = image.getAbsolutePath();
+        //  File imgFile = new  File(root);
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+        int screenIamgeWidth = 500; //mPhotoImageView.getWidth();
+        int screenIamgeHeight = 500; // mPhotoImageView.getHeight();
+
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(root, bmOptions);
+        int photoImageWidth = bmOptions.outWidth;
+        int photoImageHeight = bmOptions.outHeight;
+        int scaleFactor = Math.min(photoImageHeight / screenIamgeHeight, photoImageWidth / screenIamgeWidth);
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inJustDecodeBounds = false;
+        Bitmap photoResize = BitmapFactory.decodeFile(root, bmOptions);
+       // root.setImageBitmap(photoResize);
+
+        Bitmap thePhotoFile = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+
+        //get its orginal dimensions
+        int bmOriginalWidth = thePhotoFile.getWidth();
+        int bmOriginalHeight = thePhotoFile.getHeight();
+        double originalWidthToHeightRatio = 1.0 * bmOriginalWidth / bmOriginalHeight;
+        double originalHeightToWidthRatio = 1.0 * bmOriginalHeight / bmOriginalWidth;
+        //choose a maximum height
+        int maxHeight = 1200;
+        //choose a max width
+        int maxWidth = 1200;
+        //call the method to get the scaled bitmap
+
+        // bmOptions.inJustDecodeBounds = false;
+
+
+        thePhotoFile = getScaledBitmap(thePhotoFile, bmOriginalWidth, bmOriginalHeight,
+                originalWidthToHeightRatio, originalHeightToWidthRatio,
+                maxHeight, maxWidth);
+
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        //compress the photo's bytes into the byte array output stream
+        thePhotoFile.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+        //construct a File object to save the scaled file to
+        File f = new File(root);
+        //create the file
+        f.createNewFile();
+
+        //create an FileOutputStream on the created file
+        FileOutputStream fo = new FileOutputStream(f);
+        //write the photo's bytes to the file
+        fo.write(bytes.toByteArray());
+
+
+        //finish by closing the FileOutputStream
+        fo.close();
+
+
+        // return Bitmap.createScaledBitmap(mPhotoImageView,(int)(mPhotoImageView.getWidth()*0.5),(int)(mPhotoImageView.getHeight()*0.5),true);
+        //  resizePhoto();
+
+        return thePhotoFile;
+    }
 
 
 
