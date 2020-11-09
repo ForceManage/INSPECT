@@ -1037,7 +1037,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", Prnt,
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
-                    com5Text.getText().toString(), "Img6", " com6", "p", notes.getText().toString());
+                    com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());
 
             dbHandler.statusChanged(projId, iId);
 

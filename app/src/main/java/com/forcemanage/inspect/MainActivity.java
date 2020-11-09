@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private CheckBox checkBox;
     private Switch ToggleTB;
     public ImageView mPhotoImageView;
+    private ImageView Folders;
     private ImageView info_icon;
     private ImageView photo_cam;
     private File photo;
@@ -183,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
       //  ESMdb = new DBHandler(this, null, null, 1);
 
 
-
-
+        Folders = (ImageView) findViewById(R.id.imageView_folder);
+        Folders.setOnClickListener(this);
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -740,6 +741,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void onClick(View v) {
 
+        if(v == Folders) {
+            clearTablet();
+            updatePropList();
+
+        }
 
         if (v == btnAddActivity) {
 
@@ -3092,7 +3098,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
-                    json.put(MyConfig.TAG_INSPECTION_STATUS, "p"); //
+                    json.put(MyConfig.TAG_INSPECTION_STATUS, "m"); //
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");
@@ -3121,17 +3127,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
 
 
-            String regex = "\\/'";   //,?\s*"a[^"]*z"\s*:[^\}]+
+            String regex = "'";   //,?\s*"a[^"]*z"\s*:[^\}]+
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
 
-
+          //  Log.v("NOTE JSON", jsonString);
 
 
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_TO_SERVER, jsonString);
             //       res = jsonString;
-            //   Log.v("MAP JSON", jsonString);
+
         }
 
         return res;
@@ -3197,17 +3203,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex, "\\\\'");
 
-            Log.v("INSPECTION ITEM JSON", jsonString);
+      //      Log.v("INSPECTION ITEM JSON", jsonString);
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_ITEMS_TO_SERVER, jsonString);
 
-//            res = jsonString;
-//            res = testString;
-//            TextView propertyPhoto;
-//            propertyPhoto = (TextView) findViewById(R.id.editText6);
-            //           propertyPhoto.setText(jsonString);
 
         }
         return res;
@@ -3262,7 +3263,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_MAP_TO_SERVER, jsonString);
             //           Log.v("MAP JSON", jsonString);
 //                res = jsonString;
@@ -3326,7 +3327,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
+
+
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_PROJECT_TO_SERVER, jsonString);
 //                res = jsonString;
 
@@ -3386,8 +3389,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
-            Log.v("INSPECTION ITEM JSON", jsonString);
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
+   //         Log.v("INSPECTION ITEM JSON", jsonString);
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_ACTIONS_TO_SERVER, jsonString);
 //                res = jsonString;
         }
@@ -3441,10 +3444,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_CERT_INSPECTION_TO_SERVER, jsonString);
 //                res = jsonString;
-            Log.v("CERTIFICATE JSON", jsonString);
+//            Log.v("CERTIFICATE JSON", jsonString);
         }
 
         return res;
@@ -3495,10 +3498,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
             String regex = "'";
 
-            String jsonString = jsonArray.toString().replaceAll(regex,"");
+            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_SUMMARY_TO_SERVER, jsonString);
 //                res = jsonString;
-            Log.v("SUMMARY JSON", jsonString);
+//            Log.v("SUMMARY JSON", jsonString);
         }
 
         return res;
@@ -3632,8 +3635,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         message = "Inspections uploaded successfully";
 
-                        //Disable the cleartablet function for August 2019 inspections.
-                        //   clearTablet();
 
 
                     }
@@ -3831,7 +3832,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             i++;
         }
 
-        dbHandler.statusUploaded(USER_ID);
+   //     dbHandler.statusUploaded(USER_ID);
     }
 
 
