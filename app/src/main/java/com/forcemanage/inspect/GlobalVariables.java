@@ -26,6 +26,7 @@ public class GlobalVariables
     public static int aId;
     public static int catId;
     public static int Level;
+    public static String name;
     public static String branchType;
 
 

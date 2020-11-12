@@ -557,6 +557,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             GlobalVariables.aId = node.getaID();
             GlobalVariables.Level = node.getNodeLevel();
+            GlobalVariables.catId = node.getcatId();
+            GlobalVariables.name = node.getNodeName();
 
 
         }
@@ -742,8 +744,33 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void onClick(View v) {
 
         if(v == Folders) {
-            clearTablet();
-            updatePropList();
+
+            //Delete the information in the tables initially implemented for testing purposes
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setView(promptView);
+            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+            locationText.setText("Warning - DELETE ALL THE APP2DOC DATA STORED ON THIS DEVICE");//location.getText().toString());
+
+            alertDialogBuilder.setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            clearTablet();
+                            updatePropList();
+
+                        }
+                    })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create an alert dialog
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
 
         }
 
@@ -1122,11 +1149,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
-
         if (v == buttonClearAll) {
-            //Delete the information in the tables initially implemented for testing purposes
-            clearTablet();
-            updatePropList();
+
+
+
         }
 
 
@@ -3098,7 +3124,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
                     json.put(MyConfig.TAG_INSPECTION_TYPE, inspList.get(i).get(MyConfig.TAG_INSPECTION_TYPE));
-                    json.put(MyConfig.TAG_INSPECTION_STATUS, "m"); //
+                    json.put(MyConfig.TAG_INSPECTION_STATUS, "p"); //
                     json.put(MyConfig.TAG_PROJECT_ID, inspList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTOR, inspList.get(i).get(MyConfig.TAG_INSPECTOR));
                     if(inspList.get(i).get(MyConfig.TAG_START_DATE_TIME)==null) json.put(MyConfig.TAG_START_DATE_TIME, "20200101010101");

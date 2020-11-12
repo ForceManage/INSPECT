@@ -1295,6 +1295,8 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_INSPECTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+     //   db.delete(TABLE_ACTION_ITEM, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+     //   db.delete(TABLE_MAP, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
         db.close();
     }
 
@@ -2935,7 +2937,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION
                 + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND "
-                +  COLUMN_INSPECTOR+" = "+user_id
+                +  COLUMN_INSPECTOR+" = "+user_id+" AND "+ COLUMN_PARENT+" > 0"
                 +" ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row

@@ -80,7 +80,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String infoH;
     private List<MapViewData> listItems;
     private  int aId;
-    private int catId;
     private int Level;
 
 
@@ -411,7 +410,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
-            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
 
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -436,7 +435,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                             itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -472,7 +471,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                             itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -516,22 +515,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                 final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
-                final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-                // setup the alert builder
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Change File Tree Tab ");
-                // add a list
-                String[] actions = {"Change the File TAB name",
-                        "Move Note TAB",
-                        "",
-                        ""};
-                builder.setItems(actions, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: {
+                final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
 
 
                                 LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -541,16 +525,14 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                 itemTitle.setText("File TAB name: " + branchTitle);//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Current TAB name : " + branchLabel);//Integer.parseInt(locationId)
+                                locationText.setText("Current TAB name : " + GlobalVariables.name);//Integer.parseInt(locationId)
                                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                                LocationText.setText(branchLabel);
+                                LocationText.setText(GlobalVariables.name);
                                 // setup a dialog window
                                 alertDialogBuilder.setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 editLocation(LocationText.getText().toString());
-
-
                                             }
                                         })
                                         .setNegativeButton("Cancel",
@@ -563,49 +545,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 // create an alert dialog
                                 AlertDialog alert = alertDialogBuilder.create();
                                 alert.show();
-                                break;
-                            }
-
-                            case 1: //
-
-                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Move Current TAB : " + branchLabel);//Integer.parseInt(locationId)
-                                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                                LocationText.setHint("Moveto TAB id ->");
-                                // setup a dialog window
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dbHandler.moveTAB(projId, GlobalVariables.aId, Integer.parseInt(LocationText.getText().toString()));
-
-                                                loadMap();
-
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
-                                break;
-                        }
-                    }
-                });
-                // create and show the alert dialog
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
 
             }
 

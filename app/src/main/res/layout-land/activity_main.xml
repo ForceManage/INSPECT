@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:backgroundTint="#0B2459"
-                    android:text="Download"
+                    android:text=""
                     android:textColor="@color/white"
                     android:drawableTint="@color/white"
                     android:textSize="11sp"
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:backgroundTint="#0B2459"
-                    android:text="Upload"
+                    android:text=""
                     android:textSize="11sp"
                     android:textColor="@color/white"
                     android:drawableTint="@color/white"
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="top"
-                android:layout_weight="0.5"
+                android:layout_weight="0.9"
                 android:paddingTop="10dp"
                 android:orientation="horizontal">
 
@@ -140,9 +140,9 @@
                     android:id="@+id/addProject"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
                     android:backgroundTint="#DFB005"
-                    android:text="Add"
+                    android:text=""
                     android:textSize="11sp"
                     android:drawableStart="@drawable/ic_text_box_plus_outline"
 
@@ -152,22 +152,22 @@
                     android:id="@+id/btnloadJobs"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
                     android:backgroundTint="#DFB005"
-                    android:text="List"
+                    android:text=""
                     android:textSize="11sp"
-                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                    android:drawableLeft="@android:drawable/ic_menu_edit"
                      />
 
                 <Button
                     android:id="@+id/btnlogin"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
                     android:backgroundTint="#DFB005"
-                    android:text="Login"
+                    android:text=""
                     android:textSize="11sp"
-                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                    android:drawableLeft="@drawable/ic_login"
                     />
 
             </LinearLayout>

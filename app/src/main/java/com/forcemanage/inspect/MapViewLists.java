@@ -70,7 +70,8 @@ public class MapViewLists
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
             node.setNodeName(data.getLabel());
-            node.setbrancCat(data.getBranchCat());
+            node.setcatId(data.getCatID());
+            node.setbrancCat(data.getBranchCat());//child
             node.setaID(data.getaID());
             node.setiID(data.getiID());
             int newLevel = data.getLevel() + 1;
@@ -110,6 +111,7 @@ public class MapViewLists
             node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
+            node.setcatId(data.getCatID());
             node.setaID(data.getaID());
             node.setiID(data.getiID());
             node.setbrancCat(data.getBranchCat());

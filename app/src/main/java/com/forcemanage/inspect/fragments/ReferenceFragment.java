@@ -1153,7 +1153,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                    "", "", "1", "reportImage",
                    com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                    ,  com4Text.getText().toString(),
-                   com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "p", "");
+                   com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "m", "");
 
                dbHandler.statusChanged(projId,iId);
 
@@ -1174,7 +1174,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                     "", "", "1", "reportImage",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
-                    com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "p", "");
+                    com5Text.getText().toString(), com6Text.getText().toString(), com7Text.getText().toString(), "m", "");
 
             dbHandler.statusChanged(projId, iId);
 

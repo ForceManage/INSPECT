@@ -1109,11 +1109,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("LIST - Add TAB: sub-TABS, Note TABS, Action Notes, Certificates ");
             // add a list
-            String[] actions = {"Add New TAB",
-                    "Add Branch to the Current TAB",
-                    "Add Pages to TAB",
-                    "Attach Action to Note",
-                    "Attach Summary",
+            String[] actions = {"Add TAB",
+                    "Add Branch ",
+                    "Add Document Page to TAB",
+                    "Attach Action to Page",
+                    "Attach File Summary",
                     "Attach Certificate ",
                     "Attach Information",
                     "Cancel"};
