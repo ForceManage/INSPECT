@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.33"
                         android:backgroundTint="#DFB005"
-                        android:drawableLeft="@drawable/ic_note"
+                        android:drawableLeft="@android:drawable/ic_menu_edit"
                         android:enabled="true"
                         android:text=""
                         android:textColor="@android:color/white" />

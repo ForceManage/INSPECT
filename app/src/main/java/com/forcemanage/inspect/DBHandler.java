@@ -29,7 +29,7 @@ import java.util.HashMap;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 26;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -132,6 +132,8 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_U_CODE = "UserCode";
     public static final String COLUMN_CLIENT_NAME = "ClientName";
 
+    public static final String TABLE_NAME = "TableDel";
+    public static final String COLUMN_TABLE_NAME = "TableName";
 
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -178,6 +180,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_INSPECTION_ID + " INTEGER,"
                 + COLUMN_IMG1 + " TEXT,"
                 + COLUMN_NOTES + " TEXT,"
+                + COLUMN_ITEM_STATUS + " TEXT,"
                 + "PRIMARY KEY " + "(" + COLUMN_PROJECT_ID + "," + COLUMN_A_ID + "))";
         db.execSQL(CREATE_MAP_TABLE);
 
@@ -265,6 +268,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_PROJECT_ADDRESS + " TEXT,"
                 + COLUMN_STAGE + " TEXT,"
                 + COLUMN_NOTES + " TEXT,"
+                + COLUMN_ITEM_STATUS + " TEXT,"
                 + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "))";
         //If ESM recommendation  is not nil print photo on report
         db.execSQL(CREATE_CERTIFICATE_INSPECTION_TABLE);
@@ -279,9 +283,20 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COLUMN_COM_B + " TEXT,"
                 + COLUMN_HEAD_C + " TEXT,"
                 + COLUMN_COM_C + " TEXT,"
+                + COLUMN_ITEM_STATUS + " TEXT,"
                 + "PRIMARY KEY " + "(" + COLUMN_INSPECTION_ID + "," + COLUMN_PROJECT_ID + "))";
         //If ESM recommendation  is not nil print photo on report
         db.execSQL(CREATE_SUMMARY_TABLE);
+
+        String CREATE_TABLE_NAME_TABLE = "CREATE TABLE " +
+                TABLE_NAME + "("
+                + COLUMN_TABLE_NAME + " STRING,"
+                + COLUMN_PROJECT_ID + " INTEGER,"
+                + COLUMN_INSPECTION_ID + " INTEGER,"
+                + COLUMN_A_ID + " INTEGER)";
+
+
+        db.execSQL(CREATE_TABLE_NAME_TABLE);
 
         String CREATE_A_OR_TABLE = "CREATE TABLE " +
                 TABLE_A_OR + "("
@@ -355,6 +370,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_D_OR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LIST);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG_TIME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 
@@ -373,6 +389,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_D_OR, null, null);
         db.delete(TABLE_USER_LIST, null, null);
         db.delete(TABLE_LOG_TIME, null, null);
+        db.delete(TABLE_NAME, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -742,7 +759,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NOTES, Notes);
-
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
         db.update(TABLE_MAP, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_A_ID + " = ? " , new String[]{projId, Integer.toString(aId)});
         db.close();
 
@@ -800,7 +817,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IMG5, Img5);
         contentValues.put(COLUMN_IMG6, Img6);
         contentValues.put(COLUMN_IMG7, Img7);
-
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
         db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{proj_id, inspectionId, a_Id});
         db.close();
 
@@ -815,7 +832,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_DATE_INSPECTED, "20200424");
-
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
 
 
         db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_DATE_INSPECTED +" = ?" , new String[]{"2020-04-24"});
@@ -897,6 +914,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_IMG1, Img1);
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
         db.update(TABLE_ACTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{projId, iId, a_Id});
         db.close();
 
@@ -917,6 +935,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_PROJECT_ADDRESS, address);
         contentValues.put(COLUMN_STAGE, stage );
         contentValues.put(COLUMN_NOTES, notes);
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
         db.update(TABLE_CERTIFICATE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
         db.close();
 
@@ -936,6 +955,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_COM_A, comA);
         contentValues.put(COLUMN_COM_B, comB );
         contentValues.put(COLUMN_COM_C, comC);
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
         db.update(TABLE_SUMMARY, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
         db.close();
 
@@ -990,7 +1010,7 @@ public class DBHandler extends SQLiteOpenHelper {
         int success = 0;
         try {
             values.put(COLUMN_LABEL, label);
-
+            values.put(COLUMN_ITEM_STATUS, "m");
 
             db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
                     COLUMN_A_ID + " = " + aId, null);
@@ -1010,7 +1030,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_IMG1, photo);
-
+        values.put(COLUMN_ITEM_STATUS, "m");
 
 
         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " +
@@ -1088,6 +1108,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 ContentValues values2 = new ContentValues();
                 values2.put(COLUMN_ITEM_STATUS, "p");
                 db.update(TABLE_ACTION_ITEM, values2, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
+
+                ContentValues values3 = new ContentValues();
+                values3.put(COLUMN_ITEM_STATUS, "p");
+                db.update(TABLE_SUMMARY, values3, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
+
+                ContentValues values4 = new ContentValues();
+                values4.put(COLUMN_ITEM_STATUS, "p");
+                db.update(TABLE_CERTIFICATE_INSPECTION, values4, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
 
             } while (cursorI.moveToNext());
         }
@@ -1333,6 +1361,20 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteRec(String name, int projId, int iId, int aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TABLE_NAME, name);
+        values.put(COLUMN_PROJECT_ID, projId);
+        values.put(COLUMN_INSPECTION_ID, iId);
+        values.put(COLUMN_A_ID, aId);
+        db.insert(TABLE_NAME, null, values);
+
+        db.close();
+    }
+
 
     public void deletePhoto(Integer jId, Integer aId, Integer rId, Integer Col) {
         // Open a database for reading and writing
@@ -1507,6 +1549,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             values.put(COLUMN_CHILD, type);
                             values.put(COLUMN_IMG1, "");
                             values.put(COLUMN_NOTES, "");
+                            values.put(COLUMN_ITEM_STATUS, "m");
                             db.insert(TABLE_MAP, null, values);
                         }
                         else maxAId = 0;  //return 0 value
@@ -1527,6 +1570,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         values.put(COLUMN_CHILD, type);
                         values.put(COLUMN_IMG1, "");
                         values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_ITEM_STATUS, "m");
                         db.insert(TABLE_MAP, null, values);
 
                         break;
@@ -1546,6 +1590,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         values.put(COLUMN_CHILD, type);
                         values.put(COLUMN_IMG1, "");
                         values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_ITEM_STATUS, "m");
                         db.insert(TABLE_MAP, null, values);
 
                         break;
@@ -1583,28 +1628,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public int getInspectionpId(int projID) {
-        // Open a database for reading and writing
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery;
-        Cursor cursor;
-        int pId = 0;
-
-        selectQuery = "SELECT M." + COLUMN_P_ID + " FROM "
-                + TABLE_INSPECTION + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_PARENT + " = -1";
-
-        cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-
-            pId = cursor.getInt(0);
-        }
-
-        db.close();
-        return pId;
-
-    }
 
     public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label) {
         // Open a database for reading and writing
@@ -1679,7 +1702,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             values.put(COLUMN_COM6, "");
                             values.put(COLUMN_IMG7, "");
                             values.put(COLUMN_COM7, "");
-                            values.put(COLUMN_ITEM_STATUS, "");
+                            values.put(COLUMN_ITEM_STATUS, "m");
                             values.put(COLUMN_NOTES, "");
 
                             db_2.insert(TABLE_INSPECTION_ITEM, null, values);
@@ -1785,7 +1808,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 values.put(COLUMN_IMG1, "");
                                 values.put(COLUMN_COM1, "");
                                 values.put(COLUMN_ITEM_STATUS, "");
-                                values.put(COLUMN_NOTES, "");
+                                values.put(COLUMN_NOTES, "m");
 
                                 db_2.insert(TABLE_ACTION_ITEM, null, values);
                                 db_2.close();
@@ -1909,6 +1932,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(COLUMN_CHILD,9);
             values.put(COLUMN_IMG1, "");
             values.put(COLUMN_NOTES, "");
+            values.put(COLUMN_ITEM_STATUS, "m");
             db.insert(TABLE_MAP, null, values);
 
  /*           ContentValues values2 = new ContentValues();
@@ -1936,6 +1960,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values3.put(COLUMN_COM_B, "");
             values3.put(COLUMN_HEAD_C, "TITLE");
             values3.put(COLUMN_COM_C, "");
+            values3.put(COLUMN_ITEM_STATUS, "m");
 
             db_2.insert(TABLE_SUMMARY, null, values3);
             db_2.close();
@@ -2015,6 +2040,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     values.put(COLUMN_CHILD,10);
                     values.put(COLUMN_IMG1, "");
                     values.put(COLUMN_NOTES, "");
+                    values.put(COLUMN_ITEM_STATUS, "m");
                     db.insert(TABLE_MAP, null, values);
 
 
@@ -2040,7 +2066,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     values3.put(COLUMN_PROJECT_ADDRESS, address);
                     values3.put(COLUMN_STAGE, "");
                     values3.put(COLUMN_NOTES, "");
-
+                    values3.put(COLUMN_ITEM_STATUS, "m");
                     db_2.insert(TABLE_CERTIFICATE_INSPECTION, null, values3);
                     db_2.close();
 
@@ -2076,6 +2102,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put(COLUMN_CHILD,10);
                 values.put(COLUMN_IMG1, "");
                 values.put(COLUMN_NOTES, "");
+                values.put(COLUMN_ITEM_STATUS, "m");
                 db.insert(TABLE_MAP, null, values);
 
 
@@ -2092,6 +2119,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values2.put(COLUMN_CHILD,10);
             values2.put(COLUMN_IMG1, "");
             values2.put(COLUMN_NOTES, "");
+            values2.put(COLUMN_ITEM_STATUS, "m");
             db.insert(TABLE_MAP, null, values2);
 
 
@@ -2117,7 +2145,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values3.put(COLUMN_PROJECT_ADDRESS, address);
             values3.put(COLUMN_STAGE, "");
             values3.put(COLUMN_NOTES, "");
-
+            values3.put(COLUMN_ITEM_STATUS, "m");
             db_2.insert(TABLE_CERTIFICATE_INSPECTION, null, values3);
             db_2.close();
 
@@ -2195,6 +2223,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put(COLUMN_CHILD,11);
                 values.put(COLUMN_IMG1, "");
                 values.put(COLUMN_NOTES, "");
+                values.put(COLUMN_ITEM_STATUS, "m");
                 db.insert(TABLE_MAP, null, values);
 
 
@@ -2224,7 +2253,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values1.put(COLUMN_COM6, "");
                 values1.put(COLUMN_IMG7, "");
                 values1.put(COLUMN_COM7, "");
-                values1.put(COLUMN_ITEM_STATUS, "");
+                values1.put(COLUMN_ITEM_STATUS, "m");
                 values1.put(COLUMN_NOTES, "");
 
                 db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
@@ -2263,6 +2292,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(COLUMN_CHILD,11);
             values.put(COLUMN_IMG1, "");
             values.put(COLUMN_NOTES, "");
+            values.put(COLUMN_ITEM_STATUS, "m");
             db.insert(TABLE_MAP, null, values);
 
 
@@ -2279,6 +2309,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values2.put(COLUMN_CHILD,11);
             values2.put(COLUMN_IMG1, "");
             values2.put(COLUMN_NOTES, "");
+            values2.put(COLUMN_ITEM_STATUS, "m");
             db.insert(TABLE_MAP, null, values2);
 
             ContentValues values1 = new ContentValues();
@@ -2307,7 +2338,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values1.put(COLUMN_COM6, "");
             values1.put(COLUMN_IMG7, "");
             values1.put(COLUMN_COM7, "");
-            values1.put(COLUMN_ITEM_STATUS, "");
+            values1.put(COLUMN_ITEM_STATUS, "m");
             values1.put(COLUMN_NOTES, "");
 
             db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
@@ -2978,7 +3009,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_MAP + " ORDER BY " + MyConfig.TAG_PROJECT_ID;
+        String selectQuery = "SELECT * FROM " + TABLE_MAP + " WHERE "+COLUMN_ITEM_STATUS +" = 'm' ORDER BY " + MyConfig.TAG_PROJECT_ID;
 
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -3413,7 +3444,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT * "
                 + " FROM " + TABLE_CERTIFICATE_INSPECTION
-                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID
+                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID+" AND "+COLUMN_ITEM_STATUS+" = 'm'"
                 + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_INSPECTION_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -3468,7 +3499,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 String selectQuery = "SELECT * "
                         + " FROM " + TABLE_SUMMARY
-                        +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID
+                        +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID+" AND "+ COLUMN_ITEM_STATUS+" = 'm'"
                         + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_INSPECTION_ID;
                 //add additional fields: status,  notes, print flag
                 Cursor cursor = dtabase.rawQuery(selectQuery, null);

@@ -69,7 +69,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private Boolean Edited;
     private String note;
     private String projectId;
-    private int projId;
+    private int projId = 0;
     private String infoA;
     private String infoB;
     private String infoC;
@@ -442,7 +442,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             //      photoBranch = "";
+                                            if(projId != 0)
                                             addLevel(0, branchText.getText().toString());
+                                            else Toast.makeText(getContext(), "Select a Project", Toast.LENGTH_SHORT).show();
 
 
                                         }
@@ -701,7 +703,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         switch (type){
 
             case(-1):{
-                Toast.makeText(getContext(), "Cannot delete Parent branch, delete child branches first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cannot delete TAB with contents, delete contents first", Toast.LENGTH_SHORT).show();
 
                 break;
             }

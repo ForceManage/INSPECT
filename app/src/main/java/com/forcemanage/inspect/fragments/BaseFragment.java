@@ -353,7 +353,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
             dbHandler.updateMap(projectId, aId, bNote.getText().toString());
-
+            dbHandler.statusChanged(projId,iId);
         }
     }
 
