@@ -65,6 +65,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String dateInspected;
     private String startTime;
     private String endTime;
+    private String inspPhoto;
     private Button reportBtn;
     private ImageView printer;
 
@@ -89,6 +90,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             typeInspection = bundle.getString("inspectType");
             startTime = bundle.getString("startTime");
             endTime = bundle.getString("endTime");
+            inspPhoto = bundle.getString("inspPhoto");
             Edited = false;
 
         }
@@ -239,13 +241,13 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         });
 
 
-        if (globalVariables.propPhoto == null)
-            globalVariables.propPhoto = "";
+        if (inspPhoto == null)
+            inspPhoto = "";
 
-        if (globalVariables.propPhoto.length() > 12) {
-            String dirName = globalVariables.propPhoto.substring(6, 14);
+        if (inspPhoto.length() > 12) {
+            String dirName = inspPhoto.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.propPhoto);
+            File Image = new File(root + "/A2D_" + dirName + "/" + inspPhoto);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             mPhotoImageView.setImageBitmap(myBitmap);
         }

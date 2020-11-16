@@ -489,7 +489,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesItem.put(COLUMN_NOTES, inspectionItemAttributes.get_notes());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+        //db.execSQL("delete from "+ TABLE_A2D_INSPECTION_ITEM);
 
         db.replace(TABLE_INSPECTION_ITEM, null, valuesItem);
 
@@ -541,7 +541,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesAction.put(COLUMN_NOTES, actionItemAttributes.get_notes());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+        //db.execSQL("delete from "+ TABLE_A2D_INSPECTION_ITEM);
 
         db.replace(TABLE_ACTION_ITEM, null, valuesAction);
 
@@ -562,7 +562,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesAction.put(COLUMN_NOTES, certificateInspectionAttributes.getnotes());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+        //db.execSQL("delete from "+ TABLE_A2D_INSPECTION_ITEM);
 
         db.replace(TABLE_CERTIFICATE_INSPECTION, null, valuesAction);
 
@@ -582,7 +582,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesAction.put(COLUMN_COM_C, summaryAttributes.getcomC());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        //db.execSQL("delete from "+ TABLE_ESM_INSPECTION_ITEM);
+        //db.execSQL("delete from "+ TABLE_A2D_INSPECTION_ITEM);
 
         db.replace(TABLE_SUMMARY, null, valuesAction);
 
@@ -1117,6 +1117,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 values4.put(COLUMN_ITEM_STATUS, "p");
                 db.update(TABLE_CERTIFICATE_INSPECTION, values4, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
 
+                ContentValues values5 = new ContentValues();
+                values4.put(COLUMN_ITEM_STATUS, "p");
+                db.update(TABLE_MAP, values4, COLUMN_PROJECT_ID + " = " + proj_id+" AND "+COLUMN_ITEM_STATUS+"= 'm' ", null);
             } while (cursorI.moveToNext());
         }
 
@@ -1361,6 +1364,14 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteTable() {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_NAME,null , null);
+        db.close();
+    }
+
     public void deleteRec(String name, int projId, int iId, int aId) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1371,7 +1382,6 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_INSPECTION_ID, iId);
         values.put(COLUMN_A_ID, aId);
         db.insert(TABLE_NAME, null, values);
-
         db.close();
     }
 
@@ -2389,7 +2399,7 @@ public class DBHandler extends SQLiteOpenHelper {
 /*
 
         selectQuery = "SELECT I."+COLUMN_PROPERTY_ID+", I."+COLUMN_ASSET_ID
-                +" FROM "+TABLE_ESM_INSPECTION_ITEM+" I"
+                +" FROM "+TABLE_A2D_INSPECTION_ITEM+" I"
                 +" JOIN "+TABLE_ASSET_REGISTER+" A"
                 +" ON I."+COLUMN_PROPERTY_ID+" = A."+COLUMN_PROPERTY_ID+" AND A."+COLUMN_ASSET_ID+" = I."+COLUMN_ASSET_ID
                 +" WHERE I."+COLUMN_PROPERTY_ID+" = "+propId+" AND A."+COLUMN_SUB_LOCATION_ID+" = 2" ;
@@ -2399,7 +2409,7 @@ public class DBHandler extends SQLiteOpenHelper {
         int items = cursor.getCount();
 
         selectQuery = "SELECT I."+COLUMN_PROPERTY_ID+", I."+COLUMN_ASSET_ID
-                +" FROM "+TABLE_ESM_INSPECTION_ITEM+" I"
+                +" FROM "+TABLE_A2D_INSPECTION_ITEM+" I"
                 +" JOIN "+TABLE_ASSET_REGISTER+" A"
                 +" ON I."+COLUMN_PROPERTY_ID+" = A."+COLUMN_PROPERTY_ID+" AND A."+COLUMN_ASSET_ID+" = I."+COLUMN_ASSET_ID
                 +" WHERE I."+COLUMN_PROPERTY_ID+" = "+propId+" AND A."+COLUMN_SUB_LOCATION_ID+" = 2 AND I."+COLUMN_ITEM_STATUS+" = 'i'";
@@ -2797,6 +2807,173 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<HashMap<String, String>> dwnLoadPropertyPhoto(int proj_id) {
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String selectQuery = "SELECT E." + COLUMN_PROJECT_PHOTO
+                + " FROM " + TABLE_PROJECT_INFO +" E "
+                + " WHERE E." + COLUMN_PROJECT_ID + " = " +proj_id;
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+
+    public ArrayList<HashMap<String, String>> dwnLoadInspectionPhotos(int proj_id) {
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String selectQuery = "SELECT E." + COLUMN_IMAGE
+                + " FROM " + TABLE_INSPECTION +" E "
+                + " WHERE E." + COLUMN_PROJECT_ID + " = " +proj_id;
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+    public ArrayList<HashMap<String, String>> dwnLoadInspectionItemPhotos(int proj_id) {
+        ArrayList<HashMap<String, String>> photoArrayList;
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
+                + " FROM " + TABLE_INSPECTION_ITEM +" I "
+                + " WHERE  I."+COLUMN_PROJECT_ID+" = "+proj_id;
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
+                if (cursor.getString(1) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE2, cursor.getString(1));
+                if (cursor.getString(2) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE3, cursor.getString(2));
+                if (cursor.getString(3) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
+                if (cursor.getString(4) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+    public ArrayList<HashMap<String, String>> dwnLoadActionPhotos(int proj_id) {
+        ArrayList<HashMap<String, String>> photoArrayList;
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String selectQuery = "SELECT A." + COLUMN_IMG1
+
+                + " FROM " + TABLE_ACTION_ITEM +" A "
+                + " WHERE A." + COLUMN_PROJECT_ID + " = "+proj_id;
+
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+
+        }
+
+        cursor.close();
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+
+    public ArrayList<HashMap<String, String>> getInspectionPhotos(int user_id) {
+
+        // ArrayList that contains every row in the database
+        // and each row key / value stored in a HashMap
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        String selectQuery = "SELECT E." + COLUMN_IMAGE
+                + " FROM " + TABLE_INSPECTION +" E "
+                + " WHERE E." + COLUMN_INSPECTOR+ " = " +user_id;
+
+
+
+        // Open a database for reading and writing
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+
+        // Move to the first row
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
 
     public ArrayList<HashMap<String, String>> getInspectedItemPhotos(int user_id) {
 
@@ -2864,47 +3041,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getInspectionPhotos(int user_id) {
 
-        // ArrayList that contains every row in the database
-        // and each row key / value stored in a HashMap
-
-        ArrayList<HashMap<String, String>> photoArrayList;
-
-        photoArrayList = new ArrayList<HashMap<String, String>>();
-
-
-        String selectQuery = "SELECT E." + COLUMN_IMAGE
-                + " FROM " + TABLE_INSPECTION +" E "
-                + " WHERE E." + COLUMN_INSPECTOR+ " = " +user_id;
-
-
-
-        // Open a database for reading and writing
-
-        SQLiteDatabase database = this.getWritableDatabase();
-
-        Cursor cursor = database.rawQuery(selectQuery, null);
-
-
-        // Move to the first row
-
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> photoMap = new HashMap<String, String>();
-
-                if (cursor.getString(0) != "")
-                    photoMap.put(MyConfig.TAG_IMAGE, cursor.getString(0));
-
-                photoArrayList.add(photoMap);
-            } while (cursor.moveToNext()); // Move Cursor to the next row
-        }
-        cursor.close();
-
-        database.close();
-        // return contact list
-        return photoArrayList;
-    }
 
 
 
@@ -3009,7 +3146,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_MAP + " WHERE "+COLUMN_ITEM_STATUS +" = 'm' ORDER BY " + MyConfig.TAG_PROJECT_ID;
+        String selectQuery = "SELECT * FROM " + TABLE_MAP +" WHERE "+COLUMN_ITEM_STATUS +" = 'm' ORDER BY " + MyConfig.TAG_PROJECT_ID;  //
 
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -3276,9 +3413,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT M."+ COLUMN_PROJECT_ID+ ", M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
                 + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
-
                 + " FROM " + TABLE_MAP + " M"
-
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
                 + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
@@ -3565,6 +3700,41 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         return LOG_Time;
+
+    }
+
+
+    public ArrayList<HashMap<String, String>> getDeleted() {
+
+
+        HashMap<String, String> DELETED;
+        ArrayList<HashMap<String, String>> DELETED_items;
+
+        DELETED_items = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+        String selectQueryI = "SELECT * FROM "+TABLE_NAME;
+
+        Cursor cursor = dtabase.rawQuery(selectQueryI, null);
+        // Move to the first row
+        if (cursor.moveToFirst()) {
+            do {
+                DELETED = new HashMap<String, String>();
+                DELETED.put(MyConfig.TAG_TABLE_NAME, cursor.getString(0));
+                DELETED.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
+                DELETED.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(2))));
+                DELETED.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(3))));
+                DELETED_items.add(DELETED);
+            } while (cursor.moveToNext());
+        }
+
+
+        dtabase.close();
+
+
+        return DELETED_items;
 
     }
 

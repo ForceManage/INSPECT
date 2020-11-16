@@ -107,7 +107,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
                     String dirName = photos[i].substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File propImage = new File(root + "/ESM_" + dirName + "/" + photos[i]);
+                    File propImage = new File(root + "/A2D_" + dirName + "/" + photos[i]);
 
                     if (propImage.exists()) {
 
@@ -233,7 +233,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
                         String dirName = photos[i].substring(6, 14);
                         String root = Environment.getExternalStorageDirectory().toString();
-                        File propImage = new File(root + "/ESM_" + dirName + "/" + photos[i]);
+                        File propImage = new File(root + "/A2D_" + dirName + "/" + photos[i]);
 
                         if (propImage.exists()) {
 

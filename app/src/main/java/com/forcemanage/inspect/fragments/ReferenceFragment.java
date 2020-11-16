@@ -372,7 +372,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
                     galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -394,7 +394,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 if(!globalVariables.photo1.equals("")) {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-               //     File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
+               //     File photo_image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo1);
 
 
                     Intent galleryIntent = new Intent();
@@ -426,7 +426,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -458,7 +458,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                     String dirName = globalVariables.photo2.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo2);//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo2);//+ photos[0]
 
 
                 galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -479,7 +479,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
 
                // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
-               //  startActivityForResult(new Intent(galleryIntent.ACTION_VIEW, Uri.parse(root + "/ESM_" + dirName + "/"+ globalVariables.photos[1])));
+               //  startActivityForResult(new Intent(galleryIntent.ACTION_VIEW, Uri.parse(root + "/A2D_" + dirName + "/"+ globalVariables.photos[1])));
 
                //  startActivityForResult(galleryIntent, ACTIVITY_DRAW_FILE);
                // globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
@@ -509,7 +509,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -560,7 +560,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                 String dirName = globalVariables.photo3.substring(6, 14);
                 String root = Environment.getExternalStorageDirectory().toString();
-                File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo3 );//+ photos[0]
+                File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo3 );//+ photos[0]
                 galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -589,7 +589,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -641,7 +641,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                 String dirName = globalVariables.photo4.substring(6, 14);
                 String root = Environment.getExternalStorageDirectory().toString();
-                File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo4 );//+ photos[0]
+                File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo4 );//+ photos[0]
                 galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -669,7 +669,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -721,7 +721,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                     String dirName = globalVariables.photo5.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo5 );//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo5 );//+ photos[0]
                     galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -749,7 +749,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -802,7 +802,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                     String dirName = globalVariables.photo6.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo6 );//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo6 );//+ photos[0]
                     galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -830,7 +830,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -883,7 +883,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 try {
                     String dirName = globalVariables.photo7.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo7 );//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo7 );//+ photos[0]
                     galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -911,7 +911,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -1025,7 +1025,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
             if ( globalVariables.photos[i].length() > 12) {
                 String dirName =  globalVariables.photos[i].substring(6, 14);
                 String root = Environment.getExternalStorageDirectory().toString();
-                File Image = new File(root + "/ESM_" + dirName + "/" +  globalVariables.photos[i]);
+                File Image = new File(root + "/A2D_" + dirName + "/" +  globalVariables.photos[i]);
                 Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
 
                 switch (i) {

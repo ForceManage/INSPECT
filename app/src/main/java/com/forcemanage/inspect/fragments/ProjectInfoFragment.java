@@ -78,6 +78,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String infoF;
     private String infoG;
     private String infoH;
+    private String propPhoto;
     private List<MapViewData> listItems;
     private  int aId;
     private int Level;
@@ -103,6 +104,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             infoF = bundle.getString("infoF");
             infoG = bundle.getString("infoG");
             infoH = bundle.getString("infoH");
+            propPhoto = bundle.getString("propPhoto");
 
         }
 
@@ -338,25 +340,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                 globalVariables.mPhotoImageView = mPhotoImageView;
                 Intent galleryIntent = new Intent();
-                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                // galleryIntent.setAction(Intent.ACTION_VIEW);
+
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
 
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
-                // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),1);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
             }
 
@@ -382,13 +369,13 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         else TVinfoH.setText(infoH);
 
 
-        if (globalVariables.propPhoto == null)
-            globalVariables.propPhoto = "";
+        if (propPhoto == null)
+            propPhoto = "";
 
-        if (globalVariables.propPhoto.length() > 12) {
-            String dirName = globalVariables.propPhoto.substring(6, 14);
+        if (propPhoto.length() > 12) {
+            String dirName = propPhoto.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.propPhoto);
+            File Image = new File(root + "/A2D_" + dirName + "/" + propPhoto);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             mPhotoImageView.setImageBitmap(myBitmap);
         }
@@ -479,9 +466,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            //       photoBranch = "";
+                                            if(GlobalVariables.name == "NULL")
                                             addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
-
+                                            else Toast.makeText(getContext(), "Select a TAB", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .setNegativeButton("Cancel",
@@ -710,7 +697,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             case (0): {
                 dbHandler.deleteMapBranch(projId, GlobalVariables.aId);
-                dbHandler.deleteInspectionItem(projId, GlobalVariables.aId);
+                dbHandler.deleteRec("MAP",projId,0,GlobalVariables.aId);
+
+
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -719,7 +708,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             case (1):{
 
                 dbHandler.deleteMapBranch(projId, GlobalVariables.aId);
-                dbHandler.deleteInspectionItem(projId, GlobalVariables.aId);
+                dbHandler.deleteRec("MAP",projId,0,GlobalVariables.aId);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();

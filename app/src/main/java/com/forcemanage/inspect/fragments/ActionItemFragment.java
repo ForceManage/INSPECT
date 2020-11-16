@@ -166,7 +166,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                 if (!globalVariables.photo1.equals("")) {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
+                    File photo_image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo1);
 
 
                 Intent galleryIntent = new Intent();
@@ -196,7 +196,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                 try {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File Image = new File(root + "/ESM_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
                     galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -224,7 +224,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -285,7 +285,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
             if ( globalVariables.photos[i].length() > 12) {
                 String dirName =  globalVariables.photos[i].substring(6, 14);
                 String root = Environment.getExternalStorageDirectory().toString();
-                File Image = new File(root + "/ESM_" + dirName + "/" +  globalVariables.photos[i]);
+                File Image = new File(root + "/A2D_" + dirName + "/" +  globalVariables.photos[i]);
                 Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
 
                 switch (i) {

@@ -100,25 +100,27 @@
                     >
 
                     <Button
-                        android:id="@+id/button_edit"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:backgroundTint="#DFB005"
-                        android:drawableLeft="@drawable/ic_text_box_plus_outline"
-                        android:enabled="true"
-                        android:text=""
-                        android:textColor="@android:color/white" />
-
-                    <Button
                         android:id="@+id/button2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
                         android:backgroundTint="#DFB005"
-                        android:drawableStart="@android:drawable/ic_menu_edit"
+                        android:drawableStart="@drawable/ic_text_box_plus_outline"
                         android:enabled="true"
                         android:textColor="@android:color/white" />
+
+                    <Button
+                        android:id="@+id/button_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:backgroundTint="#DFB005"
+                        android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:enabled="true"
+                        android:text=""
+                        android:textColor="@android:color/white" />
+
+
 
                     <Button
                         android:id="@+id/button4"

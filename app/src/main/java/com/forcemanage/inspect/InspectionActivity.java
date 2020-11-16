@@ -127,7 +127,6 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private String[] locationsArr;
     private String[] sublocationsArr;
     private String[] iTitle;
-    private String[] esm_cat;
     private String editing = "NO";
     private int catId;
     private String[] observations;
@@ -558,7 +557,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             case (0): {
                 dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteRec("MAP",projId,iID,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
+                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -567,7 +568,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             case (1):{
 
                 dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteRec("MAP",projId,iID,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
+                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -576,8 +579,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             case (2):{
 
                 dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteRec("MAP",projId,iID,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
+                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
                 dbHandler.deleteActionItem(projId,aID);
+                dbHandler.deleteRec("ActionItem",projId,iID,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -587,7 +593,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             case (9):{
 
                 dbHandler.deleteSummary(projId,iID,aID);
+                dbHandler.deleteRec("Summary",projId,iID,aID);
                 dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteRec("MAP",projId,iID,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -597,7 +605,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             case (10):{
 
                 dbHandler.deleteCertificate(projId,iID,aID);
+                dbHandler.deleteRec("CertificateInsp",projId,iID,aID);
                 dbHandler.deleteMapBranch(projId, aID);
+                dbHandler.deleteRec("MAP",projId,iID,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -1549,8 +1559,8 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             fname = projectId + "_" + fname;
 
             String root = Environment.getExternalStorageDirectory().toString();
-            String SD = root + "/ESM_" + dirName + "/";
-            File storageDirectory = new File(root + "/ESM_" + dirName + "/");
+            String SD = root + "/A2D_" + dirName + "/";
+            File storageDirectory = new File(root + "/A2D_" + dirName + "/");
             // Toast.makeText(this, "should have made directory",Toast.LENGTH_SHORT).show();
             // Toast.makeText(this, "string root name = "+root ,Toast.LENGTH_SHORT).show();
             if (!storageDirectory.exists()) {
@@ -1687,7 +1697,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         dirName = dayTime(1);
         fname = projectId+"_"+fname;
         String root = Environment.getExternalStorageDirectory().toString();
-        File storageDirectory = new File(root + "/ESM_"+dirName+"/");
+        File storageDirectory = new File(root + "/A2D_"+dirName+"/");
         // Toast.makeText(this, "should have made directory",Toast.LENGTH_SHORT).show();
         // Toast.makeText(this, "string root name = "+root ,Toast.LENGTH_SHORT).show();
         if (!storageDirectory.exists()){storageDirectory.mkdirs();}

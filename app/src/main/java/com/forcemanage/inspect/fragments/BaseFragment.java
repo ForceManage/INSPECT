@@ -171,7 +171,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 if (!globalVariables.photoBranch.equals("")) {
                     String dirName = globalVariables.photoBranch.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
-                    File photo_image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photo1);
+                    File photo_image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo1);
 
 
                     Intent galleryIntent = new Intent();
@@ -207,7 +207,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
                 //     dirName = photos[0].substring(6, 14);
                 //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/ESM_" + dirName + "/" );//+ photos[0]
+                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
 
 
                 //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
@@ -229,7 +229,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         if (globalVariables.photoBranch.length() > 12) {
             String dirName = globalVariables.photoBranch.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/ESM_" + dirName + "/" + globalVariables.photoBranch);
+            File Image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photoBranch);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             photoA.setImageBitmap(myBitmap);
         }
