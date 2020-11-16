@@ -431,7 +431,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                             //      photoBranch = "";
                                             if(projId != 0)
                                             addLevel(0, branchText.getText().toString());
-                                            else Toast.makeText(getContext(), "Select a Project", Toast.LENGTH_SHORT).show();
+                                            else Toast.makeText(getContext(), "Create or Select a Project", Toast.LENGTH_SHORT).show();
 
 
                                         }
@@ -466,9 +466,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            if(GlobalVariables.name == "NULL")
-                                            addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
-                                            else Toast.makeText(getContext(), "Select a TAB", Toast.LENGTH_SHORT).show();
+                                            if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
+                                                Toast.makeText(getContext(), "Select a TAB", Toast.LENGTH_SHORT).show();
+                                            else addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
+
                                         }
                                     })
                                     .setNegativeButton("Cancel",
@@ -521,6 +522,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 alertDialogBuilder.setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
+                                                if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
+                                                    Toast.makeText(getContext(), "Invalid TAB", Toast.LENGTH_SHORT).show();
+                                                else
                                                 editLocation(LocationText.getText().toString());
                                             }
                                         })

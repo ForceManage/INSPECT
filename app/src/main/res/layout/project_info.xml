@@ -226,6 +226,18 @@
 
                 </LinearLayout>
 
+                <ScrollView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -249,11 +261,8 @@
                 </FrameLayout>
 
 
-                <ScrollView
 
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillViewport="true">
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -408,10 +417,10 @@
 
 
 
-                </ScrollView>
 
 
-
+                </LinearLayout>
+        </ScrollView>
 
             </LinearLayout>
 

@@ -711,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     reqAct req = new reqAct();
                     req.execute();
                 } else
-                    Toast.makeText(MainActivity.this, "Select a Project ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Create or select a Project ", Toast.LENGTH_LONG).show();
             } else
                 Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
@@ -988,6 +988,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
         if (v == btnLogin) {
+
+            int PERMISSION_ALL = 1;
+            String[] PERMISSIONS = {
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_CONTACTS,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.INTERNET,
+                    android.Manifest.permission.CAMERA
+            };
+
+            if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
+                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+            }
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
@@ -2200,7 +2214,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             //  editTextMessage.setText("Test begin");
 
             for (int i = 0; i < result.length(); i++) {
-   
+
 
                 JSONObject jo = result.getJSONObject(i);
                 String projid = jo.getString(MyConfig.TAG_PROJECT_ID);
