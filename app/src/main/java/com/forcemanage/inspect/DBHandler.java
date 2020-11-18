@@ -1345,7 +1345,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_MAP, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
-        db.close();
+         db.close();
     }
 
     public void deleteSummary(int projId, int iId, int aId) {

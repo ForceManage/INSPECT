@@ -60,7 +60,7 @@
                     android:padding="2dp"
                     android:paddingStart="2dp"
                     android:layout_gravity="center_vertical"
-                    android:text="Project Folder Contents "
+                    android:text="Folder TABS and File Contents "
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="normal|bold" />

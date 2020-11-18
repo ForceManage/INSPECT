@@ -264,8 +264,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
                                 Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putString("PROJECT_ID", globalVariables.projectId);
-                                bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                                bundle.putString("PROJECT_ID", Integer.toString(projId));
+                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
                                 bundle.putBoolean("logTime", true);
                                 theIntent.putExtras(bundle);
                                 startActivity(theIntent);
@@ -277,8 +277,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                                     public void onClick(DialogInterface dialog, int id) {
                                         Intent theIntent = new Intent(getActivity(), InspectionActivity.class);
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("PROJECT_ID", globalVariables.projectId);
-                                        bundle.putString("INSPECTION_ID", globalVariables.inspectionId);
+                                        bundle.putString("PROJECT_ID", Integer.toString(projId));
+                                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
                                         bundle.putBoolean("logTime", false);
                                         theIntent.putExtras(bundle);
                                         startActivity(theIntent);
@@ -332,7 +332,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private void setText(){
 
         if (!branchHead.equals("")){
-           title.setText("Project ID:  "+branchHead);
+           title.setText("Folder:  "+branchHead);
   //         branch.setText(branchLabel);
            }
     }

@@ -609,7 +609,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     public void OnTabChanged(int treeNameIndex) {
 
 
-       MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+     //  MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
 
         DetailFragment detailFragment = (DetailFragment) getChildFragmentManager()

@@ -47,7 +47,7 @@
                         android:layout_gravity="top"
                         android:paddingTop="6dp"
                         android:paddingLeft="10dp"
-                        android:text="Project:  "
+                        android:text="Folder:  "
                         android:textSize="20sp"
                         android:layout_marginBottom="5dp"
                         android:textColor="@android:color/white"

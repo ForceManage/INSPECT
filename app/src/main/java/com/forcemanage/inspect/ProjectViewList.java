@@ -154,6 +154,8 @@ public class ProjectViewList
                     if (children.size() != 0)
                         AddChildrenToList(children);
             }
+
+
         }
     }
 

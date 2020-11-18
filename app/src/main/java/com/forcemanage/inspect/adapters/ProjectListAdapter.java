@@ -88,14 +88,14 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
             case 0:{
 
-                holder.content.setTextColor(Color.DKGRAY);
+               holder.content.setTextColor(Color.DKGRAY);
                 //  holder.content.setTextSize(17);
                 if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
                 if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 if (node.getIsExpanded() == GlobalVariables.TRUE)
-                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
+                    holder.arrow.setImageResource(R.drawable.folder2_red);
                 else
-                    holder.arrow.setImageResource(R.drawable.ic_chevron_right);
+                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
 
                 break;
             }
@@ -176,7 +176,6 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
 
                     ProjectViewList.LoadDisplayList();
-
                     notifyDataSetChanged();
 
 

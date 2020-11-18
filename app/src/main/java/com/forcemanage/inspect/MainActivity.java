@@ -266,7 +266,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
             connected = false;
         }
-        //   updatePropList();
+
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_CONTACTS,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET,
+                android.Manifest.permission.CAMERA
+        };
+
+        if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
+            ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+        }
 
 
         dirName = new SimpleDateFormat("yyyyMMdd").format(new Date());
@@ -306,20 +319,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 });
                                 thread.start();
 
-                            }
-
-                            int PERMISSION_ALL = 1;
-                            String[] PERMISSIONS = {
-                                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    android.Manifest.permission.READ_CONTACTS,
-                                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                    android.Manifest.permission.ACCESS_NETWORK_STATE,
-                                    Manifest.permission.INTERNET,
-                                    android.Manifest.permission.CAMERA
-                            };
-
-                            if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
-                                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
                             }
 
                         } else
@@ -463,10 +462,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("propPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
 
 
+
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
                 doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
                 fragment.setArguments(bundle);
-                //            fragment_obj = (ProjectInfoFragment) getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+
+
                 break;
             }
 
@@ -741,6 +742,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         public void onClick(DialogInterface dialog, int id) {
                             clearTablet();
                             updatePropList();
+                            ProjectInfoFragment fragment = new ProjectInfoFragment();
+                            doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
 
                         }
                     })
@@ -761,10 +764,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Create Folders and files ");
+            builder.setTitle("Folders and files ");
             // add a list
-            String[] actions = {"Create New Project Folder",
-                    "Add a File to the Project Folder ",
+            String[] actions = {"Create New Folder",
+                    "Add a File to the Folder ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -779,11 +782,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Create a New Project Document Folder ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Create a New Folder ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Project Name : ");//Integer.parseInt(locationId)
+                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Enter Project title.");
+                            branchText.setHint("Folder title.");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -819,7 +822,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Add New File to the Project ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Add New File to the Folder ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("File Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -988,20 +991,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
         if (v == btnLogin) {
-
-            int PERMISSION_ALL = 1;
-            String[] PERMISSIONS = {
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.READ_CONTACTS,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.INTERNET,
-                    android.Manifest.permission.CAMERA
-            };
-
-            if (!hasPermissions(getBaseContext(), PERMISSIONS)) {
-                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
-            }
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
@@ -1865,7 +1854,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         ProjectData listItem;
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
-         projectlist_title.setText("Project Folders:  "+dbHandler.getUser(USER_ID));
+         projectlist_title.setText("Folder list for: "+dbHandler.getUser(USER_ID));
         for (int i = 0; i < (Projects.size()); i++){
 
             listItem = new ProjectData(
@@ -2863,6 +2852,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     update_USER_Info();
                     downloadprojects();
                     updatePropList();
+                    ProjectInfoFragment fragment = new ProjectInfoFragment();
+                    doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
                     Toast.makeText(MainActivity.this, "logged in", Toast.LENGTH_LONG).show();
                 }
             }
