@@ -58,6 +58,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
     DBHandler ESMdb;
     private Button buttonInsert;
+    private Button btnAddPage;
+    private Button btnAddDisc;
+    private Button btnAddCert;
     private Button buttonDelete;
     private Button buttonEdit;
     private String projectId;
@@ -174,8 +177,12 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         buttonInsert.setOnClickListener(this);
         buttonDelete = (Button) findViewById(R.id.button4);
         buttonDelete.setOnClickListener(this);
-        buttonEdit = (Button) findViewById(R.id.button_edit);
-        buttonEdit.setOnClickListener(this);
+        btnAddPage = (Button) findViewById(R.id.button21);
+        btnAddPage.setOnClickListener(this);
+        btnAddDisc = (Button) findViewById(R.id.button22);
+        btnAddDisc.setOnClickListener(this);
+        btnAddCert = (Button) findViewById(R.id.button_cert);
+        btnAddCert.setOnClickListener(this);
         zone = 0;
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
@@ -1117,14 +1124,10 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("LIST - Add TAB: sub-TABS, Note TABS, Action Notes, Certificates ");
+            builder.setTitle("Document Item Titles and sub-Titles ");
             // add a list
-            String[] actions = {"Add TAB",
-                    "Add Branch ",
-                    "Add Document Page to TAB",
-                    "Attach Action to Page",
-                    "Attach File Summary",
-                    "Attach Certificate ",
+            String[] actions = {"Add Item Title",
+                    "Add Item subTitle ",
                     "Attach Information",
                     "Cancel"};
 
@@ -1140,9 +1143,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("New Item Title");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Title: ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1176,9 +1179,9 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1207,14 +1210,68 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                         case 2: {
 
 
+                        }
+
+                        case 3: {
+
+                        }
+
+                        case 4: {
+
+                        }
+
+                        case 5: {
+
+                        }
+
+                        case 6: {
+                            photoBranch = "";
+                            addReferenceBranch(502, "INFORMATION");
+                            break;
+                        }
+
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+
+        }
+
+
+        if (v == btnAddPage) {
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add Pages");
+            // add a list
+            String[] actions = {
+                    "Add Page to Item",
+                    "Attach Addendum to Page",
+                    "Cancel"};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
                             LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Attach note to : " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Page filed in : " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1237,20 +1294,20 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
                             AlertDialog alert = alertDialogBuilder.create();
                             alert.show();
 
-
                             break;
+
                         }
 
-                        case 3: {
+                        case 1: {
 
                             LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Addendum ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Attach Action to " + branchLabel);//Integer.parseInt(locationId)
+                            locationText.setText("Addendum to Page: " + branchLabel);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -1275,24 +1332,106 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
                             break;
+
                         }
 
-                        case 4: {
+                        case 2: {
+
+                            break;
+                        }
+
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+
+        }
+
+        if (v == btnAddDisc) {
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Document Summary/Discussion ");
+            // add a list
+            String[] actions = {
+                    "Attach Discussion",
+                    "Cancel"};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
                             photoBranch = "";
                             addSummaryBranch(500, "COMMENTARY");
                             break;
+
                         }
 
-                        case 5: {
+                        case 1: {
+
+
+
+                            break;
+
+                        }
+
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+
+        }
+
+
+
+        if (v == btnAddCert) {
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(" Certificates ");
+            // add a list
+            String[] actions = {
+                    "Attach Certificate ",
+                    "Cancel"};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
                             photoBranch = "";
                             addCertificateBranch(501, "CERTIFICATES");
                             break;
+
                         }
 
-                        case 6: {
-                            photoBranch = "";
-                            addReferenceBranch(502, "INFORMATION");
+                        case 1: {
+
+
+
                             break;
+
                         }
 
                     }

@@ -420,7 +420,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -458,7 +458,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Name: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("TAB Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -513,9 +513,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                                 alertDialogBuilder.setView(promptView);
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("File TAB name: " + branchTitle);//Integer.parseInt(locationId)
+                                itemTitle.setText("File TAB Title: " + branchTitle);//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Current TAB name : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                locationText.setText("Current TAB Title : " + GlobalVariables.name);//Integer.parseInt(locationId)
                                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                                 LocationText.setText(GlobalVariables.name);
                                 // setup a dialog window

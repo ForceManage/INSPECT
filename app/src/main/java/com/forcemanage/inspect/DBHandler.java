@@ -744,6 +744,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_NOTE, Note);
         contentValues.put(COLUMN_NOTE_2, Note_2);
         contentValues.put(COLUMN_LABEL, Label);
+        contentValues.put(COLUMN_INSPECTION_STATUS, "m");
 
 
 

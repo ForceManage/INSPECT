@@ -6,5 +6,5 @@
     <color name="color_edit">#D4F7E8</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
-    <drawable name="grey_blue">#A7A3A3</drawable>
+    <drawable name="grey_blue">#d0d3d6</drawable>
 </resources>

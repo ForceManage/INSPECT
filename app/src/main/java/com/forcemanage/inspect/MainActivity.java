@@ -2572,13 +2572,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+           //     loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+          //      loading.dismiss();
                 JSON_STRING = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
@@ -2608,13 +2608,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+          //      loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+          //      loading.dismiss();
                 JSON_STRING_ADDITIONAL = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
@@ -2645,13 +2645,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+        //        loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+        //        loading.dismiss();
                 JSON_STRING_ACTION = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
@@ -2685,13 +2685,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+        //        loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+        //        loading.dismiss();
                 JSON_STRING_CERTINSP = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
@@ -2725,13 +2725,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+       //         loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+        //        loading.dismiss();
                 JSON_STRING_SUMMARY = s;
                 //    TextMessage.setText("JSON_STRING " + s);
 
@@ -2766,13 +2766,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+      //          loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+      //          loading.dismiss();
                 JSON_STRING_OR = s;
 
                 update_OR_Info("A");
@@ -2801,13 +2801,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+      //          loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+     //           loading.dismiss();
                 JSON_STRING_OR = s;
 
                 update_OR_Info("B");
@@ -2837,6 +2837,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             protected void onPreExecute() {
                 super.onPreExecute();
                 loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+                progressBar1.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -2855,6 +2856,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     ProjectInfoFragment fragment = new ProjectInfoFragment();
                     doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
                     Toast.makeText(MainActivity.this, "logged in", Toast.LENGTH_LONG).show();
+                    progressBar1.setVisibility(View.GONE);
                 }
             }
 
@@ -2881,13 +2883,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+     //           loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+     //           loading.dismiss();
                 JSON_STRING_LOG = s;
                 update_LOG();
 
@@ -2968,12 +2970,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             RequestHandler_ rh = new RequestHandler_();
 
 
+
             String regex = "'";   //,?\s*"a[^"]*z"\s*:[^\}]+
 
-            String jsonString = jsonArray.toString().replace(regex,"\\\\'");
 
-          //  Log.v("NOTE JSON", jsonString);
-
+           String jsonString = jsonArray.toString().replace(regex,"\\\\'");
 
 
             res = rh.sendJsonPostRequest(MyConfig.URL_SYNC_INSPECTION_TO_SERVER, jsonString);
@@ -3670,7 +3671,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         thread.start();
 
  */
-
+        if(CLIENT.equals("no-client")) CLIENT=CLIENT+"-"+USER_ID;
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID, "m");
@@ -4064,7 +4065,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     public void downloadphotos(){
 
-
+        if(CLIENT.equals("no-client")) CLIENT=CLIENT+"-"+USER_ID;
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> plist = dbHandler.dwnLoadPropertyPhoto(projId);

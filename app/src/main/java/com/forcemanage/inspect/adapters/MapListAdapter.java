@@ -92,10 +92,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
               //  holder.content.setTextSize(17);
                 if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
                 if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                if (node.getIsExpanded() == GlobalVariables.TRUE)
-                   holder.arrow.setImageResource(R.drawable.ic_chevron_down);
+
+                if (node.getNodeLevel() == 0)
+                   holder.arrow.setImageResource(R.drawable.ic_file_tree);
                 else
-                    holder.arrow.setImageResource(R.drawable.ic_chevron_right);
+                    holder.arrow.setImageResource(R.drawable.ic_filetree2);
+
+
 
                 break;
            }
@@ -103,14 +106,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.GRAY);
             //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
+                holder.arrow.setImageResource(R.drawable.ic_page_edit);
                 break;
             }
             case 2: {
                 holder.content.setTextColor(Color.GRAY);
            //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_note_text);
+                holder.arrow.setImageResource(R.drawable.ic_note);
                 break;
             }
             case 9: {

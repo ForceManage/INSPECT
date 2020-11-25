@@ -37,6 +37,17 @@
 
                 android:orientation="horizontal">
 
+                <ProgressBar
+                    android:id="@+id/progressBar1"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:paddingRight="5dp"
+                    android:progress="100"
+                    android:indeterminateOnly="true"
+                    android:visibility="gone"
+                    />
+
                 <Button
                     android:id="@+id/btnDownloadJobs"
                     android:layout_width="0dp"
@@ -64,7 +75,16 @@
                     android:drawableStart="@drawable/ic_cloud_upload_outline"
                     />
 
-
+                <Button
+                    android:id="@+id/btnlogin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:backgroundTint="#DFB005"
+                    android:text=""
+                    android:textSize="11sp"
+                    android:drawableLeft="@drawable/ic_login"
+                    />
 
 
             </LinearLayout>
@@ -137,16 +157,7 @@
                 android:layout_margin="10dp">
 
 
-                <ProgressBar
-                    android:id="@+id/progressBar1"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:paddingRight="5dp"
-                    android:progress="100"
-                    android:indeterminateOnly="true"
-                    android:visibility="gone"
-                    />
+
 
                 <Button
                     android:id="@+id/addProject"
@@ -156,7 +167,7 @@
                     android:backgroundTint="#DFB005"
                     android:text=""
                     android:textSize="11sp"
-                    android:drawableStart="@drawable/ic_text_box_plus_outline"
+                    android:drawableStart="@drawable/ic_file_tree"
 
                     />
 
@@ -171,16 +182,7 @@
                     android:drawableLeft="@drawable/ic_format_list_bulleted"
                      />
 
-                <Button
-                    android:id="@+id/btnlogin"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:backgroundTint="#DFB005"
-                    android:text=""
-                    android:textSize="11sp"
-                    android:drawableLeft="@drawable/ic_login"
-                    />
+
 
             </LinearLayout>
 
