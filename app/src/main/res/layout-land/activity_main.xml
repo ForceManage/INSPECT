@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
+    android:layout_marginLeft="3dp"
     android:paddingTop="5dp"
     tools:context="com.forcemanage.inspect.MainActivity">
 
@@ -27,65 +27,68 @@
             android:layout_height="match_parent"
             android:background="@drawable/image_border"
             android:layout_weight="0.25"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:background="@drawable/head_frame"
                 android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/head_frame"
+
+                    >
 
                 <ProgressBar
                     android:id="@+id/progressBar1"
                     style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:paddingRight="5dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:paddingLeft="3dp"
                     android:progress="100"
                     android:indeterminateOnly="true"
                     android:visibility="gone"
                     />
 
-                <Button
-                    android:id="@+id/btnDownloadJobs"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="#0B2459"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:drawableTint="@color/white"
-                    android:textSize="11sp"
-                    android:drawableStart="@drawable/ic_cloud_download_outline"
-                    />
+
+                <ImageView
+                    android:id="@+id/image_upload"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginBottom="3dp"
+
+                    android:foreground="@drawable/ic_cloud_upload_outline" />
 
 
-                <Button
-                    android:id="@+id/btnUpload"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="#0B2459"
-                    android:text=""
-                    android:textSize="11sp"
-                    android:textColor="@color/white"
-                    android:drawableTint="@color/white"
-                    android:drawableStart="@drawable/ic_cloud_upload_outline"
-                    />
 
-                <Button
-                    android:id="@+id/btnlogin"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:backgroundTint="#DFB005"
-                    android:text=""
-                    android:textSize="11sp"
-                    android:drawableLeft="@drawable/ic_login"
-                    />
 
+                <ImageView
+                    android:id="@+id/image_download"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginBottom="3dp"
+
+                    android:foreground="@drawable/ic_cloud_download_outline" />
+
+
+                <ImageView
+                    android:id="@+id/image_login"
+                    android:layout_width="35dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:foreground="@drawable/ic_login" />
+
+                </FrameLayout>
 
             </LinearLayout>
 
@@ -98,11 +101,13 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 >
+
                 <ImageView
                     android:id="@+id/imageView_projectfolder"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
                     android:layout_gravity="top"
                     android:foreground="@drawable/ring_binders" />
 
@@ -127,6 +132,8 @@
                 android:layout_gravity="top"
                 android:layout_weight="0.9"
                 android:paddingTop="10dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="5dp"
                 android:orientation="horizontal">
 
 
@@ -154,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
 
 
 

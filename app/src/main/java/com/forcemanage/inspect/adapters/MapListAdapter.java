@@ -106,27 +106,27 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.GRAY);
             //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_page_edit);
+                holder.arrow.setImageResource(R.drawable.ic_edit_outline);
                 break;
             }
             case 2: {
                 holder.content.setTextColor(Color.GRAY);
            //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_note);
+                holder.arrow.setImageResource(R.drawable.ic_note_text);
                 break;
             }
             case 9: {
                 //      holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_clipboard_text);
+                holder.arrow.setImageResource(R.drawable.ic_comment);
                 holder.content.setTextColor(Color.BLUE);
                 break;
             }
             case 10: {
           //      holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_book_check_outline);
+                holder.arrow.setImageResource(R.drawable.ic_certificate);
                 holder.content.setTextColor(Color.BLUE);
                 break;
             }

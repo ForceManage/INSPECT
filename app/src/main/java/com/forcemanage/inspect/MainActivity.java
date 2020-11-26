@@ -135,7 +135,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public ImageView mPhotoImageView;
     private ImageView Folders;
     private ImageView info_icon;
-    private ImageView photo_cam;
+    private ImageView imgDownload;
+    private ImageView imgUpload;
+    private ImageView imgLogin;
     private File photo;
     private String dirName;
     public String inspectionId;
@@ -232,13 +234,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
-        buttonDownload.setOnClickListener(this);
+      //  buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
+     //   buttonDownload.setOnClickListener(this);
         //     buttonDownloadPhotos = (Button) findViewById(R.id.btnDownloadPhotos);
         //     buttonDownloadPhotos.setOnClickListener(this);
 
-        buttonUpload = (Button) findViewById(R.id.btnUpload);
-        buttonUpload.setOnClickListener(this);
+      //  buttonUpload = (Button) findViewById(R.id.btnUpload);
+     //   buttonUpload.setOnClickListener(this);
         //     buttonSyncPhotos = (Button) findViewById(R.id.btnSyncPhotos);
         //     buttonSyncPhotos.setOnClickListener(this);
         //     buttonInspection = (Button) findViewById(R.id.btnInspection);
@@ -246,13 +248,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
 
-        btnLogin = (Button) findViewById(R.id.btnlogin);
-        btnLogin.setOnClickListener(this);
+      //  btnLogin = (Button) findViewById(R.id.btnlogin);
+      //  btnLogin.setOnClickListener(this);
         btnAddProject = (Button) findViewById(R.id.addProject);
         btnAddProject.setOnClickListener(this);
         Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
         Folders.setOnClickListener(this);
-
+        imgDownload = (ImageView) findViewById(R.id.image_download);
+        imgDownload.setOnClickListener(this);
+        imgUpload = (ImageView) findViewById(R.id.image_upload);
+        imgUpload.setOnClickListener(this);
+        imgLogin = (ImageView) findViewById(R.id.image_login);
+        imgLogin.setOnClickListener(this);
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
@@ -262,7 +269,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             connected = true;
             //getJSON();
         } else {
-            buttonDownload.setEnabled(false);
+
+            imgDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
             connected = false;
         }
@@ -547,14 +555,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
       //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
-        buttonDownload.setOnClickListener(this);
-        buttonUpload = (Button) findViewById(R.id.btnUpload);
-        buttonUpload.setOnClickListener(this);
+      //  buttonDownload = (Button) findViewById(R.id.btnDownloadJobs);
+      //  buttonDownload.setOnClickListener(this);
+     //   buttonUpload = (Button) findViewById(R.id.btnUpload);
+     //   buttonUpload.setOnClickListener(this);
         buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
         buttonLoadJobList.setOnClickListener(this);
-        btnLogin = (Button) findViewById(R.id.btnlogin);
-        btnLogin.setOnClickListener(this);
+    //    btnLogin = (Button) findViewById(R.id.btnlogin);
+    //    btnLogin.setOnClickListener(this);
+        imgDownload = (ImageView) findViewById(R.id.image_download);
+        imgDownload.setOnClickListener(this);
+        imgUpload = (ImageView) findViewById(R.id.image_upload);
+        imgUpload.setOnClickListener(this);
+        imgLogin = (ImageView) findViewById(R.id.image_login);
+        imgLogin.setOnClickListener(this);
         btnAddProject = (Button) findViewById(R.id.addProject);
         btnAddProject.setOnClickListener(this);
         Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
@@ -563,11 +577,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (nInfo != null && nInfo.isConnected()) {
             s3credentialsProvider();
             setTransferUtility();
-            buttonDownload.setEnabled(true);
+            imgDownload.setEnabled(true);
             connected = true;
             //getJSON();
         } else {
-            buttonDownload.setEnabled(false);
+            imgDownload.setEnabled(false);
             Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
             connected = false;
         }
@@ -620,13 +634,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
-    private void requestProject(final String project_Name) {
+    private void requestProject(final String project_Name, final int template) {
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
         if (nInfo != null && nInfo.isConnected()) {
-
+            final DBHandler dbHandler = new DBHandler(this, null, null, 1);
             class reqproj extends AsyncTask<Void, Void, String> {
                 ProgressDialog loading;
 
@@ -640,7 +654,42 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 @Override
                 protected void onPostExecute(String s) {
                     super.onPostExecute(s);
+
                     JSON_STRING_NEW_PROJECT = s;
+                    JSONObject jsonObject = null;
+
+                    try {
+                        jsonObject = new JSONObject(s);
+                        JSONArray result = jsonObject.getJSONArray(MyConfig.TAG_JSON_ARRAY);
+                        //   editTextMessage.setText("Test begin additional");
+
+                        for (int i = 0; i < result.length(); i++) {
+                            JSONObject jo = result.getJSONObject(i);
+                            String projId_ = jo.getString(MyConfig.TAG_PROJECT_ID);
+
+                            // testing only -
+                            //   editTextMessage.setText("Test end additional");
+                            projId = Integer.parseInt(projId_);
+                        }
+
+                    } catch (JSONException e) {
+                        // editTextMessage.setText(" Exception");
+                        Log.e("ESM", "unexpected JSON exception", e);
+                        //e.printStackTrace();
+                    }
+
+                    switch (template){
+
+                        case 1: {
+                            dbHandler.addLevel(projId, 0, 0, 0, 0, 0, "Item Title 1", 0);  //this is the ESM category
+                            dbHandler.addLevel(projId, 1, 0, 1, 0, 1, "Item Title 2", 0);  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 1, 1, 1, "Document Page");  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 2, 1, 2, "Document Page");  //this is the ESM category
+                            break;
+                        }
+                    }
+
+
                     update_NewProject();
                     updatePropList();
                     loading.dismiss();
@@ -763,11 +812,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (v == btnAddProject) {
 
             final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Folders and files ");
             // add a list
             String[] actions = {"Create New Folder",
-                    "Add a File to the Folder ",
+                    "Add a Document File to the Folder ",
+                    "New Folder/Document simple template ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -791,7 +843,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             if (USER_ID > 0) {
-                                                requestProject(branchText.getText().toString());
+                                                requestProject(branchText.getText().toString(),0);
                                                 //    downloadprojects();
                                             } else
                                                 Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
@@ -822,11 +874,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Add New File to the Folder ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Add New Document to the Folder ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("File Name : ");//Integer.parseInt(locationId)
+                            locationText.setText("Document Name : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Name the File");
+                            branchText.setHint("Document Title");
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
@@ -856,6 +908,42 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 2: {
 
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Create a New Folder and basic document outline  ");//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Folder title.");
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (USER_ID > 0) {
+                                                requestProject(branchText.getText().toString(),1);
+
+
+
+                                                //    downloadprojects();
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
 
                             break;
                         }
@@ -880,7 +968,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        if (v == buttonDownload) {
+        if (v == imgDownload) {
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -990,7 +1078,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
-        if (v == btnLogin) {
+        if (v == imgLogin) {
 
             final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
@@ -1206,7 +1294,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        if (v == buttonUpload) {
+        if (v == imgUpload) {
 
 
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
@@ -1243,11 +1331,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
-
-        if (v == photo_cam) {
-
-
-        }
 
 
         if (v == info_icon) {
@@ -1664,7 +1747,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //  File imgFile = new  File(root);
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
-        int screenIamgeWidth = 500; //mPhotoImageView.getWidth();
+        int screenIamgeWidth = 700; //mPhotoImageView.getWidth();
         int screenIamgeHeight = 500; // mPhotoImageView.getHeight();
 
         bmOptions.inJustDecodeBounds = true;
@@ -1685,9 +1768,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         double originalWidthToHeightRatio = 1.0 * bmOriginalWidth / bmOriginalHeight;
         double originalHeightToWidthRatio = 1.0 * bmOriginalHeight / bmOriginalWidth;
         //choose a maximum height
-        int maxHeight = 1200;
+        int maxHeight = 1800;
         //choose a max width
-        int maxWidth = 1200;
+        int maxWidth = 1800;
         //call the method to get the scaled bitmap
 
         // bmOptions.inJustDecodeBounds = false;
@@ -1730,8 +1813,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //  File imgFile = new  File(root);
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
-        int screenIamgeWidth = 500; //mPhotoImageView.getWidth();
-        int screenIamgeHeight = 500; // mPhotoImageView.getHeight();
+        int screenIamgeWidth = 2500; //mPhotoImageView.getWidth();
+        int screenIamgeHeight = 1875; // mPhotoImageView.getHeight();
 
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mImageFileLocation, bmOptions);
@@ -1751,9 +1834,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         double originalWidthToHeightRatio = 1.0 * bmOriginalWidth / bmOriginalHeight;
         double originalHeightToWidthRatio = 1.0 * bmOriginalHeight / bmOriginalWidth;
         //choose a maximum height
-        int maxHeight = 1200;
+        int maxHeight = 860;
         //choose a max width
-        int maxWidth = 1200;
+        int maxWidth = 1150;
         //call the method to get the scaled bitmap
 
         // bmOptions.inJustDecodeBounds = false;
@@ -1829,7 +1912,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     private static Bitmap scaleDeminsFromHeight(Bitmap bm, int maxHeight, int bmOriginalHeight, double originalWidthToHeightRatio) {
-        int newHeight = (int) Math.min(maxHeight, bmOriginalHeight * .55);
+        int newHeight = (int) Math.min(maxHeight, bmOriginalHeight * .8);
         int newWidth = (int) (newHeight * originalWidthToHeightRatio);
         bm = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
         return bm;
@@ -1837,7 +1920,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     private static Bitmap scaleDeminsFromWidth(Bitmap bm, int maxWidth, int bmOriginalWidth, double originalHeightToWidthRatio) {
         //scale the width
-        int newWidth = (int) Math.min(maxWidth, bmOriginalWidth * .75);
+        int newWidth = (int) Math.min(maxWidth, bmOriginalWidth * .8);
         int newHeight = (int) (newWidth * originalHeightToWidthRatio);
         bm = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
         return bm;

@@ -1462,7 +1462,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
-        valuesi2.put(COLUMN_LABEL, "File 1");
+        valuesi2.put(COLUMN_LABEL, "Document");
         valuesi2.put(COLUMN_LEVEL, "1");
         valuesi2.put(COLUMN_PARENT,  pID );
         valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID)+1);

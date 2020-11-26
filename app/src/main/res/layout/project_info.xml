@@ -136,7 +136,7 @@
                         android:backgroundTint="#DFB005"
                         android:text=""
                         android:textSize="11sp"
-                        android:drawableStart="@drawable/ic_text_box_plus_outline"
+                        android:drawableStart="@drawable/ic_file_tree"
 
                         />
 
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.33"
                         android:backgroundTint="#DFB005"
-                        android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:drawableLeft="@drawable/ic_edit_folder_btn"
                         android:enabled="true"
                         android:text=""
                         android:textColor="@android:color/white" />
