@@ -59,8 +59,7 @@
                     android:id="@+id/image_upload"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="80dp"
+                    android:layout_gravity="center"
                     android:layout_marginBottom="3dp"
 
                     android:foreground="@drawable/ic_cloud_upload_outline" />
@@ -72,7 +71,7 @@
                     android:id="@+id/image_download"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center|left"
                     android:layout_marginLeft="40dp"
                     android:layout_marginBottom="3dp"
 
@@ -82,7 +81,7 @@
                 <ImageView
                     android:id="@+id/image_login"
                     android:layout_width="35dp"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="3dp"

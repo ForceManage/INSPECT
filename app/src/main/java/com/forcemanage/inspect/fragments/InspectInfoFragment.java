@@ -195,11 +195,11 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
    //      if (!endTime.equals("null"))
   //       endTime = "2020-01-01 01:01:00";
 
-         inspectDate.setText("File created:  "+stringdate(inspectionDate,1));
-         inspectionType.setText("Type of File:  "+typeInspection);
+         inspectDate.setText("Document created:  "+stringdate(inspectionDate,1));
+         inspectionType.setText("Document type:  "+typeInspection);
          if(!startTime.equals("null"))
          inspectedDate.setText("Initial log recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
-         Hrs.setText("Recorded allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
+         Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
 
     //     inspector.setText("Auditor:  "+ auditor);
 

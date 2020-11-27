@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="Infomation Collection Mode  "
+                        android:text="Document Contents  "
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="normal|bold" />
@@ -102,7 +102,7 @@
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
-                            android:hint="Relevant trade/skillset applicable"
+                            android:hint="Reference"
                             android:textSize="16sp"/>
 
 
@@ -137,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="Relevant Information:  "
+                        android:text="Other considerations:  "
                         android:textColor="@android:color/black"
                         android:textStyle="normal|bold" />
 

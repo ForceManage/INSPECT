@@ -25,6 +25,7 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -1087,7 +1089,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("LOGIN WARNING");
-                builder.setMessage("Login will delete current unsaved file data. Upload data prior to login.");
+                builder.setMessage("A new Login will delete current unsaved file data. Upload data prior to login.");
 
 
                 builder.setNeutralButton("UPLOAD UNSAVED FILE DATA", new DialogInterface.OnClickListener() {
@@ -1135,7 +1137,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         final TextView text = (TextView) promptView.findViewById(R.id.text);
                         loginDialog.setView(promptView);
                         loginDialog.setTitle("Login");
-                        loginDialog.setCancelable(true).setNegativeButton("LOGIN", new DialogInterface.OnClickListener() {
+                        loginDialog.setCancelable(true).setNegativeButton("REGISTER", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                RegisterFragment fragment = new RegisterFragment();
+                                doFragmentTransaction(fragment, "RegisterFragment", true, "");
+
+                            }
+                        });
+
+                        loginDialog.setPositiveButton("LOGIN", new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -1144,20 +1155,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 get_user_JSON();
 
                             }
-                        });
-
-                        loginDialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                RegisterFragment fragment = new RegisterFragment();
-                                doFragmentTransaction(fragment, "RegisterFragment", true, "");
-
-                            }
 
                         });
 
                         AlertDialog alert = loginDialog.create();
                         alert.show();
+
                     }
                 });
 
@@ -1198,7 +1201,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             final TextView text = (TextView) promptView.findViewById(R.id.text);
                             loginDialog.setView(promptView);
                             loginDialog.setTitle("Login");
-                            loginDialog.setCancelable(true).setNegativeButton("LOGIN", new DialogInterface.OnClickListener() {
+                            loginDialog.setCancelable(true).setPositiveButton("LOGIN", new DialogInterface.OnClickListener() {
 
 
                                 public void onClick(DialogInterface dialog, int id) {
@@ -1212,6 +1215,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             AlertDialog alert = loginDialog.create();
                             alert.show();
+
+
                         }
                     });
 
@@ -2919,17 +2924,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+           //     loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
                 progressBar1.setVisibility(View.VISIBLE);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                loading.dismiss();
+            //    loading.dismiss();
+
                 JSON_STRING_USER = s;
                 if(s.equals("User not found")  || s.equals("incorrect password")) {
                     Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                    progressBar1.setVisibility(View.GONE);
                 }
                 else {
                     clearTablet();
@@ -3934,32 +3941,55 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             if (F.exists() != true) {
                 bucket = CLIENT;
 
-                Thread thread = new Thread(new Runnable() {
+
+                class download_photo extends AsyncTask<Void, Void, String> {
 
                     @Override
-                    public void run() {
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        progressBar1.setVisibility(View.VISIBLE);
+                    }
 
-                        TransferObserver transferObserver = transferUtility.download(
-                                bucket,     /* The bucket to download from */
-                                "images/"+img_name,    /* The key for the object to download */
-                                F      /* The file to download the object to */
-
-                        );
-
-                        transferObserverListener(transferObserver);
-
+                    @Override
+                    protected void onPostExecute(final String s) {
+                        super.onPostExecute(s);
+                        progressBar1.setVisibility(View.GONE);
 
                     }
-                });
-                thread.start();
+
+
+                    @Override
+                    protected String doInBackground(Void... params) {
+
+                        try {
+
+                            TransferObserver transferObserver = transferUtility.download(
+                                    bucket,     /* The bucket to download from */
+                                    "images/"+img_name,    /* The key for the object to download */
+                                    F      /* The file to download the object to */
+
+                            );
+
+                            transferObserverListener(transferObserver);
+
+                        } catch (Exception e) {
+
+                            Log.e("PUBLIC READ", "PUBLIC READ ERROR ",e );
+                        }
+
+                        return "images/";
+                    }
+
+                }
+
+
+                download_photo dwn_photo = new download_photo();
+                dwn_photo.execute();
 
 
 
+            }//if file exists
 
-
-
-
-            }
         }
 
     }

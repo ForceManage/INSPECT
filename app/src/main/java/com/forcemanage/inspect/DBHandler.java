@@ -665,12 +665,12 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         ContentValues contentValues1 = new ContentValues();
         switch (item){
-            case "Project ID":{
+            case "Folder ID":{
                 contentValues.put(COLUMN_ADDRESS_NUMBER, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Project Title":{
+            case "Folder Title":{
                 contentValues.put(COLUMN_PROJECT_ADDRESS, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 contentValues1.put(COLUMN_LABEL, txt);
@@ -718,7 +718,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 break;
             }
 
-            case "Project Note":{
+            case "Folder Note":{
                 contentValues.put(COLUMN_PROJECT_NOTE, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
@@ -983,6 +983,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_IMAGE, photo);
+        values.put(COLUMN_INSPECTION_STATUS, "m");
         db.update(TABLE_INSPECTION, values, COLUMN_PROJECT_ID + " = " + projectId+" AND "+COLUMN_INSPECTION_ID+" = "+iId, null);
         db.close();
 

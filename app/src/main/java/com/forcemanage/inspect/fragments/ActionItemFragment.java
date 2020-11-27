@@ -384,11 +384,11 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
             dbHandler.updateActionItem(projectId, inspectionId, aId, dayTime(1), descriptionE.getText().toString(),
                                       "", performE.getText().toString(), ""
-                    , scopeE.getText().toString(), "p", notesE.getText().toString());
+                    , scopeE.getText().toString(), "m", notesE.getText().toString());
 
             dbHandler.statusChanged(projId, iId);
 
-            globalVariables.Edited = false;
+
 
         }
 
@@ -416,7 +416,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
             dbHandler.statusChanged(projId, iId);
 
-            globalVariables.Edited = false;
+
 
         }
     }

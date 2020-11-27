@@ -133,7 +133,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
         TextView folder = (TextView) view.findViewById(R.id.folder);
-        folder.setText(ProjAddress+" Project Folder TABS");
+        folder.setText(ProjAddress+" folder document item Titles");
 
 
 
@@ -195,11 +195,11 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         btnDelTab.setOnClickListener(this);
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
-        TVprojectID.setText("Project ID:  " + branchHead);
+        TVprojectID.setText("Folder ID:  " + branchHead);
         TVprojectID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Project ID", TVprojectID.getText().toString());
+                editProject("Folder ID", TVprojectID.getText().toString());
             }
         });
 
@@ -208,7 +208,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         projAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Project Title", projAddress.getText().toString());
+                editProject("Folder Title", projAddress.getText().toString());
             }
         });
 
@@ -216,7 +216,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         Folder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Project Title", projAddress.getText().toString());
+                editProject("Folder Title", projAddress.getText().toString());
             }
         });
 
@@ -403,8 +403,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Add Folder TABS ");
             // add a list
-            String[] actions = {"Add a TAB to Project Folder",
-                    "Add Branch to the Current TAB",
+            String[] actions = {"Add Item Title Folder",
+                    "Add sub-Title to Title",
 
                     "Cancel"};
 
@@ -420,9 +420,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -431,7 +431,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                             //      photoBranch = "";
                                             if(projId != 0)
                                             addLevel(0, branchText.getText().toString());
-                                            else Toast.makeText(getContext(), "Create or Select a Project", Toast.LENGTH_SHORT).show();
+                                            else Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
 
                                         }
@@ -458,9 +458,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("TAB Title: " + branchTitle);//Integer.parseInt(locationId)
+                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("This TAB Branch below : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             // setup a dialog window
                             alertDialogBuilder.setCancelable(false)
@@ -513,9 +513,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                                 alertDialogBuilder.setView(promptView);
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("File TAB Title: " + branchTitle);//Integer.parseInt(locationId)
+                                itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Current TAB Title : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
                                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                                 LocationText.setText(GlobalVariables.name);
                                 // setup a dialog window
@@ -551,7 +551,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Choose an action");
             // add a list
-            String[] actions = {"Delete the current TAB",
+            String[] actions = {"Delete the current Title",
             };
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
@@ -565,7 +565,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                             alertDialogBuilder.setView(promptView);
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the Branch and ALL the associated data");//location.getText().toString());
+                            locationText.setText("Warning - this will delete the Title and ALL the associated data");//location.getText().toString());
 
                             alertDialogBuilder.setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -694,7 +694,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         switch (type){
 
             case(-1):{
-                Toast.makeText(getContext(), "Cannot delete TAB with contents, delete contents first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cannot delete Title with contents, delete contents first", Toast.LENGTH_SHORT).show();
 
                 break;
             }
@@ -778,11 +778,11 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                         if(projectId == "" | projectId.equals(null))
-                            Toast.makeText(getContext(), "Select a Project ",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Select a Folder ",Toast.LENGTH_LONG).show();
                             else{
                         switch (item) {
 
-                            case "Project Title": {
+                            case "Folder Title": {
 
                                 if(branchText.getText().toString()=="")
                                     Toast.makeText(getContext(), "Retry with valid text ",Toast.LENGTH_LONG).show();
@@ -794,7 +794,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 //        globalVariables.OnSelectionChanged(0);
                                 break;
                             }
-                            case "Project ID": {
+                            case "Folder ID": {
                                 dbHandler.updateProject(projectId, item, branchText.getText().toString(), 0);
                                 dbHandler.statusChanged(projId,0);
                                 globalVariables.OnProjectChanged(0);
@@ -870,14 +870,14 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
         int success = dbHandler.updateMapLabel(projId, GlobalVariables.aId, branchLabel);
         if(success == 1) loadMap();
-        else Toast.makeText(getContext(), "Create/select TAB", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(getContext(), "Create/select Item", Toast.LENGTH_SHORT).show();
     }
 
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
-        dbHandler.updateProject(Integer.toString(projId), "Project Note" , note, 0);
+        dbHandler.updateProject(Integer.toString(projId), "Folder Note" , note, 0);
         dbHandler.statusChanged(projId,0);
     }
 
