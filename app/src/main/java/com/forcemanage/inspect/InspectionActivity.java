@@ -57,12 +57,6 @@ import java.util.List;
 public class InspectionActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, tabchangelistener, View.OnClickListener {
 
     DBHandler ESMdb;
-    private Button buttonInsert;
-    private Button btnAddPage;
-    private Button btnAddDisc;
-    private Button btnAddCert;
-    private Button buttonDelete;
-    private Button buttonEdit;
     private String projectId;
     private String inspectionId;
     private String seq = "cur";
@@ -83,7 +77,11 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
-
+    private ImageView addItem;
+    private ImageView addPage;
+    private ImageView addSummary;
+    private ImageView addCert;
+    private ImageView addInfo;
 
     public ImageView mPhotoImageView;
     public String photoBranch;
@@ -173,18 +171,19 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         projectId = getIntent().getExtras().getString("PROJECT_ID");
         inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
         logTime = getIntent().getExtras().getBoolean("logTime");
-        buttonInsert = (Button) findViewById(R.id.button2);
-        buttonInsert.setOnClickListener(this);
-        buttonDelete = (Button) findViewById(R.id.button4);
-        buttonDelete.setOnClickListener(this);
+
         tab_edit = (ImageView) findViewById(R.id.image_edit);
         tab_edit.setOnClickListener(this);
-        btnAddPage = (Button) findViewById(R.id.button21);
-        btnAddPage.setOnClickListener(this);
-        btnAddDisc = (Button) findViewById(R.id.button22);
-        btnAddDisc.setOnClickListener(this);
-        btnAddCert = (Button) findViewById(R.id.button_cert);
-        btnAddCert.setOnClickListener(this);
+        addItem = (ImageView) findViewById(R.id.add_Item);
+        addItem.setOnClickListener(this);
+        addPage = (ImageView) findViewById(R.id.add_Page);
+        addPage.setOnClickListener(this);
+        addSummary = (ImageView) findViewById(R.id.add_Summary);
+        addSummary.setOnClickListener(this);
+        addCert = (ImageView) findViewById(R.id.add_Cert);
+        addCert.setOnClickListener(this);
+        addInfo = (ImageView) findViewById(R.id.add_Info);
+        addInfo.setOnClickListener(this);
         zone = 0;
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
@@ -1154,7 +1153,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         }
 
 
-        if (v == buttonInsert) {
+        if (v == addItem) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1256,7 +1255,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
         }
 
 
-        if (v == btnAddPage) {
+        if (v == addPage) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1268,7 +1267,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
             // add a list
             String[] actions = {
                     "Add Page to Item",
-                    "Attach Addendum to Page",
+                    "Add Addendum to Page",
                     "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1365,7 +1364,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         }
 
-        if (v == btnAddDisc) {
+        if (v == addSummary) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1413,7 +1412,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
 
 
-        if (v == btnAddCert) {
+        if (v == addCert) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -1459,7 +1458,7 @@ public class InspectionActivity extends AppCompatActivity implements OnVerseName
 
         }
 
-        if (v == buttonDelete) {
+        if (v == addInfo) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 

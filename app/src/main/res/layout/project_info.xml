@@ -38,7 +38,17 @@
                     android:background="@drawable/head_frame"
                     android:paddingBottom="10dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:id="@+id/imageView_folder"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:foreground="@drawable/folder2_red" />
 
                      <TextView
                         android:id="@+id/branchTitle"
@@ -46,12 +56,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
                         android:paddingTop="6dp"
-                        android:paddingLeft="10dp"
+                        android:paddingLeft="5dp"
                         android:text="Folder:  "
                         android:textSize="20sp"
                         android:layout_marginBottom="5dp"
                         android:textColor="@android:color/white"
                         android:textStyle="normal|bold" />
+
+                </LinearLayout>
 
                     <TextView
                         android:id="@+id/branchName"
@@ -65,43 +77,62 @@
 
                 </LinearLayout>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
 
-    <ImageView
-        android:id="@+id/imageView_folder"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_gravity="bottom"
-        android:foreground="@drawable/folder2_red" />
 
-    <TextView
-        android:id="@+id/folder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="Folder Items  "
-        android:layout_gravity="center"
-        android:textColor="@android:color/background_dark"
-        android:textSize="16sp"
-        android:textStyle="normal|bold" />
 
-</LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:weightSum="1"
+                    android:layout_margin="5dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/add_Tab"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_folder_add" />
+
+                    <ImageView
+                        android:id="@+id/edit_Tab"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_edit_folder_btn" />
+
+                    <ImageView
+                        android:id="@+id/del_Tab"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_delete_24px" />
+
+
+                </LinearLayout>
 
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/fragment_folder"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="0dp"
                     android:layout_gravity="top"
-                    android:layout_weight="1"
+                    android:background="@drawable/image_border"
+                    android:layout_weight="0.8"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:backgroundTint="@color/light"
                     android:orientation="horizontal">
 
 
@@ -110,7 +141,9 @@
                         android:name="com.forcemanage.inspect.MapViewFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="5dp"
+                        />
 
                     <fragment
                         android:id="@+id/detail_text"
@@ -121,50 +154,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_gravity="bottom">
 
-                    <Button
-                        android:id="@+id/addTab"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.33"
-                        android:backgroundTint="#DFB005"
-                        android:text=""
-                        android:textSize="11sp"
-                        android:drawableStart="@drawable/ic_file_tree"
-
-                        />
-
-                    <Button
-                        android:id="@+id/button_edit"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.33"
-                        android:backgroundTint="#DFB005"
-                        android:drawableLeft="@drawable/ic_edit_folder_btn"
-                        android:enabled="true"
-                        android:text=""
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/delTab"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.33"
-                        android:backgroundTint="#DFB005"
-                        android:text=""
-                        android:textSize="11sp"
-                        android:drawableLeft="@drawable/ic_delete_24px"
-                        />
-
-
-
-                </LinearLayout>
 
 
             </LinearLayout>

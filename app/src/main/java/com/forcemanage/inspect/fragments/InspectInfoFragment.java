@@ -66,8 +66,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String startTime;
     private String endTime;
     private String inspPhoto;
-    private Button reportBtn;
     private ImageView printer;
+    private ImageView openDoc;
 
 
 
@@ -118,7 +118,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
  //       branch = (TextView) view.findViewById(R.id.level);
         bNote = (EditText) view.findViewById(R.id.note);
         Note2 = (EditText) view.findViewById(R.id.preamble);
-
+        openDoc = (ImageView) view.findViewById(R.id.open_doc);
         Label = (TextView) view.findViewById(R.id.Text1);
         ImageView file = (ImageView) view.findViewById(R.id.file);
         file.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +133,6 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
         TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
    //     TextView inspector = (TextView) view.findViewById(R.id.Text5);
-        Button inspectionBtn = (Button) view.findViewById(R.id.InspectionButton);
         printer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,7 +251,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             mPhotoImageView.setImageBitmap(myBitmap);
         }
 
-        inspectionBtn.setOnClickListener(new View.OnClickListener() {
+        openDoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -332,7 +331,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private void setText(){
 
         if (!branchHead.equals("")){
-           title.setText("Folder:  "+branchHead);
+           title.setText("Document");
   //         branch.setText(branchLabel);
            }
     }
@@ -402,9 +401,9 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("File Information ");//Integer.parseInt(locationId)
+        itemTitle.setText("Document Information ");//Integer.parseInt(locationId)
         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-        locationText.setText("File Title");//Integer.parseInt(locationId)
+        locationText.setText("Document Title");//Integer.parseInt(locationId)
         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
         branchText.setHint(value);
         // setup a dialog window

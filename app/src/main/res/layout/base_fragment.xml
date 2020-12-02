@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:text="FILE TAB "
+                    android:text="Document Page "
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />
@@ -69,16 +69,6 @@
                     android:layout_marginBottom="5dp"
                     android:textStyle="normal|bold" />
 
-                <TextView
-                    android:id="@+id/level"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:text="Item Title:  "
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="normal|bold" />
-
             </LinearLayout>
 
 
@@ -94,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:layout_marginTop="25dp"
-                    android:text="Map branch name:  "
+                    android:text="Document title:  "
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />

@@ -110,11 +110,7 @@ import static java.lang.Integer.parseInt;
 public class MainActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, tabchangelistener, View.OnClickListener {
 
     public static final int REQUEST_CODE = 20;
-    private Button buttonDownload;
-    private Button buttonUpload;
-    private Button buttonLoadJobList;
-    private Button btnLogin;
-    private Button btnAddProject;
+
     private EditText TextMessage;
     private String JSON_STRING;
     private String JSON_STRING_ADDITIONAL;
@@ -136,6 +132,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private Switch ToggleTB;
     public ImageView mPhotoImageView;
     private ImageView Folders;
+    private ImageView addFolder;
+    private ImageView listFolders;
     private ImageView info_icon;
     private ImageView imgDownload;
     private ImageView imgUpload;
@@ -247,13 +245,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //     buttonSyncPhotos.setOnClickListener(this);
         //     buttonInspection = (Button) findViewById(R.id.btnInspection);
         //     buttonInspection.setOnClickListener(this);
-        buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
-        buttonLoadJobList.setOnClickListener(this);
 
       //  btnLogin = (Button) findViewById(R.id.btnlogin);
       //  btnLogin.setOnClickListener(this);
-        btnAddProject = (Button) findViewById(R.id.addProject);
-        btnAddProject.setOnClickListener(this);
+        addFolder = (ImageView) findViewById(R.id.add_Project);
+        addFolder.setOnClickListener(this);
+        listFolders = (ImageView) findViewById(R.id.list_Folders);
+        listFolders.setOnClickListener(this);
         Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
         Folders.setOnClickListener(this);
         imgDownload = (ImageView) findViewById(R.id.image_download);
@@ -356,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
         return true;
     }
+
 
     private void init() {
 
@@ -561,8 +560,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
       //  buttonDownload.setOnClickListener(this);
      //   buttonUpload = (Button) findViewById(R.id.btnUpload);
      //   buttonUpload.setOnClickListener(this);
-        buttonLoadJobList = (Button) findViewById(R.id.btnloadJobs);
-        buttonLoadJobList.setOnClickListener(this);
+        addFolder = (ImageView) findViewById(R.id.add_Project);
+        addFolder.setOnClickListener(this);
+        listFolders = (ImageView) findViewById(R.id.list_Folders);
+        listFolders.setOnClickListener(this);
+
     //    btnLogin = (Button) findViewById(R.id.btnlogin);
     //    btnLogin.setOnClickListener(this);
         imgDownload = (ImageView) findViewById(R.id.image_download);
@@ -571,8 +573,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         imgUpload.setOnClickListener(this);
         imgLogin = (ImageView) findViewById(R.id.image_login);
         imgLogin.setOnClickListener(this);
-        btnAddProject = (Button) findViewById(R.id.addProject);
-        btnAddProject.setOnClickListener(this);
+
         Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
         Folders.setOnClickListener(this);
 
@@ -811,7 +812,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
-        if (v == btnAddProject) {
+        if (v == addFolder) {
 
             final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 
@@ -1230,7 +1231,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
         //Loads jobs from the tablet database
-        if (v == buttonLoadJobList) {
+        if (v == listFolders) {
 
 
             if (USER_ID == 0) {
@@ -1472,11 +1473,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     case 1: {
 
 
-                        if (dbHandler.checkstatus("project", projId) == 0) reportMailer(0, "");
-                        else
+                        if (dbHandler.checkstatus("project", projId) == 0)
+                            reportMailer(0, "");
+
+                        else {
                             Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
-
-
+                              }
                         break;
 
                     } //

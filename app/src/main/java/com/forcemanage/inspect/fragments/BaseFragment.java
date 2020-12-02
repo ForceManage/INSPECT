@@ -105,7 +105,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             iId = Integer.parseInt(inspectionId);
         }
         title = (TextView) view.findViewById(R.id.title);
-        activity = (TextView) view.findViewById(R.id.level);
+      //  activity = (TextView) view.findViewById(R.id.level);
         branch = (TextView) view.findViewById(R.id.Text1);
         TabId = (TextView) view.findViewById(R.id.aId);
         branch.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +279,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
         if (!branchHead.equals("")) {
             title.setText(branchHead);
-            activity.setText("Activity title:  "+inspection);
+      //      activity.setText("Activity title:  "+inspection);
             branch.setText(branchLabel);
             bNote.setText(branchNote);
             TabId.setText(Integer.toString(aId));

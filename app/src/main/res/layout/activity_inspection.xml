@@ -90,14 +90,64 @@
 
 
 
-
-
-
-
-
-
-
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="7dp"
+                    android:weightSum="1"
+                    >
+
+                    <ImageView
+                        android:id="@+id/add_Item"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_folder_add" />
+
+                    <ImageView
+                        android:id="@+id/add_Page"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_edit_outline" />
+
+                    <ImageView
+                        android:id="@+id/add_Summary"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_comment" />
+
+                    <ImageView
+                        android:id="@+id/add_Cert"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_certificate" />
+
+                    <ImageView
+                        android:id="@+id/add_Info"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:foreground="@drawable/ic_file_info" />
+
+
+                </LinearLayout>
 
 
 
@@ -128,77 +178,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    >
 
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:backgroundTint="#DFB005"
-                        android:layout_marginLeft="5dp"
-                        android:drawableStart="@drawable/ic_file_tree"
-                        android:enabled="true"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/button21"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:backgroundTint="#DFB005"
-                        android:drawableStart="@drawable/ic_edit_outline"
-                        android:enabled="true"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/button22"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:backgroundTint="#DFB005"
-                        android:drawableStart="@drawable/ic_comment"
-                        android:enabled="true"
-                        android:textColor="@android:color/white" />
-
-
-
-                    <Button
-                        android:id="@+id/button_cert"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:backgroundTint="#DFB005"
-                        android:drawableLeft="@drawable/ic_certificate"
-                        android:enabled="true"
-                        android:text=""
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/button4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:backgroundTint="#DFB005"
-                        android:drawableLeft="@drawable/ic_file_info"
-                        android:enabled="true"
-                        android:layout_marginRight="5dp"
-                        android:text=""
-                        android:textColor="@android:color/white" />
-
-
-
-
-
-
-
-
-
-                </LinearLayout>
 
             </LinearLayout>
 

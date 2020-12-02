@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,13 +59,12 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private ImageView photo_cam;
     private ImageView info_file;
     private ImageView photo_file;
+    private ImageView add_Tab;
+    private ImageView edit_Tab;
+    private ImageView delete_Tab;
     private String branchHead = "";
     private String branchLabel = "";
     private String branchNote = "";
-    private Button btnAddTab;
-    private Button btnEditTab;
-    private Button btnDelTab;
-
     private String ProjAddress = "";
     private Boolean Edited;
     private String note;
@@ -132,11 +132,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         title = (TextView) view.findViewById(R.id.title);
         bNote = (EditText) view.findViewById(R.id.note);
         bNote.setText(note);
-        TextView folder = (TextView) view.findViewById(R.id.folder);
-        folder.setText(ProjAddress+" folder document item Titles");
-
-
-
 
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
@@ -187,12 +182,12 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         }
 
         projectId = Integer.toString(projId);
-        btnAddTab = (Button) view.findViewById(R.id.addTab);
-        btnAddTab.setOnClickListener(this);
-        btnEditTab = (Button) view.findViewById(R.id.button_edit);
-        btnEditTab.setOnClickListener(this);
-        btnDelTab = (Button) view.findViewById(R.id.delTab);
-        btnDelTab.setOnClickListener(this);
+        add_Tab = (ImageView) view.findViewById(R.id.add_Tab);
+        add_Tab.setOnClickListener(this);
+        edit_Tab = (ImageView) view.findViewById(R.id.edit_Tab);
+        edit_Tab.setOnClickListener(this);
+        delete_Tab = (ImageView) view.findViewById(R.id.del_Tab);
+        delete_Tab.setOnClickListener(this);
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
         TVprojectID.setText("Folder ID:  " + branchHead);
@@ -393,7 +388,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     @Override
     public void onClick(View v) {
 
-        if (v == btnAddTab) {
+        if (v == add_Tab) {
 
             DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
@@ -501,7 +496,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
 
-            if (v == btnEditTab) {
+            if (v == edit_Tab) {
 
                 final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
@@ -543,7 +538,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
 
-            if (v == btnDelTab) {
+            if (v == delete_Tab) {
 
 
             // setup the alert builder
