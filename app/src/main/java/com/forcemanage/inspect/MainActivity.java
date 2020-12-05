@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -61,6 +62,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.attributes.A_Attributes;
 import com.forcemanage.inspect.attributes.ActionItemAttributes;
 import com.forcemanage.inspect.attributes.CertificateInspectionAttributes;
@@ -80,6 +82,7 @@ import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
+import com.forcemanage.inspect.InspectionActivity;
 
 
 import org.json.JSONArray;
@@ -92,6 +95,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOError;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -131,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private CheckBox checkBox;
     private Switch ToggleTB;
     public ImageView mPhotoImageView;
-    private ImageView Folders;
+    private ImageView Folders_img;
     private ImageView addFolder;
     private ImageView listFolders;
     private ImageView info_icon;
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private String dirName;
     public String inspectionId;
     public String projectId = "null";
-    private int projId;
+    private int projId = 0;
     private int iId;
     private String fname;
     private String cat;
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public String propPhoto;
     private ProgressBar progressBar1;
     private Boolean connected;
+    private TextView client;
 
 
     AmazonS3 s3Client;
@@ -182,37 +187,38 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
       //  ESMdb = new DBHandler(this, null, null, 1);
 
 
-        TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
+        client = (TextView) findViewById(R.id.ProjectList);
+        client.setOnClickListener(this);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         init();
 
-        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
-        progressBar1 = findViewById(R.id.progressBar1);
-        projectlistItems = new ArrayList<>();
-        ProjectData listItem;
+        ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID, projId);
+        maplistItems = new ArrayList<>();
 
-        for (int i = 0; i < (Projects.size()); i++) {
+     //   projectlistItems = new ArrayList<>();
+        MapViewData listItem;
 
-            listItem = new ProjectData(
+        for (int i = 0; i < (Folders.size()); i++) {
 
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
+            listItem = new MapViewData(
 
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Projects.get(i).get(MyConfig.TAG_LABEL),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_P_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
-                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
-                    Projects.get(i).get(MyConfig.TAG_NOTES)
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
+                    Folders.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                    Folders.get(i).get(MyConfig.TAG_IMAGE1),
+                    Folders.get(i).get(MyConfig.TAG_NOTES)
 
             );
-            projectlistItems.add(listItem);
+            maplistItems.add(listItem);
         }
 
-        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
+        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
         //     TreeViewLists.LoadDisplayList();
 
 
@@ -225,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
 
             // Create an Instance of Fragment
-            ProjectViewFragment treeFragment = new ProjectViewFragment();
+            MapViewFragment treeFragment = new MapViewFragment();
             treeFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, treeFragment)
@@ -252,14 +258,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         addFolder.setOnClickListener(this);
         listFolders = (ImageView) findViewById(R.id.list_Folders);
         listFolders.setOnClickListener(this);
-        Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
-        Folders.setOnClickListener(this);
+        Folders_img = (ImageView) findViewById(R.id.imageView_projectfolder);
+        Folders_img.setOnClickListener(this);
         imgDownload = (ImageView) findViewById(R.id.image_download);
         imgDownload.setOnClickListener(this);
         imgUpload = (ImageView) findViewById(R.id.image_upload);
         imgUpload.setOnClickListener(this);
         imgLogin = (ImageView) findViewById(R.id.image_login);
         imgLogin.setOnClickListener(this);
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
@@ -429,15 +436,97 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     @Override
-    public void OnProjectChanged(int treeNameIndex){
-        ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
+    public void OnTabChanged(int treeNameIndex){
+
+        GlobalVariables.modified = false;
+
+        MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
+      //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
 
 
-        projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
-        inspectionId = Integer.toString(node.getiID());
-        projId = node.getprojId();
-        iId = node.getiID();
 
+        if(projId != node.getprojId()) {
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID, node.getprojId());
+
+            maplistItems = new ArrayList<>();
+
+            //   projectlistItems = new ArrayList<>();
+            MapViewData listItem;
+
+            for (int i = 0; i < (Folders.size()); i++) {
+
+                listItem = new MapViewData(
+
+
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
+                        Folders.get(i).get(MyConfig.TAG_LABEL),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                        Folders.get(i).get(MyConfig.TAG_IMAGE1),
+                        Folders.get(i).get(MyConfig.TAG_NOTES)
+
+                );
+                maplistItems.add(listItem);
+            }
+
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+           // GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
+            //     TreeViewLists.LoadDisplayList();
+
+            //   ProjectViewList.LoadInitialData();
+            //   ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
+            //   MapViewLists.LoadDisplayList();
+         //    node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+
+      //      ProjectViewList.LoadDisplayList();
+
+            //   OnSelectionChanged(0);
+        //    MapViewLists.LoadDisplayList();
+            DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.detail_text);
+
+           MapViewFragment newDetailFragment = new MapViewFragment();
+       //     Bundle args = new Bundle();
+       //     detailFragment.mCurrentPosition = (GlobalVariables.pos);
+
+       //     args.putInt(DetailFragment.KEY_POSITION, 0);
+       //     newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
+
+            GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+           // GlobalVariables.modified = true;
+
+            projId = node.getprojId();
+            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
+            inspectionId = Integer.toString(node.getiID());
+            iId = node.getiID();
+
+
+        }
+
+        else{
+
+            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
+            inspectionId = Integer.toString(node.getiID());
+            projId = node.getprojId();
+            iId = node.getiID();
+        }
 
         TextView projlist = (TextView) findViewById(R.id.ProjectList);
 
@@ -456,6 +545,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
+                bundle.putInt("USER_ID", USER_ID);
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
@@ -481,10 +571,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
 
             case 1: {
-
+    /*
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-                HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+                final HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
 
                 //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
              //   propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
@@ -506,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     mPhotoImageView.setImageDrawable(getDrawable(draw));
                 }
 
-  */
+
 
                 Bundle bundle = new Bundle();
 
@@ -523,9 +613,56 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
                 bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
 
-                InspectInfoFragment fragment = new InspectInfoFragment();
-                doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
-                fragment.setArguments(bundle);
+           //     InspectInfoFragment fragment = new InspectInfoFragment();
+          //      doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
+           //     fragment.setArguments(bundle);
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Log Session");
+                alertDialogBuilder.setMessage("Record file session time?");
+                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("PROJECT_ID", Integer.toString(projId));
+                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                        bundle.putString("DOC_NAME", projectItem.get(MyConfig.TAG_LABEL));
+                        bundle.putString("CLIENT", CLIENT);
+                        bundle.putInt("USER_ID", USER_ID);
+                        bundle.putBoolean("logTime", true);
+                        theIntent.putExtras(bundle);
+                        startActivity(theIntent);
+                        dialog.dismiss();
+
+                    }
+                })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("PROJECT_ID", Integer.toString(projId));
+                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                bundle.putString("DOC_NAME", projectItem.get(MyConfig.TAG_LABEL));
+                                bundle.putString("CLIENT", CLIENT);
+                                bundle.putInt("USER_ID", USER_ID);
+                                bundle.putBoolean("logTime", false);
+                                theIntent.putExtras(bundle);
+                                startActivity(theIntent);
+                                dialog.cancel();
+                            }
+                        });
+
+                // create an alert dialog
+                AlertDialog alert = alertDialogBuilder.create();
+                alert.show();
+
+
+
+     */
+
+
+
 
 
                 break;
@@ -535,16 +672,133 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
     @Override
-    public void OnTabChanged(int treeNameIndex){
+    public void OnProjectChanged(int treeNameIndex){
 
-        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+        ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
 
             GlobalVariables.aId = node.getaID();
             GlobalVariables.Level = node.getNodeLevel();
-            GlobalVariables.catId = node.getcatId();
+       //     GlobalVariables.catId = node.getcatId();
             GlobalVariables.name = node.getNodeName();
 
+        switch (node.getNodeLevel()) {
 
+
+            case 0: {
+
+     /*           DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
+                //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+                //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
+
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("projId", projId);
+                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+                bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
+                bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
+                bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
+                bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
+                bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
+                bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+                bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
+                bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
+                bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
+                bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
+                bundle.putString("propPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+
+
+
+                ProjectInfoFragment fragment = new ProjectInfoFragment();
+                doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
+                fragment.setArguments(bundle);
+
+
+      */
+
+                break;
+            }
+
+            case 1: {
+
+          //      DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                projId = node.getprojId();
+                iId = node.getiID();
+
+         //       final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
+
+
+                //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+             //   propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
+
+       /*         if(propPhoto.length() > 14)
+                {
+                    dirName = propPhoto.substring(6, 14);
+                    root = Environment.getExternalStorageDirectory().toString();
+                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
+
+                    if (propImage.exists()) {
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
+                        mPhotoImageView.setImageBitmap(myBitmap);
+                    }
+                }
+                else {
+                    Integer draw = android.R.drawable.ic_menu_camera;
+                    mPhotoImageView.setImageDrawable(getDrawable(draw));
+                }
+
+*/
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Log Session");
+                alertDialogBuilder.setMessage("Record file session time?");
+                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Intent theIntent = new Intent(getBaseContext(), InspectionActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("PROJECT_ID", Integer.toString(projId));
+                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                        bundle.putString("DOC_NAME", GlobalVariables.name);
+                        bundle.putBoolean("logTime", true);
+                        theIntent.putExtras(bundle);
+                        startActivity(theIntent);
+                        dialog.dismiss();
+
+                    }
+                })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent theIntent = new Intent(getBaseContext(), InspectionActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("PROJECT_ID", Integer.toString(projId));
+                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                bundle.putString("DOC_NAME", GlobalVariables.name);
+                                bundle.putBoolean("logTime", false);
+                                theIntent.putExtras(bundle);
+                                startActivity(theIntent);
+                                dialog.cancel();
+                            }
+                        });
+
+                // create an alert dialog
+                AlertDialog alert = alertDialogBuilder.create();
+                alert.show();
+
+
+
+
+
+
+
+
+
+                break;
+            }
+        }
         }
 
 
@@ -560,6 +814,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
       //  buttonDownload.setOnClickListener(this);
      //   buttonUpload = (Button) findViewById(R.id.btnUpload);
      //   buttonUpload.setOnClickListener(this);
+     //   USER_ID = 0;
         addFolder = (ImageView) findViewById(R.id.add_Project);
         addFolder.setOnClickListener(this);
         listFolders = (ImageView) findViewById(R.id.list_Folders);
@@ -574,8 +829,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         imgLogin = (ImageView) findViewById(R.id.image_login);
         imgLogin.setOnClickListener(this);
 
-        Folders = (ImageView) findViewById(R.id.imageView_projectfolder);
-        Folders.setOnClickListener(this);
+        Folders_img = (ImageView) findViewById(R.id.imageView_projectfolder);
+        Folders_img.setOnClickListener(this);
 
         if (nInfo != null && nInfo.isConnected()) {
             s3credentialsProvider();
@@ -590,18 +845,60 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
-        ProjectViewList.LoadDisplayList();
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID, projId);
+
+        maplistItems = new ArrayList<>();
+
+        //   projectlistItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (Folders.size()); i++) {
+
+            listItem = new MapViewData(
+
+
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
+                    Folders.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                    Folders.get(i).get(MyConfig.TAG_IMAGE1),
+                    Folders.get(i).get(MyConfig.TAG_NOTES)
+
+            );
+            maplistItems.add(listItem);
+        }
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+        // GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
+        //     TreeViewLists.LoadDisplayList();
+
+        //   ProjectViewList.LoadInitialData();
+        //   ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
+        //   MapViewLists.LoadDisplayList();
+
+
+        MapViewLists.LoadInitialData();
+        MapViewLists.LoadDisplayList();
+    //    GlobalVariables.displayNodes = (ArrayList<MapViewNode>) maplistItems;
+     //   ProjectViewList.LoadInitialData();
+    //    ProjectViewList.LoadDisplayList();
         GlobalVariables.modified = true;
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
         //   OnSelectionChanged(0);
-        DetailProjectFragment detailFragment = (DetailProjectFragment) getSupportFragmentManager()
+
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
 
         if (GlobalVariables.modified == true) {
-            ProjectViewFragment newDetailFragment = new ProjectViewFragment();
+            MapViewFragment newDetailFragment = new MapViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
 
@@ -720,7 +1017,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-    private void requestActivity(final String activity_Name) {
+    public void requestActivity(final String activity_Name) {
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -779,7 +1076,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void onClick(View v) {
 
-        if(v == Folders) {
+        if(v==client){
+
+            OnTabChanged(GlobalVariables.pos+1);
+        }
+
+        if(v == Folders_img) {
 
             //Delete the information in the tables initially implemented for testing purposes
             LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -792,6 +1094,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             alertDialogBuilder.setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            USER_ID = 0;
                             clearTablet();
                             updatePropList();
                             ProjectInfoFragment fragment = new ProjectInfoFragment();
@@ -818,11 +1121,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Folders and files ");
+            builder.setTitle("Folders and Titles ");
             // add a list
             String[] actions = {"Create New Folder",
-                    "Add a Document File to the Folder ",
-                    "New Folder/Document simple template ",
+                    "Add Title/Sub-Titles to Selected Folder",
+                    "Create New Folder  (TWO TITLES TEMPLATE) ",
                     "Cancel Request "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -872,40 +1175,106 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Add New Document to the Folder ");//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Document Name : ");//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Document Title");
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            if (USER_ID > 0) {
-                                                requestActivity(branchText.getText().toString());
-                                                //    downloadprojects();
-                                            } else
-                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
+
+                            DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
+
+                            // setup the alert builder
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Add Folder TABS ");
+                            // add a list
+                            String[] actions = {"Add Title",
+                                    "Add sub-Title",
+                                    "Cancel"};
+
+                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+
+                                        case 0: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getBaseContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            //      photoBranch = "";
+                                                            if(projId != 0)
+                                                                addLevel(0, branchText.getText().toString());
+                                                            else Toast.makeText(getBaseContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+                                            break;
 
                                         }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
 
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
+                                        case 1: {
 
-                            break;
+                                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getBaseContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
+                                                                Toast.makeText(getBaseContext(), "Select a TAB", Toast.LENGTH_SHORT).show();
+                                                            else addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+                                            break;
+
+                                        }
+
+
+                                    }
+                                }
+                            });
+
+
+
 
                         }
 
@@ -1105,6 +1474,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         passDialog.setTitle("Enter User Code");
                         passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                USER_ID = 0;
                                 if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                 USER_ID = dbHandler.checkCode(passText.getText().toString());
                                 if (USER_ID > 0) {
@@ -1151,6 +1521,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                             public void onClick(DialogInterface dialog, int id) {
+                                USER_ID = 0;
                                 USER_NAME = user.getText().toString();
                                 PASS_WORD = password.getText().toString();
                                 get_user_JSON();
@@ -1206,6 +1577,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
                                 public void onClick(DialogInterface dialog, int id) {
+                                    USER_ID = 0;
                                     USER_NAME = user.getText().toString();
                                     PASS_WORD = password.getText().toString();
                                     get_user_JSON();
@@ -1375,132 +1747,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    private void addLevel(int Level, String levelName) {
 
-    public void reportMenu() {
-
-        // setup the alert builder
-        final DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Choose an action");
-        // add a list
-        String[] actions = {"Compile and review the file output.",
-                "Compile and email document to user",
-                "Compile and email document to Contact List entity",
-                "Compile file certificate",
-                "Cancel this operation."};
-        builder.setItems(actions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0: {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("projectId", projId);
-                        bundle.putInt("iId", iId);
-
-
-                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iId);
-
-                        //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-                        //     recyclerView.setHasFixedSize(true);
-                        //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-                        reportlistItems = new ArrayList<>();
-                        ReportItem listItem;
-
-                        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
-                            listItem = new ReportItem(
-                                    listItemsmap.get(i).get("typeObject"),
-                                    listItemsmap.get(i).get("BranchHead"),
-                                    listItemsmap.get(i).get("ParentLabel"),
-                                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
-                                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
-                                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
-                                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
-                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_A),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_A),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_B),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_B),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_C),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_C)
-
-                            );
-
-                            reportlistItems.add(listItem);
-
-                            Log.v("report list", listItemsmap.get(i).get("typeObject") + ", ");
-                        }
-
-
-                        HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
-
-                        //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                        propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
-
-                        bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                        bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                        bundle.putString("projectId", projectId);
-                        bundle.putString("inspectionId", inspectionId);
-                        bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
-                        bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
-                        bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
-                        bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
-                        bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                        bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
-
-                        ReportFragment reportfragment = new ReportFragment();
-                        reportfragment.setArguments(bundle);
-                        doFragmentTransaction(reportfragment, "ReportFragment", false, "");
-                        reportfragment.setArguments(bundle);
-
-                        break;
-                    }
-                    case 1: {
-
-
-                        if (dbHandler.checkstatus("project", projId) == 0)
-                            reportMailer(0, "");
-
-                        else {
-                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
-                              }
-                        break;
-
-                    } //
-                    case 2: {
-                        if (dbHandler.checkstatus("project", projId) == 0) {
-                            Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                            startActivityForResult(intentContact, PICK_CONTACT);
-                        } else
-                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
-                        break;
-                    }
-
-                }
-                //end of case 0
-            }
-        });
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
-
-
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, 0);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
+     //   else
+        //    loadMap();
     }
 
 
@@ -1557,39 +1811,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        if (requestCode == PICK_CONTACT) {
-
-            final ArrayList emailAdress;
-            emailAdress = getContactInfo(data);
-
-
-            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-            View promptView = layoutInflater.inflate(R.layout.email_accept, null);
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertDialogBuilder.setView(promptView);
-            final TextView locationText = (TextView) promptView.findViewById(R.id.email);
-            if (emailAdress.size() > 0)
-                locationText.setText(emailAdress.get(0).toString());//location.getText().toString());
-
-            alertDialogBuilder.setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            reportMailer(1, emailAdress.get(0).toString());
-                        }
-                    })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-            // create an alert dialog
-            AlertDialog alert = alertDialogBuilder.create();
-            alert.show();
-
-        }
 
 
         if (requestCode == ACTIVITY_GET_FILE && resultCode == RESULT_OK) {
@@ -1678,55 +1899,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
     }
 
-
-
-
-    protected  ArrayList<String> getContactInfo(Intent data)
-    {
-        ArrayList<String> contactInfo = new ArrayList<>();
-
-
-        Cursor cursor = null;
-        String email = "", name = "";
-        try {
-            Uri result = data.getData();
-            Log.v(" Email", "Got a contact result: " + result.toString());
-
-            // get the contact id from the Uri
-            String id = result.getLastPathSegment();
-
-            // query for everything email
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,  null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id }, null);
-
-            int nameId = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-
-            int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-
-            // let's just get the first email
-            if (cursor.moveToFirst()) {
-                do {
-                    contactInfo = new ArrayList<>();
-                    contactInfo.add(cursor.getString(emailIdx));
-
-                    email = contactInfo.get(0);
-         //           name = cursor.getString(nameId);
-                    Log.v(" Email", "Got email: " + email);
-                }
-                while (cursor.moveToNext());
-            } else {
-                Log.w(" Email", "No results");
-            }
-        } catch (Exception e) {
-            Log.e(" Email", "Failed to get email data", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-
-
-        }
-        return contactInfo;
-    }//getContactInfo
 
     File createPhotoFile()throws IOException {
 
@@ -1939,34 +2111,42 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> Projects = dbHandler.getProjects(USER_ID);
-        projectlistItems = new ArrayList<>();
-        ProjectData listItem;
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
          projectlist_title.setText("Folder list for: "+dbHandler.getUser(USER_ID));
-        for (int i = 0; i < (Projects.size()); i++){
 
-            listItem = new ProjectData(
 
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PROJECT_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_LEVEL)),
-                    Projects.get(i).get(MyConfig.TAG_LABEL),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_P_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                    Integer.parseInt(Projects.get(i).get(MyConfig.TAG_PARENT)),
-                    Projects.get(i).get(MyConfig.TAG_IMAGE1),
-                    Projects.get(i).get(MyConfig.TAG_NOTES)
+        ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID, projId);
+        maplistItems = new ArrayList<>();
+
+        //   projectlistItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (Folders.size()); i++) {
+
+            listItem = new MapViewData(
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
+                            Folders.get(i).get(MyConfig.TAG_LABEL),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                            Folders.get(i).get(MyConfig.TAG_IMAGE1),
+                            Folders.get(i).get(MyConfig.TAG_NOTES)
+
             );
-            projectlistItems.add(listItem);
+            maplistItems.add(listItem);
         }
 
-        GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
-        //     TreeViewLists.LoadDisplayList();
+        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
 
 
+        MapViewLists.LoadInitialData();
+        MapViewLists.LoadInitialNodes(GlobalVariables.dataList);
+
+      //  ProjectViewList.LoadDisplayList();
         MapViewLists.LoadDisplayList();
         GlobalVariables.modified = true;
         //    MapListAdapter mAdapter = new MapListAdapter(this);
@@ -1974,12 +2154,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         //   OnSelectionChanged(0);
 
 
-        DetailProjectFragment detailFragment = (DetailProjectFragment) getSupportFragmentManager()
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
 
         if (GlobalVariables.modified == true) {
-            ProjectViewFragment newDetailFragment = new ProjectViewFragment();
+            MapViewFragment newDetailFragment = new MapViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
 
@@ -3621,7 +3801,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         dbHandler.statusUploaded(USER_ID);
                         dbHandler.deleteTable();
 
-                        message = "Inspections uploaded successfully";
+                        message = "Folders/Documents uploaded successfully";
 
 
 

@@ -674,6 +674,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 contentValues.put(COLUMN_PROJECT_ADDRESS, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 contentValues1.put(COLUMN_LABEL, txt);
+                contentValues1.put(COLUMN_INSPECTION_STATUS, "m");
                 db.update(TABLE_INSPECTION, contentValues1, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_INSPECTION_ID + " = ?", new String[]{projId, Integer.toString(0)});
                 break;
             }
@@ -2439,7 +2440,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public HashMap<String, String> getInspection(String projId, String iId) {
+    public HashMap<String, String> getInspection(int projId, int iId) {
         // Open a database for reading and writing
 
         HashMap<String, String> inspectionItem = new HashMap<String, String>();
@@ -3107,7 +3108,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  * FROM "+ TABLE_INSPECTION
                 + " WHERE "+ COLUMN_INSPECTION_STATUS +" = 'm' AND "
-                +  COLUMN_INSPECTOR+" = "+user_id+" AND "+ COLUMN_PARENT+" > 0"
+                +  COLUMN_INSPECTOR+" = "+user_id //+" AND "+ COLUMN_PARENT+" > 0"
                 +" ORDER BY " + COLUMN_PROJECT_ID;
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
         // Move to the first row
@@ -3351,8 +3352,75 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+
+    public ArrayList<HashMap<String, String>> getFolders(int user_id, int folder_id) {
+
+
+        HashMap<String, String> ProjectMap;
+        ArrayList<HashMap<String, String>> ProjectMapArrayList;
+
+        ProjectMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+    /*    String selectQuery = "SELECT P."+COLUMN_PROJECT_ADDRESS+", P." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
+                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE+", I."+COLUMN_P_ID
+
+                + " FROM " + TABLE_PROJECT_INFO + " P"
+                + " JOIN " + TABLE_INSPECTION + " I"
+                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id;
+
+     */
+
+
+        String selectQuery = "SELECT M."+COLUMN_PROJECT_ID+", M." +  COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M."+ COLUMN_PARENT+", M." + COLUMN_LABEL
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID +", I." + COLUMN_INSPECTION_ID + " , M."+COLUMN_IMG1+ ", M." + COLUMN_NOTES
+
+                + " FROM " + TABLE_MAP + " M "
+                + " JOIN " + TABLE_PROJECT_INFO + " P "
+                + " JOIN " + TABLE_INSPECTION + " I "
+                + " ON P." + COLUMN_PROJECT_ID + " = M."+ COLUMN_PROJECT_ID
+                + " AND P."+ COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " AND I."+ COLUMN_INSPECTION_ID+ " = '0' "
+                + " AND M."+ COLUMN_INSPECTION_ID+ " = '0' "
+                + " AND M."+ COLUMN_CAT_ID+ " < '9' "
+                + " AND (M."+ COLUMN_PROJECT_ID+ " =  "+folder_id+ " OR M."+COLUMN_PARENT+ " = '-1')";
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProjectMap = new HashMap<String, String>();
+
+                ProjectMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
+                ProjectMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
+                ProjectMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
+                ProjectMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
+                ProjectMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                ProjectMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
+                ProjectMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
+                ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
+                ProjectMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
+                ProjectMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
+
+                ProjectMapArrayList.add(ProjectMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return ProjectMapArrayList;
+
+
+
+    }
+
     //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getProjects(int user_id) {
+    public ArrayList<HashMap<String, String>> getProjects(int user_id, int folder_id) {
 
 
         HashMap<String, String> ProjectMap;
@@ -3369,7 +3437,26 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_PROJECT_INFO + " P"
                 + " JOIN " + TABLE_INSPECTION + " I"
                 + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
-                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id;
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id+ " AND I."+COLUMN_PROJECT_ID+ " = " + folder_id;
+
+
+/*
+
+        String selectQuery = "SELECT M."+COLUMN_LABEL+", M." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", M." + COLUMN_LEVEL
+                + ", M." + COLUMN_LABEL + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + " , M."+COLUMN_IMG1+ ", M." + COLUMN_NOTES+", M."+COLUMN_A_ID
+
+                + " FROM " + TABLE_MAP + " M "
+                + " JOIN " + TABLE_PROJECT_INFO + " P "
+                + " JOIN " + TABLE_INSPECTION + " I "
+                + " ON P." + COLUMN_PROJECT_ID + " = M."+ COLUMN_PROJECT_ID
+                + " AND P."+ COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " AND I."+ COLUMN_INSPECTION_ID+ " = '0' "
+                + " AND M."+ COLUMN_INSPECTION_ID+ " = '0' "
+                + " AND M."+ COLUMN_CAT_ID+ " < '9' "
+                + " AND (M."+ COLUMN_PROJECT_ID+ " =  "+folder_id+ " OR M."+COLUMN_PARENT+ " = '-1')";
+
+ */
 
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -3397,11 +3484,72 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return ProjectMapArrayList;
 
+
+
     }
 
 
 
     //Get a list of sublocations to populate the sub location spinner
+    public ArrayList<HashMap<String, String>> getFolderMap(int projID, int iID, int Child) {
+
+
+        HashMap<String, String> SiteMap;
+        ArrayList<HashMap<String, String>> SiteMapArrayList;
+
+        SiteMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+/*
+        String selectQuery = "SELECT M."+ COLUMN_PROJECT_ID+ ", M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+                + " FROM " + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
+                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
+        //add additional fields: status,  notes, print flag
+
+ */
+
+        String selectQuery = "SELECT P."+COLUMN_PROJECT_ID+", I." +  COLUMN_LEVEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT
+                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_P_ID + " ,I."+COLUMN_INSPECTION_ID+ ", I." + COLUMN_IMAGE+", I."+COLUMN_NOTE
+
+                + " FROM " + TABLE_PROJECT_INFO + " P"
+                + " JOIN " + TABLE_INSPECTION + " I"
+                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_PROJECT_ID+" = "+projID;
+
+
+
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SiteMap = new HashMap<String, String>();
+                    SiteMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
+                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
+                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
+                    SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
+                    SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(5))));
+                    SiteMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(6))));
+                    SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
+                    SiteMap.put(MyConfig.TAG_IMAGE, cursor.getString(8));
+                    SiteMap.put(MyConfig.TAG_NOTE, cursor.getString(9));
+
+
+                SiteMapArrayList.add(SiteMap);
+
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return SiteMapArrayList;
+
+    }
+
+
     public ArrayList<HashMap<String, String>> getMap(int projID, int iID, int Child) {
 
 
@@ -3419,21 +3567,23 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
                 + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
         //add additional fields: status,  notes, print flag
+
+
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 SiteMap = new HashMap<String, String>();
-                    SiteMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
-                    SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
-                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
-                    SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
-                    SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
-                    SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
-                    SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
-                    SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
-                    SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
-                    SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
+                SiteMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
+                SiteMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
+                SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
+                SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
+                SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                SiteMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
+                SiteMap.put(MyConfig.TAG_A_ID, (String.valueOf(cursor.getInt(6))));
+                SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
+                SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
+                SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
 
 
                 SiteMapArrayList.add(SiteMap);

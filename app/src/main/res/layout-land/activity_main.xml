@@ -58,8 +58,8 @@
                     android:id="@+id/ProjectList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingLeft="5dp"
+                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="50dp"
                      android:textColor="@android:color/white"
                      android:textStyle="bold"
                     android:text="Folders and document files"
@@ -86,7 +86,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_folder_add" />
 
 
@@ -96,7 +96,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_format_list_bulleted" />
 
                     <ImageView
@@ -105,7 +105,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_cloud_download_outline" />
 
                 <ImageView
@@ -114,7 +114,7 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="0.1"
+                    android:layout_weight="0.2"
                     android:foreground="@drawable/ic_cloud_upload_outline" />
 
                 <ImageView
@@ -124,7 +124,7 @@
                     android:layout_gravity="right"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="0.1"
+                    android:layout_weight="0.2"
                     android:layout_marginBottom="3dp"
                     android:foreground="@drawable/ic_login" />
 
@@ -145,15 +145,15 @@
             </LinearLayout>
 
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="top"
                 android:layout_weight="0.7"
                 android:layout_marginTop="7dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_marginBottom="5dp"
                 android:paddingTop="10dp"
                 android:background="@drawable/image_border"
@@ -163,15 +163,14 @@
 
                 <fragment
                     android:id="@+id/tree_fragment"
-                    android:name="com.forcemanage.inspect.ProjectViewFragment"
+                    android:name="com.forcemanage.inspect.MapViewFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
-
                 <fragment
                     android:id="@+id/detail_text"
-                    android:name="com.forcemanage.inspect.DetailProjectFragment"
+                    android:name="com.forcemanage.inspect.DetailFragment"
                     android:layout_width="0dp"
 
                     android:layout_height="match_parent" />

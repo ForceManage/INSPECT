@@ -48,6 +48,7 @@ public class ProjectViewFragment extends ListFragment {
         if (position != ListView.INVALID_POSITION) {
             ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
 
+
             if (node.getIsExpanded() == GlobalVariables.TRUE) {
                 node.setIsExpanded(GlobalVariables.FALSE);
 
@@ -56,10 +57,15 @@ public class ProjectViewFragment extends ListFragment {
                     node.setIsExpanded(GlobalVariables.TRUE);
 
             }
+
         }
-        ProjectViewList.LoadDisplayList();
+
+
+       ProjectViewList.LoadDisplayList();
         mAdapter.notifyDataSetChanged();
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
+      //  tabchangelistener listener = (tabchangelistener) getActivity();
+       // listener.OnTabChanged(position);
         OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
         listener.OnProjectChanged(position);
 

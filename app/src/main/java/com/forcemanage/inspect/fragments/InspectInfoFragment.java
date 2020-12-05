@@ -37,7 +37,7 @@ import java.util.Date;
 
 public class InspectInfoFragment extends Fragment implements View.OnClickListener{
 
-    private MainActivity globalVariables;
+    private InspectionActivity globalVariables;
 
 
     private static final String TAG = "Project Info Fragment";
@@ -100,7 +100,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (MainActivity) getActivity();
+    //    globalVariables = (MainActivity) getActivity();
     }
 
 
@@ -265,6 +265,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                                 Bundle bundle = new Bundle();
                                 bundle.putString("PROJECT_ID", Integer.toString(projId));
                                 bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                bundle.putString("DOC_NAME", branchLabel);
                                 bundle.putBoolean("logTime", true);
                                 theIntent.putExtras(bundle);
                                 startActivity(theIntent);
@@ -278,6 +279,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                                         Bundle bundle = new Bundle();
                                         bundle.putString("PROJECT_ID", Integer.toString(projId));
                                         bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                        bundle.putString("DOC_NAME", branchLabel);
                                         bundle.putBoolean("logTime", false);
                                         theIntent.putExtras(bundle);
                                         startActivity(theIntent);
@@ -417,8 +419,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
                             case "Label":{
                                 branchLabel = branchText.getText().toString();
                                 dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
-                                globalVariables.OnProjectChanged(0);
-                                globalVariables.updatePropList();
+                            //    globalVariables.OnProjectChanged(0);
+                             //   globalVariables.updatePropList();
                                 break;
                             }
 

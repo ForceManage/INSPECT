@@ -93,14 +93,21 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
                 if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
 
-                if (node.getNodeLevel() == 0)
-                   holder.arrow.setImageResource(R.drawable.ic_file_tree);
-                else
-                    holder.arrow.setImageResource(R.drawable.ic_filetree2);
+                switch (node.getNodeLevel()) {
 
+                    case 0:
+                        holder.arrow.setImageResource(R.drawable.folder2_red);
+                        break;
+                    case 1:
+                        holder.arrow.setImageResource(R.drawable.ic_file_tree);
+                        break;
+                    case 2:
+                        holder.arrow.setImageResource(R.drawable.ic_filetree2);
+                        break;
+                   }
+                if (node.getNodeLevel() > 2) holder.arrow.setImageResource(R.drawable.ic_filetree2);
 
-
-                break;
+                 break;
            }
             case 1: {
                 holder.content.setTextColor(Color.GRAY);
@@ -205,7 +212,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
         }
 
-        //   TreeViewLists.LoadDisplayList();
+        // TreeViewLists.LoadDisplayList();
         notifyDataSetChanged();
 
         //

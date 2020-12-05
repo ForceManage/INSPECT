@@ -12,7 +12,11 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.forcemanage.inspect.adapters.MapListAdapter;
+import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MapViewFragment extends ListFragment {
@@ -42,7 +46,7 @@ public class MapViewFragment extends ListFragment {
     @Override
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
-        GlobalVariables.pos = position;
+       GlobalVariables.pos = position;
             if (position != ListView.INVALID_POSITION) {
                 MapViewNode node = GlobalVariables.displayNodes.get(position);
 
@@ -55,12 +59,16 @@ public class MapViewFragment extends ListFragment {
 
                 }
             }
-            MapViewLists.LoadDisplayList();
-            mAdapter.notifyDataSetChanged();
-            MapViewNode node = GlobalVariables.displayNodes.get(position);
-            tabchangelistener listener = (tabchangelistener) getActivity();
-            listener.OnTabChanged(position);
-   
+
+
+        tabchangelistener listener = (tabchangelistener) getActivity();
+        listener.OnTabChanged(position);
+
+
+        MapViewLists.LoadDisplayList();
+        mAdapter.notifyDataSetChanged();
+
+
         v.post(new Runnable() {
             @Override
             public void run() {

@@ -107,7 +107,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_folder_add" />
 
                     <ImageView
@@ -116,7 +116,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_edit_outline" />
 
                     <ImageView
@@ -125,7 +125,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_comment" />
 
                     <ImageView
@@ -134,7 +134,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_certificate" />
 
                     <ImageView
@@ -143,20 +143,55 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_file_info" />
 
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/grey_blue"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp">
 
+                    <ImageView
+                        android:id="@+id/img_folder"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:foreground="@drawable/ic_document_text" />
+
+
+                    <TextView
+                        android:id="@+id/docTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="6dp"
+                        android:text="Document  "
+                        android:textColor="@color/cardview_dark_background"
+                        android:textSize="20sp"
+                        android:textStyle="normal|bold" />
+
+                </LinearLayout>
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.8"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/light"
                     android:orientation="horizontal">
 
 

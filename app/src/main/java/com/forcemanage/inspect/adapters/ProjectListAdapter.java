@@ -84,7 +84,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
         int base_node = node.getNodeLevel();
 
-        switch (node.getbranchCat()){
+        switch (node.getNodeLevel()){
 
             case 0:{
 
@@ -95,22 +95,28 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 if (node.getIsExpanded() == GlobalVariables.TRUE)
                     holder.arrow.setImageResource(R.drawable.folder2_red);
                 else
-                    holder.arrow.setImageResource(R.drawable.ic_chevron_down);
-
+                    holder.arrow.setImageResource(R.drawable.folder2_red);
                 break;
             }
             case 1: {
                 holder.content.setTextColor(Color.GRAY);
                 //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_document_text);
+              //  holder.arrow.setImageResource(R.drawable.ic_file_tree);
+                if (node.getNodeLevel() == 1)
+                    holder.arrow.setImageResource(R.drawable.ic_documents);
+                else
+                    holder.arrow.setImageResource(R.drawable.ic_filetree2);
                 break;
             }
             case 2: {
                 holder.content.setTextColor(Color.GRAY);
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                holder.arrow.setImageResource(R.drawable.ic_note_text);
+                if (node.getNodeLevel() == 1)
+                    holder.arrow.setImageResource(R.drawable.ic_file_tree);
+                else
+                    holder.arrow.setImageResource(R.drawable.ic_filetree2);
                 break;
             }
             case 9: {
@@ -175,8 +181,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                     }
 
 
-                    ProjectViewList.LoadDisplayList();
-                    notifyDataSetChanged();
+               //     ProjectViewList.LoadDisplayList();
+              //      notifyDataSetChanged();
 
 
                 }
