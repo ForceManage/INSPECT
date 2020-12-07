@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -79,6 +80,8 @@ import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
+import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
+import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
@@ -428,12 +431,23 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
-        transaction.replace(R.id.mainfragment_container, fragment, name);
+        transaction.replace(R.id.mainfragment_container_1, fragment, name);
         if (addToBackStack) {
             transaction.addToBackStack(name);
         }
         transaction.commit();
     }
+
+    private void doFragmentFolderInfoTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragDisplay = name;
+        transaction.replace(R.id.mainfragment_container_2, fragment, name);
+        if (addToBackStack) {
+            transaction.addToBackStack(name);
+        }
+        transaction.commit();
+    }
+
 
     @Override
     public void OnTabChanged(int treeNameIndex){
@@ -442,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
       //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
-
+        GlobalVariables.folder_Id = node.getprojId();
 
 
         if(projId != node.getprojId()) {
@@ -566,11 +580,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
                 fragment.setArguments(bundle);
 
+                ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", true, "");
+                fragment2.setArguments(bundle);
+
 
                 break;
             }
 
             case 1: {
+
+
     /*
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -686,7 +706,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             case 0: {
 
-     /*           DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+
+
+               DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
@@ -711,12 +734,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
-                ProjectInfoFragment fragment = new ProjectInfoFragment();
-                doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
+                ProjectInfoFolderFragment fragment = new ProjectInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment, "ProjectInfoFolderFragment", true, "");
                 fragment.setArguments(bundle);
 
 
-      */
+
 
                 break;
             }
@@ -724,8 +747,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             case 1: {
 
           //      DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 projId = node.getprojId();
                 iId = node.getiID();
+                inspectionId = Integer.toString(iId);
+                final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
+
+                Bundle bundle = new Bundle();
+
+
+                bundle.putString("note_2", projectItem.get(MyConfig.TAG_NOTE_2));
+                bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
+
+
+
+
+
+                InspectionInfoFolderFragment fragment = new InspectionInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment, "InspectionInfoFolderFragment", true, "");
+                fragment.setArguments(bundle);
 
          //       final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
 
@@ -752,6 +794,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 */
 
+                /*
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                 alertDialogBuilder.setTitle("Log Session");
                 alertDialogBuilder.setMessage("Record file session time?");
@@ -787,6 +830,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 // create an alert dialog
                 AlertDialog alert = alertDialogBuilder.create();
                 alert.show();
+
+                 */
 
 
 
@@ -1175,14 +1220,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
+                       // add_title();
 
-
-                            DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+                          DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
 
                             final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
 
                             // setup the alert builder
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
                             builder.setTitle("Add Folder TABS ");
                             // add a list
                             String[] actions = {"Add Title",
@@ -1190,7 +1236,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     "Cancel"};
 
                             builder.setItems(actions, new DialogInterface.OnClickListener() {
-                                @Override
+
+                                    @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (which) {
 
@@ -1275,6 +1322,52 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
+
+                            break;
+
+
+
+
+                            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
+
+                            // setup the alert builder
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setTitle(" File Information ");
+                            // add a list
+                            String[] actions = {
+                                    "Attach File Information ",
+                                    "Cancel"};
+
+                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+
+                                        case 0: {
+
+                                            String photoBranch = "";
+                                            //    addReferenceBranch(502, "File Information");
+                                            break;
+
+                                        }
+
+                                        case 1: {
+
+
+
+                                            break;
+
+                                        }
+
+                                    }
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+
+                            dialog.show();
 
                         }
 
@@ -1746,6 +1839,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     }
+
+    private void add_title(){
+
+
+
+    }
+
+
 
     private void addLevel(int Level, String levelName) {
 

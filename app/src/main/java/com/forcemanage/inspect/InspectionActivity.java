@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements  tabchangelistener, View.OnClickListener {
+public class InspectionActivity extends AppCompatActivity implements  tabchangelistener, tabchangelistener_2, View.OnClickListener {
 
     DBHandler ESMdb;
     private String projectId;
@@ -392,7 +392,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
     @Override
-    public void OnTabChanged(int treeNameIndex) {
+    public void OnTab2Changed(int treeNameIndex) {
+
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
@@ -452,7 +453,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             GlobalVariables.modified = false;
 
-            OnTabChanged(GlobalVariables.pos);
+            OnTab2Changed(GlobalVariables.pos);
         }
         aID = detailFragment.aID;
 
@@ -462,8 +463,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         displayInspectionItem();
     }
 
- /*   @Override
-    public void OnSelectionChanged(int treeNameIndex) {
+    @Override
+    public void OnTabChanged(int treeNameIndex) {
 
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
@@ -522,7 +523,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             GlobalVariables.modified = false;
 
-            OnSelectionChanged(GlobalVariables.pos);
+      //      OnTabChanged(GlobalVariables.pos);
         }
 
 
@@ -534,7 +535,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
     }
-*/
+
 
     private void getORArray(String Cat_Table, String subCat) {
 

@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.DetailFragment;
+import com.forcemanage.inspect.DetailProjectFragment;
 import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
@@ -67,6 +68,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private ImageView add_Tab;
     private ImageView edit_Tab;
     private ImageView delete_Tab;
+    private ImageView page_Tab;
     private String branchHead = "";
     private String branchLabel = "";
     private String branchNote = "";
@@ -75,6 +77,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String note;
     private String projectId;
     private int projId = 0;
+    private int iId = 0;
     private String infoA;
     private String infoB;
     private String infoC;
@@ -84,6 +87,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String infoG;
     private String infoH;
     private String propPhoto;
+    private String FragDisplay;
     private List<ProjectData> listItems;
     private  int aId;
     private int Level;
@@ -101,7 +105,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             branchHead = bundle.getString("branchHead");
             //branchLabel = bundle.getString("branchLabel");
             //      branchNote = bundle.getString("notes");
-            ProjAddress = bundle.getString("address");
+   /*         ProjAddress = bundle.getString("address");
             note = bundle.getString("note");
             infoA = bundle.getString("infoA");
             infoB = bundle.getString("infoB");
@@ -113,6 +117,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             infoH = bundle.getString("infoH");
             propPhoto = bundle.getString("propPhoto");
 
+
+    */
         }
 
         Edited = false;
@@ -139,8 +145,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         branch = (TextView) view.findViewById((R.id.branchName));
         branch.setText(branchHead);
-        bNote = (EditText) view.findViewById(R.id.note);
-        bNote.setText(note);
+    //    bNote = (EditText) view.findViewById(R.id.note);
+    //    bNote.setText(note);
 
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
@@ -155,7 +161,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_P_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
                     SiteMapData.get(i).get(MyConfig.TAG_LABEL)+" Documents",
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_P_ID)),
                     Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
@@ -198,6 +204,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         edit_Tab.setOnClickListener(this);
         delete_Tab = (ImageView) view.findViewById(R.id.del_Tab);
         delete_Tab.setOnClickListener(this);
+        page_Tab = (ImageView) view.findViewById(R.id.page_Tab);
+        page_Tab.setOnClickListener(this);
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
         TVprojectID.setText("Folder ID:  " + branchHead);
@@ -208,6 +216,26 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             }
         });
 
+        Bundle bundle = new Bundle();
+
+        bundle.putString("note", note);
+        bundle.putString("infoA", infoA);
+  /*      bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
+        bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
+        bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
+        bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+        bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
+        bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
+        bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
+        bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
+        bundle.putString("propPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+
+   */
+
+     //   ProjectInfoFolderFragment fragment = new ProjectInfoFolderFragment();
+     //   doFragmentTransaction(fragment, "ProjectInfoFolderFragment", true, "");
+    //    fragment.setArguments(bundle);
+/*
         final TextView projAddress = (TextView) view.findViewById(R.id.Text1);
         projAddress.setText(ProjAddress);
         projAddress.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +244,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                 editProject("Folder Title", projAddress.getText().toString());
             }
         });
-/*
+
         ImageView Folder = (ImageView) view.findViewById(R.id.img_folder);
         Folder.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -226,7 +254,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         });
 
  */
-
+/*
         final TextView TVinfoA = (TextView) view.findViewById(R.id.Text2);
         TVinfoA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +318,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             }
         });
 
+ */
 
+/*
         mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
         photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
         photo_cam.setOnClickListener(new View.OnClickListener() {
@@ -315,12 +345,15 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                 Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", propImage);
                 // Uri data = Uri.parse(propImage.getAbsolutePath());
-                galleryIntent.setDataAndType(data, "*/*");
+
+ */
+              //  galleryIntent.setDataAndType(data, "*/*");
 
                 // galleryIntent.setDataAndType(Uri.withAppendedPath(Uri.fromFile(propImage) ,dir),"image/*" );
                 // galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 // galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        /*
 
                 try {
 
@@ -339,6 +372,11 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         });
 
 
+
+         */
+
+
+/*
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
 
         photo_file.setOnClickListener(new View.OnClickListener() {
@@ -394,8 +432,25 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         });
 
+ */
         return view;
+
+
     }
+
+/*
+    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
+        androidx.fragment.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        FragDisplay = name;
+        transaction.replace(R.id.child_mainfragment_container, fragment, name);
+        if (addToBackStack) {
+            transaction.addToBackStack(name);
+        }
+        transaction.commit();
+    }
+
+ */
+
 
     @Override
     public void onClick(View v) {
@@ -454,7 +509,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                 itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                locationText.setText("Sub-Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
                                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                                 LocationText.setText(GlobalVariables.name);
                                 // setup a dialog window
@@ -464,7 +519,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                                 if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
                                                     Toast.makeText(getContext(), "Invalid TAB", Toast.LENGTH_SHORT).show();
                                                 else
-                                                editLocation(LocationText.getText().toString());
+                                               // editLocation(LocationText.getText().toString());
+                                                editLabel("Label",LocationText.getText().toString());
                                             }
                                         })
                                         .setNegativeButton("Cancel",
@@ -538,6 +594,52 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             dialog.show();
          }
 
+        if (v == page_Tab) {
+
+            ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
+            projId = node.getprojId();
+            iId = node.getiID();
+
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+            alertDialogBuilder.setTitle("Log Session");
+            alertDialogBuilder.setMessage("Record file session time?");
+            alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    Intent theIntent = new Intent(getContext(), InspectionActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("PROJECT_ID", Integer.toString(projId));
+                    bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                    bundle.putString("DOC_NAME", GlobalVariables.name);
+                    bundle.putBoolean("logTime", true);
+                    theIntent.putExtras(bundle);
+                    startActivity(theIntent);
+                    dialog.dismiss();
+
+                }
+            })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent theIntent = new Intent(getContext(), InspectionActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("PROJECT_ID", Integer.toString(projId));
+                            bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                            bundle.putString("DOC_NAME", GlobalVariables.name);
+                            bundle.putBoolean("logTime", false);
+                            theIntent.putExtras(bundle);
+                            startActivity(theIntent);
+                            dialog.cancel();
+                        }
+                    });
+
+            // create an alert dialog
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+
+
+        }
+
     }
 
 
@@ -550,8 +652,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
      //  MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
-
-        DetailFragment detailFragment = (DetailFragment) getChildFragmentManager()
+        DetailProjectFragment detailFragment = (DetailProjectFragment) getChildFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
 
@@ -573,7 +674,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
+            fragmentTransaction.replace(R.id.tree_fragment, newDetailFragment);
 
             //  fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
@@ -593,7 +694,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
+            fragmentTransaction.replace(R.id.tree_fragment, newDetailFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             FragmentManager fm = getChildFragmentManager();
@@ -696,7 +797,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
 
-     //   OnTabChanged(GlobalVariables.pos);
+        OnTabChanged(GlobalVariables.pos);
     }
 
     public void editProject(final String  item, String value){
@@ -812,6 +913,55 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         if(success == 1) loadMap();
         else Toast.makeText(getContext(), "Create/select Item", Toast.LENGTH_SHORT).show();
     }
+
+    public void editLabel(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Document Information ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText("Document Title");//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        switch (item) {
+
+                            case "Label":{
+                                branchLabel = branchText.getText().toString();
+                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, "note_2");
+                                //    globalVariables.OnProjectChanged(0);
+                                //   globalVariables.updatePropList();
+                                break;
+                            }
+
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
+
+    }
+
 
     public void saveData(){
 

@@ -16,22 +16,19 @@
         android:layout_height="match_parent"
         android:layout_marginStart="3dp"
         android:layout_marginTop="0dp"
-        android:weightSum="1"
+        android:baselineAligned="false"
         android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:weightSum="1">
 
 
         <LinearLayout
             android:layout_width="0dp"
-            android:orientation="vertical"
             android:layout_height="match_parent"
-            android:background="@drawable/image_border"
             android:layout_weight="0.25"
+            android:background="@drawable/image_border"
+            android:orientation="vertical"
 
             >
-
-
-
 
 
             <LinearLayout
@@ -46,28 +43,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/imageView_projectfolder"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:foreground="@drawable/ring_binders" />
+                    <ImageView
+                        android:id="@+id/imageView_projectfolder"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:foreground="@drawable/ring_binders" />
 
-                 <TextView
-                    android:id="@+id/ProjectList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="50dp"
-                     android:textColor="@android:color/white"
-                     android:textStyle="bold"
-                    android:text="Folders and document files"
-                    />
-
+                    <TextView
+                        android:id="@+id/ProjectList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="50dp"
+                        android:text="Folders and document files"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
 
 
-            </FrameLayout>
+                </FrameLayout>
 
 
             </LinearLayout>
@@ -76,37 +71,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
 
-                    <ImageView
-                        android:id="@+id/add_Project"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="0.2"
-                        android:foreground="@drawable/ic_folder_add" />
+                <ImageView
+                    android:id="@+id/add_Project"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.2"
+                    android:foreground="@drawable/ic_folder_add" />
 
 
-                    <ImageView
-                        android:id="@+id/list_Folders"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="0.2"
-                        android:foreground="@drawable/ic_format_list_bulleted" />
+                <ImageView
+                    android:id="@+id/list_Folders"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.2"
+                    android:foreground="@drawable/ic_format_list_bulleted" />
 
-                    <ImageView
-                        android:id="@+id/image_download"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="0.2"
-                        android:foreground="@drawable/ic_cloud_download_outline" />
+                <ImageView
+                    android:id="@+id/image_download"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.2"
+                    android:foreground="@drawable/ic_cloud_download_outline" />
 
                 <ImageView
                     android:id="@+id/image_upload"
@@ -124,8 +119,8 @@
                     android:layout_gravity="right"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="0.2"
                     android:layout_marginBottom="3dp"
+                    android:layout_weight="0.2"
                     android:foreground="@drawable/ic_login" />
 
                 <ProgressBar
@@ -134,12 +129,10 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="right"
+                    android:indeterminateOnly="true"
                     android:paddingLeft="3dp"
                     android:progress="100"
-                    android:indeterminateOnly="true"
-                    android:visibility="gone"
-                    />
-
+                    android:visibility="gone" />
 
 
             </LinearLayout>
@@ -150,15 +143,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="top"
-                android:layout_weight="0.7"
-                android:layout_marginTop="7dp"
                 android:layout_marginLeft="2dp"
+                android:layout_marginTop="7dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginBottom="5dp"
-                android:paddingTop="10dp"
+                android:layout_weight="0.7"
                 android:background="@drawable/image_border"
                 android:backgroundTint="@color/light"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
 
                 <fragment
@@ -179,29 +172,41 @@
             </LinearLayout>
 
 
-
-
-
-
-
         </LinearLayout>
-
 
         <LinearLayout
-
-            android:id="@+id/mainfragment_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.75"
-            android:paddingLeft="5dp"
-            android:orientation="vertical">
+            android:layout_weight="0.75">
+
+
+            <LinearLayout
+
+                android:id="@+id/mainfragment_container_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:id="@+id/mainfragment_container_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
-
     </LinearLayout>
-
-
 
 
 </RelativeLayout>
