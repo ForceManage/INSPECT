@@ -181,8 +181,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                     }
 
 
-               //     ProjectViewList.LoadDisplayList();
-              //      notifyDataSetChanged();
+                    ProjectViewList.LoadDisplayList();
+                    notifyDataSetChanged();
 
 
                 }

@@ -1026,10 +1026,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     switch (template){
 
                         case 1: {
-                            dbHandler.addLevel(projId, 0, 0, 0, 0, 0, "Item Title 1", 0);  //this is the ESM category
-                            dbHandler.addLevel(projId, 1, 0, 1, 0, 1, "Item Title 2", 0);  //this is the ESM category
-                            dbHandler.addReportBranch(projId, 1, 1, 1, 1, "Document Page");  //this is the ESM category
-                            dbHandler.addReportBranch(projId, 1, 2, 1, 2, "Document Page");  //this is the ESM category
+                            dbHandler.addLevel(projId, 0, 0, 0, 1, 0, "Item Title 1", 0);  //this is the ESM category
+                            dbHandler.addLevel(projId, 1, 0, 1, 1, 1, "Item Title 2", 0);  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Document Page");  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 2, 2, 2, "Document Page");  //this is the ESM category
                             break;
                         }
                     }
@@ -1220,15 +1220,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         case 1: {
 
-                       // add_title();
+                            // add_title();
 
-                          DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+                            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
 
                             final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
 
                             // setup the alert builder
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            final MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+                           AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                             builder.setTitle("Add Folder TABS ");
                             // add a list
                             String[] actions = {"Add Title",
@@ -1237,7 +1239,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             builder.setItems(actions, new DialogInterface.OnClickListener() {
 
-                                    @Override
+
+
+                                @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (which) {
 
@@ -1245,21 +1249,22 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getBaseContext());
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                             alertDialogBuilder.setView(promptView);
                                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                             itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                            locationText.setText("Sub Title to : " + node.getNodeName());//Integer.parseInt(locationId)
                                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                             // setup a dialog window
                                             alertDialogBuilder.setCancelable(false)
                                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             //      photoBranch = "";
-                                                            if(projId != 0)
-                                                                addLevel(0, branchText.getText().toString());
-                                                            else Toast.makeText(getBaseContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+                                                            if (projId != 0)
+                                                                addLevel(1, branchText.getText().toString());
+                                                            else
+                                                                Toast.makeText(MainActivity.this, "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
 
                                                         }
@@ -1283,20 +1288,21 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                                             View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getBaseContext());
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                             alertDialogBuilder.setView(promptView);
                                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                             itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
                                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                            locationText.setText("Sub Title to : " + GlobalVariables.name);//Integer.parseInt(locationId)
+                                            locationText.setText("Sub Title to : " + node.getNodeName());//Integer.parseInt(locationId)
                                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                             // setup a dialog window
                                             alertDialogBuilder.setCancelable(false)
                                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
-                                                            if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
-                                                                Toast.makeText(getBaseContext(), "Select a TAB", Toast.LENGTH_SHORT).show();
-                                                            else addLevel((GlobalVariables.Level + 1), branchText.getText().toString());
+                                                            if (node.getNodeName() == "NULL" || node.getNodeName() == null)
+                                                                Toast.makeText(MainActivity.this, "Select a TAB", Toast.LENGTH_SHORT).show();
+                                                            else
+                                                                addLevel((node.getNodeLevel() + 1), branchText.getText().toString());
 
                                                         }
                                                     })
@@ -1318,22 +1324,24 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                     }
                                 }
+
+
+
+
                             });
 
+                            AlertDialog alert = builder.create();
 
+                            alert.show();
 
+                            /*
 
-                            break;
-
-
-
-
-                            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
 
                             final String branchTitle = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
 
                             // setup the alert builder
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                             builder.setTitle(" File Information ");
                             // add a list
                             String[] actions = {
@@ -1364,10 +1372,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     }
                                 }
                             });
+*/
 
-                            AlertDialog dialog = builder.create();
 
-                            dialog.show();
+                            break;
 
                         }
 
@@ -1846,16 +1854,69 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    public void loadMap() {
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getFolders(USER_ID, projId);
+
+        maplistItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (SiteMapData.size()); i++) {
+
+            listItem = new MapViewData(
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+            );
+            maplistItems.add(listItem);
+        }
+
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+        GlobalVariables.modified = true;
+
+
+
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+
+        MapViewFragment newDetailFragment = new MapViewFragment();
+
+        androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the backStack so the User can navigate back
+        fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+
+        GlobalVariables.displayNodes.get(GlobalVariables.pos+1);
+
+        // GlobalVariables.modified = true;
+
+
+    }
+
 
 
     private void addLevel(int Level, String levelName) {
 
+        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, 0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, node.getaID(), 0, node.getcatId(), Level, node.getaID(), levelName, 0);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
-     //   else
-        //    loadMap();
+        else
+         loadMap();
     }
 
 
