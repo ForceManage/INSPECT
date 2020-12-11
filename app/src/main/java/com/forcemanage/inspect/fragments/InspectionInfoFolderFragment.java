@@ -42,7 +42,6 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
 
     private TextView title;
     private TextView Label;
-    private EditText bNote;
     private EditText Note2;
     private EditText DumbV;
     private ImageView mPhotoImageView;
@@ -55,8 +54,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
     private String inspectionDate;
     private String typeInspection;
     private String auditor;
-    private String note;
-    private String note_2;
+    private String preamble;
     private Boolean Edited;
     private Integer projId;
     private Integer iId;
@@ -76,9 +74,11 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-
-            note_2 = bundle.getString("note_2");
+            projId = bundle.getInt("projectId");
+            iId = bundle.getInt("inspectionId");
+            preamble = bundle.getString("preamble");
             inspPhoto = bundle.getString("inspPhoto");
+            branchLabel = bundle.getString("branchLabel");
 
             Edited = false;
 
@@ -164,7 +164,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
         //     inspector.setText("Auditor:  "+ auditor);
 
 
-        Note2.setText(note_2);
+        Note2.setText(preamble);
 
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
@@ -248,10 +248,9 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
      public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-        note = bNote.getText().toString();
-        note_2 = Note2.getText().toString();
+        preamble = Note2.getText().toString();
 
-        dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
+        dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, "", preamble);
         dbHandler.statusChanged(projId, iId);
 
     }

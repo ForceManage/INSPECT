@@ -94,7 +94,7 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
 
             note = bundle.getString("note");
             infoA = bundle.getString("infoA");
-            propPhoto = bundle.getString("propPhoto");
+            propPhoto = bundle.getString("folderPhoto");
             /*
             infoB = bundle.getString("infoB");
             infoC = bundle.getString("infoC");

@@ -742,7 +742,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        if(!Note.equals(""))
         contentValues.put(COLUMN_NOTE, Note);
+        if(!Note_2.equals(""))
         contentValues.put(COLUMN_NOTE_2, Note_2);
         contentValues.put(COLUMN_LABEL, Label);
         contentValues.put(COLUMN_INSPECTION_STATUS, "m");
@@ -1547,9 +1549,9 @@ public class DBHandler extends SQLiteOpenHelper {
                         ContentValues values = new ContentValues();
                         if(branchType == 0 || branchType >=9) {
 
-                            if (Level == 0) {
+                            if (Level == 1) {
                                 values.put(COLUMN_CAT_ID, maxcatID);
-                                values.put(COLUMN_PARENT, -1);
+                                values.put(COLUMN_PARENT, 0);
                             } else {
                                 values.put(COLUMN_CAT_ID, CatID);
                                 values.put(COLUMN_PARENT, parent);

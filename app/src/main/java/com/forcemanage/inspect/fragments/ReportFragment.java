@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.adapters.ReportAdapter;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class ReportFragment extends Fragment {
 
-    private MainActivity globalVariables;
+    private InspectionActivity globalVariables;
 
 
     private static final String TAG = "Report Fragment";
@@ -52,7 +53,7 @@ public class ReportFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-       globalVariables = (MainActivity) getActivity();
+       globalVariables = (InspectionActivity) getActivity();
     }
 /*
     @Override
@@ -104,7 +105,7 @@ public class ReportFragment extends Fragment {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InspectInfoFragment info = new InspectInfoFragment();
+                InspectionInfoFolderFragment info = new InspectionInfoFolderFragment();
 
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction trans = getFragmentManager().beginTransaction();

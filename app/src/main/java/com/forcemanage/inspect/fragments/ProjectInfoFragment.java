@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,10 @@ import com.forcemanage.inspect.attributes.ProjectNode;
 import com.forcemanage.inspect.tabchangelistener;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +64,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
     private TextView branch;
-    private EditText bNote;
     private ImageView mPhotoImageView;
     private ImageView photo_cam;
     private ImageView info_file;
@@ -69,12 +72,16 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private ImageView edit_Tab;
     private ImageView delete_Tab;
     private ImageView page_Tab;
-    private String branchHead = "";
-    private String branchLabel = "";
+    private ImageView printer;
+    private String Folder = "";
+    private String FolderID = "";
+    private String Title = "";
+
     private String branchNote = "";
     private String ProjAddress = "";
     private Boolean Edited;
-    private String note;
+    private String folderNote="";
+    private String preamble ="";
     private String projectId;
     private int projId = 0;
     private int iId = 0;
@@ -86,12 +93,22 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String infoF;
     private String infoG;
     private String infoH;
-    private String propPhoto;
+    private String folderPhoto;
     private String FragDisplay;
     private List<ProjectData> listItems;
     private  int aId;
     private int Level;
     private int USER_ID = 0;
+    private LinearLayout linearLayout;
+    private String inspectionDate;
+    private String typeInspection;
+    private String auditor;
+    private String dateInspected;
+    private String startTime ="";
+    private String endTime ="";
+    private String docPhoto;
+    private EditText Preamble;
+    private EditText FolderNote;
 
 
     @Override
@@ -102,11 +119,21 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         if (bundle != null) {
             projId = bundle.getInt("projId");
             USER_ID = bundle.getInt("USER_ID");
-            branchHead = bundle.getString("branchHead");
-            //branchLabel = bundle.getString("branchLabel");
+            FolderID = bundle.getString("Folder_ID");
+            Folder = bundle.getString("Folder");
+            folderNote = bundle.getString("foldernote");
+            preamble = bundle.getString("preamble");
+            auditor = bundle.getString("auditor");
+            inspectionDate = bundle.getString("date");
+            dateInspected = bundle.getString("date");
+            typeInspection = bundle.getString("inspectType");
+            startTime = bundle.getString("startTime");
+            endTime = bundle.getString("endTime");
+            docPhoto = bundle.getString("docPhoto");
+              //branchLabel = bundle.getString("branchLabel");
             //      branchNote = bundle.getString("notes");
-   /*         ProjAddress = bundle.getString("address");
-            note = bundle.getString("note");
+   //         ProjAddress = bundle.getString("address");
+
             infoA = bundle.getString("infoA");
             infoB = bundle.getString("infoB");
             infoC = bundle.getString("infoC");
@@ -115,10 +142,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             infoF = bundle.getString("infoF");
             infoG = bundle.getString("infoG");
             infoH = bundle.getString("infoH");
-            propPhoto = bundle.getString("propPhoto");
+            folderPhoto = bundle.getString("folderPhoto");
 
 
-    */
+
         }
 
         Edited = false;
@@ -143,8 +170,13 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         Log.d(TAG, "oncreateview: started");
 
 
+
+        TextView folder = (TextView) view.findViewById((R.id.branchTitle));
+        folder.setText(Folder);
         branch = (TextView) view.findViewById((R.id.branchName));
-        branch.setText(branchHead);
+        branch.setText(FolderID);
+        Preamble = (EditText) view.findViewById(R.id.preamble);
+        Preamble.setText(preamble);
     //    bNote = (EditText) view.findViewById(R.id.note);
     //    bNote.setText(note);
 
@@ -195,7 +227,18 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             getChildFragmentManager().beginTransaction().add(R.id.fragment_folder, treeFragment)
                     .commit();
         }
+        if(globalVariables.focus == "DOCS") {
+            TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
+            TextView Hrs = (TextView) view.findViewById(R.id.Text5);
+            TextView inspectionType = (TextView) view.findViewById(R.id.Text3);
+            TextView inspectedDate = (TextView) view.findViewById(R.id.Text4);
 
+            inspectDate.setText("Document created:  " + stringdate(inspectionDate, 1));
+            inspectionType.setText("Document type:  " + typeInspection);
+            if (!startTime.equals("null"))
+                inspectedDate.setText("Initial log recorded: " + stringdate(startTime, 2) + "  -  " + stringdate(endTime, 2));
+            Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
+        }
 
         projectId = Integer.toString(projId);
         add_Tab = (ImageView) view.findViewById(R.id.add_Tab);
@@ -206,9 +249,18 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         delete_Tab.setOnClickListener(this);
         page_Tab = (ImageView) view.findViewById(R.id.page_Tab);
         page_Tab.setOnClickListener(this);
+        printer = (ImageView) view.findViewById(R.id.printer);
+        printer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.reportMenu();
+
+            }
+        });
+
 
         final TextView TVprojectID = (TextView) view.findViewById(R.id.branchTitle);
-        TVprojectID.setText("Folder ID:  " + branchHead);
+        TVprojectID.setText("Folder ID:  " + FolderID);
         TVprojectID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,8 +270,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         Bundle bundle = new Bundle();
 
-        bundle.putString("note", note);
-        bundle.putString("infoA", infoA);
+
   /*      bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
         bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
         bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
@@ -254,7 +305,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         });
 
  */
-/*
+
         final TextView TVinfoA = (TextView) view.findViewById(R.id.Text2);
         TVinfoA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,7 +313,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                 editProject("Note A", TVinfoA.getText().toString());
             }
         });
-
+/*
         final TextView TVinfoB = (TextView) view.findViewById(R.id.Text3);
         TVinfoB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -497,6 +548,11 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             if (v == edit_Tab) {
 
+                if(globalVariables.focus != "DOC"){
+                    Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
                 final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
@@ -540,6 +596,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
             if (v == delete_Tab) {
 
+                if(globalVariables.focus != "DOC"){
+                    Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
             // setup the alert builder
 
@@ -596,10 +656,17 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         if (v == page_Tab) {
 
+            if(globalVariables.focus != "DOC"){
+                Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
+                return;
+             }
             ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
             projId = node.getprojId();
             iId = node.getiID();
-
+            if(iId == 0){
+                Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
+                return;
+             }
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
             alertDialogBuilder.setTitle("Log Session");
@@ -640,9 +707,71 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         }
 
+        if (v == printer) {
+
+            printer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    globalVariables.reportMenu();
+
+                }
+            });
+
+
+        }
+
     }
 
+    public String stringdate(String date, int type){
 
+        switch (type) {
+
+            case 1: {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy");
+                date = sdf.format(d);
+                break;
+            }
+            case 2: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy, HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+            case 3: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+        }
+
+        return date;
+    }
 
 
 
@@ -651,6 +780,12 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
      //  MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+
+        if(globalVariables.focus == "DOC")
+            linearLayout.setVisibility(View.VISIBLE);
+        else
+            linearLayout.setVisibility(View.GONE);
 
         DetailProjectFragment detailFragment = (DetailProjectFragment) getChildFragmentManager()
                 .findFragmentById(R.id.detail_text);
@@ -935,8 +1070,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                         switch (item) {
 
                             case "Label":{
-                                branchLabel = branchText.getText().toString();
-                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, "note_2");
+                                Folder = branchText.getText().toString();
+                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), Folder, folderNote, "");
                                 //    globalVariables.OnProjectChanged(0);
                                 //   globalVariables.updatePropList();
                                 break;
@@ -966,8 +1101,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-        note = bNote.getText().toString();
-        dbHandler.updateProject(Integer.toString(projId), "Folder Note" , note, 0);
+        folderNote = FolderNote.getText().toString();
+        dbHandler.updateProject(Integer.toString(projId), "Folder Note" , folderNote, 0);
         dbHandler.statusChanged(projId,0);
     }
 

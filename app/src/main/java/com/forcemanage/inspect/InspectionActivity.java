@@ -41,6 +41,7 @@ import com.forcemanage.inspect.fragments.BaseFragment;
 import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
+import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.fragments.SummaryFragment;
@@ -199,7 +200,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
         docTitle = (TextView) findViewById(R.id.docTitle);
-        docTitle.setText(getIntent().getExtras().getString("DOC_NAME"));
+      //  docTitle.setText(getIntent().getExtras().getString("DOC_NAME"));
 
 
      //   dateBtn = (Button) findViewById(R.id.btndate);
@@ -272,13 +273,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     private void init() {
 
-    //    BaseFragment fragment = new BaseFragment();
-    //    doFragmentTransaction(fragment, "BaseFragment", false, "");
-
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-        final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
+        HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
 
         Bundle bundle = new Bundle();
 
@@ -455,7 +453,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             OnTab2Changed(GlobalVariables.pos);
         }
-        aID = detailFragment.aID;
+
+        aID = node.getaID();
 
 
 
@@ -755,7 +754,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        if(aID == 0) aID = 1;
+     //   if(aID == 0) aID = 1;
         HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
 
         String MapBranch;
@@ -776,7 +775,32 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case 0: {
 
+                if(Level == 0){
 
+                    HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                    bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+                    bundle.putInt("projectId", projId);
+                    bundle.putInt("inspectionId", iID);
+                    bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+                    bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+                    bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
+                    bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
+                    bundle.putString("note_2", projectItem.get(MyConfig.TAG_NOTE_2));
+                    bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+                    bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
+                    bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
+
+
+                    InspectInfoFragment fragment = new InspectInfoFragment();
+                    doFragmentTransaction(fragment, "InspectInfoFragment", false, "");
+                    fragment.setArguments(bundle);
+
+                }
+                else{
                 Bundle bundle = new Bundle();
                 bundle.putString("branchHead", branchHead);
                 bundle.putString("inspection", inspLabel);
@@ -791,7 +815,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                 fragment.setArguments(bundle);
 
                 doFragmentTransaction(fragment, "BaseFragment", false, "");
-
+                 }
                  break;
             }
             case 1: {
@@ -1546,21 +1570,9 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     public void reportMenu() {
 
-        // setup the alert builder
-        final DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose an action");
-        // add a list
-        String[] actions = {"Compile and review the file output.",
-                "Compile and email document to user",
-                "Compile and email document to Contact List entity",
-                "Compile file certificate",
-                "Cancel this operation."};
-        builder.setItems(actions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0: {
+       DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+
 
                         Bundle bundle = new Bundle();
                         bundle.putInt("projectId", projId);
@@ -1568,11 +1580,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
                         ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iID);
-
-                        //     recyclerView  = (RecyclerView) findViewById(R.id.reportView);
-                        //     recyclerView.setHasFixedSize(true);
-                        //     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
                         reportlistItems = new ArrayList<>();
                         ReportItem listItem;
@@ -1635,39 +1642,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                         reportfragment.setArguments(bundle);
                         doFragmentTransaction(reportfragment, "ReportFragment", false, "");
                         reportfragment.setArguments(bundle);
-
-                        break;
-                    }
-                    case 1: {
-
-
-                        if (dbHandler.checkstatus("project", projId) == 0)
-                            reportMailer(0, "");
-
-                        else {
-                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-
-                    } //
-                    case 2: {
-                        if (dbHandler.checkstatus("project", projId) == 0) {
-                            Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                            startActivityForResult(intentContact, PICK_CONTACT);
-                        } else
-                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
-                        break;
-                    }
-
-                }
-                //end of case 0
-            }
-        });
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-
-        dialog.show();
-
 
     }
 

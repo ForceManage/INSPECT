@@ -22,10 +22,8 @@
 
 
             <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:layout_marginRight="5dp"
                     android:background="@drawable/image_border"
                     android:orientation="vertical"
                     >
@@ -86,7 +84,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:weightSum="2"
+                    android:weightSum="2.5"
                     android:layout_margin="5dp"
                     >
 
@@ -96,7 +94,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_folder_add" />
 
                     <ImageView
@@ -105,7 +103,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_edit_folder_btn" />
 
                     <ImageView
@@ -114,7 +112,7 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_delete_24px" />
 
                     <ImageView
@@ -124,8 +122,17 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_gravity="right"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.2"
                         android:foreground="@drawable/ic_file_open" />
+                    <ImageView
+                        android:id="@+id/printer"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="0.2"
+                        app:srcCompat="@drawable/ic_print_24px" />
 
 
                 </LinearLayout>
@@ -139,6 +146,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:weightSum="1.0"
                     android:orientation="vertical">
 
 
@@ -146,12 +154,13 @@
                     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/fragment_folder"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="top"
+
                     android:background="@drawable/image_border"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:layout_marginBottom="5dp"
                     android:backgroundTint="@color/light"
                     android:orientation="horizontal">
@@ -164,7 +173,6 @@
                         android:name="com.forcemanage.inspect.ProjectViewFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.9"
                         android:layout_marginLeft="7dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="10dp"
@@ -178,6 +186,248 @@
 
 
                 </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/document_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:orientation="vertical"
+                        android:background="@color/light"
+                        android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/Doc_Head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Document Information  "
+                        android:textColor="@android:color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/Text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Document created:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Type of Document:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Author:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:paddingLeft="10dp"
+                        android:text=":  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Document notes:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/preamble"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Document notes (Non Output)"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/folder_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:orientation="vertical"
+                        android:background="@color/light"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/Service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="25dp"
+                            android:text="Project Name:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+
+                        <TextView
+                            android:id="@+id/folder_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Project Title - Eg. Project Address/Project name/ etc"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/infotitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:paddingLeft="10dp"
+                            android:text="Project Information:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+                        <TextView
+                            android:id="@+id/text2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note"
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/text9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:text="Project Note "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal" />
+
+
+                        <TextView
+                            android:id="@+id/note_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:text="Project Notes:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+
+
+                        <EditText
+                            android:id="@+id/folder_note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Author notes (text not printed)"
+                            android:textColor="@color/cardview_shadow_start_color"
+                            android:textSize="16sp"/>
+
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 

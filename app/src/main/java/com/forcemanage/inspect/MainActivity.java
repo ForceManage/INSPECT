@@ -79,6 +79,9 @@ import com.forcemanage.inspect.attributes.ProjectNode;
 import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
+import com.forcemanage.inspect.fragments.BaseFragment;
+import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
+import com.forcemanage.inspect.fragments.BaseInfoFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
@@ -99,6 +102,7 @@ import java.io.FileOutputStream;
 import java.io.IOError;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -145,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private ImageView imgDownload;
     private ImageView imgUpload;
     private ImageView imgLogin;
-    private File photo;
+    public File photo;
     private String dirName;
     public String inspectionId;
     public String projectId = "null";
@@ -153,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private int iId;
     private String fname;
     private String cat;
+    public String photoBranch;
     private List<MapViewData> maplistItems;
     private List<ProjectData> projectlistItems;
     private String mImageFileLocation;
@@ -169,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private ProgressBar progressBar1;
     private Boolean connected;
     private TextView client;
+    public String focus = "null";
 
 
     AmazonS3 s3Client;
@@ -438,6 +444,58 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         transaction.commit();
     }
 
+    public String stringdate(String date, int type){
+
+        switch (type) {
+
+            case 1: {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy");
+                date = sdf.format(d);
+                break;
+            }
+            case 2: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("dd MMM yyyy, HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+            case 3: {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date d = null;
+                try {
+                    d = sdf.parse(date);
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                sdf.applyPattern("HH:mm");
+                date = sdf.format(d);
+                break;
+
+            }
+
+        }
+
+        return date;
+    }
+
+
     private void doFragmentFolderInfoTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
@@ -453,6 +511,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     public void OnTabChanged(int treeNameIndex){
 
         GlobalVariables.modified = false;
+        focus = "FOLDER";
 
         MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
       //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
@@ -545,10 +604,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         TextView projlist = (TextView) findViewById(R.id.ProjectList);
 
 
-        switch (node.getNodeLevel()) {
+        if(node.getNodeLevel() == 0) {
 
-
-            case 0: {
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -560,19 +617,19 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
-                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-                bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
+                bundle.putString("Folder_ID", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+                bundle.putString("Folder", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+                bundle.putString("foldernote", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
                 bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
                 bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
                 bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
                 bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
-                bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+                bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
                 bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
                 bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
                 bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
-                bundle.putString("propPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+
 
 
 
@@ -585,109 +642,53 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 fragment2.setArguments(bundle);
 
 
-                break;
+
             }
 
-            case 1: {
+            else {
 
-
-    /*
+                Integer aID = node.getaID();
+                Integer iID = node.getiID();
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                if(aID == 0)  aID = 1;
+                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
 
-                final HashMap<String, String> projectItem = dbHandler.getInspection(projectId, inspectionId);
+                String MapBranch;
 
-                //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-             //   propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
+                Integer catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
+                Integer Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
+                Integer Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
+                photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
+                String inspLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
+                String branchLabel = mapItem.get("MAP_LABEL"); //This is the Map label column
+                String branchNote = mapItem.get(MyConfig.TAG_NOTES);
+                Integer branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
 
- /*               if(propPhoto.length() > 14)
-                {
-                    dirName = propPhoto.substring(6, 14);
-                    root = Environment.getExternalStorageDirectory().toString();
-                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
-
-                    if (propImage.exists()) {
-
-                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                        mPhotoImageView.setImageBitmap(myBitmap);
-                    }
-                }
-                else {
-                    Integer draw = android.R.drawable.ic_menu_camera;
-                    mPhotoImageView.setImageDrawable(getDrawable(draw));
-                }
-
-
+                String branchHead = dbHandler.getMapBranchTitle(projId, catId);
 
                 Bundle bundle = new Bundle();
-
-                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                bundle.putInt("projectId", projId);
-                bundle.putInt("inspectionId", iId);
-                bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
-                bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
-                bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
-                bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
-                bundle.putString("note_2", projectItem.get(MyConfig.TAG_NOTE_2));
-                bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
-                bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
-
-           //     InspectInfoFragment fragment = new InspectInfoFragment();
-          //      doFragmentTransaction(fragment, "InspectInfoFragment", true, "");
-           //     fragment.setArguments(bundle);
-
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setTitle("Log Session");
-                alertDialogBuilder.setMessage("Record file session time?");
-                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("PROJECT_ID", Integer.toString(projId));
-                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                        bundle.putString("DOC_NAME", projectItem.get(MyConfig.TAG_LABEL));
-                        bundle.putString("CLIENT", CLIENT);
-                        bundle.putInt("USER_ID", USER_ID);
-                        bundle.putBoolean("logTime", true);
-                        theIntent.putExtras(bundle);
-                        startActivity(theIntent);
-                        dialog.dismiss();
-
-                    }
-                })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent theIntent = new Intent(getApplication(), InspectionActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("PROJECT_ID", Integer.toString(projId));
-                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                                bundle.putString("DOC_NAME", projectItem.get(MyConfig.TAG_LABEL));
-                                bundle.putString("CLIENT", CLIENT);
-                                bundle.putInt("USER_ID", USER_ID);
-                                bundle.putBoolean("logTime", false);
-                                theIntent.putExtras(bundle);
-                                startActivity(theIntent);
-                                dialog.cancel();
-                            }
-                        });
-
-                // create an alert dialog
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
+                bundle.putString("branchHead", branchHead);
+                bundle.putString("inspection", inspLabel);
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putString("image", photoBranch);
+                bundle.putString("MAP_LABEL", branchLabel);
+                bundle.putInt("aID", aID);
+                bundle.putString("notes", branchNote);
+              //  bundle.putString("com2", com2);
 
 
+                BaseInfoFragment fragment = new BaseInfoFragment();
+                doFragmentTransaction(fragment, "BaseInfoFragment", false, "");
+                fragment.setArguments(bundle);
 
-     */
+                BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+                fragment2.setArguments(bundle);
 
 
-
-
-
-                break;
             }
-        }
+
 
     }
 
@@ -701,11 +702,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
        //     GlobalVariables.catId = node.getcatId();
             GlobalVariables.name = node.getNodeName();
 
+        Bundle bundle = new Bundle();
         switch (node.getNodeLevel()) {
 
 
             case 0: {
 
+                focus = "FOLDER";
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
+                linearLayout.setVisibility(View.GONE);
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
+                linearLayout_.setVisibility(View.VISIBLE);
 
 
 
@@ -716,11 +726,11 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
 
-                Bundle bundle = new Bundle();
+
                 bundle.putInt("projId", projId);
                 bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-                bundle.putString("note", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
+                bundle.putString("foldernote", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
                 bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
                 bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
                 bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
@@ -730,7 +740,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
                 bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
-                bundle.putString("propPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+                bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
 
 
 
@@ -748,21 +758,43 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
           //      DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
+                focus = "DOC";
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
+                linearLayout_.setVisibility(View.GONE);
+                LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
+                linearLayout.setVisibility(View.VISIBLE);
 
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 projId = node.getprojId();
                 iId = node.getiID();
                 inspectionId = Integer.toString(iId);
-                final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
-
-                Bundle bundle = new Bundle();
+                HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
 
 
-                bundle.putString("note_2", projectItem.get(MyConfig.TAG_NOTE_2));
+                bundle.putString("folderNote", projectItem.get(MyConfig.TAG_NOTE));
+                bundle.putInt("projectId", projId);
+                bundle.putInt("inspectionId", iId);
+                bundle.putString("preamble", projectItem.get(MyConfig.TAG_NOTE_2));
                 bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
+                bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+                bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+                bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+                bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
+                bundle.putString("inspectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+                bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
 
+                TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text2);
+                TextView Hrs = fragment_obj.getView().findViewById(R.id.Text5);
+                TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text3);
+                TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text4);
 
-
+                inspectDate.setText("Document created:  " + stringdate(projectItem.get(MyConfig.TAG_INSPECTION_DATE), 1));
+                inspectionType.setText("Document type:  " + projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+                if (!projectItem.get(MyConfig.TAG_START_DATE_TIME).equals("null"))
+                    inspectedDate.setText("Initial log recorded: " + stringdate(projectItem.get(MyConfig.TAG_START_DATE_TIME), 2) + "  -  " + stringdate(projectItem.get(MyConfig.TAG_END_DATE_TIME), 2));
+                Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
 
 
                 InspectionInfoFolderFragment fragment = new InspectionInfoFolderFragment();
@@ -1233,8 +1265,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                             builder.setTitle("Add Folder TABS ");
                             // add a list
-                            String[] actions = {"Add Title",
-                                    "Add sub-Title",
+                            String[] actions = {"Add a Title",
+                                    "Add a sub-Title",
                                     "Cancel"};
 
                             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1906,6 +1938,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    public void editLocation(String branchLabel) {
+        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int success = dbHandler.updateMapLabel(node.getprojId(), node.getaID(), branchLabel);
+        if(success == 1) loadMap();
+        else Toast.makeText(this, "Create/select TAB", Toast.LENGTH_SHORT).show();
+    }
+
 
 
     private void addLevel(int Level, String levelName) {
@@ -1945,18 +1985,27 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
-            ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
-            switch (node.getNodeLevel()) {
-                case 0: {
+            if(focus == "FOLDER") {
+                MapViewNode mapViewNode =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
+                if(mapViewNode.getNodeLevel() == 0) {
                     dbHandler.updatePropPhoto(projectId, photo.getName());
                 }
-                case 1: {
-                    dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
+                else{
+                    dbHandler.updateBranchPhoto(projId, mapViewNode.getaID(), photo.getName());
                 }
             }
+            if(focus == "DOC") {
+                ProjectNode projectNode = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
+                if(projectNode.getNodeLevel() ==0) {
+                         dbHandler.updatePropPhoto(projectId, photo.getName());
+                         }
+                    else {
+                        dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
 
+                    }
+                }
 
             try {
                 rotateImage(resizePhoto());
@@ -2000,14 +2049,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             // Set the Image in ImageView after decoding the String
             // photoA.setImageBitmap(BitmapFactory.decodeFile(path));
 
-            if (FragDisplay == "InspectInfoFragment") {
+            if (FragDisplay == "InspectInfoFolderFragment") {
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectInfoFragment");
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
              }
 
-            if (FragDisplay == "ProjectInfoFragment") {
+            if (FragDisplay == "ProjectInfoFolderFragment") {
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
+                photoA.setImageURI(selectedImage);
+            }
+
+            if (FragDisplay == "BaseInfoFolderFragment") {
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseInfoFolderFragment");
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
             }
@@ -2043,13 +2098,18 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 e.printStackTrace();
             }
 
-            if (FragDisplay == "InspectInfoFragment") {
+            if (FragDisplay == "BaseInfoFolderFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseInfoFolderFragment");
+            }
+
+            if (FragDisplay == "InspectionInfoFolderFragment") {
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 String inspectionPhoto = to.getName();
                 dbHandler.updateInspectionPhoto(projectId, inspectionId, inspectionPhoto);
             }
 
-            if (FragDisplay == "ProjectInfoFragment") {
+            if (FragDisplay == "ProjectInfoFolderFragment") {
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 String projectPhoto = to.getName();
                 dbHandler.updatePropPhoto(projectId, projectPhoto);
@@ -4031,6 +4091,55 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+    public void reportMenu() {
+
+        // setup the alert builder
+        final DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an action");
+        // add a list
+        String[] actions = {
+                "Compile and email document to user",
+                "Compile and email document to Contact List entity",
+                "Compile file certificate",
+                "Cancel this operation."};
+        builder.setItems(actions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+
+                    case 0: {
+
+
+                        if (dbHandler.checkstatus("project", projId) == 0)
+                            reportMailer(0, "");
+
+                        else {
+                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+
+                    } //
+                    case 1: {
+                        if (dbHandler.checkstatus("project", projId) == 0) {
+                            Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                            startActivityForResult(intentContact, PICK_CONTACT);
+                        } else
+                            Toast.makeText(getBaseContext(), "* Data Upload required", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+
+                }
+                //end of case 0
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+
+    }
 
 // Remove?
     //    private HashMap<String, String> getInspectionRecords() {

@@ -197,7 +197,7 @@
                 android:id="@+id/mainfragment_container_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.75"
+                android:layout_weight="0.6"
                 android:orientation="vertical"
                 android:paddingLeft="5dp">
 
