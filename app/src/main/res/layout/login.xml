@@ -50,6 +50,8 @@
                 android:singleLine="true"
                 android:hint="Password"
                 />
+
+
             <TextView
                 android:id="@+id/error"
                 android:layout_width="match_parent"

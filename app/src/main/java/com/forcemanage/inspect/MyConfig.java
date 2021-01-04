@@ -11,7 +11,7 @@ public class MyConfig {
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
     public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_login.php?user=";
     public static final String URL_GET_LOG = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_LOG.php?InspectorId=";
-
+    public static final String URL_CHANGE_USER_CODE = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_change_code.php?user_id=";
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
     public static final String URL_SYNC_INSPECTION_ITEMS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspItemsToServer.php";
     public static final String URL_SYNC_MAP_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncMAPToServer.php";

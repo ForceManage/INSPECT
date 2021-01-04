@@ -640,6 +640,22 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void update_USER_code(String code, Integer uid) {
+        String _uid = Integer.toString(uid);
+        SQLiteDatabase db = this.getWritableDatabase();
+        //replace will delete the row if the category already exists
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_U_CODE, code);
+
+
+        //replace will delete the row if the OR already exists
+
+        db.update(TABLE_USER_LIST, values, COLUMN_U_ID+ " = ?", new String[]{_uid});
+        db.close();
+
+    }
+
     public void  update_LOG_FromServer(LOG_Attributes log_attributes) {
 
         //replace will delete the row if the category already exists
@@ -664,6 +680,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         ContentValues contentValues1 = new ContentValues();
+        ContentValues contentValues2 = new ContentValues();
         switch (item){
             case "Folder ID":{
                 contentValues.put(COLUMN_ADDRESS_NUMBER, txt);
@@ -676,6 +693,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 contentValues1.put(COLUMN_LABEL, txt);
                 contentValues1.put(COLUMN_INSPECTION_STATUS, "m");
                 db.update(TABLE_INSPECTION, contentValues1, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_INSPECTION_ID + " = ?", new String[]{projId, Integer.toString(0)});
+                contentValues2.put(COLUMN_LABEL, txt);
+                contentValues2.put(COLUMN_ITEM_STATUS, "m");
+                db.update(TABLE_MAP, contentValues2, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_LEVEL +" = 0 ", new String[]{projId});
                 break;
             }
             case "infoA":{
@@ -1475,6 +1495,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.insert(TABLE_INSPECTION, null, valuesi2);
 
+        ContentValues valuesMap = new ContentValues();
+        valuesMap.put(COLUMN_INSPECTION_ID, "0");
+        valuesMap.put(COLUMN_CAT_ID, "0");
+        valuesMap.put(COLUMN_LEVEL, "0");
+        valuesMap.put(COLUMN_PROJECT_ID, projID);
+        valuesMap.put(COLUMN_PARENT, "-1");
+        valuesMap.put(COLUMN_LABEL, label);
+        valuesMap.put(COLUMN_A_ID, "0");
+        valuesMap.put(COLUMN_CHILD, "0");
+
+        db.insert(TABLE_MAP, null, valuesMap);
+
       db.close();
     }
 
@@ -1499,6 +1531,8 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_NOTE, "");
 
         db.insert(TABLE_INSPECTION, null, valuesi2);
+
+
 
         db.close();
     }
@@ -3334,7 +3368,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 ProjectInfo.put(MyConfig.TAG_INFO_A, cursor.getString(3));
                 ProjectInfo.put(MyConfig.TAG_INFO_B, cursor.getString(4));
                 ProjectInfo.put(MyConfig.TAG_INFO_C, cursor.getString(5));
-                ProjectInfo.put(MyConfig.TAG_INFO_D, (String.valueOf(cursor.getInt(6))));
+                ProjectInfo.put(MyConfig.TAG_INFO_D, cursor.getString(6));
                 ProjectInfo.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(7));
                 ProjectInfo.put(MyConfig.TAG_INFO_E, cursor.getString(8));
                 ProjectInfo.put(MyConfig.TAG_INFO_F, cursor.getString(9));
@@ -4043,7 +4077,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  " + COLUMN_CAT_ID + " , " + COLUMN_LABEL +
                 " FROM " + TABLE_MAP +
-                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+0+ " GROUP BY " + COLUMN_CAT_ID+ " ORDER BY " + COLUMN_CAT_ID;
+                " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_LEVEL + " = "+1+  " ORDER BY " + COLUMN_CAT_ID; //" GROUP BY " + COLUMN_CAT_ID+
 
         Cursor cursor = dbase.rawQuery(selectQuery, null);
         int i = 1;

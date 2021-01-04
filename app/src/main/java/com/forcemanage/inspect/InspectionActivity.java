@@ -45,6 +45,7 @@ import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.fragments.SummaryFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -84,7 +85,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
-    private ImageView addItem;
     private ImageView addPage;
     private ImageView addSummary;
     private ImageView addCert;
@@ -164,6 +164,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private Boolean logTime;
     private String startTime;
     private String endTime;
+    private FloatingActionButton fab_add;
+    private String Folder;
 
 
 
@@ -186,8 +188,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         tab_edit = (ImageView) findViewById(R.id.image_edit);
         tab_edit.setOnClickListener(this);
-        addItem = (ImageView) findViewById(R.id.add_Item);
-        addItem.setOnClickListener(this);
         addPage = (ImageView) findViewById(R.id.add_Page);
         addPage.setOnClickListener(this);
         addSummary = (ImageView) findViewById(R.id.add_Summary);
@@ -200,6 +200,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
         docTitle = (TextView) findViewById(R.id.docTitle);
+        fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
+        fab_add.setOnClickListener(this);
       //  docTitle.setText(getIntent().getExtras().getString("DOC_NAME"));
 
 
@@ -277,6 +279,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
+        Folder = projectItem.get(MyConfig.TAG_ADDRESS_NO);
 
         Bundle bundle = new Bundle();
 
@@ -1216,18 +1219,19 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         }
 
 
-        if (v == addItem) {
+        if (v == fab_add) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
             final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
+            final String folder = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Document Item Titles and sub-Titles ");
+            builder.setTitle("Document Titles and sub-Titles ");
             // add a list
-            String[] actions = {"Add Item Title",
-                    "Add Item subTitle ",
+            String[] actions = {"Add Title TAB to "+folder+" Folder",
+                    "Add sub TAB to "+branchTitle+" TAB",
                     "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1251,7 +1255,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             photoBranch = "";
-                                            addLevel(0, branchText.getText().toString());
+                                            addLevel(1, branchText.getText().toString());
 
 
                                         }
@@ -1272,36 +1276,38 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                         }
 
                         case 1: {
+                            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+                            if(node.getNodeLevel() > 0) {
+                                LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                                alertDialogBuilder.setView(promptView);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
+                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                // setup a dialog window
+                                alertDialogBuilder.setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                photoBranch = "";
+                                                addLevel((Level + 1), branchText.getText().toString());
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addLevel((Level + 1), branchText.getText().toString());
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
 
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                            }
+                            else Toast.makeText(getBaseContext(), "Choose TAB in folder", Toast.LENGTH_SHORT).show();
                             break;
 
                         }
@@ -1865,7 +1871,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             }
 
-            File from = new File(path);
+
 
 
             fname = dayTime(3);
@@ -1881,14 +1887,22 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                 storageDirectory.mkdirs();
             }
 
-            File to = new File(SD + fname + ".jpg");
+
+                File from = new File(path);
+                File to = new File(SD + fname + ".jpg");
+
+
+
+
 
 
             // from.renameTo(to);  This deletes the source file from
 
             try {
+
                 copy(from, to);
                 if(to.length()/1048576 > 1) resizeImage(to);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

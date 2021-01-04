@@ -14,5 +14,5 @@
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:gravity="center"
-        android:descendantFocusability="blocksDescendants"/>
+       />
 </RelativeLayout>

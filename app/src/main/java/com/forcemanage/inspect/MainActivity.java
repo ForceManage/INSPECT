@@ -89,6 +89,7 @@ import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.InspectionActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import org.json.JSONArray;
@@ -110,6 +111,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -137,17 +139,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private int USER_ID = 0;
     private String USER_NAME = "";
     private String PASS_WORD = "";
+    private String USER_CODE = "";
     private String CLIENT = "no-client";
     private ListView listView;
     private CheckBox checkBox;
     private Switch ToggleTB;
     public ImageView mPhotoImageView;
     private ImageView Folders_img;
-    private ImageView addFolder;
+    private ImageView settings;
     private ImageView listFolders;
     private ImageView info_icon;
     private ImageView imgDownload;
-    private ImageView imgUpload;
     private ImageView imgLogin;
     public File photo;
     private String dirName;
@@ -175,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private Boolean connected;
     private TextView client;
     public String focus = "null";
+    private FloatingActionButton fab_add;
+
 
 
     AmazonS3 s3Client;
@@ -263,19 +267,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
       //  btnLogin = (Button) findViewById(R.id.btnlogin);
       //  btnLogin.setOnClickListener(this);
-        addFolder = (ImageView) findViewById(R.id.add_Project);
-        addFolder.setOnClickListener(this);
+        settings = (ImageView) findViewById(R.id.settings);
+        settings.setOnClickListener(this);
         listFolders = (ImageView) findViewById(R.id.list_Folders);
         listFolders.setOnClickListener(this);
         Folders_img = (ImageView) findViewById(R.id.imageView_projectfolder);
         Folders_img.setOnClickListener(this);
         imgDownload = (ImageView) findViewById(R.id.image_download);
         imgDownload.setOnClickListener(this);
-        imgUpload = (ImageView) findViewById(R.id.image_upload);
-        imgUpload.setOnClickListener(this);
         imgLogin = (ImageView) findViewById(R.id.image_login);
         imgLogin.setOnClickListener(this);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
+        fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
+        fab_add.setOnClickListener(this);
+
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
@@ -510,12 +515,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     @Override
     public void OnTabChanged(int treeNameIndex){
 
-        GlobalVariables.modified = false;
+   //     GlobalVariables.modified = false;
         focus = "FOLDER";
 
         MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
       //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
         GlobalVariables.folder_Id = node.getprojId();
+        GlobalVariables.name = node.getNodeName();
 
 
         if(projId != node.getprojId()) {
@@ -583,18 +589,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
-           // GlobalVariables.modified = true;
-
-            projId = node.getprojId();
-            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
-            inspectionId = Integer.toString(node.getiID());
-            iId = node.getiID();
-
-
-        }
-
-        else{
-
             projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
             inspectionId = Integer.toString(node.getiID());
             projId = node.getprojId();
@@ -624,21 +618,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
                 bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
                 bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
-                bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
                 bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
                 bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
                 bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
-
+                bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
 
 
 
                 ProjectInfoFragment fragment = new ProjectInfoFragment();
-                doFragmentTransaction(fragment, "ProjectInfoFragment", true, "");
+                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
                 fragment.setArguments(bundle);
 
                 ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", true, "");
+                doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", false, "");
                 fragment2.setArguments(bundle);
 
 
@@ -699,8 +692,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             GlobalVariables.aId = node.getaID();
             GlobalVariables.Level = node.getNodeLevel();
+            GlobalVariables.iId = node.getiID();
        //     GlobalVariables.catId = node.getcatId();
             GlobalVariables.name = node.getNodeName();
+     //   GlobalVariables.modified = true;
 
         Bundle bundle = new Bundle();
         switch (node.getNodeLevel()) {
@@ -709,14 +704,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             case 0: {
 
                 focus = "FOLDER";
+
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+
                 LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
                 linearLayout.setVisibility(View.GONE);
-
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
                 LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
                 linearLayout_.setVisibility(View.VISIBLE);
-
 
 
                DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -742,14 +736,38 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
                 bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
 
-
-
                 ProjectInfoFolderFragment fragment = new ProjectInfoFolderFragment();
                 doFragmentFolderInfoTransaction(fragment, "ProjectInfoFolderFragment", true, "");
                 fragment.setArguments(bundle);
 
 
 
+                TextView folder = fragment_obj.getView().findViewById(R.id.folder_name);
+                TextView InfoA = fragment_obj.getView().findViewById(R.id.text2);
+                TextView InfoB = fragment_obj.getView().findViewById(R.id.text3);
+                TextView InfoC = fragment_obj.getView().findViewById(R.id.text4);
+                TextView InfoD = fragment_obj.getView().findViewById(R.id.text5);
+                folder.setText(projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+
+                if(projectItem.get(MyConfig.TAG_INFO_A) == "" || projectItem.get(MyConfig.TAG_INFO_A)== null )
+                    InfoA.setText("Note A");
+                    else
+                    InfoA.setText(projectItem.get(MyConfig.TAG_INFO_A));
+
+                if(projectItem.get(MyConfig.TAG_INFO_B)== "" | projectItem.get(MyConfig.TAG_INFO_B) == null )
+                    InfoB.setText("Note B");
+                    else
+                    InfoB.setText(projectItem.get(MyConfig.TAG_INFO_B));
+
+                if(projectItem.get(MyConfig.TAG_INFO_C)== "" | projectItem.get(MyConfig.TAG_INFO_C) == null )
+                    InfoC.setText("Note C");
+                else
+                    InfoC.setText(projectItem.get(MyConfig.TAG_INFO_C));
+
+                if(projectItem.get(MyConfig.TAG_INFO_D)== "" | projectItem.get(MyConfig.TAG_INFO_D) == null )
+                    InfoD.setText("Note D");
+                else
+                    InfoD.setText(projectItem.get(MyConfig.TAG_INFO_D));
 
                 break;
             }
@@ -778,99 +796,30 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putInt("inspectionId", iId);
                 bundle.putString("preamble", projectItem.get(MyConfig.TAG_NOTE_2));
                 bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
-                bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+                bundle.putString("doc_name", projectItem.get(MyConfig.TAG_LABEL));
                 bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                 bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                 bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
                 bundle.putString("inspectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
                 bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
 
-                TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text2);
-                TextView Hrs = fragment_obj.getView().findViewById(R.id.Text5);
-                TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text3);
-                TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text4);
+                InspectionInfoFolderFragment fragment = new InspectionInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment, "InspectionInfoFolderFragment", true, "");
+                fragment.setArguments(bundle);
 
+
+
+                TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text_2);
+                TextView Hrs = fragment_obj.getView().findViewById(R.id.Text_5);
+                TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text_3);
+                TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text_4);
+                TextView doc_title = fragment_obj.getView().findViewById(R.id.doc_name);
+                doc_title.setText(projectItem.get(MyConfig.TAG_LABEL));
                 inspectDate.setText("Document created:  " + stringdate(projectItem.get(MyConfig.TAG_INSPECTION_DATE), 1));
                 inspectionType.setText("Document type:  " + projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
                 if (!projectItem.get(MyConfig.TAG_START_DATE_TIME).equals("null"))
                     inspectedDate.setText("Initial log recorded: " + stringdate(projectItem.get(MyConfig.TAG_START_DATE_TIME), 2) + "  -  " + stringdate(projectItem.get(MyConfig.TAG_END_DATE_TIME), 2));
                 Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
-
-
-                InspectionInfoFolderFragment fragment = new InspectionInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment, "InspectionInfoFolderFragment", true, "");
-                fragment.setArguments(bundle);
-
-         //       final HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
-
-
-                //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-             //   propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
-
-       /*         if(propPhoto.length() > 14)
-                {
-                    dirName = propPhoto.substring(6, 14);
-                    root = Environment.getExternalStorageDirectory().toString();
-                    File propImage = new File(root + "/ESM_" + dirName + "/" + propPhoto);
-
-                    if (propImage.exists()) {
-
-                        Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
-                        mPhotoImageView.setImageBitmap(myBitmap);
-                    }
-                }
-                else {
-                    Integer draw = android.R.drawable.ic_menu_camera;
-                    mPhotoImageView.setImageDrawable(getDrawable(draw));
-                }
-
-*/
-
-                /*
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setTitle("Log Session");
-                alertDialogBuilder.setMessage("Record file session time?");
-                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        Intent theIntent = new Intent(getBaseContext(), InspectionActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("PROJECT_ID", Integer.toString(projId));
-                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                        bundle.putString("DOC_NAME", GlobalVariables.name);
-                        bundle.putBoolean("logTime", true);
-                        theIntent.putExtras(bundle);
-                        startActivity(theIntent);
-                        dialog.dismiss();
-
-                    }
-                })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent theIntent = new Intent(getBaseContext(), InspectionActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("PROJECT_ID", Integer.toString(projId));
-                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                                bundle.putString("DOC_NAME", GlobalVariables.name);
-                                bundle.putBoolean("logTime", false);
-                                theIntent.putExtras(bundle);
-                                startActivity(theIntent);
-                                dialog.cancel();
-                            }
-                        });
-
-                // create an alert dialog
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
-
-                 */
-
-
-
-
-
-
-
 
 
                 break;
@@ -892,8 +841,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
      //   buttonUpload = (Button) findViewById(R.id.btnUpload);
      //   buttonUpload.setOnClickListener(this);
      //   USER_ID = 0;
-        addFolder = (ImageView) findViewById(R.id.add_Project);
-        addFolder.setOnClickListener(this);
+        fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
+        fab_add.setOnClickListener(this);
         listFolders = (ImageView) findViewById(R.id.list_Folders);
         listFolders.setOnClickListener(this);
 
@@ -901,8 +850,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     //    btnLogin.setOnClickListener(this);
         imgDownload = (ImageView) findViewById(R.id.image_download);
         imgDownload.setOnClickListener(this);
-        imgUpload = (ImageView) findViewById(R.id.image_upload);
-        imgUpload.setOnClickListener(this);
         imgLogin = (ImageView) findViewById(R.id.image_login);
         imgLogin.setOnClickListener(this);
 
@@ -952,13 +899,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
         GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
-        // GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
-        //     TreeViewLists.LoadDisplayList();
-
-        //   ProjectViewList.LoadInitialData();
-        //   ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
-        //   MapViewLists.LoadDisplayList();
-
 
         MapViewLists.LoadInitialData();
         MapViewLists.LoadDisplayList();
@@ -1058,8 +998,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     switch (template){
 
                         case 1: {
-                            dbHandler.addLevel(projId, 0, 0, 0, 1, 0, "Item Title 1", 0);  //this is the ESM category
-                            dbHandler.addLevel(projId, 1, 0, 1, 1, 1, "Item Title 2", 0);  //this is the ESM category
+                            dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Item Title 1", 0);  //this is the ESM category
+                     //       dbHandler.addLevel(projId, 2, 0, 2, 1, 0, "Item Title 2", 0);  //this is the ESM category
                             dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Document Page");  //this is the ESM category
                             dbHandler.addReportBranch(projId, 1, 2, 2, 2, "Document Page");  //this is the ESM category
                             break;
@@ -1155,7 +1095,285 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if(v==client){
 
-            OnTabChanged(GlobalVariables.pos+1);
+        }
+
+        if(v==settings){
+
+            final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Downloads");
+            // add a list
+            String[] actions = {"Change User Code",
+                    " ",
+                    " "};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    switch (which) {
+
+                        case 0: {
+
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                                builder.setTitle("CHANGE USER CODE");
+                                builder.setMessage("Four Digit pass code access for uploading/downloading and Reporting");
+
+
+                                builder.setNegativeButton("Change Code", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                        View promptView = layoutInflater.inflate(R.layout.code_reset, null);
+                                        AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                                        final EditText code = (EditText) promptView.findViewById(R.id.code);
+                                        final EditText password = (EditText) promptView.findViewById(R.id.password);
+                                        passDialog.setView(promptView);
+                                        passDialog.setTitle("Change User Code");
+                                        passDialog.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                if (Pattern.matches("\\d{4}", code.getText().toString())) {
+
+
+                                                        USER_CODE = code.getText().toString();
+                                                        PASS_WORD = password.getText().toString();
+                                                        change_usercode_JSON();
+
+
+                                                } else
+                                                    Toast.makeText(MainActivity.this, "Invalid Code Input", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+                                        // create an alert dialog
+                                        AlertDialog alert = passDialog.create();
+                                        alert.show();
+                                    }
+
+                                });
+
+
+                                builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
+
+
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+
+
+
+                            break;
+
+                        }
+
+                        case 1: {
+
+
+
+                            break;
+
+                        }
+
+                        case 2: {
+
+
+                            break;
+                        }
+
+
+                    }
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+
+            dialog.show();
+
+        }
+
+
+        if(v==fab_add){
+
+            final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, 0);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Folders/TAB Titles ");
+            // add a list
+
+
+            String[] actions = {"Create New Folder",
+                    "Add a Title TAB to "+branchTitle+" Folder",
+                    "Place TABS under "+GlobalVariables.name+" TAB",
+                    "Cancel Request "};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Create a New Folder and basic document  ");//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Folder title.");
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (USER_ID > 0) {
+                                                requestProject(branchText.getText().toString(),1);
+
+                                                //    downloadprojects();
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+                            break;
+
+                        }
+
+                        case 1: {
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Add a Title TAB to " + branchTitle+ " Folder");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //      photoBranch = "";
+                                            if (projId != 0)
+                                                addLevel(1, branchText.getText().toString());
+
+                                            else
+                                                Toast.makeText(MainActivity.this, "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+                            break;
+
+                        }
+
+                        case 2: {
+
+                            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
+
+                            // setup the alert builder
+
+                            final MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+                            if(node.getNodeLevel() > 0) {
+                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                                alertDialogBuilder.setView(promptView);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("Sub Title to : " + node.getNodeName());//Integer.parseInt(locationId)
+                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                // setup a dialog window
+                                alertDialogBuilder.setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                if (node.getNodeName() == "NULL" || node.getNodeName() == null)
+                                                    Toast.makeText(MainActivity.this, "Select a TAB", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    addLevel((node.getNodeLevel() + 1), branchText.getText().toString());
+
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                            }
+                            else
+                                Toast.makeText(MainActivity.this, "Select a TAB in the folder", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+
+
+
+                        case 3: {
+
+
+
+
+                            break;
+                        }
+
+
+                    }
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+
+
         }
 
         if(v == Folders_img) {
@@ -1192,286 +1410,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         }
 
-        if (v == addFolder) {
-
-            final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Folders and Titles ");
-            // add a list
-            String[] actions = {"Create New Folder",
-                    "Add Title/Sub-Titles to Selected Folder",
-                    "Create New Folder  (TWO TITLES TEMPLATE) ",
-                    "Cancel Request "};
-
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-
-                        case 0: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Create a New Folder ");//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Folder title.");
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            if (USER_ID > 0) {
-                                                requestProject(branchText.getText().toString(),0);
-                                                //    downloadprojects();
-                                            } else
-                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-
-                        }
-
-                        case 1: {
-
-                            // add_title();
-
-                            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-
-                            final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
-
-                            // setup the alert builder
-
-                            final MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-                           AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Add Folder TABS ");
-                            // add a list
-                            String[] actions = {"Add a Title",
-                                    "Add a sub-Title",
-                                    "Cancel"};
-
-                            builder.setItems(actions, new DialogInterface.OnClickListener() {
-
-
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-
-                                        case 0: {
-
-                                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            alertDialogBuilder.setView(promptView);
-                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
-                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                            locationText.setText("Sub Title to : " + node.getNodeName());//Integer.parseInt(locationId)
-                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                            // setup a dialog window
-                                            alertDialogBuilder.setCancelable(false)
-                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            //      photoBranch = "";
-                                                            if (projId != 0)
-                                                                addLevel(1, branchText.getText().toString());
-                                                            else
-                                                                Toast.makeText(MainActivity.this, "Create or Select a Folder", Toast.LENGTH_SHORT).show();
-
-
-                                                        }
-                                                    })
-                                                    .setNegativeButton("Cancel",
-                                                            new DialogInterface.OnClickListener() {
-                                                                public void onClick(DialogInterface dialog, int id) {
-                                                                    dialog.cancel();
-                                                                }
-                                                            });
-
-                                            // create an alert dialog
-                                            AlertDialog alert = alertDialogBuilder.create();
-                                            alert.show();
-
-                                            break;
-
-                                        }
-
-                                        case 1: {
-
-                                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                            alertDialogBuilder.setView(promptView);
-                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
-                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                            locationText.setText("Sub Title to : " + node.getNodeName());//Integer.parseInt(locationId)
-                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                            // setup a dialog window
-                                            alertDialogBuilder.setCancelable(false)
-                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            if (node.getNodeName() == "NULL" || node.getNodeName() == null)
-                                                                Toast.makeText(MainActivity.this, "Select a TAB", Toast.LENGTH_SHORT).show();
-                                                            else
-                                                                addLevel((node.getNodeLevel() + 1), branchText.getText().toString());
-
-                                                        }
-                                                    })
-                                                    .setNegativeButton("Cancel",
-                                                            new DialogInterface.OnClickListener() {
-                                                                public void onClick(DialogInterface dialog, int id) {
-                                                                    dialog.cancel();
-                                                                }
-                                                            });
-
-                                            // create an alert dialog
-                                            AlertDialog alert = alertDialogBuilder.create();
-                                            alert.show();
-
-                                            break;
-
-                                        }
-
-
-                                    }
-                                }
-
-
-
-
-                            });
-
-                            AlertDialog alert = builder.create();
-
-                            alert.show();
-
-                            /*
-
-                            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-
-                            final String branchTitle = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
-
-                            // setup the alert builder
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle(" File Information ");
-                            // add a list
-                            String[] actions = {
-                                    "Attach File Information ",
-                                    "Cancel"};
-
-                            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-
-                                        case 0: {
-
-                                            String photoBranch = "";
-                                            //    addReferenceBranch(502, "File Information");
-                                            break;
-
-                                        }
-
-                                        case 1: {
-
-
-
-                                            break;
-
-                                        }
-
-                                    }
-                                }
-                            });
-*/
-
-
-                            break;
-
-                        }
-
-                        case 2: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Create a New Folder and basic document outline  ");//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            branchText.setHint("Folder title.");
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            if (USER_ID > 0) {
-                                                requestProject(branchText.getText().toString(),1);
-
-
-
-                                                //    downloadprojects();
-                                            } else
-                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-                        }
-
-                        case 3: {
-
-
-                            break;
-                        }
-
-
-                    }
-
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-
-
-        }
-
 
         if (v == imgDownload) {
 
@@ -1479,7 +1417,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Downloads");
             // add a list
-            String[] actions = {"Download Project Documents and Files",
+            String[] actions = {"Upload New/Edited data",
+                    "Download Project Documents and Files",
                     "Download Images ",
                     "Cancel Request "};
 
@@ -1490,6 +1429,38 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     switch (which) {
 
                         case 0: {
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.call_log, null);
+                            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
+                            final EditText passText = (EditText) promptView.findViewById(R.id.code);
+                            passDialog.setView(promptView);
+                            passDialog.setTitle("Enter User Code");
+                            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+                                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
+                                        USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                        if (USER_ID > 0) {
+                                            uploaddata();
+                                            uploadphotos();
+                                        } else
+                                            Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
+
+
+
+                                }
+                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = passDialog.create();
+                            alert.show();
+                        }
+
+                        case 1: {
 
                             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                             View promptView = layoutInflater.inflate(R.layout.call_log, null);
@@ -1529,7 +1500,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         }
 
-                        case 1: {
+                        case 2: {
 
                             if (USER_ID == 0) {
 
@@ -1564,7 +1535,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         }
 
-                        case 2: {
+                        case 3: {
 
 
                             break;
@@ -1805,44 +1776,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        if (v == imgUpload) {
-
-
-            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-            View promptView = layoutInflater.inflate(R.layout.call_log, null);
-            AlertDialog.Builder passDialog = new AlertDialog.Builder(MainActivity.this);
-            final EditText passText = (EditText) promptView.findViewById(R.id.code);
-            passDialog.setView(promptView);
-            passDialog.setTitle("Enter User Code");
-            passDialog.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-
-                    if (Pattern.matches("\\d{4}", passText.getText().toString())) {
-                        USER_ID = dbHandler.checkCode(passText.getText().toString());
-                        if (USER_ID > 0) {
-                            uploaddata();
-                            uploadphotos();
-                        } else
-                            Toast.makeText(MainActivity.this, "Incorrect PIN or User Login required", Toast.LENGTH_LONG).show();
-                    } else
-                        Toast.makeText(MainActivity.this, "Invalid Input", Toast.LENGTH_LONG).show();
-
-
-
-                }
-            });
-
-            // create an alert dialog
-            AlertDialog alert = passDialog.create();
-            alert.show();
-
-
-
-
-        }
-
-
 
         if (v == info_icon) {
 
@@ -1890,6 +1823,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getFolders(USER_ID, projId);
+        int position = GlobalVariables.pos;
 
         maplistItems = new ArrayList<>();
         MapViewData listItem;
@@ -1931,7 +1865,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         fragmentTransaction.commit();
 
 
-        GlobalVariables.displayNodes.get(GlobalVariables.pos+1);
+      //  GlobalVariables.displayNodes.get(GlobalVariables.pos);
+
+
+
 
         // GlobalVariables.modified = true;
 
@@ -2776,6 +2713,14 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         // editTextMessage.setText("Test 4");
     }
 
+
+    private void update_user_code(){
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        dbHandler.update_USER_code(USER_CODE, USER_ID);
+
+    }
+
+
     private void update_USER_Info() {
         JSONObject jsonObject = null;
 
@@ -3316,6 +3261,57 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         Get_BOR_JSON gj = new Get_BOR_JSON();
         gj.execute();
     }
+
+
+
+    private void change_usercode_JSON() {
+
+        class Change_USERCODE_JSON extends AsyncTask<Void, Void, String> {
+
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //     loading = ProgressDialog.show(MainActivity.this, "Connecting to the server", "Wait...", false, false);
+                progressBar1.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //    loading.dismiss();
+
+                JSON_STRING_USER = s;
+                if(s.equals("User not found")  || s.equals("incorrect password")) {
+                    Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+                    progressBar1.setVisibility(View.GONE);
+                }
+                else {
+                    DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+
+                    dbHandler.update_USER_code(USER_CODE,USER_ID);
+
+                    Toast.makeText(MainActivity.this, "User Code Updated", Toast.LENGTH_LONG).show();
+                    progressBar1.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                RequestHandler_ rh = new RequestHandler_();
+                String s = rh.sendGetRequestParam(MyConfig.URL_CHANGE_USER_CODE,USER_ID+"&code="+USER_CODE+"&password="+PASS_WORD);
+                return s;
+            }
+
+        }
+        Change_USERCODE_JSON gj = new Change_USERCODE_JSON();
+        gj.execute();
+    }
+
+
+
 
 
     private void get_user_JSON() {

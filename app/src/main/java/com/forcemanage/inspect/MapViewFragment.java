@@ -43,6 +43,7 @@ public class MapViewFragment extends ListFragment {
         }
 
 
+
     @Override
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
@@ -63,7 +64,7 @@ public class MapViewFragment extends ListFragment {
                 }
             }
 
-        mAdapter.notifyDataSetChanged();
+     //   mAdapter.notifyDataSetChanged();
 
             tabchangelistener listener = (tabchangelistener) getActivity();
             listener.OnTabChanged(position);

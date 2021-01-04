@@ -411,19 +411,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 // galleryIntent.setAction(Intent.ACTION_VIEW);
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
-
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
             }
@@ -436,15 +423,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
 
                 Intent galleryIntent = new Intent();
-                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-              //   galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                 galleryIntent.setAction(Intent.ACTION_VIEW);
-              //  galleryIntent.setAction(Intent.ACTION_EDIT);
-               // galleryIntent.setAction(Intent.ACTION_PICK);
-             //   galleryIntent.setType("image/*");
-              //     String[] mimetypes = {"image/*"};
-               //    galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                try {
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                 try {
                     String dirName = globalVariables.photo2.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
                     File Image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo2);//+ photos[0]
@@ -456,29 +436,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
                     Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
                     galleryIntent.setDataAndType(data,"image/*");
-                  //  galleryIntent.setData(data);
-                  //  String[] mimeTypes = {"image/jpeg", "image/png"};
-
-               //  galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-               // galleryIntent.putExtra(galleryIntent.ACTION_EDIT,mimeTypes);
-
                     startActivity(galleryIntent);
                 }
                 catch(Exception e){};
-
-
-               // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
-               //  startActivityForResult(new Intent(galleryIntent.ACTION_VIEW, Uri.parse(root + "/A2D_" + dirName + "/"+ globalVariables.photos[1])));
-
-               //  startActivityForResult(galleryIntent, ACTIVITY_DRAW_FILE);
-               // globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
-
-
-
-                // galleryIntent.setDataAndType(Uri.withAppendedPath(Uri.fromFile(propImage) ,dir),"image/*" );
-
-
-
 
 
             }
@@ -489,24 +449,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
                 globalVariables.filephoto = 2;
                 Intent galleryIntent = new Intent();
-                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                // galleryIntent.setAction(Intent.ACTION_VIEW);
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
-
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
             }
@@ -574,19 +518,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 // galleryIntent.setAction(Intent.ACTION_VIEW);
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
-
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
             }
@@ -655,19 +586,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 // galleryIntent.setAction(Intent.ACTION_VIEW);
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
-
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
             }
@@ -736,19 +654,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 // galleryIntent.setAction(Intent.ACTION_VIEW);
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
-
-
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
             }
