@@ -27,6 +27,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
@@ -40,6 +42,7 @@ import com.forcemanage.inspect.OnVerseNameSelectionChangeListener;
 import com.forcemanage.inspect.ProjectDetailFragment;
 import com.forcemanage.inspect.ProjectViewFragment;
 import com.forcemanage.inspect.ProjectViewList;
+import com.forcemanage.inspect.adapters.ReportDocsAdapter;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.MyConfig;
@@ -47,6 +50,7 @@ import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectData;
 import com.forcemanage.inspect.attributes.ProjectNode;
+import com.forcemanage.inspect.attributes.Projectlistdata;
 import com.forcemanage.inspect.tabchangelistener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -63,6 +67,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private MainActivity globalVariables;
 
     private static final String TAG = "Project Info Fragment";
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     private TextView branch;
@@ -189,6 +197,14 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         branch.setText("Folder ID: "+FolderID);
         Preamble = (EditText) view.findViewById(R.id.preamble);
         Preamble.setText(preamble);
+
+        mRecyclerView = view.findViewById(R.id.reportlist);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new ReportDocsAdapter(GlobalVariables.projectList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);

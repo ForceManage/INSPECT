@@ -50,7 +50,28 @@ public class MapViewFragment extends ListFragment {
        GlobalVariables.pos = position;
         MapViewNode node = GlobalVariables.displayNodes.get(position);
 
+        int proj = node.getprojId();
 
+        if(GlobalVariables.folder_Id != proj){
+
+            if (position != ListView.INVALID_POSITION) {
+
+                if (node.getIsExpanded() == GlobalVariables.TRUE) {
+                    node.setIsExpanded(GlobalVariables.FALSE);
+
+                } else {
+                    if (node.getNodeChildren() != null)
+                        node.setIsExpanded(GlobalVariables.TRUE);
+
+                }
+            }
+
+            tabchangelistener listener = (tabchangelistener) getActivity();
+            listener.OnTabChanged(position);
+            MapViewLists.LoadDisplayList();
+            mAdapter.notifyDataSetChanged();
+
+        }
 
         if (position != ListView.INVALID_POSITION) {
 

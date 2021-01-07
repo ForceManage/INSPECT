@@ -1458,6 +1458,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                             // create an alert dialog
                             AlertDialog alert = passDialog.create();
                             alert.show();
+
+                            break;
+
                         }
 
                         case 1: {
