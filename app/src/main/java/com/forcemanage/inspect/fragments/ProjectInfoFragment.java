@@ -68,9 +68,9 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
     private static final String TAG = "Project Info Fragment";
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+ //   private RecyclerView mRecyclerView;
+ //   private RecyclerView.Adapter mAdapter;
+  //  private RecyclerView.LayoutManager mLayoutManager;
 
 
     private TextView branch;
@@ -198,7 +198,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         Preamble = (EditText) view.findViewById(R.id.preamble);
         Preamble.setText(preamble);
 
-        mRecyclerView = view.findViewById(R.id.reportlist);
+   /*     mRecyclerView = view.findViewById(R.id.reportlist);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ReportDocsAdapter(GlobalVariables.projectList);
@@ -206,7 +206,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+*/
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID,projId); //child 9 shows only the types <9
 
