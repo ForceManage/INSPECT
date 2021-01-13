@@ -245,12 +245,12 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             //     }
 //
             // Create an Instance of Fragment
-            ProjectViewFragment treeFragment = new ProjectViewFragment();
+            ProjectViewFragment projectViewFragment = new ProjectViewFragment();
 
             //  treeFragment.setArguments(getIntent().getExtras());
 
 
-            getChildFragmentManager().beginTransaction().add(R.id.fragment_folder, treeFragment)
+            getChildFragmentManager().beginTransaction().add(R.id.fragment_folder, projectViewFragment)
                     .commit();
         }
 
@@ -269,59 +269,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         }
 
         projectId = Integer.toString(projId);
-
-        delete_Tab = (ImageView) view.findViewById(R.id.del_Tab);
-        delete_Tab.setOnClickListener(this);
-        page_Tab = (ImageView) view.findViewById(R.id.page_Tab);
-        page_Tab.setOnClickListener(this);
-        printer = (ImageView) view.findViewById(R.id.printer);
-        printer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                globalVariables.reportMenu();
-
-            }
-        });
-        FloatingActionButton fab_add = (FloatingActionButton) view.findViewById(R.id.fab_add);
-        fab_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                alertDialogBuilder.setView(promptView);
-                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                itemTitle.setText("Add New Document to the Folder ");//Integer.parseInt(locationId)
-                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                locationText.setText("Document Name : ");//Integer.parseInt(locationId)
-                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                branchText.setHint("Document Title");
-                alertDialogBuilder.setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                if (USER_ID > 0) {
-                                    globalVariables.requestActivity(branchText.getText().toString());
-                                    //    downloadprojects();
-                                } else
-                                    Toast.makeText(getContext(), "Log in required ", Toast.LENGTH_LONG).show();
-
-
-                            }
-                        })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                // create an alert dialog
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
-            }
-        });
-
-
 
         final TextView doc_name = (TextView) view.findViewById(R.id.doc_name);
         doc_name.setOnClickListener(new View.OnClickListener() {
@@ -539,71 +486,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             dialog.show();
          }
 
-        if (v == page_Tab) {
-
-            if(globalVariables.focus != "DOC"){
-                Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
-                return;
-             }
-            ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
-            projId = node.getprojId();
-            iId = node.getiID();
-            if(iId == 0){
-                Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
-                return;
-             }
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-            alertDialogBuilder.setTitle("Log Session");
-            alertDialogBuilder.setMessage("Record file session time?");
-            alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                    Intent theIntent = new Intent(getContext(), InspectionActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("PROJECT_ID", Integer.toString(projId));
-                    bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                    bundle.putString("DOC_NAME", GlobalVariables.name);
-                    bundle.putBoolean("logTime", true);
-                    theIntent.putExtras(bundle);
-                    startActivity(theIntent);
-                    dialog.dismiss();
-
-                }
-            })
-                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent theIntent = new Intent(getContext(), InspectionActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("PROJECT_ID", Integer.toString(projId));
-                            bundle.putString("INSPECTION_ID", Integer.toString(iId));
-                            bundle.putString("DOC_NAME", GlobalVariables.name);
-                            bundle.putBoolean("logTime", false);
-                            theIntent.putExtras(bundle);
-                            startActivity(theIntent);
-                            dialog.cancel();
-                        }
-                    });
-
-            // create an alert dialog
-            AlertDialog alert = alertDialogBuilder.create();
-            alert.show();
 
 
-        }
-
-        if (v == printer) {
-
-            printer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    globalVariables.reportMenu();
-
-                }
-            });
-
-
-        }
 
     }
 
@@ -663,7 +547,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     @Override
     public void OnTabChanged(int treeNameIndex) {
 
-
+/*
      //  MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
 
@@ -726,6 +610,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             OnTabChanged(GlobalVariables.pos);
         }
 
+
+ */
     }
 
 
@@ -779,7 +665,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     }
 
     public void loadMap() {
-
+/*
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getFolderMap(projId, 0, 9); //child 9 shows only the types <9
 
@@ -813,6 +699,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         //   mAdapter.notifyDataSetChanged();
 
         OnTabChanged(GlobalVariables.pos);
+
+ */
     }
 
     public void editProject(final String  item, String value){

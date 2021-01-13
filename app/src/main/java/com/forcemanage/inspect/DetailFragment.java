@@ -45,7 +45,7 @@ public class DetailFragment extends Fragment
         // This is necessary when in two pane layout
 
         if (savedInstanceState != null){
-            mCurrentPosition = savedInstanceState.getInt(KEY_POSITION);
+            mCurrentPosition = GlobalVariables.pos;  //savedInstanceState.getInt(KEY_POSITION);
             id=mCurrentPosition;
         }
 

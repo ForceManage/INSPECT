@@ -49,7 +49,6 @@ public class MapViewLists
      //   MapViewLists.LoadDisplayList();
         return GlobalVariables.dataList;
 
-        // return GlobalVariables.dataList;
 
       }
 
@@ -136,6 +135,16 @@ public class MapViewLists
 
 
         return nodes;
+    }
+
+
+    public static  void ClearExpandedNodes(){
+
+        for(int i = 0; i < GlobalVariables.nodes.size(); i++) {
+            MapViewNode node = GlobalVariables.nodes.get(i);
+            node.setIsExpanded(GlobalVariables.FALSE);
+        }
+
     }
 
 

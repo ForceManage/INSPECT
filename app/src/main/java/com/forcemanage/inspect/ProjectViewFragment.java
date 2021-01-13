@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import androidx.fragment.app.ListFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.adapters.ProjectListAdapter;
@@ -31,6 +32,7 @@ public class ProjectViewFragment extends ListFragment {
         GlobalVariables.projectList = ProjectViewList.LoadInitialData();
 
         GlobalVariables.projectnodes = ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
+
 
         ProjectViewList.LoadDisplayList();
 
@@ -58,11 +60,13 @@ public class ProjectViewFragment extends ListFragment {
 
             }
 
+
+            node.setIsExpanded(GlobalVariables.TRUE);
         }
 
 
-       ProjectViewList.LoadDisplayList();
-        mAdapter.notifyDataSetChanged();
+     //  ProjectViewList.LoadDisplayList();
+    //   mAdapter.notifyDataSetChanged();
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
       //  tabchangelistener listener = (tabchangelistener) getActivity();
        // listener.OnTabChanged(position);
@@ -77,6 +81,8 @@ public class ProjectViewFragment extends ListFragment {
         });
 
         showMessage(Integer.toString(position));
+
+
 
     }
 

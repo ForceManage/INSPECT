@@ -30,6 +30,7 @@ public class GlobalVariables
     public static int folder_Id;
     public static String name;
     public static String branchType;
+    public static int User_id;
 
 
     public static Boolean modified = false;

@@ -26,7 +26,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="2dp"
         android:clickable="true"
-        android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+        android:src="@drawable/folder2_red" />
 
     <TextView
         android:id="@+id/text"
@@ -45,16 +45,6 @@
         android:choiceMode="singleChoice"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <ImageView
-        android:id="@+id/menu"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="2dp"
-        android:clickable="true"
-        />
 
 
 </LinearLayout>

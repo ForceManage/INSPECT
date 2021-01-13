@@ -63,7 +63,7 @@ public class ProjectViewList
         for(int i = 0; i < dataList.size(); i++)
         {
             ProjectData data = dataList.get(i);
-            if (data.getLevel() != 0) continue;
+         //   if (data.getLevel() != 0) continue;
 
             Log.v("LoadInitialNodes", data.getLabel());
 

@@ -9,6 +9,8 @@ import android.widget.TextView;
 public class ProjectListViewHolder {
 
     public ImageView arrow;
+    public ImageView file_open;
+    public ImageView print;
     public TextView content;
     public int position;
 }

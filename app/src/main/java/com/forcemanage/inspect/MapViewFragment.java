@@ -4,10 +4,13 @@ package com.forcemanage.inspect;
  * Created by cindyoakes on 9/23/16.
  */
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.ListFragment;
 
@@ -17,6 +20,7 @@ import com.forcemanage.inspect.attributes.MapViewNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MapViewFragment extends ListFragment {
@@ -30,7 +34,7 @@ public class MapViewFragment extends ListFragment {
      public void onActivityCreated(Bundle savedInstanceState){
          super.onActivityCreated(savedInstanceState);
 
-        GlobalVariables.dataList = MapViewLists.LoadInitialData();
+       GlobalVariables.dataList =  MapViewLists.LoadInitialData();
 
         GlobalVariables.nodes = MapViewLists.LoadInitialNodes(GlobalVariables.dataList);
 
@@ -45,35 +49,73 @@ public class MapViewFragment extends ListFragment {
 
 
     @Override
-    public  void  onListItemClick(ListView l, final View v, final int position, long id) {
+    public  void  onListItemClick(ListView l, final View v, int position, long id) {
+        int position2 = 0;
+        Boolean vary = false;
 
-       GlobalVariables.pos = position;
         MapViewNode node = GlobalVariables.displayNodes.get(position);
 
         int proj = node.getprojId();
 
-        if(GlobalVariables.folder_Id != proj){
 
-            if (position != ListView.INVALID_POSITION) {
+        if(GlobalVariables.folder_Id != proj) {
 
-                if (node.getIsExpanded() == GlobalVariables.TRUE) {
-                    node.setIsExpanded(GlobalVariables.FALSE);
+            int expanded = GlobalVariables.displayNodes.size();
 
-                } else {
-                    if (node.getNodeChildren() != null)
-                        node.setIsExpanded(GlobalVariables.TRUE);
+
+            DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(GlobalVariables.User_id, proj);
+            List<MapViewData> maplistItems = new ArrayList<>();
+
+            //   projectlistItems = new ArrayList<>();
+            MapViewData listItem;
+
+            for (int i = 0; i < (Folders.size()); i++) {
+
+                listItem = new MapViewData(
+
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
+                        Folders.get(i).get(MyConfig.TAG_LABEL),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                        Folders.get(i).get(MyConfig.TAG_IMAGE1),
+                        Folders.get(i).get(MyConfig.TAG_NOTES)
+
+                );
+                maplistItems.add(listItem);
+            }
+
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+
+            GlobalVariables.dataList = MapViewLists.LoadInitialData();
+
+            GlobalVariables.nodes = MapViewLists.LoadInitialNodes(GlobalVariables.dataList);
+
+            MapViewLists.LoadDisplayList();
+
+            int foldersize = GlobalVariables.nodes.size();
+
+            if (expanded > foldersize) {
+                if (position > GlobalVariables.pos) {
+                    GlobalVariables.pos = position - (expanded - foldersize);
+                    vary = true;
 
                 }
             }
 
-            tabchangelistener listener = (tabchangelistener) getActivity();
-            listener.OnTabChanged(position);
-            MapViewLists.LoadDisplayList();
-            mAdapter.notifyDataSetChanged();
 
         }
 
-        if (position != ListView.INVALID_POSITION) {
+            if (!vary) {
+                GlobalVariables.pos = position;
+            }
+
+
+            if (GlobalVariables.pos != ListView.INVALID_POSITION) {
 
                 if (node.getIsExpanded() == GlobalVariables.TRUE) {
                     node.setIsExpanded(GlobalVariables.FALSE);
@@ -85,30 +127,38 @@ public class MapViewFragment extends ListFragment {
                 }
             }
 
-     //   mAdapter.notifyDataSetChanged();
+
 
             tabchangelistener listener = (tabchangelistener) getActivity();
-            listener.OnTabChanged(position);
+            listener.OnTabChanged(GlobalVariables.pos);
+
+
 
             MapViewLists.LoadDisplayList();
-            mAdapter.notifyDataSetChanged();
 
 
 
 
+      //  final ListView listView = getListView();
+        l.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        l.setItemChecked(GlobalVariables.pos,true);
 
-
-
+        mAdapter.notifyDataSetChanged();
+     //   Toast.makeText(getActivity(), Integer.toString(l.getCheckedItemPosition()), Toast.LENGTH_LONG).show();
 
 
         v.post(new Runnable() {
             @Override
             public void run() {
-                v.setSelected(true);
+
+              v.setSelected(true);
+
             }
         });
 
         showMessage(Integer.toString(position));
+
+
 
     }
 

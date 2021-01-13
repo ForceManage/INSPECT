@@ -328,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                     if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                         USER_ID = dbHandler.checkCode(passText.getText().toString());
+                        GlobalVariables.User_id = USER_ID;
                         if (USER_ID > 0) {
                             CLIENT = dbHandler.getClient(USER_ID);
                             updatePropList();
@@ -517,67 +518,33 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
    //     GlobalVariables.modified = false;
         focus = "FOLDER";
-
+      //  MapViewNode node = GlobalVariables.dataList.get(GlobalVariables.pos);
         MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
       //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
         GlobalVariables.folder_Id = node.getprojId();
         GlobalVariables.name = node.getNodeName();
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-        if(projId != node.getprojId()) {
-
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID, node.getprojId());
-
-            maplistItems = new ArrayList<>();
-
-            //   projectlistItems = new ArrayList<>();
-            MapViewData listItem;
-
-            for (int i = 0; i < (Folders.size()); i++) {
-
-                listItem = new MapViewData(
+           projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
+           inspectionId = Integer.toString(node.getiID());
+           projId = node.getprojId();
+           iId = node.getiID();
 
 
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
 
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
-                        Folders.get(i).get(MyConfig.TAG_LABEL),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
-                        Folders.get(i).get(MyConfig.TAG_IMAGE1),
-                        Folders.get(i).get(MyConfig.TAG_NOTES)
+        if (detailFragment != null) {
+            // If description is available, we are in two pane layout
+            // so we call the method in DescriptionFragment to update its content
+            detailFragment.setDetail(treeNameIndex);
+        } else {
+            DetailFragment newDetailFragment = new DetailFragment();
+            Bundle args = new Bundle();
 
-                );
-                maplistItems.add(listItem);
-            }
-
-            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
-           // GlobalVariables.projectList = (ArrayList<ProjectData>) projectlistItems;
-            //     TreeViewLists.LoadDisplayList();
-
-            //   ProjectViewList.LoadInitialData();
-            //   ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
-            //   MapViewLists.LoadDisplayList();
-         //    node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-
-      //      ProjectViewList.LoadDisplayList();
-
-            //   OnSelectionChanged(0);
-        //    MapViewLists.LoadDisplayList();
-            DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.detail_text);
-
-           MapViewFragment newDetailFragment = new MapViewFragment();
-       //     Bundle args = new Bundle();
-       //     detailFragment.mCurrentPosition = (GlobalVariables.pos);
-
-       //     args.putInt(DetailFragment.KEY_POSITION, 0);
-       //     newDetailFragment.setArguments(args);
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+            newDetailFragment.setArguments(args);
             androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             // Replace whatever is in the fragment_container view with this fragment,
@@ -585,25 +552,16 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-
-
-            GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
-            inspectionId = Integer.toString(node.getiID());
-            projId = node.getprojId();
-            iId = node.getiID();
         }
 
-        TextView projlist = (TextView) findViewById(R.id.ProjectList);
+
+
 
 
         if(node.getNodeLevel() == 0) {
 
 
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-                HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
+               HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
               //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
@@ -642,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 Integer aID = node.getaID();
                 Integer iID = node.getiID();
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
                 if(aID == 0)  aID = 1;
                 HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
 
@@ -1390,6 +1348,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             USER_ID = 0;
+                            GlobalVariables.User_id = 0;
                             clearTablet();
                             updatePropList();
                             ProjectInfoFragment fragment = new ProjectInfoFragment();
@@ -1442,6 +1401,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                     if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                         USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                        GlobalVariables.User_id = USER_ID;
                                         if (USER_ID > 0) {
                                             uploaddata();
                                             uploadphotos();
@@ -1477,6 +1437,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     if (Pattern.matches("\\d{4}", passText.getText().toString())) {
 
                                     USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                        GlobalVariables.User_id = USER_ID;
                                     if (USER_ID > 0) {
                                         CLIENT = dbHandler.getClient(USER_ID);
                                         if (dbHandler.checkstatus("all", USER_ID) == 0)
@@ -1517,6 +1478,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                     public void onClick(DialogInterface dialog, int id) {
                                         if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                         USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                            GlobalVariables.User_id = USER_ID;
                                         if (USER_ID > 0) {
                                             downloadphotos();
 
@@ -1584,6 +1546,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 USER_ID = 0;
                                 if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                                 USER_ID = dbHandler.checkCode(passText.getText().toString());
+                                    GlobalVariables.User_id = USER_ID;
                                 if (USER_ID > 0) {
                                     uploaddata();
                                     uploadphotos();
@@ -1629,6 +1592,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             public void onClick(DialogInterface dialog, int id) {
                                 USER_ID = 0;
+                                GlobalVariables.User_id = 0;
                                 USER_NAME = user.getText().toString();
                                 PASS_WORD = password.getText().toString();
                                 get_user_JSON();
@@ -1685,6 +1649,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                                 public void onClick(DialogInterface dialog, int id) {
                                     USER_ID = 0;
+                                    GlobalVariables.User_id = 0;
                                     USER_NAME = user.getText().toString();
                                     PASS_WORD = password.getText().toString();
                                     get_user_JSON();
@@ -1727,6 +1692,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                         if (Pattern.matches("\\d{4}", passText.getText().toString())) {
                             USER_ID = dbHandler.checkCode(passText.getText().toString());
+                            GlobalVariables.User_id = USER_ID;
                             if (USER_ID > 0) {
                                 CLIENT = dbHandler.getClient(USER_ID);
                                 updatePropList();
@@ -2758,6 +2724,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                 //editTextMessage.setText("Test 5");
                 USER_ID = uID;
+                GlobalVariables.User_id = USER_ID;
                 CLIENT = clientName;
                  dbHandler.update_USER_FromServer(user_attributes);
 

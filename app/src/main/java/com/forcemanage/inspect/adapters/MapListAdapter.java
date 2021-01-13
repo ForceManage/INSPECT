@@ -36,6 +36,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
+
     @Override
     public int getCount() {return GlobalVariables.displayNodes.size();
     }
@@ -59,7 +61,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
         if (convertView == null)
         {
-            convertView = mInflater.inflate(R.layout.single_item, parent, false);
+            convertView = mInflater.inflate(R.layout.folder_item, parent, false);
 
             holder = new MapListViewHolder();
             holder.content = (TextView) convertView.findViewById(R.id.text);
@@ -68,6 +70,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
             ((ImageView) convertView.findViewById(R.id.arrow)).setOnClickListener(mArrowClickListener);
+        //    ((TextView) convertView.findViewById(R.id.text)).setOnClickListener(mTextClickListener);
 
             convertView.setTag(holder);
 
@@ -153,18 +156,35 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
         int lvl = node.getNodeLevel();
-        int newWidth = (lvl * 25) + 1;
+        int newWidth = (lvl * 20) ;
         ((TextView) convertView.findViewById(R.id.spacer)).getLayoutParams().width = newWidth;
         ((TextView) convertView.findViewById(R.id.spacer)).requestLayout();
 
-        showMessage("TreelistAdapter pos:  "+position);
+        showMessage("MapView Adapter pos:  "+position);
 
         return convertView;
     }
 
-    public OnClickListener mArrowClickListener;
 
+
+
+     public OnClickListener mArrowClickListener;
+ /*
     {
+     mTextClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setSelected(true);
+            }
+
+
+
+        };
+*/
+
+
+
+{
         mArrowClickListener = new OnClickListener() {
             //   @Override
             public void onClick(View v) {
@@ -173,7 +193,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
               //  int position = GlobalVariables.pos;
 
                 if (position != ListView.INVALID_POSITION) {
-                    MapViewNode node = GlobalVariables.displayNodes.get(position);
+                    MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
 
                     if (node.getIsExpanded() == GlobalVariables.TRUE) {
                         node.setIsExpanded(GlobalVariables.FALSE);
