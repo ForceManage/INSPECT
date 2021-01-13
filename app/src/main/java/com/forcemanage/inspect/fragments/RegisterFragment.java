@@ -83,6 +83,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
+            
         }
     }
 
