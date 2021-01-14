@@ -91,6 +91,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
 
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
+        GlobalVariables.pos = position;
         holder.content.setText(node.getNodeName());
 
 
@@ -180,8 +181,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
             public void onClick(View v) {
 
                 //int position = (int) v.getTag();
-                int position = GlobalVariables.pos;
-                ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
+
+                ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
 
                 final int projId = node.getprojId();
                 final int iId = node.getiID();

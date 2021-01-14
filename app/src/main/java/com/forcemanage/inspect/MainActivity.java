@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -443,7 +444,20 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
-        transaction.replace(R.id.mainfragment_container_1, fragment, name);
+        if(FragDisplay == "RegisterFragment"){
+
+
+
+            LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
+            main1.setVisibility(View.VISIBLE);
+
+            transaction.replace(R.id.mainfragment_container, fragment, name);
+        }
+        else{
+            LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
+            main1.setVisibility(View.GONE);
+            transaction.replace(R.id.mainfragment_container_1, fragment, name);
+        }
         if (addToBackStack) {
             transaction.addToBackStack(name);
         }
@@ -505,6 +519,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private void doFragmentFolderInfoTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
+        LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
+        main1.setVisibility(View.GONE);
+
         transaction.replace(R.id.mainfragment_container_2, fragment, name);
         if (addToBackStack) {
             transaction.addToBackStack(name);

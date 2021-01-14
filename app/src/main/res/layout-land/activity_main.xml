@@ -186,9 +186,24 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.75">
+            android:layout_weight="0.75"
+            android:weightSum="1">
+
+            <LinearLayout
+
+                android:id="@+id/mainfragment_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:visibility="gone">
+
+
+            </LinearLayout>
 
 
             <LinearLayout

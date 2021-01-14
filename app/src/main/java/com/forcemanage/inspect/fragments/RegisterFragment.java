@@ -68,7 +68,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         appsite = (WebView) view.findViewById(R.id.webapp);
 
 
-        appsite.loadUrl("http://www.dev.force-management.com");
+        appsite.loadUrl("http://dev.force-management.com");
 
         appsite.setWebViewClient(new WebViewClient());
 
@@ -83,7 +83,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
-            
+
         }
     }
 
