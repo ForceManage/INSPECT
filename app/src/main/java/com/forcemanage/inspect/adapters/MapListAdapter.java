@@ -169,20 +169,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
      public OnClickListener mArrowClickListener;
- /*
-    {
-     mTextClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.setSelected(true);
-            }
-
-
-
-        };
-*/
-
-
 
 {
         mArrowClickListener = new OnClickListener() {
@@ -216,30 +202,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             }
         };
     }
-
-    public void reset() {
-        //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-
-
-        MapViewNode node = GlobalVariables.displayNodes.get(0);
-
-        if (node.getIsExpanded() == GlobalVariables.TRUE) {
-            node.setIsExpanded(GlobalVariables.FALSE);
-
-        } else {
-            if (node.getNodeChildren() != null)
-                node.setIsExpanded(GlobalVariables.TRUE);
-
-        }
-
-        // TreeViewLists.LoadDisplayList();
-        notifyDataSetChanged();
-
-        //
-
-    }
-
-
 
 
     private void showMessage(String message) {

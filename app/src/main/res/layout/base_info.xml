@@ -71,60 +71,6 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight="0.7">
-
-                <TextView
-                    android:id="@+id/Service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="25dp"
-                    android:text="Document title:  "
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="normal|bold" />
-
-
-                <TextView
-                    android:id="@+id/Text1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="10dp"
-                    android:hint="Project Map Branch Name - "
-                    android:textSize="16sp"/>
-
-
-
-                <TextView
-                    android:id="@+id/noteHead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="30dp"
-                    android:text="Notes:  "
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="normal|bold" />
-
-                <EditText
-                    android:id="@+id/note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:hint="Descriptive notes here"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
 
 
 

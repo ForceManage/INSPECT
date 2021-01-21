@@ -59,7 +59,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="55dp"
                         android:layout_marginRight="40dp"
-                        android:text="Folders and document files"
+                        android:text="Folder List"
                         android:textColor="@android:color/white"
                         android:textStyle="bold" />
 

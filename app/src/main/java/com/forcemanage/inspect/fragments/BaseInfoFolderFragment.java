@@ -67,12 +67,17 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
+            branchHead = bundle.getString("branchHead");
+            branchLabel = bundle.getString("MAP_LABEL");
+            inspection = bundle.getString("inspection");
+            branchNote = bundle.getString("notes");
+            projectId = bundle.getString("projectID");
+            inspectionId = bundle.getString("inspectionID");
             aId = bundle.getInt("aID");
             image = bundle.getString("image");
          }
 
-
-    }
+      }
 
     @Override
     public void onAttach(Context context) {
@@ -103,6 +108,31 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
         photo_file.setOnClickListener(this);
+
+        title = (TextView) view.findViewById(R.id.title);
+        //  activity = (TextView) view.findViewById(R.id.level);
+        branch = (TextView) view.findViewById(R.id.Text1);
+        TabId = (TextView) view.findViewById(R.id.aId);
+        branch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editLabel("Label",branch.getText().toString());
+            }
+        });
+
+        bNote = (EditText) view.findViewById(R.id.note);
+
+
+        branch.setText(branchLabel);
+        bNote.setText(branchNote);
+
+
+        bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) Edited = true;
+            }
+        });
 
 
 
@@ -194,6 +224,9 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         });
 
+
+
+
         if (image == null)
             image = "";
 
@@ -211,11 +244,63 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
     }
 
 
+
+
     @Override
     public void onClick(View v) {
 
     }
 
+    public void editLabel(final String  item, String value){
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(promptView);
+        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
+        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+        locationText.setText(item);//Integer.parseInt(locationId)
+        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+        branchText.setHint(value);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                        switch (item) {
+
+                            case "Label":{
+                                branchLabel = branchText.getText().toString();
+                                if(aId > 0) {
+                                    dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
+                                    globalVariables.OnTabChanged(0);
+                                }
+                                else
+                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+
+
+    }
 
 
     @Override
@@ -228,6 +313,9 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             // work out the next service date in three months time
             dbHandler.updateMap(projectId, aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
+
+
+
         }
     }
 

@@ -26,6 +26,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.R;
 
@@ -114,7 +115,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
         View view = inflater.inflate(R.layout.certificate_inspection, container, false);
         //       btnInspection = (Button) view.findViewById(R.id.btnInspection);
         projId = Integer.parseInt(projectId);
-        iId = Integer.parseInt(inspectionId);
+        iId = GlobalVariables.iId;
 
         Log.d(TAG, "oncreateview: started");
 

@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.amazonaws.services.dynamodbv2.model.GlobalTableAlreadyExistsException;
 import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
@@ -92,13 +94,13 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     public ImageView mPhotoImageView;
     public String photoBranch;
-    public String photo1;
-    public String photo2;
-    public String photo3;
-    public String photo4;
-    public String photo5;
-    public String photo6;
-    public String photo7;
+    public String photo1 = "";
+    public String photo2 = "";
+    public String photo3 = "";
+    public String photo4 = "";
+    public String photo5 = "";
+    public String photo6 = "";
+    public String photo7 = "";
     public String[] photos = new String[7];
     private String mImageFileLocation = "";
     private String fname;
@@ -358,7 +360,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     public void loadMap() {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID, 15);
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, GlobalVariables.iId, 15);
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -399,7 +401,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
-        MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+        MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
 
 
         if (detailFragment != null) {
@@ -461,6 +463,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
 
+
         //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
         displayInspectionItem();
     }
@@ -471,6 +474,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
+
+        MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
+        aID = node.getaID();
+
 
 
         if (detailFragment != null) {
@@ -530,7 +537,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
 
-        aID = detailFragment.aID;
+
 
              //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
         displayInspectionItem();
@@ -564,13 +571,13 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
         if (FragDisplay == "InspectionFragment") {
-            dbHandler.updateInspectionItemPhoto(projId, iID, aID, photo1, photo2, photo3,photo4,
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, aID, photo1, photo2, photo3,photo4,
                     photo5, photo6, photo7);
 
         }
 
         if (FragDisplay == "ReferenceFragment") {
-            dbHandler.updateInspectionItemPhoto(projId, iID, aID, photo1, photo2, photo3,photo4,
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, aID, photo1, photo2, photo3,photo4,
                     photo5, photo6, photo7);
 
         }
@@ -580,7 +587,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         }
 
-        String status = dbHandler.getStatus(iID, projId);
+        String status = dbHandler.getStatus(GlobalVariables.iId, projId);
 
         //      dbHandler.updateStatus(projId, iID, "p", dayTime(1));
 
@@ -606,9 +613,9 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case (0): {
                 dbHandler.deleteMapBranch(projId, aID);
-                dbHandler.deleteRec("MAP",projId,iID,aID);
+                dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
-                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
+                dbHandler.deleteRec("InspectionItem",projId,GlobalVariables.iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -617,9 +624,9 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             case (1):{
 
                 dbHandler.deleteMapBranch(projId, aID);
-                dbHandler.deleteRec("MAP",projId,iID,aID);
+                dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
-                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
+                dbHandler.deleteRec("InspectionItem",projId,GlobalVariables.iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -628,11 +635,11 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             case (2):{
 
                 dbHandler.deleteMapBranch(projId, aID);
-                dbHandler.deleteRec("MAP",projId,iID,aID);
+                dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
-                dbHandler.deleteRec("InspectionItem",projId,iID,aID);
+                dbHandler.deleteRec("InspectionItem",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteActionItem(projId,aID);
-                dbHandler.deleteRec("ActionItem",projId,iID,aID);
+                dbHandler.deleteRec("ActionItem",projId,GlobalVariables.iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -641,10 +648,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case (9):{
 
-                dbHandler.deleteSummary(projId,iID,aID);
-                dbHandler.deleteRec("Summary",projId,iID,aID);
+                dbHandler.deleteSummary(projId,GlobalVariables.iId,aID);
+                dbHandler.deleteRec("Summary",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteMapBranch(projId, aID);
-                dbHandler.deleteRec("MAP",projId,iID,aID);
+                dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -653,10 +660,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case (10):{
 
-                dbHandler.deleteCertificate(projId,iID,aID);
-                dbHandler.deleteRec("CertificateInsp",projId,iID,aID);
+                dbHandler.deleteCertificate(projId,GlobalVariables.iId,aID);
+                dbHandler.deleteRec("CertificateInsp",projId,GlobalVariables.iId,aID);
                 dbHandler.deleteMapBranch(projId, aID);
-                dbHandler.deleteRec("MAP",projId,iID,aID);
+                dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                 loadMap();
@@ -679,7 +686,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addLevel(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, aID, iID, catId, Level, aID, levelName, 0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, aID, GlobalVariables.iId, catId, Level, aID, levelName, 0);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -690,7 +697,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addReportBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addReportBranch(projId, iID, catId, Level, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addReportBranch(projId, GlobalVariables.iId, catId, Level, aID, levelName);  //this is the ESM category
 
         if (result == 1)
             loadMap();
@@ -702,7 +709,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addActionBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addActionBranch(projId, iID, catId, Level, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addActionBranch(projId, GlobalVariables.iId, catId, Level, aID, levelName);  //this is the ESM category
 
         if (result == 1)
             loadMap();
@@ -714,7 +721,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addCertificateBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addCertificate(projId, iID, 501, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addCertificate(projId, GlobalVariables.iId, 501, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Certificate TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -725,7 +732,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addSummaryBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addSummary(projId, iID, 500, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addSummary(projId, GlobalVariables.iId, 500, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Summary TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -736,7 +743,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addReferenceBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addReference(projId, iID, 502, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addReference(projId, GlobalVariables.iId, 502, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Reference TAB here", Toast.LENGTH_SHORT).show();
         else
@@ -757,8 +764,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-     //   if(aID == 0) aID = 1;
-        HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
+        if(aID == 0) aID = 1;
+        HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, GlobalVariables.iId);
 
         String MapBranch;
 
@@ -780,14 +787,14 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
                 if(Level == 0){
 
-                    HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
+                    HashMap<String, String> projectItem = dbHandler.getInspection(projId, GlobalVariables.iId);
 
                     Bundle bundle = new Bundle();
 
                     bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                     bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
                     bundle.putInt("projectId", projId);
-                    bundle.putInt("inspectionId", iID);
+                    bundle.putInt("inspectionId", GlobalVariables.iId);
                     bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
                     bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
                     bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
@@ -824,7 +831,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             case 1: {
 
 
-                HashMap<String, String> list = dbHandler.getInspectionItem(projId, iID, aID);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, aID);
                 if(list.size() > 0) {
                     relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                     Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -890,7 +897,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             }
             case 2: {
 
-                HashMap<String, String> list = dbHandler.getActionItem(projId, aID, iID);
+                HashMap<String, String> list = dbHandler.getActionItem(projId, aID, GlobalVariables.iId);
 
                 relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                 Overview = list.get(MyConfig.TAG_OVERVIEW);
@@ -933,7 +940,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case 9: {
 
-                HashMap<String, String> list = dbHandler.getSummary(projId, iID);
+                HashMap<String, String> list = dbHandler.getSummary(projId,GlobalVariables.iId);
 
 
                 String head_A;
@@ -976,7 +983,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case 10: {
 
-                HashMap<String, String> list = dbHandler.getCert_Inspection(projId, iID);
+                HashMap<String, String> list = dbHandler.getCert_Inspection(projId, GlobalVariables.iId);
 
                 String Date_Time;
                 String permit;
@@ -986,31 +993,34 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                 Date_Time = list.get(MyConfig.TAG_DATE_TIME);
                 if(Date_Time == "") Date_Time = dayTime(4);
 
-                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                Overview = list.get(MyConfig.TAG_OVERVIEW);
-                permit = list.get(MyConfig.TAG_PERMIT);
-                address = list.get(MyConfig.TAG_PROJECT_ADDRESS);
-                stage = list.get(MyConfig.TAG_STAGE);
-                Notes = list.get(MyConfig.TAG_NOTES);
+                if(list.size() > 0 ) {
+
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    permit = list.get(MyConfig.TAG_PERMIT);
+                    address = list.get(MyConfig.TAG_PROJECT_ADDRESS);
+                    stage = list.get(MyConfig.TAG_STAGE);
+                    Notes = list.get(MyConfig.TAG_NOTES);
 
 
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putString("branchHead", branchHead);
+                    bundle.putString("branchLabel", inspLabel);
+                    bundle.putString("description", Overview);
+                    bundle.putString("time", Date_Time);
+                    bundle.putString("permit", permit);
+                    bundle.putString("address", address);
+                    bundle.putString("stage", stage);
+                    bundle.putString("notes", Notes);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("projectID", projectId);
-                bundle.putString("inspectionID", inspectionId);
-                bundle.putString("branchHead", branchHead);
-                bundle.putString("branchLabel", inspLabel);
-                bundle.putString("description", Overview);
-                bundle.putString("time", Date_Time);
-                bundle.putString("permit", permit);
-                bundle.putString("address", address);
-                bundle.putString("stage", stage);
-                bundle.putString("notes", Notes);
+                    CertificateInspectionFragment fragment = new CertificateInspectionFragment();
+                    fragment.setArguments(bundle);
 
-                CertificateInspectionFragment fragment = new CertificateInspectionFragment();
-                fragment.setArguments(bundle);
-
-                doFragmentTransaction(fragment, "CertificateInspectionFragment", false, "");
+                    doFragmentTransaction(fragment, "CertificateInspectionFragment", false, "");
+                }
+                else Toast.makeText(this, "No Certificate data found",Toast.LENGTH_SHORT).show();
 
                 //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
@@ -1021,7 +1031,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
             case 11: {
 
-                if(Level > 0) {
+                if(Level > 1) { //only fires if there is a content tab
                     HashMap<String, String> list = dbHandler.getReferenceItem(projId, aID);
                     //          if(list.size() > 0) {
                     com1 = list.get(MyConfig.TAG_COM1);
@@ -1072,7 +1082,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                     //         }
 
                     //         else Toast.makeText(this, "No associated data found",Toast.LENGTH_SHORT).show();
-                } //Level > 0
+                } //Level > 1
                 break;
 
 
@@ -1582,10 +1592,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
                         Bundle bundle = new Bundle();
                         bundle.putInt("projectId", projId);
-                        bundle.putInt("iId", iID);
+                        bundle.putInt("iId", GlobalVariables.iId);
 
 
-                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, iID);
+                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, GlobalVariables.iId);
 
                         reportlistItems = new ArrayList<>();
                         ReportItem listItem;
@@ -1628,7 +1638,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                         }
 
 
-                        HashMap<String, String> projectItem = dbHandler.getInspection(projId, iID);
+                        HashMap<String, String> projectItem = dbHandler.getInspection(projId, GlobalVariables.iId);
 
                         //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
                         propPhoto = projectItem.get(MyConfig.TAG_IMAGE);

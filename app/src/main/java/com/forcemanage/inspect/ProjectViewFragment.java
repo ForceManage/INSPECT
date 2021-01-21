@@ -46,7 +46,7 @@ public class ProjectViewFragment extends ListFragment {
     @Override
     public  void  onListItemClick(ListView l, final View v, final int position, long id) {
 
-        GlobalVariables.pos = position;
+        GlobalVariables.doc_pos = position;
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
         GlobalVariables.iId = node.getiID();
 
@@ -65,7 +65,8 @@ public class ProjectViewFragment extends ListFragment {
             node.setIsExpanded(GlobalVariables.TRUE);
         }
 
-
+        l.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        l.setItemChecked(GlobalVariables.doc_pos,true);
 
         OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
         listener.OnProjectChanged(position);

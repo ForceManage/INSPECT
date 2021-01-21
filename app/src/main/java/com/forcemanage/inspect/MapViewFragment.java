@@ -50,10 +50,11 @@ public class MapViewFragment extends ListFragment {
 
     @Override
     public  void  onListItemClick(ListView l, final View v, int position, long id) {
-        int position2 = 0;
+
         Boolean vary = false;
 
         MapViewNode node = GlobalVariables.displayNodes.get(position);
+
 
         int proj = node.getprojId();
 

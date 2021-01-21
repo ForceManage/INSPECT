@@ -22,6 +22,7 @@ public class GlobalVariables
     public static ArrayList<ProjectData> projectList = new ArrayList<ProjectData>();
     public static ArrayList<ProjectNode> projectnodes = new ArrayList<ProjectNode>();
     public static ArrayList<ProjectNode> projectdisplayNodes = new ArrayList<ProjectNode>();
+    public static int doc_pos;
     public static int pos;
     public static int aId;
     public static int iId;

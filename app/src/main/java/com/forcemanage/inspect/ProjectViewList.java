@@ -65,7 +65,7 @@ public class ProjectViewList
             ProjectData data = dataList.get(i);
          //   if (data.getLevel() != 0) continue;
 
-            Log.v("LoadInitialNodes", data.getLabel());
+       //    Log.v("LoadInitialNodes", data.getLabel());
 
             ProjectNode node = new ProjectNode();
             node.setiprojId(data.getProjId());

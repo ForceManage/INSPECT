@@ -17,18 +17,5 @@
         android:gravity="center"
        />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="10dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/detail_text1"
-        android:layout_centerVertical="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:gravity="center"
-        />
-
 
 </RelativeLayout>

@@ -191,7 +191,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 
         final TextView folder = (TextView) view.findViewById((R.id.branchTitle));
-        folder.setText("Documents - "+ Folder);
+        folder.setText("Files - "+ Folder);
 
         branch = (TextView) view.findViewById((R.id.branchName));
         branch.setText("Folder ID: "+FolderID);
@@ -293,7 +293,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                 alertDialogBuilder.setCancelable(false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                if(GlobalVariables.name == "NULL" || GlobalVariables.name == null)
+                                if(LocationText.getText().toString() == "NULL" || LocationText.getText().toString() == null)
                                     Toast.makeText(getContext(), "Invalid TAB", Toast.LENGTH_SHORT).show();
                                 else
                                     // editLocation(LocationText.getText().toString());
@@ -841,7 +841,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                             case "Label":{
                                 Folder = branchText.getText().toString();
-                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), Folder, folderNote, "");
+                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(GlobalVariables.iId), Folder, folderNote, "");
                                 //    globalVariables.OnProjectChanged(0);
                                 //   globalVariables.updatePropList();
                                 break;

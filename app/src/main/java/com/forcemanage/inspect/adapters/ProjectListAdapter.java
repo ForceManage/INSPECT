@@ -75,7 +75,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
             holder.file_open = (ImageView) convertView.findViewById(R.id.file);
             holder.print = (ImageView) convertView.findViewById(R.id.print);
             holder.position = position;
-            GlobalVariables.pos = position;
+
 
 
             ((ImageView) convertView.findViewById(R.id.arrow)).setOnClickListener(mArrowClickListener);
@@ -91,7 +91,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
 
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
-        GlobalVariables.pos = position;
+        GlobalVariables.doc_pos = position;
         holder.content.setText(node.getNodeName());
 
 
@@ -182,10 +182,11 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
                 //int position = (int) v.getTag();
 
-                ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
+                ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
 
                 final int projId = node.getprojId();
                 final int iId = node.getiID();
+                GlobalVariables.iId = iId;
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setTitle("Log Session");
@@ -231,8 +232,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
             mPrintClickListener = new OnClickListener() {
                 //   @Override
                 public void onClick(View v) {
-                    int position = GlobalVariables.pos;
-                    if(GlobalVariables.pos == 0){
+                    int position = GlobalVariables.doc_pos;
+                    if(position == 0){
                         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                         View promptView = layoutInflater.inflate(R.layout.add_location, null);
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
