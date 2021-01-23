@@ -586,6 +586,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
+                bundle.putInt("Level", 0);
                 bundle.putString("Folder_ID", projectItem.get(MyConfig.TAG_ADDRESS_NO));
                 bundle.putString("Folder", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
                 bundle.putString("foldernote", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
@@ -639,6 +640,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 String branchHead = dbHandler.getMapBranchTitle(projId, catId);
 
                 Bundle bundle = new Bundle();
+                bundle.putInt("projId", projId);
+                bundle.putInt("USER_ID", USER_ID);
+                bundle.putInt("Level", node.getNodeLevel());
+                bundle.putInt("catId", node.getcatId());
                 bundle.putString("branchHead", branchHead);
                 bundle.putString("inspection", inspLabel);
                 bundle.putString("projectID", projectId);
@@ -649,9 +654,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 bundle.putString("notes", branchNote);
               //  bundle.putString("com2", com2);
 
+                ProjectInfoFragment fragment = new ProjectInfoFragment();
+                doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+                fragment.setArguments(bundle);
 
-                BaseInfoFolderFragment fragment = new BaseInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment, "BaseInfoFolderFragment", false, "");
+
+                BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
                 fragment.setArguments(bundle);
 
 

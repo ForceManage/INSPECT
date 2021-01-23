@@ -107,6 +107,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private List<ProjectData> listItems;
     private  int aId;
     private int Level;
+    private int catId;
     private int USER_ID = 0;
     private LinearLayout linearLayout;
     private String inspectionDate;
@@ -162,6 +163,10 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             infoG = bundle.getString("infoG");
             infoH = bundle.getString("infoH");
 
+            Level = bundle.getInt("Level");
+            catId = bundle.getInt("catId");
+            aId = bundle.getInt("aID");
+
 
 
 
@@ -208,7 +213,8 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
 */
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID,projId); //child 9 shows only the types <9
+
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID,projId, Level, catId, aId); //child 9 shows only the types <9
 
         listItems = new ArrayList<>();
         ProjectData listItem;

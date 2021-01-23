@@ -70,7 +70,7 @@
                             android:paddingStart="60dp"
                             android:textColor="@color/color_edit"
                             android:layout_gravity="center_vertical"
-                            android:text="Document Outline"
+                            android:text="File Builder"
 
                             android:textStyle="normal|bold" />
 
@@ -165,7 +165,7 @@
                         android:layout_marginBottom="2dp"
                         android:paddingLeft="5dp"
                         android:paddingTop="6dp"
-                        android:text="Folder - Document "
+                        android:text="Folder - File Content "
                         android:textColor="@color/cardview_dark_background"
                         android:textSize="20sp"
                         android:textStyle="normal|bold" />
