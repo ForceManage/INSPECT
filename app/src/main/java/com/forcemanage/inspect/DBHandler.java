@@ -3467,8 +3467,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-        switch (Level) {
-            case 0: {
+
+            if(Level == 0) {
                 String selectQuery = "SELECT P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
                         + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I." + COLUMN_IMAGE + ", I." + COLUMN_NOTE + ", I." + COLUMN_P_ID
 
@@ -3476,6 +3476,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         + " JOIN " + TABLE_INSPECTION + " I"
                         + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
                         + " WHERE I." + COLUMN_INSPECTOR + " = " + user_id + " AND I." + COLUMN_PROJECT_ID + " = " + folder_id;
+
 
                 Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
@@ -3497,12 +3498,11 @@ public class DBHandler extends SQLiteOpenHelper {
                         ProjectMapArrayList.add(ProjectMap);
                     } while (cursor.moveToNext());
                 }
-                break;
             }
 
-            case 1:{
+            else {
 
-                String selectQuery = "SELECT P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
+           /*     String selectQuery = "SELECT P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
                         + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I." + COLUMN_IMAGE + ", I." + COLUMN_NOTE + ", I." + COLUMN_P_ID
 
                         + " FROM " + TABLE_PROJECT_INFO + " P"
@@ -3512,6 +3512,22 @@ public class DBHandler extends SQLiteOpenHelper {
                         + " ON P." + COLUMN_PROJECT_ID + " = M." + COLUMN_PROJECT_ID
                         + " WHERE I." + COLUMN_INSPECTOR + " = " + user_id + " AND I." + COLUMN_PROJECT_ID + " = " + folder_id + " AND M." + COLUMN_CAT_ID + " = " + catId
                         + " GROUP BY I." + COLUMN_INSPECTION_ID;
+
+            */
+
+                String selectQuery = "SELECT P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
+                        + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I." + COLUMN_IMAGE + ", I." + COLUMN_NOTE + ", I." + COLUMN_P_ID
+
+                        + " FROM " + TABLE_PROJECT_INFO + " P"
+                        + " JOIN " + TABLE_MAP + " M"
+                        + " ON P." + COLUMN_PROJECT_ID + " = M." + COLUMN_PROJECT_ID
+                        + " JOIN " + TABLE_INSPECTION + " I"
+                        + " ON M." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID + " AND M." + COLUMN_INSPECTION_ID + " = I." + COLUMN_INSPECTION_ID
+
+                        + " WHERE I." + COLUMN_INSPECTOR + " = " + user_id + " AND I." + COLUMN_PROJECT_ID + " = " + folder_id + " AND M." + COLUMN_CAT_ID + " = " + catId
+                        + " GROUP BY I." + COLUMN_INSPECTION_ID;
+
+
                 Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
                 if (cursor.moveToFirst()) {
@@ -3533,78 +3549,11 @@ public class DBHandler extends SQLiteOpenHelper {
                     } while (cursor.moveToNext());
                 }
 
-                break;
-            }
-
-
-
-        } //end switch
-
-        if(Level > 1){
-
-            String selectQuery = "SELECT P." + COLUMN_PROJECT_ADDRESS + ", P." + COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
-                    + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I." + COLUMN_IMAGE + ", I." + COLUMN_NOTE + ", I." + COLUMN_P_ID
-
-                    + " FROM " + TABLE_PROJECT_INFO + " P"
-                    + " JOIN " + TABLE_INSPECTION + " I"
-                    + " ON P." + COLUMN_PROJECT_ID + " = I." + COLUMN_PROJECT_ID
-                    + " JOIN " + TABLE_MAP + " M"
-                    + " ON P." + COLUMN_PROJECT_ID + " = M." + COLUMN_PROJECT_ID
-                    + " WHERE I." + COLUMN_INSPECTOR + " = " + user_id + " AND I." + COLUMN_PROJECT_ID + " = " + folder_id + " AND M." + COLUMN_CAT_ID + " = " + catId + " AND M." + COLUMN_A_ID + " = " + aId
-                    + " GROUP BY I." + COLUMN_INSPECTION_ID;
-
-            Cursor cursor = dtabase.rawQuery(selectQuery, null);
-
-            if (cursor.moveToFirst()) {
-                do {
-                    ProjectMap = new HashMap<String, String>();
-
-                    ProjectMap.put(MyConfig.TAG_PROJECT_ADDRESS, cursor.getString(0));
-                    ProjectMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(1))));
-                    ProjectMap.put(MyConfig.TAG_PROJECT_PHOTO, cursor.getString(2));
-                    ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(3))));
-                    ProjectMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
-                    ProjectMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(5))));
-                    ProjectMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(6))));
-                    ProjectMap.put(MyConfig.TAG_IMAGE, cursor.getString(7));
-                    ProjectMap.put(MyConfig.TAG_NOTE, cursor.getString(8));
-                    ProjectMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(9))));
-
-                    ProjectMapArrayList.add(ProjectMap);
-                } while (cursor.moveToNext());
-            }
-
-
-        }
-
-/*
-
-        String selectQuery = "SELECT M."+COLUMN_LABEL+", M." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", M." + COLUMN_LEVEL
-                + ", M." + COLUMN_LABEL + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + " , M."+COLUMN_IMG1+ ", M." + COLUMN_NOTES+", M."+COLUMN_A_ID
-
-                + " FROM " + TABLE_MAP + " M "
-                + " JOIN " + TABLE_PROJECT_INFO + " P "
-                + " JOIN " + TABLE_INSPECTION + " I "
-                + " ON P." + COLUMN_PROJECT_ID + " = M."+ COLUMN_PROJECT_ID
-                + " AND P."+ COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
-                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
-                + " AND I."+ COLUMN_INSPECTION_ID+ " = '0' "
-                + " AND M."+ COLUMN_INSPECTION_ID+ " = '0' "
-                + " AND M."+ COLUMN_CAT_ID+ " < '9' "
-                + " AND (M."+ COLUMN_PROJECT_ID+ " =  "+folder_id+ " OR M."+COLUMN_PARENT+ " = '-1')";
-
- */
-
-        //add additional fields: status,  notes, print flag
-
-
-
+        } //end esle
 
         dtabase.close();
 
         return ProjectMapArrayList;
-
-
 
     }
 
