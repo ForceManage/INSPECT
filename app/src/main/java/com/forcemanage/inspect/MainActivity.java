@@ -3523,7 +3523,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     jsonItem.put(MyConfig.TAG_COM6, inspItemList.get(i).get(MyConfig.TAG_COM6));
                     jsonItem.put(MyConfig.TAG_IMAGE7, inspItemList.get(i).get(MyConfig.TAG_IMAGE7));
                     jsonItem.put(MyConfig.TAG_COM7, inspItemList.get(i).get(MyConfig.TAG_COM7));
-                    jsonItem.put(MyConfig.TAG_ITEM_STATUS, inspItemList.get(i).get(MyConfig.TAG_ITEM_STATUS));
+                    jsonItem.put(MyConfig.TAG_ITEM_STATUS, "p");
                     jsonItem.put(MyConfig.TAG_NOTES, inspItemList.get(i).get(MyConfig.TAG_NOTES));
                     jsonArray.put(jsonItem);
 

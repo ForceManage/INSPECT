@@ -59,7 +59,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String auditor;
     private String note;
     private String note_2;
-    private Boolean Edited;
+    private Boolean Edited = false;
     private Integer projId;
     private Integer iId;
     private String dateInspected;
@@ -67,6 +67,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     private String endTime;
     private String inspPhoto;
     private ImageView printer;
+
+
 
 
 
@@ -91,7 +93,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
             startTime = bundle.getString("startTime");
             endTime = bundle.getString("endTime");
             inspPhoto = bundle.getString("inspPhoto");
-            Edited = false;
+
 
         }
 
@@ -112,6 +114,10 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         Log.d(TAG, "oncreateview: started");
+
+        Edited = false;
+
+
 
 
         title = (TextView) view.findViewById(R.id.branchTitle);
@@ -193,8 +199,8 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
    //      if (!endTime.equals("null"))
   //       endTime = "2020-01-01 01:01:00";
 
-         inspectDate.setText("Document created:  "+stringdate(inspectionDate,1));
-         inspectionType.setText("Document type:  "+typeInspection);
+         inspectDate.setText("File created:  "+stringdate(inspectionDate,1));
+         inspectionType.setText("File type:  "+typeInspection);
          if(!startTime.equals("null"))
          inspectedDate.setText("Initial log recorded: "+stringdate(startTime,2)+"  -  "+stringdate(endTime,2));
          Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
@@ -278,15 +284,16 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
 
 
+
+
         return view;
     }
-
 
 
     private void setText(){
 
         if (!branchHead.equals("")){
-           title.setText("Document");
+           title.setText("File");
   //         branch.setText(branchLabel);
            }
     }
@@ -406,6 +413,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
         dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
         dbHandler.statusChanged(projId, iId);
+        Edited = false;
 
 }
 

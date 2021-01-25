@@ -87,7 +87,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private ImageView photo_file;
     private ImageView photo_file2;
     private ImageView photo_file3;
-    private ImageView addPage;
     private ImageView addSummary;
     private ImageView addCert;
     private ImageView addInfo;
@@ -190,8 +189,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         tab_edit = (ImageView) findViewById(R.id.image_edit);
         tab_edit.setOnClickListener(this);
-        addPage = (ImageView) findViewById(R.id.add_Page);
-        addPage.setOnClickListener(this);
         addSummary = (ImageView) findViewById(R.id.add_Summary);
         addSummary.setOnClickListener(this);
         addCert = (ImageView) findViewById(R.id.add_Cert);
@@ -201,7 +198,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         zone = 0;
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
-        docTitle = (TextView) findViewById(R.id.docTitle);
         fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
         fab_add.setOnClickListener(this);
       //  docTitle.setText(getIntent().getExtras().getString("DOC_NAME"));
@@ -694,7 +690,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     }
 
 
-    private void addReportBranch(int Level, String levelName) {
+    public void addReportBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addReportBranch(projId, GlobalVariables.iId, catId, Level, aID, levelName);  //this is the ESM category
@@ -706,7 +702,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     }
 
-    private void addActionBranch(int Level, String levelName) {
+    public void addActionBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int result = dbHandler.addActionBranch(projId, GlobalVariables.iId, catId, Level, aID, levelName);  //this is the ESM category
@@ -764,7 +760,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         //          ItemNumbers.setText("Zone : "+locationId+", Sublocat : "+sublocationId+",  Asset id : "+ aId);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        if(aID == 0) aID = 1;
+    //    if(aID == 0) aID = 1;
         HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, GlobalVariables.iId);
 
        if(mapItem.size() > 1) {
@@ -817,6 +813,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                        bundle.putString("image", photoBranch);
                        bundle.putString("MAP_LABEL", branchLabel);
                        bundle.putInt("aID", aID);
+                       bundle.putInt("Level", Level);
+                       bundle.putInt("catId", catId);
                        bundle.putString("notes", branchNote);
                        bundle.putString("com2", com2);
                        BaseFragment fragment = new BaseFragment();
@@ -848,6 +846,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                        bundle.putString("projectID", projectId);
                        bundle.putString("inspectionID", inspectionId);
                        bundle.putInt("aID", aID);
+                       bundle.putInt("Level", Level);
+                       bundle.putInt("catId", catId);
                        bundle.putString("branchHead", branchHead);
                        bundle.putString("branchLabel", inspLabel);
                        bundle.putString("aprovider", aProvider);
@@ -1030,50 +1030,52 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
                    if (Level > 1) { //only fires if there is a content tab
                        HashMap<String, String> list = dbHandler.getReferenceItem(projId, aID);
-                       //          if(list.size() > 0) {
-                       com1 = list.get(MyConfig.TAG_COM1);
-                       com2 = list.get(MyConfig.TAG_COM2);
-                       com3 = list.get(MyConfig.TAG_COM3);
-                       com4 = list.get(MyConfig.TAG_COM4);
-                       com5 = list.get(MyConfig.TAG_COM5);
-                       com6 = list.get(MyConfig.TAG_COM6);
-                       com7 = list.get(MyConfig.TAG_COM7);
+                       if(list.size() > 0) {
+                           com1 = list.get(MyConfig.TAG_COM1);
+                           com2 = list.get(MyConfig.TAG_COM2);
+                           com3 = list.get(MyConfig.TAG_COM3);
+                           com4 = list.get(MyConfig.TAG_COM4);
+                           com5 = list.get(MyConfig.TAG_COM5);
+                           com6 = list.get(MyConfig.TAG_COM6);
+                           com7 = list.get(MyConfig.TAG_COM7);
 
 
-                       Bundle bundle = new Bundle();
-                       bundle.putString("projectID", projectId);
-                       bundle.putString("inspectionID", inspectionId);
-                       bundle.putInt("aID", aID);
-                       bundle.putString("com1", com1);
-                       bundle.putString("com2", com2);
-                       bundle.putString("com3", com3);
-                       bundle.putString("com4", com4);
-                       bundle.putString("com5", com5);
-                       bundle.putString("com6", com6);
-                       bundle.putString("com7", com7);
+                           Bundle bundle = new Bundle();
+                           bundle.putString("projectID", projectId);
+                           bundle.putString("inspectionID", inspectionId);
+                           bundle.putInt("aID", aID);
+                           bundle.putString("com1", com1);
+                           bundle.putString("com2", com2);
+                           bundle.putString("com3", com3);
+                           bundle.putString("com4", com4);
+                           bundle.putString("com5", com5);
+                           bundle.putString("com6", com6);
+                           bundle.putString("com7", com7);
 
-                       photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                       photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                       photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                       photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                       photos[4] = list.get(MyConfig.TAG_IMAGE5);
-                       photos[5] = list.get(MyConfig.TAG_IMAGE6);
-                       photos[6] = list.get(MyConfig.TAG_IMAGE7);
-                       //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                       String tag = list.get(MyConfig.TAG_IMAGE1);
+                           photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                           photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                           photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                           photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                           photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                           photos[5] = list.get(MyConfig.TAG_IMAGE6);
+                           photos[6] = list.get(MyConfig.TAG_IMAGE7);
+                           //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                           String tag = list.get(MyConfig.TAG_IMAGE1);
 
-                       photo1 = photos[0];
-                       photo2 = photos[1];
-                       photo3 = photos[2];
-                       photo4 = photos[3];
-                       photo5 = photos[4];
-                       photo6 = photos[5];
-                       photo7 = photos[6];
+                           photo1 = photos[0];
+                           photo2 = photos[1];
+                           photo3 = photos[2];
+                           photo4 = photos[3];
+                           photo5 = photos[4];
+                           photo6 = photos[5];
+                           photo7 = photos[6];
 
-                       ReferenceFragment fragment = new ReferenceFragment();
-                       fragment.setArguments(bundle);
+                           ReferenceFragment fragment = new ReferenceFragment();
+                           fragment.setArguments(bundle);
 
-                       doFragmentTransaction(fragment, "ReferenceFragment", false, "");
+                           doFragmentTransaction(fragment, "ReferenceFragment", false, "");
+                       }
+                       else Toast.makeText(this, "No Information data found", Toast.LENGTH_SHORT).show();
 
                        //   int itemNos = dbHandler.getSubItemMap(projId, aID);
                        //         }
@@ -1238,10 +1240,10 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             final String folder = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Document Titles and sub-Titles ");
+            builder.setTitle("Folder Topic Tab Titles and sub-Titles ");
             // add a list
-            String[] actions = {"Add Title TAB to "+folder+" Folder",
-                    "Add sub TAB to "+branchTitle+" TAB",
+            String[] actions = {"Add Topic Title to the | "+folder+" | Folder",
+                    "Add sub Title TAB to the [ "+branchTitle+" ] topic tab",
                     "Cancel"};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -1256,7 +1258,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("New Item Title");//Integer.parseInt(locationId)
+                            itemTitle.setText("New Topic Title");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                             locationText.setText("Title: ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -1293,7 +1295,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                                 alertDialogBuilder.setView(promptView);
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
+                                itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                                 locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
                                 final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -1317,7 +1319,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                                 AlertDialog alert = alertDialogBuilder.create();
                                 alert.show();
                             }
-                            else Toast.makeText(getBaseContext(), "Choose TAB in folder", Toast.LENGTH_SHORT).show();
+                            else Toast.makeText(getBaseContext(), "Choose topic TAB in folder", Toast.LENGTH_SHORT).show();
                             break;
 
                         }
@@ -1334,114 +1336,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         }
 
 
-        if (v == addPage) {
-
-            DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-            // setup the alert builder
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Add Pages");
-            // add a list
-            String[] actions = {
-                    "Add Page to Item",
-                    "Add Addendum to Page",
-                    "Cancel"};
-
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-
-                        case 0: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Item Title: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Page filed in : " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addReportBranch((Level + 1), branchText.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-                            break;
-
-                        }
-
-                        case 1: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Addendum ");//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Addendum to Page: " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addActionBranch((Level + 1), branchText.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-
-                        }
-
-                        case 2: {
-
-                            break;
-                        }
-
-                    }
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-
-
-        }
 
         if (v == addSummary) {
 

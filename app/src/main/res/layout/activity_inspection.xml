@@ -59,7 +59,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_height="40dp"
                             android:layout_marginTop="5dp"
-                            app:srcCompat="@drawable/ic_doc_text_white" />
+                            app:srcCompat="@drawable/ic_documents" />
 
                         <TextView
                             android:id="@+id/SubLocation"
@@ -101,15 +101,6 @@
                     >
 
 
-
-                    <ImageView
-                        android:id="@+id/add_Page"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:foreground="@drawable/ic_edit_outline" />
-
                     <ImageView
                         android:id="@+id/add_Summary"
                         android:layout_width="40dp"
@@ -138,39 +129,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/grey_blue"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp">
 
-                    <ImageView
-                        android:id="@+id/img_folder"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp"
-                        android:foreground="@drawable/ic_document_text" />
-
-
-                    <TextView
-                        android:id="@+id/docTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="2dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="6dp"
-                        android:text="Folder - File Content "
-                        android:textColor="@color/cardview_dark_background"
-                        android:textSize="20sp"
-                        android:textStyle="normal|bold" />
-
-                </LinearLayout>
 
                 <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"

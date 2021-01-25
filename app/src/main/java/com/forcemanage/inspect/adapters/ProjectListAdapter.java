@@ -107,7 +107,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
                 if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                   holder.arrow.setImageResource(R.drawable.folder2_red);
-                  holder.print.setImageResource(R.drawable.ic_add_24);
+                  holder.print.setImageResource(R.drawable.ic_create_new_folder_24);
+                  holder.file_open.setVisibility(View.GONE);
 
                 break;
             }
@@ -115,8 +116,9 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 holder.content.setTextColor(Color.GRAY);
                 //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-              //  holder.arrow.setImageResource(R.drawable.ic_file_tree);
-                   holder.arrow.setImageResource(R.drawable.ic_documents);
+
+                //   holder.arrow.setImageResource(R.drawable.ic_folder_24);
+                   holder.arrow.setVisibility(View.GONE);
                    holder.file_open.setImageResource(R.drawable.ic_file_open);
                    holder.print.setImageResource(R.drawable.ic_print_24px);
                    break;
@@ -239,11 +241,11 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                         alertDialogBuilder.setView(promptView);
                         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                        itemTitle.setText("Add New Document to the Folder ");//Integer.parseInt(locationId)
+                        itemTitle.setText("Create new File ");//Integer.parseInt(locationId)
                         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                        locationText.setText("Document Name : ");//Integer.parseInt(locationId)
+                        locationText.setText("File Name : ");//Integer.parseInt(locationId)
                         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                        branchText.setHint("Document Title");
+                        branchText.setHint("Title of File");
                         alertDialogBuilder.setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {

@@ -64,6 +64,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     private Integer iId;
     private String image;
     private int aId;
+    private int Level;
+    private int catId;
+    private ImageView addPage;
 
 
     @Override
@@ -80,6 +83,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             inspectionId = bundle.getString("inspectionID");
             image = bundle.getString("image");
             aId = bundle.getInt("aID");
+            Level = bundle.getInt("Level");
+            catId = bundle.getInt("catId");
         }
 
 
@@ -126,6 +131,61 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
         photo_file.setOnClickListener(this);
 
+        addPage = (ImageView) view.findViewById(R.id.add_Page);
+        addPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+                final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+                // setup the alert builder
+
+
+
+
+                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                alertDialogBuilder.setView(promptView);
+                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                locationText.setText("File page in the [ " + branchLabel+" ] folder topic tab");//Integer.parseInt(locationId)
+                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                // setup a dialog window
+                                alertDialogBuilder.setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                globalVariables.photoBranch = "";
+                                                globalVariables.addReportBranch((Level + 1), branchText.getText().toString());
+
+
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+
+
+
+
+
+
+
+                    }
+                });
+
+
+
 
         setText();
 
@@ -147,7 +207,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                     globalVariables.takeImageFromCamera(null);
                 }
                 else
-                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Select/create a folder topic tab ",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -242,9 +302,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                 alertDialogBuilder.setView(promptView);
                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                itemTitle.setText("Branch Head Title: " + branchHead);//Integer.parseInt(locationId)
+                itemTitle.setText("Topic Title: " + branchHead);//Integer.parseInt(locationId)
                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                locationText.setText("Current label : " + branchLabel);//Integer.parseInt(locationId)
+                locationText.setText("Current Tab Title : " + branchLabel);//Integer.parseInt(locationId)
                 final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                 LocationText.setText(branchLabel);
                 // setup a dialog window
@@ -255,7 +315,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                                     globalVariables.editLocation(LocationText.getText().toString());
                                 }
                                 else
-                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Select/create a Topic Tab in folder ",Toast.LENGTH_LONG).show();
                            }
                         })
                         .setNegativeButton("Cancel",
@@ -300,7 +360,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
+        itemTitle.setText("Topic Tab Title ");//Integer.parseInt(locationId)
         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
         locationText.setText(item);//Integer.parseInt(locationId)
         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -320,7 +380,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                                     globalVariables.OnTab2Changed(0);
                                 }
                                 else
-                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Select/create a Topic Tab ",Toast.LENGTH_LONG).show();
                                 break;
                             }
 

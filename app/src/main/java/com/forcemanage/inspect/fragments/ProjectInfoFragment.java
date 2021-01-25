@@ -88,7 +88,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
     private String branchNote = "";
     private String ProjAddress = "";
-    private Boolean Edited;
+    private Boolean Edited = false;
     private String folderNote="";
     private String preamble ="";
     private String projectId;
@@ -127,6 +127,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private TextView TVinfoF;
     private TextView TVinfoG;
     private TextView TVinfoH;
+
 
 
 
