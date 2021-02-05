@@ -1,6 +1,7 @@
 package com.forcemanage.inspect.fragments;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,7 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
 
     private static final String TAG = "Project Info Fragment";
 
-
+    private static final int PDF_SELECTION_CODE = 4;
     private TextView branch;
     private EditText bNote;
     private ImageView mPhotoImageView;
@@ -113,24 +115,55 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
         info_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+             //   intent.addCategory(Intent.ACTION_EDIT);
+             //  Intent intent = new Intent(Intent.ACTION_EDIT);
+            //   Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            //   intent.addCategory(Intent.ACTION_VIEW);
+
+            //   String root = Environment.getExternalStorageDirectory().getPath();
+
+           //    File pdf = new File(root + "/14081INFO/19004.pdf" );
+
+                File pdf = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/ABC.pdf");
+
+              //  File pdf = new File(root + "/A2D_20200518/3_2_3.pdf" );
+              //   File pdf = new File(root + "/14081INFO/" );
+                Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", pdf);
+             //   intent.setDataAndType(uri, "application/pdf");
+                intent.setDataAndType(uri, "application/pdf");
+
+             //   intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+             //   intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(Intent.createChooser(intent, "Open folder"));
+
+             //   globalVariables.startActivityForResult(intent, PDF_SELECTION_CODE);
+
+
+/*
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+
+
+                // Optionally, specify a URI for the file that should appear in the
+                // system file picker when it loads.
                 String root = Environment.getExternalStorageDirectory().getPath();
-                File propImage = new File(root + "/" + projectId + "INFO/");
-                 Intent galleryIntent = new Intent(Intent.ACTION_VIEW);
-                Uri data = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", propImage);
-                // Uri data = Uri.parse(propImage.getAbsolutePath());
-                galleryIntent.setDataAndType(data, "*/*");
+                File pdf = new File(root + "/14081INFO/" );
+                Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", pdf);
+                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+               intent.setDataAndType(Uri.parse(root + "/14081INFO/"), "application/pdf" );
 
-                try {
+ */
 
-                    startActivity(Intent.createChooser(galleryIntent, "OPEN"));
-                    // startActivity(galleryIntent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("tag", "Exception found while listing " + e);
 
-                }
+             }
 
-            }
+
         });
 
 

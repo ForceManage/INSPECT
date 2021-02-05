@@ -98,7 +98,7 @@
                     android:foreground="@drawable/ic_format_list_bulleted" />
 
                 <ImageView
-                    android:id="@+id/image_download"
+                    android:id="@+id/image_cloud"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="5dp"

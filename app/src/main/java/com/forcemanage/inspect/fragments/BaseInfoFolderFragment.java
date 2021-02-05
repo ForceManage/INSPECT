@@ -42,10 +42,10 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
     private TextView activity;
     private TextView TabId;
     private EditText bNote;
-    private ImageView photoA;
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
+    private ImageView mPhotoImageView;
     private Button reportBtn;
 
     private Boolean Edited = false;
@@ -98,8 +98,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             projId = Integer.parseInt(projectId);
             iId = Integer.parseInt(inspectionId);
         }
-
-        photoA = (ImageView) view.findViewById(R.id.photo);
+        mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
         photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
         photo_cam.setOnClickListener(this);
 
@@ -141,27 +140,14 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             public void onClick(View v) {
                 if(aId > 0) {
                  //   globalVariables.photoframe = 0;
-                    globalVariables.mPhotoImageView = photoA;
+                    globalVariables.mPhotoImageView = mPhotoImageView;
                     globalVariables.takeImageFromCamera(null);
                 }
                 else
-                    Toast.makeText(getContext(), "Select/create a Document Item ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Select/create a folder topic tab. ",Toast.LENGTH_LONG).show();
             }
         });
 
-        photoA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                globalVariables.mPhotoImageView = photoA;
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_PICK);
-                galleryIntent.setType("image/*");
-                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
-            }
-
-
-        });
 
         photo_draw.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,32 +179,17 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         photo_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-          //      globalVariables.filephoto = 1;
-                Edited = true;
+
+
+               globalVariables.mPhotoImageView = mPhotoImageView;
                 Intent galleryIntent = new Intent();
-                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                // galleryIntent.setAction(Intent.ACTION_VIEW);
+
                 galleryIntent.setAction(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
-                //   String[] mimetypes = {"image/*"};
-                //   galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes); //            setType("image/*");
-                //     dirName = photos[0].substring(6, 14);
-                //     String root = Environment.getExternalStorageDirectory().toString();
-                //    File Image = new File(root + "/A2D_" + dirName + "/" );//+ photos[0]
+
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
 
 
-                //    Uri data = FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID+".provider",Image);
-                //    galleryIntent.setDataAndType(data,"image/*");
-                //    String[] mimeTypes = {"image/jpeg", "image/png"};
-                // galleryIntent.putExtra(galleryIntent.EXTRA_MIME_TYPES,mimeTypes);
-
-                //startActivityForResult(galleryIntent, ACTIVITY_GET_FILE);
-                // startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),1);
-
-
-
-         //       globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), globalVariables.ACTIVITY_GET_FILE);
             }
 
 
@@ -235,7 +206,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             String root = Environment.getExternalStorageDirectory().toString();
             File Image = new File(root + "/A2D_" + dirName + "/" + image);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
-            photoA.setImageBitmap(myBitmap);
+            mPhotoImageView.setImageBitmap(myBitmap);
         }
 
 

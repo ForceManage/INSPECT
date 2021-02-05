@@ -19,11 +19,13 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +92,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private ImageView addSummary;
     private ImageView addCert;
     private ImageView addInfo;
+    private ImageView addPDF;
 
     public ImageView mPhotoImageView;
     public String photoBranch;
@@ -140,7 +143,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private String[] sublocationsArr;
     private String[] iTitle;
     private String editing = "NO";
-    private int catId;
+    private Integer catId;
     private String[] observations;
     private String[] recommendations;
     private Integer zone;
@@ -167,6 +170,9 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private String endTime;
     private FloatingActionButton fab_add;
     private String Folder;
+    private String[] pdf_files;
+    private Spinner spnrFiles;
+    private TextView file_name;
 
 
 
@@ -195,11 +201,17 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         addCert.setOnClickListener(this);
         addInfo = (ImageView) findViewById(R.id.add_Info);
         addInfo.setOnClickListener(this);
+        addPDF = (ImageView) findViewById(R.id.add_PDF);
+        addPDF.setOnClickListener(this);
         zone = 0;
         projId = Integer.parseInt(projectId);
         iID = Integer.parseInt(inspectionId);
         fab_add = (FloatingActionButton) findViewById(R.id.fab_add);
         fab_add.setOnClickListener(this);
+        spnrFiles = (Spinner) findViewById(R.id.spinner_file);
+
+        file_name = (TextView) findViewById(R.id.file_name);
+
       //  docTitle.setText(getIntent().getExtras().getString("DOC_NAME"));
 
 
@@ -266,6 +278,27 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                     .commit();
 
         }
+
+        AdapterView.OnItemSelectedListener fileSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> my_spinner, View container,
+                                       int position, long id) {
+                if (position !=0)
+                    file_name.setText(pdf_files[position]);
+                Edited = true;
+                spnrFiles.setSelection(0);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        };
+
+      //  spnrFiles.setOnItemSelectedListener(fileSelectedListener);
+
+        // Setting ItemClick Handler for Spinner Widget
+
+
 
 
 
@@ -470,7 +503,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
-
+        Integer index = treeNameIndex;
+        if(index == null) treeNameIndex = 0;
         MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
         aID = node.getaID();
 
@@ -739,9 +773,20 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addReferenceBranch(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addReference(projId, GlobalVariables.iId, 502, 0, aID, levelName);  //this is the ESM category
+        int result = dbHandler.addReference(projId, GlobalVariables.iId, 510, 0, aID, levelName);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place Reference TAB here", Toast.LENGTH_SHORT).show();
+        else
+            loadMap();
+
+    }
+
+    private void addPDF_Doc(int Level, String levelName) {
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        int result = dbHandler.addPdf_Doc(projId, GlobalVariables.iId, 505, 0, aID, levelName);  //this is the ESM category
+        if (result == 0)
+            Toast.makeText(this, "Cannot place PDF TAB here", Toast.LENGTH_SHORT).show();
         else
             loadMap();
 
@@ -1234,77 +1279,42 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         if (v == fab_add) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
-            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
+      //      MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+            if(catId == null) catId = 0;
             final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
             final String folder = dbHandler.getMapBranchTitle(projId, 0); //get Branch head
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Folder Topic Tab Titles and sub-Titles ");
             // add a list
-            String[] actions = {"Add Topic Title to the | "+folder+" | Folder",
-                    "Add sub Title TAB to the [ "+branchTitle+" ] topic tab",
-                    "Cancel"};
+            if(catId == 0) {
+                String[] actions = {"Add Topic Title to the | " + folder + " | Folder",
 
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
+                        "Cancel"};
 
-                        case 0: {
+                builder.setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
 
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("New Topic Title");//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Title: ");//Integer.parseInt(locationId)
-                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            photoBranch = "";
-                                            addLevel(1, branchText.getText().toString());
+                            case 0: {
 
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-                            break;
-
-                        }
-
-                        case 1: {
-                            MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-                            if(node.getNodeLevel() > 0) {
                                 LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
                                 View promptView = layoutInflater.inflate(R.layout.add_location, null);
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
                                 alertDialogBuilder.setView(promptView);
                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                                itemTitle.setText("New Topic Title");//Integer.parseInt(locationId)
                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
+                                locationText.setText("Title: ");//Integer.parseInt(locationId)
                                 final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                 // setup a dialog window
                                 alertDialogBuilder.setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 photoBranch = "";
-                                                addLevel((Level + 1), branchText.getText().toString());
+                                                addLevel(1, branchText.getText().toString());
+
 
                                             }
                                         })
@@ -1318,21 +1328,157 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                                 // create an alert dialog
                                 AlertDialog alert = alertDialogBuilder.create();
                                 alert.show();
-                            }
-                            else Toast.makeText(getBaseContext(), "Choose topic TAB in folder", Toast.LENGTH_SHORT).show();
-                            break;
 
-                        }
+                                break;
+
+                            }
+
+
+                            }
+
 
                     }
+                });
+
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+            }
+
+            if(catId > 0) {
+
+                if (catId == 505) {
+
+
+                    ArrayList<String> pdfList = Search_Dir("pdf");
+
+                    pdf_files = new String[pdfList.size() + 1];
+                    pdf_files[0] = "Downloaded PDF File list";
+                    for (int i = 0; i < pdfList.size(); i++) {
+                        pdf_files[i + 1] = pdfList.get(i);
+                    }
+
+                    //     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner, pdf_files);
+
+
+                    MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+                    if (node.getNodeLevel() > 0) {
+                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                        View promptView = layoutInflater.inflate(R.layout.add_file, null);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                        alertDialogBuilder.setView(promptView);
+                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                        itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                        locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
+                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                        file_name = (TextView) promptView.findViewById(R.id.file_name);
+                        spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), R.layout.my_spinner, pdf_files);
+                        spnrFiles.setAdapter(adapter);
+
+                       AdapterView.OnItemSelectedListener fileSelectedListener = new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> my_spinner, View container,
+                                                       int position, long id) {
+                                if (position != 0)
+                                    file_name.setText(pdf_files[position]);
+                                Edited = true;
+                                spnrFiles.setSelection(0);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> arg0) {
+                                // TODO Auto-generated method stub
+                            }
+                        };
+
+
+                        spnrFiles.setOnItemSelectedListener(fileSelectedListener);
+
+
+                        // setup a dialog window
+                        alertDialogBuilder.setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        photoBranch = "";
+                                        addLevel((Level + 1), branchText.getText().toString());
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                        // create an alert dialog
+                        AlertDialog alert = alertDialogBuilder.create();
+                        alert.show();
+                    } else
+                        Toast.makeText(getBaseContext(), "Choose topic TAB in folder", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    String[] actions = {
+                            "Add sub Title TAB to the [ " + branchTitle + " ] topic tab",
+                            "Cancel"};
+
+                    builder.setItems(actions, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+
+                                case 0: {
+
+                                    MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+                                    if (node.getNodeLevel() > 0) {
+                                        LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
+                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
+                                        alertDialogBuilder.setView(promptView);
+                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                        itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                        locationText.setText("Sub-Title of: " + branchLabel);//Integer.parseInt(locationId)
+                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                        // setup a dialog window
+                                        alertDialogBuilder.setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        photoBranch = "";
+                                                        addLevel((Level + 1), branchText.getText().toString());
+
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+
+                                        // create an alert dialog
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
+                                    } else
+                                        Toast.makeText(getBaseContext(), "Choose topic TAB in folder", Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                }
+
+
+                            }
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
+
                 }
-            });
-
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-
-
+            }
         }
 
 
@@ -1431,6 +1577,52 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         }
 
+
+        if (v == addPDF) {
+
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(" PDF Documents ");
+            // add a list
+            String[] actions = {
+                    "Attach PDF File List ",
+                    "Cancel"};
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+
+                        case 0: {
+
+                            photoBranch = "";
+                            addPDF_Doc(505, "PDF Documents");
+                            break;
+
+                        }
+
+                        case 1: {
+
+
+
+                            break;
+
+                        }
+
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+
+
         if (v == addInfo) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -1453,7 +1645,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                         case 0: {
 
                             photoBranch = "";
-                            addReferenceBranch(502, "File Information");
+                            addReferenceBranch(510, "File Information");
                             break;
 
                         }
@@ -1477,6 +1669,30 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
     }
+
+
+    public ArrayList<String> Search_Dir(String fileType) {
+       ArrayList<String> files = new ArrayList<String>();
+
+
+        File FileList[] = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+
+        if (FileList != null) {
+            for (int i = 0; i < FileList.length; i++) {
+                    if (FileList[i].getName().endsWith(fileType)){
+                        //here you have that file.
+
+                        files.add(FileList[i].getName());
+                    }
+
+            }
+        }
+        return files;
+    }
+
+
+
+
 
     public void reportMenu() {
 
@@ -2003,6 +2219,9 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         }
         return contactInfo;
     }//getContactInfo
+
+
+
     File createPhotoFile()throws IOException {
 
         fname = dayTime(3);

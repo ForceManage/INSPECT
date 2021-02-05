@@ -1014,6 +1014,19 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
+    public void updateMapPhoto(String projectId, int aId, String photo) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_IMG1, photo);
+        values.put(COLUMN_ITEM_STATUS, "m");
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projectId+" AND "+COLUMN_A_ID+" = "+aId, null);
+        db.close();
+
+    }
+
     public void updateStatus(int projId, int iId, String status, String date) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1486,7 +1499,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
-        valuesi2.put(COLUMN_LABEL, "Document");
+        valuesi2.put(COLUMN_LABEL, "Document 1");
         valuesi2.put(COLUMN_LEVEL, "1");
         valuesi2.put(COLUMN_PARENT,  pID );
         valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID)+1);
@@ -2208,6 +2221,203 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public Integer addPdf_Doc(int projId, int iId, int CatID, int Level, int aId, String Label) {
+        // Open a database for reading and writing
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String address = "";
+        int result = 0;
+        int certId = 0;
+        int a_id = 1; //aId of the branch which has the parent branch clicked
+        int maxAId = 1;
+
+        //First check if current branch is a location branch
+        selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 505 "
+                +" AND "+COLUMN_PROJECT_ID+" = "+projId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+        //Reference tab exists
+        {
+            selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
+                    + TABLE_MAP + " WHERE " + COLUMN_CHILD + " = 12 "
+                    +" AND "+COLUMN_PROJECT_ID+" = "+projId;
+
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+
+            }
+            else{
+
+                selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                        + TABLE_MAP + " M"
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    maxAId = cursor.getInt(0);
+
+                    maxAId = maxAId + 1;
+
+                }
+
+                selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
+                        + TABLE_MAP + " M"
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 505";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+                cursor = db.rawQuery(selectQuery, null);
+                if (cursor.moveToFirst()) {
+                    certId = cursor.getInt(0);
+
+                }
+
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_CAT_ID, CatID);
+                values.put(COLUMN_PARENT, certId);
+                values.put(COLUMN_PROJECT_ID, projId);
+                values.put(COLUMN_LABEL, "PDF");
+                values.put(COLUMN_LEVEL, 1);
+                values.put(COLUMN_A_ID, maxAId);
+                values.put(COLUMN_INSPECTION_ID, 0);
+                values.put(COLUMN_CHILD,12);
+                values.put(COLUMN_IMG1, "");
+                values.put(COLUMN_NOTES, "");
+                values.put(COLUMN_ITEM_STATUS, "m");
+                db.insert(TABLE_MAP, null, values);
+
+
+                ContentValues values1 = new ContentValues();
+                SQLiteDatabase db_2 = this.getWritableDatabase();
+
+                values1.put(COLUMN_PROJECT_ID, projId);
+                values1.put(COLUMN_INSPECTION_ID, iId);
+                values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
+                values1.put(COLUMN_A_ID, maxAId);
+                values1.put(COLUMN_OVERVIEW, "");
+                values1.put(COLUMN_RELEVANT_INFO, "");
+                values1.put(COLUMN_SERVICE_LEVEL, "1");
+                values1.put(COLUMN_SERVICED_BY, "");
+                values1.put(COLUMN_REPORT_IMAGE, "0");
+                values1.put(COLUMN_IMG1, "");
+                values1.put(COLUMN_COM1, "");
+                values1.put(COLUMN_IMG2, "");
+                values1.put(COLUMN_COM2, "");
+                values1.put(COLUMN_IMG3, "");
+                values1.put(COLUMN_COM3, "");
+                values1.put(COLUMN_IMG4, "");
+                values1.put(COLUMN_COM4, "");
+                values1.put(COLUMN_IMG5, "");
+                values1.put(COLUMN_COM5, "");
+                values1.put(COLUMN_IMG6, "");
+                values1.put(COLUMN_COM6, "");
+                values1.put(COLUMN_IMG7, "");
+                values1.put(COLUMN_COM7, "");
+                values1.put(COLUMN_ITEM_STATUS, "m");
+                values1.put(COLUMN_NOTES, "");
+
+                db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
+                db_2.close();
+
+
+                result = 1;
+
+
+            }
+
+        }  //end if Reference does exist
+        //if Reference tab doesn't exist
+        else {
+
+            selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+                    + TABLE_MAP + " M"
+                    + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                maxAId = cursor.getInt(0);
+
+                maxAId = maxAId + 1;
+
+            }
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_CAT_ID, CatID);
+            values.put(COLUMN_PARENT, -1);
+            values.put(COLUMN_PROJECT_ID, projId);
+            values.put(COLUMN_LABEL, Label);
+            values.put(COLUMN_LEVEL, Level);
+            values.put(COLUMN_A_ID, maxAId);
+            values.put(COLUMN_INSPECTION_ID, 0);
+            values.put(COLUMN_CHILD,12);
+            values.put(COLUMN_IMG1, "");
+            values.put(COLUMN_NOTES, "");
+            values.put(COLUMN_ITEM_STATUS, "m");
+            db.insert(TABLE_MAP, null, values);
+
+
+
+
+            ContentValues values2 = new ContentValues();
+            values2.put(COLUMN_CAT_ID, CatID);
+            values2.put(COLUMN_PARENT, maxAId);
+            values2.put(COLUMN_PROJECT_ID, projId);
+            values2.put(COLUMN_LABEL, "PDF Documents");
+            values2.put(COLUMN_LEVEL, 1);
+            values2.put(COLUMN_A_ID, maxAId+1);
+            values2.put(COLUMN_INSPECTION_ID, 0);
+            values2.put(COLUMN_CHILD,12);
+            values2.put(COLUMN_IMG1, "");
+            values2.put(COLUMN_NOTES, "");
+            values2.put(COLUMN_ITEM_STATUS, "m");
+            db.insert(TABLE_MAP, null, values2);
+
+            ContentValues values1 = new ContentValues();
+            SQLiteDatabase db_2 = this.getWritableDatabase();
+
+            values1.put(COLUMN_PROJECT_ID, projId);
+            values1.put(COLUMN_INSPECTION_ID, iId);
+            values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
+            values1.put(COLUMN_A_ID, maxAId+1);
+            values1.put(COLUMN_OVERVIEW, "");
+            values1.put(COLUMN_RELEVANT_INFO, "");
+            values1.put(COLUMN_SERVICE_LEVEL, "1");
+            values1.put(COLUMN_SERVICED_BY, "");
+            values1.put(COLUMN_REPORT_IMAGE, "0");
+            values1.put(COLUMN_IMG1, "");
+            values1.put(COLUMN_COM1, "");
+            values1.put(COLUMN_IMG2, "");
+            values1.put(COLUMN_COM2, "");
+            values1.put(COLUMN_IMG3, "");
+            values1.put(COLUMN_COM3, "");
+            values1.put(COLUMN_IMG4, "");
+            values1.put(COLUMN_COM4, "");
+            values1.put(COLUMN_IMG5, "");
+            values1.put(COLUMN_COM5, "");
+            values1.put(COLUMN_IMG6, "");
+            values1.put(COLUMN_COM6, "");
+            values1.put(COLUMN_IMG7, "");
+            values1.put(COLUMN_COM7, "");
+            values1.put(COLUMN_ITEM_STATUS, "m");
+            values1.put(COLUMN_NOTES, "");
+
+            db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
+            db_2.close();
+
+            result = 1;
+        }
+
+
+        db.close();
+
+        return result;
+    }
+
+
+
+
     public Integer addReference(int projId, int iId, int CatID, int Level, int aId, String Label) {
         // Open a database for reading and writing
 
@@ -2222,7 +2432,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 502 "
+                + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 510 "
                 +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
         cursor = db.rawQuery(selectQuery, null);
@@ -2253,7 +2463,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
                         + TABLE_MAP + " M"
-                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 502";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
+                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 510";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
                 cursor = db.rawQuery(selectQuery, null);
                 if (cursor.moveToFirst()) {
@@ -4052,6 +4262,8 @@ public class DBHandler extends SQLiteOpenHelper {
         return ORArrayList;
 
     }
+
+
 
     public ArrayList<HashMap<String, String>> getZonesArray(String PropId) {
 

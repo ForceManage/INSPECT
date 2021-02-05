@@ -70,7 +70,7 @@
                             android:paddingStart="60dp"
                             android:textColor="@color/color_edit"
                             android:layout_gravity="center_vertical"
-                            android:text="File Builder"
+                            android:text="Folder -> Document content"
 
                             android:textStyle="normal|bold" />
 
@@ -116,6 +116,15 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:foreground="@drawable/ic_certificate" />
+
+                    <ImageView
+                        android:id="@+id/add_PDF"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+
+                        android:foreground="@drawable/ic_pdf_24" />
 
                     <ImageView
                         android:id="@+id/add_Info"

@@ -47,7 +47,7 @@
                         android:layout_height="45dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="5dp"
-                        android:foreground="@drawable/folder2_red" />
+                        android:foreground="@drawable/documents" />
 
                      <TextView
                         android:id="@+id/branchTitle"
@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
                         android:paddingLeft="10dp"
-                        android:text="Folder Item Titles  "
+                        android:text="Document Titles  "
                         android:textColor="@android:color/white"
                         android:textStyle="normal" />
 
