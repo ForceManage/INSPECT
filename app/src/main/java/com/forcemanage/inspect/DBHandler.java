@@ -777,14 +777,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateMap(String projId, int aId, String Notes) {
+    public void updateMap(int projId, int aId, String Notes) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NOTES, Notes);
         contentValues.put(COLUMN_ITEM_STATUS, "m");
-        db.update(TABLE_MAP, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_A_ID + " = ? " , new String[]{projId, Integer.toString(aId)});
+        db.update(TABLE_MAP, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_A_ID + " = ? " , new String[]{Integer.toString(projId), Integer.toString(aId)});
         db.close();
 
 
@@ -2242,12 +2242,6 @@ public class DBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst())
         //Reference tab exists
         {
-            selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
-                    + TABLE_MAP + " WHERE " + COLUMN_CHILD + " = 12 "
-                    +" AND "+COLUMN_PROJECT_ID+" = "+projId;
-
-            cursor = db.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
 
             }
             else{
@@ -2264,15 +2258,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 }
 
-                selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
-                        + TABLE_MAP + " M"
-                        + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 505";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
-
-                cursor = db.rawQuery(selectQuery, null);
-                if (cursor.moveToFirst()) {
-                    certId = cursor.getInt(0);
-
-                }
 
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_CAT_ID, CatID);
@@ -2289,37 +2274,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 db.insert(TABLE_MAP, null, values);
 
 
-                ContentValues values1 = new ContentValues();
-                SQLiteDatabase db_2 = this.getWritableDatabase();
-
-                values1.put(COLUMN_PROJECT_ID, projId);
-                values1.put(COLUMN_INSPECTION_ID, iId);
-                values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
-                values1.put(COLUMN_A_ID, maxAId);
-                values1.put(COLUMN_OVERVIEW, "");
-                values1.put(COLUMN_RELEVANT_INFO, "");
-                values1.put(COLUMN_SERVICE_LEVEL, "1");
-                values1.put(COLUMN_SERVICED_BY, "");
-                values1.put(COLUMN_REPORT_IMAGE, "0");
-                values1.put(COLUMN_IMG1, "");
-                values1.put(COLUMN_COM1, "");
-                values1.put(COLUMN_IMG2, "");
-                values1.put(COLUMN_COM2, "");
-                values1.put(COLUMN_IMG3, "");
-                values1.put(COLUMN_COM3, "");
-                values1.put(COLUMN_IMG4, "");
-                values1.put(COLUMN_COM4, "");
-                values1.put(COLUMN_IMG5, "");
-                values1.put(COLUMN_COM5, "");
-                values1.put(COLUMN_IMG6, "");
-                values1.put(COLUMN_COM6, "");
-                values1.put(COLUMN_IMG7, "");
-                values1.put(COLUMN_COM7, "");
-                values1.put(COLUMN_ITEM_STATUS, "m");
-                values1.put(COLUMN_NOTES, "");
-
-                db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
-                db_2.close();
 
 
                 result = 1;
@@ -2327,87 +2281,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
             }
 
-        }  //end if Reference does exist
-        //if Reference tab doesn't exist
-        else {
 
-            selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
-                    + TABLE_MAP + " M"
-                    + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
-
-            cursor = db.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
-                maxAId = cursor.getInt(0);
-
-                maxAId = maxAId + 1;
-
-            }
-
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_CAT_ID, CatID);
-            values.put(COLUMN_PARENT, -1);
-            values.put(COLUMN_PROJECT_ID, projId);
-            values.put(COLUMN_LABEL, Label);
-            values.put(COLUMN_LEVEL, Level);
-            values.put(COLUMN_A_ID, maxAId);
-            values.put(COLUMN_INSPECTION_ID, 0);
-            values.put(COLUMN_CHILD,12);
-            values.put(COLUMN_IMG1, "");
-            values.put(COLUMN_NOTES, "");
-            values.put(COLUMN_ITEM_STATUS, "m");
-            db.insert(TABLE_MAP, null, values);
-
-
-
-
-            ContentValues values2 = new ContentValues();
-            values2.put(COLUMN_CAT_ID, CatID);
-            values2.put(COLUMN_PARENT, maxAId);
-            values2.put(COLUMN_PROJECT_ID, projId);
-            values2.put(COLUMN_LABEL, "PDF Documents");
-            values2.put(COLUMN_LEVEL, 1);
-            values2.put(COLUMN_A_ID, maxAId+1);
-            values2.put(COLUMN_INSPECTION_ID, 0);
-            values2.put(COLUMN_CHILD,12);
-            values2.put(COLUMN_IMG1, "");
-            values2.put(COLUMN_NOTES, "");
-            values2.put(COLUMN_ITEM_STATUS, "m");
-            db.insert(TABLE_MAP, null, values2);
-
-            ContentValues values1 = new ContentValues();
-            SQLiteDatabase db_2 = this.getWritableDatabase();
-
-            values1.put(COLUMN_PROJECT_ID, projId);
-            values1.put(COLUMN_INSPECTION_ID, iId);
-            values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
-            values1.put(COLUMN_A_ID, maxAId+1);
-            values1.put(COLUMN_OVERVIEW, "");
-            values1.put(COLUMN_RELEVANT_INFO, "");
-            values1.put(COLUMN_SERVICE_LEVEL, "1");
-            values1.put(COLUMN_SERVICED_BY, "");
-            values1.put(COLUMN_REPORT_IMAGE, "0");
-            values1.put(COLUMN_IMG1, "");
-            values1.put(COLUMN_COM1, "");
-            values1.put(COLUMN_IMG2, "");
-            values1.put(COLUMN_COM2, "");
-            values1.put(COLUMN_IMG3, "");
-            values1.put(COLUMN_COM3, "");
-            values1.put(COLUMN_IMG4, "");
-            values1.put(COLUMN_COM4, "");
-            values1.put(COLUMN_IMG5, "");
-            values1.put(COLUMN_COM5, "");
-            values1.put(COLUMN_IMG6, "");
-            values1.put(COLUMN_COM6, "");
-            values1.put(COLUMN_IMG7, "");
-            values1.put(COLUMN_COM7, "");
-            values1.put(COLUMN_ITEM_STATUS, "m");
-            values1.put(COLUMN_NOTES, "");
-
-            db_2.insert(TABLE_INSPECTION_ITEM, null, values1);
-            db_2.close();
-
-            result = 1;
-        }
 
 
         db.close();

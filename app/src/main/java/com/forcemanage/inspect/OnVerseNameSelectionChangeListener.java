@@ -5,9 +5,7 @@ package com.forcemanage.inspect;
  */
 public interface OnVerseNameSelectionChangeListener {
 
-    public void OnProjectChanged(int treeNameIndex);
-
-
+    void OnProjectChanged(int treeNameIndex);
 
 }
 

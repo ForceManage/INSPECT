@@ -22,6 +22,7 @@ public class GlobalVariables
     public static ArrayList<ProjectData> projectList = new ArrayList<ProjectData>();
     public static ArrayList<ProjectNode> projectnodes = new ArrayList<ProjectNode>();
     public static ArrayList<ProjectNode> projectdisplayNodes = new ArrayList<ProjectNode>();
+    public static  int doc_mode;
     public static int doc_pos;
     public static int pos;
     public static int aId;
@@ -30,7 +31,6 @@ public class GlobalVariables
     public static int Level;
     public static int folder_Id;
     public static String name;
-    public static String branchType;
     public static int User_id;
 
 

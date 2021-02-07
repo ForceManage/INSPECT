@@ -282,7 +282,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
-            dbHandler.updateMap(projectId, aId, bNote.getText().toString());
+            dbHandler.updateMap(projId, aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
 
 
@@ -298,7 +298,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
             if(projectId != null) {
-                dbHandler.updateMap(projectId, aId, bNote.getText().toString());
+                dbHandler.updateMap(projId, aId, bNote.getText().toString());
                 dbHandler.statusChanged(projId,iId);
             }
         }

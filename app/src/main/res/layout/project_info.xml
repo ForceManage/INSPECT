@@ -113,7 +113,7 @@
                      >
 
                     <fragment
-                        android:id="@+id/tree_fragment"
+                        android:id="@+id/tree1_fragment"
                         android:name="com.forcemanage.inspect.ProjectViewFragment"
                         android:layout_width="match_parent"
                         android:layout_height="155dp"
@@ -123,7 +123,7 @@
                         />
 
                     <fragment
-                        android:id="@+id/detail_text"
+                        android:id="@+id/detail1_text"
                         android:name="com.forcemanage.inspect.DetailProjectFragment"
                         android:layout_width="0dp"
                         android:layout_height="0dp" />

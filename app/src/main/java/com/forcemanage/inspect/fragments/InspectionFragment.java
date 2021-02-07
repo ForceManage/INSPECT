@@ -217,8 +217,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                                            alertDialogBuilder.setCancelable(false)
                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                        public void onClick(DialogInterface dialog, int id) {
-                                                           globalVariables.photoBranch = "";
-                                                           globalVariables.addActionBranch((Level + 1), branchText.getText().toString());
+                                                          
 
 
                                                        }

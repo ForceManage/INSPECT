@@ -91,7 +91,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
 
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
-        GlobalVariables.doc_pos = position;
+     //   GlobalVariables.doc_pos = position;
         holder.content.setText(node.getNodeName());
 
 
@@ -107,7 +107,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 if(base_node == 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
                 if(base_node > 0) holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                   holder.arrow.setImageResource(R.drawable.folder2_red);
-                  holder.print.setImageResource(R.drawable.ic_create_new_folder_24);
+                  holder.print.setImageResource(R.drawable.ic_more_vert);
                   holder.file_open.setVisibility(View.GONE);
 
                 break;
@@ -119,7 +119,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
                 //   holder.arrow.setImageResource(R.drawable.ic_folder_24);
                    holder.arrow.setVisibility(View.GONE);
-                   holder.file_open.setImageResource(R.drawable.ic_file_open);
+                   holder.file_open.setImageResource(R.drawable.ic_book);
                    holder.print.setImageResource(R.drawable.ic_print_24px);
                    break;
             }
@@ -160,6 +160,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
         holder.arrow.setTag(position);
         holder.content.setTag(position);
+        holder.file_open.setTag(position);
 
 
         int lvl = node.getNodeLevel();
@@ -182,9 +183,9 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
             //   @Override
             public void onClick(View v) {
 
-                //int position = (int) v.getTag();
+                int position = (int) v.getTag();
 
-                ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
+                ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
 
                 final int projId = node.getprojId();
                 final int iId = node.getiID();

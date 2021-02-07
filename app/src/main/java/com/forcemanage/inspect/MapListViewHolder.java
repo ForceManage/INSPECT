@@ -9,6 +9,7 @@ import android.widget.TextView;
 public class MapListViewHolder {
 
     public ImageView arrow;
+    public ImageView more;
     public TextView content;
     public int position;
 }

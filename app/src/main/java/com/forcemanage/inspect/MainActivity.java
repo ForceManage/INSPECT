@@ -550,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
           // inspectionId = Integer.toString(node.getiID());
            projId = node.getprojId();
+
         //   iId = node.getiID();
 
 
@@ -775,7 +776,6 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 projId = node.getprojId();
                 iId = node.getiID();
-                GlobalVariables.iId = node.getiID();
                 inspectionId = Integer.toString(iId);
                 HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
 
@@ -822,6 +822,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         super.onResume();
 
+        GlobalVariables.doc_mode = 0;
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
       //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -1513,7 +1514,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         if (v == imgCloud) {
 
-            final DBHandler dbHandler = new DBHandler(getBaseContext(), null, null, 1);
+            final DBHandler dbHandler = new DBHandler(this, null, null, 1);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Downloads");
             // add a list
@@ -1933,13 +1934,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
-    private void add_title(){
 
 
-
-    }
-
-    public void loadMap() {
+    public void loadMap(int projId) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getFolders(USER_ID, projId);
@@ -2003,7 +2000,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int success = dbHandler.updateMapLabel(node.getprojId(), node.getaID(), branchLabel);
-        if(success == 1) loadMap();
+        if(success == 1) loadMap(projId);
         else Toast.makeText(this, "Create/select TAB", Toast.LENGTH_SHORT).show();
     }
 
@@ -2017,7 +2014,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else
-         loadMap();
+         loadMap(projId);
     }
 
 

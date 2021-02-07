@@ -93,50 +93,6 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="7dp"
-                    >
-
-
-                    <ImageView
-                        android:id="@+id/add_Summary"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:foreground="@drawable/ic_comment" />
-
-                    <ImageView
-                        android:id="@+id/add_Cert"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:foreground="@drawable/ic_certificate" />
-
-                    <ImageView
-                        android:id="@+id/add_PDF"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-
-                        android:foreground="@drawable/ic_pdf_24" />
-
-                    <ImageView
-                        android:id="@+id/add_Info"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-
-                        android:foreground="@drawable/ic_file_info" />
-
-
-                </LinearLayout>
 
 
 
@@ -148,12 +104,15 @@
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_gravity="top"
                     android:layout_marginLeft="2dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/light"
-                    android:orientation="horizontal">
+                    android:background="@drawable/image_border"
+                    android:backgroundTint="@color/light"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
 
 
                     <fragment
@@ -161,8 +120,6 @@
                         android:name="com.forcemanage.inspect.MapViewFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1" />
 
                     <fragment
@@ -173,15 +130,6 @@
 
 
                 </LinearLayout>
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="20dp"
-                        android:src="@drawable/ic_add_list_white"
-                        />
 
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

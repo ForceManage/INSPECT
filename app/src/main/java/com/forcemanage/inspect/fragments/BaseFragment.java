@@ -158,8 +158,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                                 alertDialogBuilder.setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                globalVariables.photoBranch = "";
-                                                globalVariables.addReportBranch((Level + 1), branchText.getText().toString());
+
 
 
                                             }
@@ -412,7 +411,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
-            dbHandler.updateMap(projectId, aId, bNote.getText().toString());
+            dbHandler.updateMap(projId, aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
         }
     }
@@ -425,7 +424,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
             // String serviceDate = inspectionDate.getText().toString();
             // work out the next service date in three months time
             if(projectId != null) {
-                dbHandler.updateMap(projectId, aId, bNote.getText().toString());
+                dbHandler.updateMap(projId, aId, bNote.getText().toString());
                 dbHandler.statusChanged(projId,iId);
             }
         }
