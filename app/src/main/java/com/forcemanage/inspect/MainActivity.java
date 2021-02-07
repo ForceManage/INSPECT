@@ -988,7 +988,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     switch (template){
 
                         case 1: {
-                            dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Topic 1", 0);  //this is the ESM category
+                            dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Topic 1", "", 0);  //this is the ESM category
                      //       dbHandler.addLevel(projId, 2, 0, 2, 1, 0, "Item Title 2", 0);  //this is the ESM category
                             dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Information Page");  //this is the ESM category
                      //       dbHandler.addReportBranch(projId, 1, 2, 2, 2, "Topic data Page");  //this is the ESM category
@@ -2010,7 +2010,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
         MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, node.getaID(), 0, node.getcatId(), Level, node.getaID(), levelName, 0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, node.getaID(), 0, node.getcatId(), Level, node.getaID(), levelName, "", 0);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else

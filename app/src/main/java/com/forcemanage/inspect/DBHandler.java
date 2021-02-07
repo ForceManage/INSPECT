@@ -1108,6 +1108,28 @@ public class DBHandler extends SQLiteOpenHelper {
         return type;
     }
 
+    public String getPDFfile(int projId, int aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String file = "nil";
+
+        selectQuery = "SELECT M." + COLUMN_NOTES + " FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId + " AND M." + COLUMN_A_ID + " = " + aId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            file = cursor.getString(0);
+        }
+        db.close();
+        return file;
+
+    }
+
+
 
     public void statusChanged(Integer projId, Integer iId) {
         // Open a database for reading and writing
@@ -1551,7 +1573,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     //Add sublocation to the location
-    public int addLevel(int projID, int aId, int iId, int CatID, int Level, int parent, String Label, int type) {
+    public int addLevel(int projID, int aId, int iId, int CatID, int Level, int parent, String Label, String note, int type) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1658,6 +1680,26 @@ public class DBHandler extends SQLiteOpenHelper {
                         break;
                     }
 
+                    case (12): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, 505);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, note);
+                        values.put(COLUMN_ITEM_STATUS, "m");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+
                 }
 
 
@@ -1735,7 +1777,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         {
      */                       result = 1;
 
-                            int newId = addLevel(projId, aId, iId, CatID, Level, aId, Label, 1); //first aId is aId second aId passed as the parent
+                            int newId = addLevel(projId, aId, iId, CatID, Level, aId, Label, "", 1); //first aId is aId second aId passed as the parent
                                                                                                     //of the new branch
                             SQLiteDatabase db_2 = this.getWritableDatabase();
 
@@ -1852,7 +1894,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             }
 
 
-                                int newId = addLevel(projId, aId, i_id, CatID, Level, aId, Label, 2);
+                                int newId = addLevel(projId, aId, i_id, CatID, Level, aId, Label, "", 2);
 
                                 SQLiteDatabase db_2 = this.getWritableDatabase();
 
@@ -2264,7 +2306,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put(COLUMN_PARENT, certId);
                 values.put(COLUMN_PROJECT_ID, projId);
                 values.put(COLUMN_LABEL, "PDF");
-                values.put(COLUMN_LEVEL, 1);
+                values.put(COLUMN_LEVEL, 0);
                 values.put(COLUMN_A_ID, maxAId);
                 values.put(COLUMN_INSPECTION_ID, 0);
                 values.put(COLUMN_CHILD,12);

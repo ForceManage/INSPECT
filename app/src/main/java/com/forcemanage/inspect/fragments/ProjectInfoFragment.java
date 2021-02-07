@@ -625,7 +625,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private void addLevel(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, 0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, "",  0);  //this is the ESM category
         if (result == 0)
             Toast.makeText(getContext(), "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else

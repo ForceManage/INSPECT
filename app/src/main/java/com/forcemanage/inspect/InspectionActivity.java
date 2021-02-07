@@ -465,7 +465,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                 .findFragmentById(R.id.detail_text);
         Integer index = treeNameIndex;
         if(index == null) treeNameIndex = 0;
-        MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
+        final MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
         aID = node.getaID();
 
 
@@ -523,9 +523,74 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
             GlobalVariables.modified = false;
 
       //      OnTabChanged(GlobalVariables.pos);
+
+
         }
 
+        if (node.getbranchCat() == 12 && node.getNodeLevel()>0){
 
+            final DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            String[] actions = {"Open PDF file to view or markup",
+
+                    "Cancel "};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
+            builder.setTitle("Open/Edit Pdf file");
+
+            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    switch (which) {
+
+                        case 0: {
+
+                            String file = dbHandler.getPDFfile(node.getprojId(), node.getaID());
+                            if(!file.equals("nil")) {
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                                File pdf = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + file);
+
+                                Uri uri = FileProvider.getUriForFile(InspectionActivity.this, BuildConfig.APPLICATION_ID + ".provider", pdf);
+                                //   intent.setDataAndType(uri, "application/pdf");
+                                intent.setDataAndType(uri, "application/pdf");
+
+                                //   intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                //   intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                startActivity(Intent.createChooser(intent, "Open folder"));
+                            }
+                            else
+
+                                Toast.makeText(InspectionActivity.this, "Pdf file not found", Toast.LENGTH_SHORT).show();
+
+                            break;
+
+                        }
+
+                        case 1: {
+
+                            break;
+
+                        }
+
+                    }
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+
+            dialog.show();
+
+
+
+
+        } //if branch pdf
 
 
 
@@ -676,7 +741,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     private void addLevel(int Level, String levelName) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        int result = dbHandler.addLevel(projId, aID, GlobalVariables.iId, catId, Level, aID, levelName, 0);  //this is the ESM category
+        int result = dbHandler.addLevel(projId, aID, GlobalVariables.iId, catId, Level, aID, levelName,"", 0);  //this is the ESM category
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else
