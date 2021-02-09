@@ -272,96 +272,261 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                 if (GlobalVariables.doc_mode == 0) { //Folder template project setup
 
+                    if(node.getcatId() == 0){ // if Folder label
 
-                    String[] actions = {"Edit Topic Label",
-                            "Add Topic Sub-Label ",
-                            "Cancel "};
-
-
-                    builder.setItems(actions, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            switch (which) {
-
-                                case 0: {
+                        String[] actions = {"Edit Folder Title",
+                                "Add Topic Label ",
+                                "Cancel "};
 
 
-                                    break;
+                        builder.setItems(actions, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                                switch (which) {
+
+                                    case 0: {
+
+                                        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                        alertDialogBuilder.setView(promptView);
+                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                        itemTitle.setText("Folder Information ");//Integer.parseInt(locationId)
+                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                        locationText.setText("Current Label: " + node.getNodeName());//Integer.parseInt(locationId)
+                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                        branchText.setHint("Folder title");
+                                        // setup a dialog window
+                                        alertDialogBuilder.setCancelable(true)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                                DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+
+                                                                if (branchText.getText().toString() == "")
+                                                                    Toast.makeText(getContext(), "Retry with valid text ", Toast.LENGTH_LONG).show();
+                                                                else {
+                                                                    dbHandler.updateProject(Integer.toString(node.getprojId()), "Folder Title", branchText.getText().toString(), 0);
+                                                                    loadMap(node.getprojId());
+                                                                }
+                                                                //
+
+
+
+                                                            }
+
+
+                                                        })
+
+
+                                                    .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                        // create an alert dialog
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
+
+                                        break;
                                 }
 
-                                case 1: {
+
+                                    case 1: {
 
 
-                                    //  int position = GlobalVariables.pos;
-                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                    alertDialogBuilder.setView(promptView);
-                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                    itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
-                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                    locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
-                                    final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                    // setup a dialog window
-                                    alertDialogBuilder.setCancelable(false)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    //      photoBranch = "";
-                                                    //     if (projId != 0)
-                                                    //         addLevel(1, branchText.getText().toString());
+                                        //  int position = GlobalVariables.pos;
+                                        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                        alertDialogBuilder.setView(promptView);
+                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                        itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
+                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                        locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                        // setup a dialog window
+                                        alertDialogBuilder.setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        //      photoBranch = "";
+                                                        //     if (projId != 0)
+                                                        //         addLevel(1, branchText.getText().toString());
 
-                                                    //      else
-                                                    //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+                                                        //      else
+                                                        //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
-                                                    DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-                                                    int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                    loadMap(node.getprojId());
-                                                }
-                                            })
-                                            .setNegativeButton("Cancel",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                                                        int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                        loadMap(node.getprojId());
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
 
-                                    // create an alert dialog
-                                    AlertDialog alert = alertDialogBuilder.create();
-                                    alert.show();
+                                        // create an alert dialog
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
 
 
-                                    break;
+                                        break;
+
+                                    }
+
+                                    case 2: {
+
+
+                                        break;
+
+                                    }
+
 
                                 }
-
-                                case 2: {
-
-
-                                    break;
-
-                                }
-
-                                case 3: {
-
-
-                                    break;
-                                }
-
 
                             }
+                        });
 
-                        }
-                    });
-
-                    AlertDialog dialog = builder.create();
+                        AlertDialog dialog = builder.create();
 
 
-                    dialog.show();
+                        dialog.show();
+
+                    }
 
 
-                } else { // if in doc mode
+
+                    else { // Still in project mode but if not folder
+
+                        String[] actions = {"Edit Topic Label",
+                                "Add Topic Sub-Label ",
+                                "Cancel "};
+
+
+                        builder.setItems(actions, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                switch (which) {
+
+                                    case 0: {
+
+                                        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                        alertDialogBuilder.setView(promptView);
+                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                        itemTitle.setText("Edit Folder label ");//Integer.parseInt(locationId)
+                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                        locationText.setText(node.getNodeName());//Integer.parseInt(locationId)
+                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                        branchText.setHint("Label title");
+                                        // setup a dialog window
+                                        alertDialogBuilder.setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+
+                                                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+                                                               dbHandler.updateMapLabel((node.getprojId()), node.getaID(), branchText.getText().toString());
+                                                               loadMap(node.getprojId());
+                                                      }
+                                                })
+                                                .setNegativeButton("Cancel",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+
+                                        // create an alert dialog
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
+
+                                        break;
+
+                                    }
+
+                                    case 1: {
+
+
+                                        //  int position = GlobalVariables.pos;
+                                        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                        alertDialogBuilder.setView(promptView);
+                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                        itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
+                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                        locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                        // setup a dialog window
+                                        alertDialogBuilder.setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        //      photoBranch = "";
+                                                        //     if (projId != 0)
+                                                        //         addLevel(1, branchText.getText().toString());
+
+                                                        //      else
+                                                        //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+                                                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                                                        int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                        loadMap(node.getprojId());
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+
+                                        // create an alert dialog
+                                        AlertDialog alert = alertDialogBuilder.create();
+                                        alert.show();
+
+
+                                        break;
+
+                                    }
+
+                                    case 2: {
+
+
+                                        break;
+
+                                    }
+
+                                    case 3: {
+
+
+                                        break;
+                                    }
+
+
+                                }
+
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+
+
+                        dialog.show();
+                    } // else if not folder
+
+                }  else //In doc mode
+
+                    {
 
                     final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                     switch (node.getbranchCat()) {
@@ -369,6 +534,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         case 0: { //first order tabs id doc
 
                             if (node.getNodeLevel() == 0) { // if folder tab
+
 
                                 String[] actions = {
                                         "Add Topic Label to Folder",
@@ -384,8 +550,48 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                     public void onClick(DialogInterface dialog, int which) {
 
                                         switch (which) {
+                                            case 0:{
 
-                                            case 0: {
+                                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                alertDialogBuilder.setView(promptView);
+                                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
+                                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                // setup a dialog window
+                                                alertDialogBuilder.setCancelable(false)
+                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                //      photoBranch = "";
+                                                                //     if (projId != 0)
+                                                                //         addLevel(1, branchText.getText().toString());
+
+                                                                //      else
+                                                                //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+                                                                DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+                                                                int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                                loadMap(node.getprojId());
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel",
+                                                                new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        dialog.cancel();
+                                                                    }
+                                                                });
+
+                                                // create an alert dialog
+                                                AlertDialog alert = alertDialogBuilder.create();
+                                                alert.show();
+
+                                                break;
+                                            }
+
+                                            case 1: {
 
                                                 int result = dbHandler.addSummary(node.getprojId(), GlobalVariables.iId, 500, 0, node.getaID(), "Discussion");  //this is the ESM category
                                                 loadMap(node.getprojId());
@@ -393,7 +599,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                             }
 
-                                            case 1: {
+                                            case 2: {
 
                                                 int result = dbHandler.addCertificate(node.getprojId(), GlobalVariables.iId, 501, 0, node.getaID(), "Certificates");  //this is the ESM category
                                                 loadMap(node.getprojId());
@@ -402,7 +608,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                             }
 
-                                            case 2: {
+                                            case 3: {
 
                                                 int result = dbHandler.addReference(node.getprojId(), GlobalVariables.iId, 510, 0, node.getaID(), "Reference Items");  //this is the ESM category
                                                 loadMap(node.getprojId());
@@ -411,13 +617,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                             }
 
-                                            case 3: {
+                                            case 4: {
 
                                                 int result = dbHandler.addPdf_Doc(node.getprojId(), GlobalVariables.iId, 505, 0, node.getaID(), "PDF Files");  //this is the ESM category
                                                 loadMap(node.getprojId());
                                                 break;
                                             }
-                                            case 4: {
+                                            case 5: {
 
                                                 break;
                                             }
@@ -437,219 +643,493 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                 break;
 
 
-                            } else { //if base tab other than folder
-
-                                String[] actions = {"Edit Topic Label",
-                                        "Add sublabel topic tab",
-                                        "Place page in ["+node.getNodeName()+"] topic",
-                                        "Cancel "};
-
-                                final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
-                                builder.setItems(actions, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        switch (which) {
-
-                                            case 0: {
-                                                //     final DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-                                                //   final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-                                                // setup the alert builder
-
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                builder.setTitle("Edit Document Outline ");
-                                                // add a list
-                                                String[] actions = {"Change Selected Text",
-                                                        "Move Selected Page location",
-                                                        "Delete Selected Page/title",
-                                                        "Cancel"};
-
-                                                builder.setItems(actions, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        switch (which) {
-                                                            case 0: {
+                            } else { //if doc is true
 
 
-                                                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                                                alertDialogBuilder.setView(promptView);
-                                                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                                itemTitle.setText("Topic label: " + branchTitle);//Integer.parseInt(locationId)
-                                                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                                locationText.setText("Topic label : " + node.getNodeName());//Integer.parseInt(locationId)
-                                                                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                                                                LocationText.setText(node.getNodeName());
-                                                                // setup a dialog window
-                                                                alertDialogBuilder.setCancelable(false)
-                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                                editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+                                  if(node.getcatId() == 505) { //if label is pdf
+
+                                      String[] actions = {"Edit Label",
+                                              "Add sublabel",
+                                              "Add Pdf file under [" + node.getNodeName() + "] label",
+                                              "Cancel "};
+
+                                      final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
+                                      builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                          @Override
+                                          public void onClick(DialogInterface dialog, int which) {
+
+                                              switch (which) {
+
+                                                  case 0: {
+                                                      //     final DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+                                                      //   final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
+
+                                                      // setup the alert builder
+
+                                                      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                      builder.setTitle("Edit Document Topic label ");
+                                                      // add a list
+                                                      String[] actions = {"Change Selected Text",
+                                                                          "Delete Selected Page/title",
+                                                                            "Cancel"};
+
+                                                      builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                          public void onClick(DialogInterface dialog_sub, int which) {
+                                                              switch (which) {
+                                                                  case 0: {
 
 
-                                                                            }
-                                                                        })
-                                                                        .setNegativeButton("Cancel",
-                                                                                new DialogInterface.OnClickListener() {
-                                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                                        dialog.cancel();
-                                                                                    }
-                                                                                });
-
-                                                                // create an alert dialog
-                                                                AlertDialog alert = alertDialogBuilder.create();
-                                                                alert.show();
-                                                                break;
-                                                            }
-
-                                                            case 1: {//
-
-                                                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                                                alertDialogBuilder.setView(promptView);
-                                                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                                itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
-                                                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                                locationText.setText("Move Current TAB : " + node.getNodeName());//Integer.parseInt(locationId)
-                                                                final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                                                                LocationText.setHint("Moveto TAB id ->");
-                                                                // setup a dialog window
-                                                                alertDialogBuilder.setCancelable(false)
-                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                                dbHandler.moveTAB(node.getprojId(), node.getaID(), Integer.parseInt(LocationText.getText().toString()));
-
-                                                                                loadMap(node.getprojId());
-
-                                                                            }
-                                                                        })
-                                                                        .setNegativeButton("Cancel",
-                                                                                new DialogInterface.OnClickListener() {
-                                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                                        dialog.cancel();
-                                                                                    }
-                                                                                });
-
-                                                                // create an alert dialog
-                                                                AlertDialog alert = alertDialogBuilder.create();
-                                                                alert.show();
+                                                                      LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                                      View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                                      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                      alertDialogBuilder.setView(promptView);
+                                                                      final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                                      itemTitle.setText("Topic label: " + branchTitle);//Integer.parseInt(locationId)
+                                                                      final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                                      locationText.setText("Topic label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                                      final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                                      LocationText.setText(node.getNodeName());
+                                                                      // setup a dialog window
+                                                                      alertDialogBuilder.setCancelable(false)
+                                                                              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                  public void onClick(DialogInterface dialog, int id) {
+                                                                                      editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
 
 
-                                                                break;
+                                                                                  }
+                                                                              })
+                                                                              .setNegativeButton("Cancel",
+                                                                                      new DialogInterface.OnClickListener() {
+                                                                                          public void onClick(DialogInterface dialog, int id) {
+                                                                                              dialog.cancel();
+                                                                                          }
+                                                                                      });
 
+                                                                      // create an alert dialog
+                                                                      AlertDialog alert = alertDialogBuilder.create();
+                                                                      alert.show();
+                                                                      break;
+                                                                  }
+
+                                                                  case 1: {//
+
+                                                                      LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                                      View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                                      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                      alertDialogBuilder.setView(promptView);
+                                                                      final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                                      itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
+                                                                      final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                                      locationText.setText("Move Current TAB : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                                      final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                                      LocationText.setHint("Moveto TAB id ->");
+                                                                      // setup a dialog window
+                                                                      alertDialogBuilder.setCancelable(false)
+                                                                              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                  public void onClick(DialogInterface dialog, int id) {
+                                                                                      dbHandler.moveTAB(node.getprojId(), node.getaID(), Integer.parseInt(LocationText.getText().toString()));
+
+                                                                                      loadMap(node.getprojId());
+
+                                                                                  }
+                                                                              })
+                                                                              .setNegativeButton("Cancel",
+                                                                                      new DialogInterface.OnClickListener() {
+                                                                                          public void onClick(DialogInterface dialog, int id) {
+                                                                                              dialog.cancel();
+                                                                                          }
+                                                                                      });
+
+                                                                      // create an alert dialog
+                                                                      AlertDialog alert = alertDialogBuilder.create();
+                                                                      alert.show();
+
+
+                                                                      break;
+
+                                                                  }
+                                                              }
+                                                          }
+                                                      });
+
+                                                      AlertDialog dialog_sub = builder.create();
+
+                                                      dialog_sub.show();
+
+                                                      break;
+                                                  }
+
+
+                                                  case 1: { //add sublabel
+
+
+                                                      //  int position = GlobalVariables.pos;
+                                                      LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                      View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                      alertDialogBuilder.setView(promptView);
+                                                      final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                      itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
+                                                      final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                      locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                      final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                      // setup a dialog window
+                                                      alertDialogBuilder.setCancelable(false)
+                                                              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                  public void onClick(DialogInterface dialog, int id) {
+                                                                      //      photoBranch = "";
+                                                                      //     if (projId != 0)
+                                                                      //         addLevel(1, branchText.getText().toString());
+
+                                                                      //      else
+                                                                      //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+                                                                      int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                                      loadMap(node.getprojId());
+                                                                  }
+                                                              })
+                                                              .setNegativeButton("Cancel",
+                                                                      new DialogInterface.OnClickListener() {
+                                                                          public void onClick(DialogInterface dialog, int id) {
+                                                                              dialog.cancel();
+                                                                          }
+                                                                      });
+
+                                                      // create an alert dialog
+                                                      AlertDialog alert = alertDialogBuilder.create();
+                                                      alert.show();
+
+
+                                                      break;
+
+                                                  }
+
+                                                  case 2: { //add pdf file
+
+
+                                                      ArrayList<String> pdfList = Search_Dir("pdf");
+
+                                                      pdf_files = new String[pdfList.size() + 1];
+                                                      pdf_files[0] = "Select PDF from list";
+                                                      for (int i = 0; i < pdfList.size(); i++) {
+                                                          pdf_files[i + 1] = pdfList.get(i);
+                                                      }
+
+                                                      //     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner, pdf_files);
+
+
+                                                      LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                      View promptView = layoutInflater.inflate(R.layout.add_file, null);
+                                                      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                      alertDialogBuilder.setView(promptView);
+                                                      final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                      itemTitle.setText("Topic Title: " + "branchTitle");//Integer.parseInt(locationId)
+                                                      final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                      locationText.setText("Sub-Title of: " + node.getNodeName());//Integer.parseInt(locationId)
+                                                      final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                  //    final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
+                                                      final Spinner spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
+
+                                                      ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.my_spinner, pdf_files);
+                                                      spnrFiles.setAdapter(adapter);
+
+                                                      AdapterView.OnItemSelectedListener fileSelectedListener = new AdapterView.OnItemSelectedListener() {
+                                                          @Override
+                                                          public void onItemSelected(AdapterView<?> my_spinner, View container,
+                                                                                     int position, long id) {
+                                                              if (position != 0)
+                                                          //        file_name.setText(pdf_files[position]);
+                                                              pdf_name = pdf_files[position];
+                                                              //     dbHandler.updateMap(node.getprojId(), node.getaID(),pdf_files[position]);
+                                                              //  Edited = true;
+                                                              spnrFiles.setSelection(position);
+                                                          }
+
+                                                          @Override
+                                                          public void onNothingSelected(AdapterView<?> arg0) {
+                                                              // TODO Auto-generated method stub
+                                                          }
+                                                      };
+
+
+                                                      spnrFiles.setOnItemSelectedListener(fileSelectedListener);
+
+
+                                                      // setup a dialog window
+                                                      alertDialogBuilder.setCancelable(true)
+                                                              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                  public void onClick(DialogInterface dialog, int id) {
+
+                                                                      int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
+                                                                      loadMap(node.getprojId());
+
+                                                                  }
+                                                              })
+                                                              .setNegativeButton("Cancel",
+                                                                      new DialogInterface.OnClickListener() {
+                                                                          public void onClick(DialogInterface dialog, int id) {
+                                                                              dialog.cancel();
+                                                                          }
+                                                                      });
+
+                                                      // create an alert dialog
+                                                      AlertDialog alert = alertDialogBuilder.create();
+                                                      alert.show();
+
+                                                      break;
+
+                                                  }
+
+                                                  case 3: {
+
+
+                                                      break;
+                                                  }
+
+
+                                              }
+
+                                          }
+                                      });
+
+                                      AlertDialog dialog = builder.create();
+
+
+                                      dialog.show();
+
+
+                                      break;
+
+
+
+
+                                  } //if cat = 505
+
+                                  else {
+
+                                    String[] actions = {"Edit Topic Label",
+                                            "Add sublabel topic tab",
+                                            "Place page in [ " + node.getNodeName() + " ] topic",
+                                            "Cancel "};
+
+                                    final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
+                                    builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            switch (which) {
+
+                                                case 0: {
+
+
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle("Edit Document Outline ");
+                                                    // add a list
+                                                    String[] actions = {"Change Selected Text",
+                                                            "Move Selected Page location",
+                                                            "Delete Selected Page/title",
+                                                            "Cancel"};
+
+                                                    builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog_sub, int which) {
+                                                            switch (which) {
+                                                                case 0: {
+
+
+                                                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                    alertDialogBuilder.setView(promptView);
+                                                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                                    itemTitle.setText("Topic label: " + branchTitle);//Integer.parseInt(locationId)
+                                                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                                    locationText.setText("Topic label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                                    final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                                    LocationText.setText(node.getNodeName());
+                                                                    // setup a dialog window
+                                                                    alertDialogBuilder.setCancelable(false)
+                                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                                    editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+
+
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("Cancel",
+                                                                                    new DialogInterface.OnClickListener() {
+                                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                                            dialog.cancel();
+                                                                                        }
+                                                                                    });
+
+                                                                    // create an alert dialog
+                                                                    AlertDialog alert = alertDialogBuilder.create();
+                                                                    alert.show();
+                                                                    break;
+                                                                }
+
+                                                                case 1: {//
+
+                                                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                    alertDialogBuilder.setView(promptView);
+                                                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                                    itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
+                                                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                                    locationText.setText("Move Current TAB : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                                    final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                                    LocationText.setHint("Moveto TAB id ->");
+                                                                    // setup a dialog window
+                                                                    alertDialogBuilder.setCancelable(false)
+                                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                                    dbHandler.moveTAB(node.getprojId(), node.getaID(), Integer.parseInt(LocationText.getText().toString()));
+
+                                                                                    loadMap(node.getprojId());
+
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("Cancel",
+                                                                                    new DialogInterface.OnClickListener() {
+                                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                                            dialog.cancel();
+                                                                                        }
+                                                                                    });
+
+                                                                    // create an alert dialog
+                                                                    AlertDialog alert = alertDialogBuilder.create();
+                                                                    alert.show();
+
+
+                                                                    break;
+
+                                                                }
+                                                                case 2:{
+                                                                    break;
+                                                                }
+                                                                case 3: {
+
+                                                                    break;
+                                                                }
                                                             }
                                                         }
-                                                    }
-                                                });
-                                                break;
+                                                    });
+
+                                                    AlertDialog dialog_sub = builder.create();
+
+
+                                                    dialog_sub.show();
+
+                                                    break;
+                                                }
+
+
+                                                case 1: { //add sublabel
+
+
+                                                    //  int position = GlobalVariables.pos;
+                                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                    alertDialogBuilder.setView(promptView);
+                                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                    itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
+                                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                    locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                    final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                    // setup a dialog window
+                                                    alertDialogBuilder.setCancelable(false)
+                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    //      photoBranch = "";
+                                                                    //     if (projId != 0)
+                                                                    //         addLevel(1, branchText.getText().toString());
+
+                                                                    //      else
+                                                                    //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+                                                                    int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                                    loadMap(node.getprojId());
+                                                                }
+                                                            })
+                                                            .setNegativeButton("Cancel",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+
+                                                    // create an alert dialog
+                                                    AlertDialog alert = alertDialogBuilder.create();
+                                                    alert.show();
+
+
+                                                    break;
+
+                                                }
+
+                                                case 2: { //add page to label
+
+
+                                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                    alertDialogBuilder.setView(promptView);
+                                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                    itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                    locationText.setText("File page in the [ " + node.getNodeName() + " ] folder topic tab");//Integer.parseInt(locationId)
+                                                    final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                    // setup a dialog window
+
+                                                    alertDialogBuilder.setCancelable(false)
+                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    //        InspectionVariables.photoBranch = "";
+                                                                    int result = dbHandler.addReportBranch(node.getprojId(), GlobalVariables.iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
+                                                                    loadMap(node.getprojId());
+                                                                }
+                                                            })
+                                                            .setNegativeButton("Cancel",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+
+                                                    // create an alert dialog
+                                                    AlertDialog alert = alertDialogBuilder.create();
+                                                    alert.show();
+
+                                                    break;
+
+                                                }
+
+                                                case 3: {
+
+
+                                                    break;
+                                                }
+
+
                                             }
-
-
-                                            case 1: { //add sublabel
-
-
-                                                //  int position = GlobalVariables.pos;
-                                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                                alertDialogBuilder.setView(promptView);
-                                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
-                                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
-                                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                                // setup a dialog window
-                                                alertDialogBuilder.setCancelable(false)
-                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                //      photoBranch = "";
-                                                                //     if (projId != 0)
-                                                                //         addLevel(1, branchText.getText().toString());
-
-                                                                //      else
-                                                                //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
-
-                                                                int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "",0);  //this is the ESM category
-                                                                loadMap(node.getprojId());
-                                                            }
-                                                        })
-                                                        .setNegativeButton("Cancel",
-                                                                new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                        dialog.cancel();
-                                                                    }
-                                                                });
-
-                                                // create an alert dialog
-                                                AlertDialog alert = alertDialogBuilder.create();
-                                                alert.show();
-
-
-                                                break;
-
-                                            }
-
-                                            case 2: { //add page to label
-
-
-                                                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                                alertDialogBuilder.setView(promptView);
-                                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
-                                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                locationText.setText("File page in the [ " + node.getNodeName() + " ] folder topic tab");//Integer.parseInt(locationId)
-                                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                                // setup a dialog window
-
-                                                alertDialogBuilder.setCancelable(false)
-                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                //        InspectionVariables.photoBranch = "";
-                                                                int result = dbHandler.addReportBranch(node.getprojId(), GlobalVariables.iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
-                                                                loadMap(node.getprojId());
-                                                            }
-                                                        })
-                                                        .setNegativeButton("Cancel",
-                                                                new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                        dialog.cancel();
-                                                                    }
-                                                                });
-
-                                                // create an alert dialog
-                                                AlertDialog alert = alertDialogBuilder.create();
-                                                alert.show();
-
-                                                break;
-
-                                            }
-
-                                            case 3: {
-
-
-                                                break;
-                                            }
-
 
                                         }
+                                    });
 
-                                    }
-                                });
-
-                                AlertDialog dialog = builder.create();
+                                    AlertDialog dialog = builder.create();
 
 
-                                dialog.show();
+                                    dialog.show();
 
+                                    break;
 
-                                break;
+                                }
                             }
-                        }
+                        } //switch node.getcatId
+
 
                         case 1: {//if page label
 
@@ -760,8 +1240,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                             dialog.show();
 
-
                             break;
+
                         }
 
 
@@ -776,15 +1256,77 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-
+                                    final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
                                     switch (which) {
 
                                         case 0: {
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Topic label: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Topic label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            LocationText.setText(node.getNodeName());
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
 
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
                                             break;
                                         }
 
                                         case 1: {
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Add a Topic to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            //      photoBranch = "";
+                                                            //     if (projId != 0)
+                                                            //         addLevel(1, branchText.getText().toString());
+
+                                                            //      else
+                                                            //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
+
+                                                            int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
+                                                            loadMap(node.getprojId());
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
 
                                             break;
                                         }
@@ -794,7 +1336,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             ArrayList<String> pdfList = Search_Dir("pdf");
 
                                             pdf_files = new String[pdfList.size() + 1];
-                                            pdf_files[0] = "Downloaded PDF File list";
+                                            pdf_files[0] = "Select PDF File from list";
                                             for (int i = 0; i < pdfList.size(); i++) {
                                                 pdf_files[i + 1] = pdfList.get(i);
                                             }
@@ -811,7 +1353,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                                             locationText.setText("Sub-Title of: " + node.getNodeName());//Integer.parseInt(locationId)
                                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                            final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
+                                          //  final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
                                             final Spinner spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
 
                                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.my_spinner, pdf_files);
@@ -822,7 +1364,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                 public void onItemSelected(AdapterView<?> my_spinner, View container,
                                                                            int position, long id) {
                                                     if (position != 0)
-                                                        file_name.setText(pdf_files[position]);
+                                                //        file_name.setText(pdf_files[position]);
                                                         pdf_name = pdf_files[position];
                                                    //     dbHandler.updateMap(node.getprojId(), node.getaID(),pdf_files[position]);
                                                     //  Edited = true;

@@ -1625,6 +1625,10 @@ public class DBHandler extends SQLiteOpenHelper {
                                 values.put(COLUMN_CAT_ID, CatID);
                                 values.put(COLUMN_PARENT, parent);
                             }
+                            if(CatID == 505){
+                                values.put(COLUMN_CAT_ID, CatID);
+                                values.put(COLUMN_PARENT, parent);
+                            }
                             values.put(COLUMN_PROJECT_ID, projID);
                             values.put(COLUMN_LABEL, Label);
                             values.put(COLUMN_LEVEL, Level);

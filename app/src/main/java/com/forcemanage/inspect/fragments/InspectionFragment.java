@@ -192,57 +192,6 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         Log.d(TAG, "oncreateview: started");
 
 
-        addPage = (ImageView) view.findViewById(R.id.add_Page);
-        addPage.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View v) {
-
-                                           DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-
-                                           final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-                                           // setup the alert builder
-
-
-                                           LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                                           View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                           AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                                           alertDialogBuilder.setView(promptView);
-                                           final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                           itemTitle.setText("Page attachment ");//Integer.parseInt(locationId)
-                                           final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                           locationText.setText("Attachment to Page: " + branchName);//Integer.parseInt(locationId)
-                                           final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                           // setup a dialog window
-                                           alertDialogBuilder.setCancelable(false)
-                                                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                       public void onClick(DialogInterface dialog, int id) {
-                                                          
-
-
-                                                       }
-                                                   })
-                                                   .setNegativeButton("Cancel",
-                                                           new DialogInterface.OnClickListener() {
-                                                               public void onClick(DialogInterface dialog, int id) {
-                                                                   dialog.cancel();
-                                                               }
-                                                           });
-
-                                           // create an alert dialog
-                                           AlertDialog alert = alertDialogBuilder.create();
-                                           alert.show();
-
-                                       }
-                                   });
-
-
-
-
-
-
-
-
 
         projId = Integer.parseInt(projectId);
         iId= Integer.parseInt(inspectionId);

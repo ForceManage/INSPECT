@@ -130,7 +130,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="10dp"
                             android:layout_marginTop="25dp"
-                            android:text="Project Name:  "
+                            android:text="Folder Name:  "
                             android:textColor="@android:color/black"
                             android:textStyle="normal|bold" />
 
@@ -143,7 +143,7 @@
                             android:paddingLeft="10dp"
                             android:paddingTop="5dp"
                             android:paddingBottom="10dp"
-                            android:hint="Project Title - Eg. Project Address/Project name/ etc"
+                            android:hint="Folder Title - Eg. Project Address/Project name/ etc"
                             android:textSize="16sp"/>
 
 

@@ -71,28 +71,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="7dp"
-                >
-
-
-
-                <ImageView
-                    android:id="@+id/add_Page"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:tooltipText="Add page to this topic"
-                    android:foreground="@drawable/ic_edit_outline" />
-
-
-
-            </LinearLayout>
-
 
 
             <LinearLayout
@@ -107,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:paddingLeft="10dp"
-                    android:text="Topic Sub-Title:  "
+                    android:text="Topic Label sub-title:  "
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="normal|bold" />

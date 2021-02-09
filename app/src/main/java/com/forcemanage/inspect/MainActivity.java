@@ -2056,8 +2056,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             }
             if(focus == "DOC") {
                 ProjectNode projectNode = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
+                MapViewNode mapViewNode =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
                 if(projectNode.getNodeLevel() ==0) {
                          dbHandler.updatePropPhoto(projectId, photo.getName());
+                         dbHandler.updateBranchPhoto(projId, mapViewNode.getaID(), photo.getName());
                          }
                     else {
                         dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
@@ -2115,7 +2117,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
             if (FragDisplay == "ProjectInfoFolderFragment") {
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFolderFragment");
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
             }

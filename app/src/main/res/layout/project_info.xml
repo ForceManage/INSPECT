@@ -37,7 +37,7 @@
                     android:background="@drawable/head_frame"
                     android:paddingBottom="5dp">
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -47,13 +47,14 @@
                         android:layout_height="45dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="5dp"
+                        android:layout_gravity="left"
                         android:foreground="@drawable/documents" />
 
                      <TextView
                         android:id="@+id/branchTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
+                        android:layout_marginLeft="50dp"
                         android:paddingTop="6dp"
                         android:paddingLeft="5dp"
                         android:text="Folder:  "
@@ -62,17 +63,21 @@
                         android:textColor="@android:color/white"
                         android:textStyle="normal|bold" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/branchName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:layout_marginLeft="50dp"
+                            android:layout_gravity="bottom"
+                            android:text="Document Titles  "
+                            android:textColor="@android:color/white"
+                            android:textStyle="normal" />
 
-                    <TextView
-                        android:id="@+id/branchName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp"
-                        android:paddingLeft="10dp"
-                        android:text="Document Titles  "
-                        android:textColor="@android:color/white"
-                        android:textStyle="normal" />
+                </FrameLayout>
+
+
 
                 </LinearLayout>
 

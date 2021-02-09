@@ -90,17 +90,6 @@
 
 
 
-                        <ImageView
-                            android:id="@+id/add_Page"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:tooltipText="Attach scope to this page"
-                            android:foreground="@drawable/ic_add_scope" />
-
-
-
 
                     </LinearLayout>
 
