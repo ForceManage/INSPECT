@@ -534,16 +534,17 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     @Override
-    public void OnTabChanged(int treeNameIndex){
+    public void OnTabChanged(int labelIndex){
 
    //     GlobalVariables.modified = false;
         focus = "FOLDER";
       //  MapViewNode node = GlobalVariables.dataList.get(GlobalVariables.pos);
-        MapViewNode node =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
+        MapViewNode node =  GlobalVariables.displayNodes.get(labelIndex);
       //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
         GlobalVariables.folder_Id = node.getprojId();
         GlobalVariables.name = node.getNodeName();
         GlobalVariables.aId = node.getaID();
+        if(node.getcatId() == 0) GlobalVariables.folderIndex = labelIndex;
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
@@ -560,12 +561,12 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         if (detailFragment != null) {
             // If description is available, we are in two pane layout
             // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(treeNameIndex);
+            detailFragment.setDetail(labelIndex);
         } else {
             DetailFragment newDetailFragment = new DetailFragment();
             Bundle args = new Bundle();
 
-            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+            args.putInt(DetailFragment.KEY_POSITION, labelIndex);
             newDetailFragment.setArguments(args);
             androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
@@ -673,6 +674,153 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
     }
+
+
+
+    @Override
+    public void OnTabChanged_(int Index){
+
+        //     GlobalVariables.modified = false;
+        focus = "FOLDER";
+      //   MapViewNode node = GlobalVariables.dataList.get(Index);
+
+        MapViewNode node =  GlobalVariables.displayNodes.get(Index);
+        //  ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
+        GlobalVariables.folder_Id = node.getprojId();
+        GlobalVariables.name = node.getNodeName();
+        GlobalVariables.aId = node.getaID();
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+
+        projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
+        // inspectionId = Integer.toString(node.getiID());
+        projId = node.getprojId();
+
+        //   iId = node.getiID();
+
+
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+
+        if (detailFragment != null) {
+            // If description is available, we are in two pane layout
+            // so we call the method in DescriptionFragment to update its content
+            detailFragment.setDetail(Index);
+        } else {
+            DetailFragment newDetailFragment = new DetailFragment();
+            Bundle args = new Bundle();
+
+            args.putInt(DetailFragment.KEY_POSITION, Index);
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+
+
+
+
+
+        if(node.getNodeLevel() == 0) {
+
+
+            HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
+            //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+            //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
+
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("projId", projId);
+            bundle.putInt("USER_ID", USER_ID);
+            bundle.putInt("Level", 0);
+            bundle.putString("Folder_ID", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+            bundle.putString("Folder", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+            bundle.putString("foldernote", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
+            bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
+            bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
+            bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
+            bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
+            bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
+            bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
+            bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
+            bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
+            bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+
+
+
+            ProjectInfoFragment fragment = new ProjectInfoFragment();
+            doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+            fragment.setArguments(bundle);
+
+            ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
+            doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", false, "");
+            fragment2.setArguments(bundle);
+
+
+
+        }
+
+        else {
+
+            Integer aID = node.getaID();
+            Integer iID = node.getiID();
+
+            //  if(aID == 0)  aID = 1;
+            //  if(iID == 0)  iID = 1;
+
+            inspectionId = Integer.toString(iID);
+
+            HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
+
+            String MapBranch;
+
+            Integer catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
+            Integer Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
+            Integer Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
+            photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
+            String inspLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
+            String branchLabel = mapItem.get("MAP_LABEL"); //This is the Map label column
+            String branchNote = mapItem.get(MyConfig.TAG_NOTES);
+            Integer branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
+
+            String branchHead = dbHandler.getMapBranchTitle(projId, catId);
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("projId", projId);
+            bundle.putInt("USER_ID", USER_ID);
+            bundle.putInt("Level", node.getNodeLevel());
+            bundle.putInt("catId", node.getcatId());
+            bundle.putString("branchHead", branchHead);
+            bundle.putString("inspection", inspLabel);
+            bundle.putString("projectID", projectId);
+            bundle.putString("inspectionID", inspectionId);
+            bundle.putString("image", photoBranch);
+            bundle.putString("MAP_LABEL", branchLabel);
+            bundle.putInt("aID", node.getaID());
+            bundle.putString("notes", branchNote);
+            //  bundle.putString("com2", com2);
+
+            ProjectInfoFragment fragment = new ProjectInfoFragment();
+            doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+            fragment.setArguments(bundle);
+
+
+            BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+            doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+            fragment2.setArguments(bundle);
+
+
+        }
+
+
+    }
+
+
 
     @Override
     public void OnProjectChanged(int treeNameIndex){
@@ -838,6 +986,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     //    btnLogin = (Button) findViewById(R.id.btnlogin);
     //    btnLogin.setOnClickListener(this);
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
         imgCloud = (ImageView) findViewById(R.id.image_cloud);
         imgCloud.setOnClickListener(this);
         imgLogin = (ImageView) findViewById(R.id.image_login);

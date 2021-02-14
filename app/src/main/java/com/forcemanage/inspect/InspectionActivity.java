@@ -42,10 +42,13 @@ import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.fragments.ActionItemFragment;
 import com.forcemanage.inspect.fragments.BaseFragment;
+import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
 import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
+import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
+import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.fragments.SummaryFragment;
@@ -66,7 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements  tabchangelistener, tabchangelistener_2, View.OnClickListener {
+public class InspectionActivity extends AppCompatActivity implements  tabchangelistener, View.OnClickListener {
 
     DBHandler ESMdb;
     private String projectId;
@@ -383,79 +386,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     }
 
 
-    @Override
-    public void OnTab2Changed(int treeNameIndex) {
 
-
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_text);
-
-        MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
-
-
-        if (detailFragment != null) {
-            // If description is available, we are in two pane layout
-            // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(treeNameIndex);
-
-        } else {
-            DetailFragment newDetailFragment = new DetailFragment();
-            Bundle args = new Bundle();
-
-            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-            newDetailFragment.setArguments(args);
-
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-
-            //  fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
-        }
-
-        if (GlobalVariables.modified == true) {
-            MapViewFragment newDetailFragment = new MapViewFragment();
-            Bundle args = new Bundle();
-            detailFragment.mCurrentPosition = -1;
-
-
-            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-
-            newDetailFragment.setArguments(args);
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_container, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            FragmentManager fm = getSupportFragmentManager();
-
-            //fm.popBackStack(DF,0);
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
-            }
-
-            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-            GlobalVariables.modified = false;
-
-            OnTab2Changed(GlobalVariables.pos);
-        }
-
-        aID = node.getaID();
-
-
-
-
-        //  Toast.makeText(this, "BranchNote from Inspection Acvtivity: "+branchNote, Toast.LENGTH_SHORT).show();
-        displayInspectionItem();
-    }
 
     @Override
     public void OnTabChanged(int treeNameIndex) {
@@ -599,6 +530,13 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
 
     }
+
+    @Override
+    public void OnTabChanged_(int treeNameIndex){
+
+
+    }
+
 
 
     private void getORArray(String Cat_Table, String subCat) {

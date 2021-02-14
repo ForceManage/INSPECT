@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by DAP on 12/03/2020.
  */
@@ -757,17 +759,30 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateInspection(String projId, String iId, String Label, String Note, String Note_2) {
+    public void updateInspectionLabel(String projId, String iId, String Label) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_LABEL, Label);
+        contentValues.put(COLUMN_INSPECTION_STATUS, "m");
+
+        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
+        db.close();
+
+
+    }
+
+    public void updateInspectionNotes(String projId, String iId, String Note, String Note_2) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         if(!Note.equals(""))
-        contentValues.put(COLUMN_NOTE, Note);
+            contentValues.put(COLUMN_NOTE, Note);
         if(!Note_2.equals(""))
-        contentValues.put(COLUMN_NOTE_2, Note_2);
-        contentValues.put(COLUMN_LABEL, Label);
-        contentValues.put(COLUMN_INSPECTION_STATUS, "m");
+            contentValues.put(COLUMN_NOTE_2, Note_2);
+          contentValues.put(COLUMN_INSPECTION_STATUS, "m");
 
 
 
@@ -1424,6 +1439,22 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteInformation(int projId, int iId, int aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_CERTIFICATE_INSPECTION, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId, null);
+        db.close();
+    }
+
+    public void deletePDF(int projId, int iId, int aId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_CERTIFICATE_INSPECTION, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId, null);
+        db.close();
+    }
+
     public void deleteTable() {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1572,7 +1603,90 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    //Add sublocation to the location
+
+    public void changePos(int projId, int  aId, int child, int catId, String dir, int branchcat){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        String updateQuery;
+        Cursor cursor;
+        int aSwap = 0;
+        int maxcatID = 1;
+        int pos = 0;
+
+        selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_CAT_ID + " = " + catId + " AND "+ COLUMN_CHILD + " = "+ child;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do{
+            if(cursor.getInt(0) == aId) pos = cursor.getPosition();
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        if(dir == "UP") {
+            if (pos > 0) {
+                cursor.moveToPosition(pos - 1);
+                aSwap = cursor.getInt(0);
+            }
+        }
+        if(dir == "DWN") {
+            if (pos < cursor.getCount()) {
+                cursor.moveToPosition(pos + 1);
+                aSwap = cursor.getInt(0);
+            }
+        }
+            ContentValues values = new ContentValues();
+
+            switch (branchcat ) {
+
+                case 1:{
+
+                    values.put(COLUMN_A_ID, aSwap * -1);
+                    values.put(COLUMN_ITEM_STATUS, "m");
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                    values.put(COLUMN_A_ID, aId * -1);
+                    values.put(COLUMN_ITEM_STATUS, "m");
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+
+                    values.put(COLUMN_A_ID, aSwap);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    values.put(COLUMN_A_ID, aId);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
+                    break;
+                }
+
+                case 2: {
+
+                    values.put(COLUMN_A_ID, aSwap * -1);
+                    values.put(COLUMN_ITEM_STATUS, "m");
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                    values.put(COLUMN_A_ID, aId * -1);
+                    values.put(COLUMN_ITEM_STATUS, "m");
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+
+                    values.put(COLUMN_A_ID, aSwap);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    values.put(COLUMN_A_ID, aId);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
+
+                    break;
+                }
+            }
+
+        db.close();
+
+       }
+
+
+      //Add sublocation to the location
     public int addLevel(int projID, int aId, int iId, int CatID, int Level, int parent, String Label, String note, int type) {
         // Open a database for reading and writing
 

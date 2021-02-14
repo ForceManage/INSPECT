@@ -112,12 +112,6 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         //  activity = (TextView) view.findViewById(R.id.level);
         branch = (TextView) view.findViewById(R.id.Text1);
         TabId = (TextView) view.findViewById(R.id.aId);
-        branch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editLabel("Label",branch.getText().toString());
-            }
-        });
 
         bNote = (EditText) view.findViewById(R.id.note);
 
@@ -222,56 +216,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
     }
 
-    public void editLabel(final String  item, String value){
 
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View promptView = layoutInflater.inflate(R.layout.add_location, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(promptView);
-        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Activity Title ");//Integer.parseInt(locationId)
-        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-        locationText.setText(item);//Integer.parseInt(locationId)
-        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-        branchText.setHint(value);
-        // setup a dialog window
-        alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-                        switch (item) {
-
-                            case "Label":{
-                                branchLabel = branchText.getText().toString();
-                                if(aId > 0) {
-                                    dbHandler.updateMapLabel(Integer.parseInt(projectId), aId, branchLabel);
-                                    globalVariables.OnTabChanged(0);
-                                }
-                                else
-                                    Toast.makeText(getContext(), "Select/create a MAP branch ",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-
-                        }
-
-
-                    }
-                })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        // create an alert dialog
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
-
-
-
-    }
 
 
     @Override

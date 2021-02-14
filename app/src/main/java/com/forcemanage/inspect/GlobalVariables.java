@@ -32,6 +32,7 @@ public class GlobalVariables
     public static int folder_Id;
     public static String name;
     public static int User_id;
+    public static int folderIndex;
 
 
     public static Boolean modified = false;

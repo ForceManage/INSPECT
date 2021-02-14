@@ -250,7 +250,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         preamble = Note2.getText().toString();
 
-        dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, "", preamble);
+        dbHandler.updateInspectionNotes(Integer.toString(projId), Integer.toString(iId), "", preamble);
         dbHandler.statusChanged(projId, iId);
 
     }

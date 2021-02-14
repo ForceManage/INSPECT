@@ -125,13 +125,6 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         bNote = (EditText) view.findViewById(R.id.note);
         Note2 = (EditText) view.findViewById(R.id.preamble);
         Label = (TextView) view.findViewById(R.id.Text1);
-        ImageView file = (ImageView) view.findViewById(R.id.file);
-        file.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editLabel("Label",Label.getText().toString());
-            }
-        });
         printer = (ImageView) view.findViewById(R.id.printer);
         TextView inspectDate = (TextView) view.findViewById(R.id.Text2);
         TextView Hrs = (TextView) view.findViewById(R.id.Text5);
@@ -356,62 +349,13 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public void editLabel(final String  item, String value){
-
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View promptView = layoutInflater.inflate(R.layout.add_location, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(promptView);
-        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-        itemTitle.setText("Document Information ");//Integer.parseInt(locationId)
-        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-        locationText.setText("Document Title");//Integer.parseInt(locationId)
-        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-        branchText.setHint(value);
-        // setup a dialog window
-        alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-                        switch (item) {
-
-                            case "Label":{
-                                branchLabel = branchText.getText().toString();
-                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
-                            //    globalVariables.OnProjectChanged(0);
-                             //   globalVariables.updatePropList();
-                                break;
-                            }
-
-                        }
-
-
-                    }
-                })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        // create an alert dialog
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
-
-
-
-    }
-
-
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         note = bNote.getText().toString();
         note_2 = Note2.getText().toString();
 
-        dbHandler.updateInspection(Integer.toString(projId), Integer.toString(iId), branchLabel, note, note_2);
+        dbHandler.updateInspectionNotes(Integer.toString(projId), Integer.toString(iId), note, note_2);
         dbHandler.statusChanged(projId, iId);
         Edited = false;
 

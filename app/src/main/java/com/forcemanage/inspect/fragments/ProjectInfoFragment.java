@@ -90,7 +90,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String ProjAddress = "";
     private Boolean Edited = false;
     private String folderNote="";
-    private String preamble ="";
+    private String siteNotes ="";
     private String projectId;
     private int projId = 0;
     private int iId = 0;
@@ -117,7 +117,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     private String startTime ="";
     private String endTime ="";
     private String docPhoto;
-    private EditText Preamble;
+    private EditText SiteNotes;
     private EditText FolderNote;
     private TextView TVinfoA;
     private TextView TVinfoB;
@@ -142,7 +142,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             FolderID = bundle.getString("Folder_ID");
             Folder = bundle.getString("Folder");
             folderNote = bundle.getString("foldernote");
-            preamble = bundle.getString("preamble");
+            siteNotes = bundle.getString("siteNotes");
             auditor = bundle.getString("auditor");
             inspectionDate = bundle.getString("date");
             dateInspected = bundle.getString("date");
@@ -201,18 +201,26 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
         branch = (TextView) view.findViewById((R.id.branchName));
         branch.setText("Folder ID: "+FolderID);
-        Preamble = (EditText) view.findViewById(R.id.preamble);
-        Preamble.setText(preamble);
+        SiteNotes = (EditText) view.findViewById(R.id.siteNotes);
+        SiteNotes.setText(siteNotes);
+        SiteNotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
 
-   /*     mRecyclerView = view.findViewById(R.id.reportlist);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ReportDocsAdapter(GlobalVariables.projectList);
+            }
+        });
+        FolderNote = (EditText) view.findViewById(R.id.folder_note);
+        FolderNote.setText(folderNote);
+        FolderNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+            }
+        });
 
-*/
+
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
         ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID,projId, Level, catId, aId); //child 9 shows only the types <9
@@ -304,7 +312,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
                                     Toast.makeText(getContext(), "Invalid TAB", Toast.LENGTH_SHORT).show();
                                 else
                                     // editLocation(LocationText.getText().toString());
-                                    dbHandler.updateInspection(Integer.toString(projId), Integer.toString(GlobalVariables.iId), LocationText.getText().toString(), "", "");
+                                    dbHandler.updateInspectionLabel(Integer.toString(projId), Integer.toString(GlobalVariables.iId), LocationText.getText().toString());
                                 OnTabChanged(0);
 
                             }
@@ -406,18 +414,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
             public void onClick(View v) {
                 editProject("Note H", TVinfoH.getText().toString());
             }
-        });
-
-
-
-
-
-        Preamble.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Edited = true;
-            }
-
         });
 
 
@@ -554,83 +550,15 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
     @Override
     public void OnTabChanged(int treeNameIndex) {
 
-/*
-     //  MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-
-        DetailProjectFragment detailFragment = (DetailProjectFragment) getChildFragmentManager()
-                .findFragmentById(R.id.detail_text);
-
-
-        if (detailFragment != null) {
-            // If description is available, we are in two pane layout
-            // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(treeNameIndex);
-
-        } else {
-            ProjectDetailFragment newDetailFragment = new ProjectDetailFragment();
-            Bundle args = new Bundle();
-
-          //  args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-            newDetailFragment.setArguments(args);
-
-
-            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.tree_fragment, newDetailFragment);
-
-            //  fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
-        }
-
-        if (GlobalVariables.modified == true) {
-            ProjectViewFragment newDetailFragment = new ProjectViewFragment();
-            Bundle args = new Bundle();
-      //      detailFragment.mCurrentPosition = -1;
-
-
-       //     args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
-
-            newDetailFragment.setArguments(args);
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.tree_fragment, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            FragmentManager fm = getChildFragmentManager();
-
-            //fm.popBackStack(DF,0);
-            if (getChildFragmentManager().getBackStackEntryCount() > 0) {
-                getChildFragmentManager().popBackStackImmediate();
-            }
-
-            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-            GlobalVariables.modified = false;
-
-            OnTabChanged(GlobalVariables.pos);
-        }
-
-
- */
     }
 
 
-    private void addLevel(int Level, String levelName) {
+    @Override
+    public void OnTabChanged_(int treeNameIndex) {
 
-        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-        int result = dbHandler.addLevel(projId, GlobalVariables.aId, 0, GlobalVariables.catId, Level, GlobalVariables.aId, levelName, "",  0);  //this is the ESM category
-        if (result == 0)
-            Toast.makeText(getContext(), "Cannot place TAB here", Toast.LENGTH_SHORT).show();
-        else
-        loadMap();
     }
+
+
 
     public void deleteInspectionItem() {
 
@@ -848,7 +776,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
                             case "Label":{
                                 Folder = branchText.getText().toString();
-                                dbHandler.updateInspection(Integer.toString(projId), Integer.toString(GlobalVariables.iId), Folder, folderNote, "");
+                                dbHandler.updateInspectionLabel(Integer.toString(projId), Integer.toString(GlobalVariables.iId), Folder);
                                 //    globalVariables.OnProjectChanged(0);
                                 //   globalVariables.updatePropList();
                                 break;
@@ -880,6 +808,7 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         folderNote = FolderNote.getText().toString();
         dbHandler.updateProject(Integer.toString(projId), "Folder Note" , folderNote, 0);
+        dbHandler.updateInspectionNotes(Integer.toString(projId),Integer.toString(iId),SiteNotes.getText().toString(),FolderNote.getText().toString());
         dbHandler.statusChanged(projId,0);
         Edited = false;
     }
