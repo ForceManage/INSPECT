@@ -26,6 +26,7 @@ import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.ProjectListViewHolder;
 import com.forcemanage.inspect.R;
+import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectNode;
 
 
@@ -161,7 +162,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
         holder.arrow.setTag(position);
         holder.content.setTag(position);
         holder.file_open.setTag(position);
-
+        holder.print.setTag(position);
 
         int lvl = node.getNodeLevel();
         int newWidth = (lvl * 20) ;
@@ -235,7 +236,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
             mPrintClickListener = new OnClickListener() {
                 //   @Override
                 public void onClick(View v) {
-                    int position = GlobalVariables.doc_pos;
+                    int position = (int) v.getTag();
+                    final ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
                     if(position == 0){
                         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                         View promptView = layoutInflater.inflate(R.layout.add_location, null);
@@ -272,7 +274,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                     }
                     else {
 
-                        ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
+
                         GlobalVariables.iId = node.getiID();
                         ((MainActivity) getContext()).reportMenu();
                         // showMessage("Adapter listener "+node.getNodeChildren().toString());

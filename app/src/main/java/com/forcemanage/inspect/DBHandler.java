@@ -15,6 +15,7 @@ import com.forcemanage.inspect.attributes.LOG_Attributes;
 import com.forcemanage.inspect.attributes.MAPattributes;
 import com.forcemanage.inspect.attributes.ProjectAttributes;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
+import com.forcemanage.inspect.attributes.Template_Attributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 
 import java.text.ParseException;
@@ -31,7 +32,7 @@ import static java.lang.Math.abs;
  */
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 26;
+    private static final int DATABASE_VERSION = 27;
     private static final String DATABASE_NAME = "Inspection.db";
 
     public static final String TABLE_PROJECT_INFO = "project_info";
@@ -136,6 +137,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME = "TableDel";
     public static final String COLUMN_TABLE_NAME = "TableName";
+
+    public static final String TABLE_TEMPLATE = "Template";
+    public static final String COLUMN_TEMPLATE_NAME = "TemplateName";
+
 
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -300,6 +305,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_TABLE_NAME_TABLE);
 
+        String CREATE_TEMPLATE_TABLE = "CREATE TABLE " +
+                TABLE_TEMPLATE + "("
+                + COLUMN_CLIENT_NAME + " STRING,"
+                + COLUMN_TEMPLATE_NAME + " STRING,"
+                + COLUMN_CAT_ID + " INTEGER,"
+                + COLUMN_LEVEL + " INTEGER,"
+                + COLUMN_PARENT + " INTEGER,"
+                + COLUMN_LABEL + " INTEGER,"
+                + COLUMN_CHILD + " INTEGER,"
+                + COLUMN_A_ID + " INTEGER)";
+
+
+        db.execSQL(CREATE_TEMPLATE_TABLE);
+
+
         String CREATE_A_OR_TABLE = "CREATE TABLE " +
                 TABLE_A_OR + "("
                 + COLUMN_NUM + " INTEGER PRIMARY KEY,"
@@ -373,6 +393,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_LIST);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG_TIME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEMPLATE);
         onCreate(db);
     }
 
@@ -392,6 +413,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_USER_LIST, null, null);
         db.delete(TABLE_LOG_TIME, null, null);
         db.delete(TABLE_NAME, null, null);
+        db.delete(TABLE_TEMPLATE, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -672,6 +694,26 @@ public class DBHandler extends SQLiteOpenHelper {
         //replace will delete the row if the OR already exists
 
         db.replace(TABLE_LOG_TIME, null, values);
+        db.close();
+
+    }
+
+    public void  update_TEMPLATE_FromServer(Template_Attributes template_attributes) {
+
+        //replace will delete the row if the category already exists
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CLIENT_NAME, template_attributes.getClientName());
+        values.put(COLUMN_TEMPLATE_NAME, template_attributes.getTemplateName());
+        values.put(COLUMN_CAT_ID, template_attributes.getCatId());
+        values.put(COLUMN_LEVEL, template_attributes.getLevel());
+        values.put(COLUMN_PARENT, template_attributes.getParent());
+        values.put(COLUMN_LABEL, template_attributes.getLabel());
+        values.put(COLUMN_CHILD, template_attributes.getChild());
+        values.put(COLUMN_A_ID, template_attributes.getaId());
+        SQLiteDatabase db = this.getWritableDatabase();
+        //replace will delete the row if the OR already exists
+
+        db.replace(TABLE_TEMPLATE, null, values);
         db.close();
 
     }
@@ -1386,13 +1428,40 @@ public class DBHandler extends SQLiteOpenHelper {
                diffHours = hours + " Hrs " + mins+" Min";
         }
 
+            db.close();
 
             return  diffHours;
 
     }
 
 
+    public void saveTemplate(String client, String name, int projId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
 
+        selectQuery = "SELECT " + COLUMN_CAT_ID+ " , "+COLUMN_LEVEL+" , "+ COLUMN_PARENT+" , "+COLUMN_LABEL
+                                +" , "+COLUMN_CHILD+" , "+COLUMN_A_ID+" FROM "+  TABLE_MAP
+                                + " WHERE " + COLUMN_PROJECT_ID + " = "+ projId;
+
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_CLIENT_NAME, client);
+                values.put(COLUMN_TEMPLATE_NAME, name);
+                values.put(COLUMN_CAT_ID,cursor.getInt(0));
+                values.put(COLUMN_LEVEL,cursor.getInt(1));
+                values.put(COLUMN_PARENT,cursor.getInt(2));
+                values.put(COLUMN_LABEL,cursor.getString(3));
+                values.put(COLUMN_CHILD,cursor.getInt(4));
+                values.put(COLUMN_A_ID,cursor.getInt(5));
+                db.insert(TABLE_TEMPLATE, null, values);
+
+            } while (cursor.moveToNext());
+        }
+    }
 
 
 
@@ -1604,14 +1673,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void changePos(int projId, int  aId, int child, int catId, String dir, int branchcat){
+    public void changePos(int projId, int  aId, int iId, int child, int catId, String dir, int branchcat){
 
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery;
         String updateQuery;
         Cursor cursor;
         int aSwap = 0;
-        int maxcatID = 1;
         int pos = 0;
 
         selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
@@ -1628,12 +1696,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 cursor.moveToPosition(pos - 1);
                 aSwap = cursor.getInt(0);
             }
+            else return;
         }
         if(dir == "DWN") {
             if (pos < cursor.getCount()) {
                 cursor.moveToPosition(pos + 1);
                 aSwap = cursor.getInt(0);
             }
+            else return;
         }
             ContentValues values = new ContentValues();
 
@@ -1641,42 +1711,43 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 case 1:{
 
-                    values.put(COLUMN_A_ID, aSwap * -1);
+                    values.put(COLUMN_A_ID, -(aSwap));
                     values.put(COLUMN_ITEM_STATUS, "m");
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
-                    values.put(COLUMN_A_ID, aId * -1);
+                    values.put(COLUMN_A_ID, -(aId));
                     values.put(COLUMN_ITEM_STATUS, "m");
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
 
                     values.put(COLUMN_A_ID, aSwap);
-                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
-                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
                     values.put(COLUMN_A_ID, aId);
-                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
-                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId), null);
+                    db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId) , null);
+                    statusChanged(projId,iId);
                     break;
                 }
 
                 case 2: {
 
-                    values.put(COLUMN_A_ID, aSwap * -1);
+                    values.put(COLUMN_A_ID, -(aSwap));
                     values.put(COLUMN_ITEM_STATUS, "m");
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
                     db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
-                    values.put(COLUMN_A_ID, aId * -1);
+                    values.put(COLUMN_A_ID, -(aId));
                     values.put(COLUMN_ITEM_STATUS, "m");
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
                     db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
 
                     values.put(COLUMN_A_ID, aSwap);
-                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
-                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap * -1, null);
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
                     values.put(COLUMN_A_ID, aId);
-                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
-                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId * -1, null);
-
+                    db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId), null);
+                    db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId), null);
+                    statusChanged(projId,iId);
                     break;
                 }
             }
@@ -2011,7 +2082,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                     i_id = iId; //make sure that action from inspection has same inspectionId
                             }
 
-
+                                //addLevel places a new label and corresponding aId in map.
                                 int newId = addLevel(projId, aId, i_id, CatID, Level, aId, Label, "", 2);
 
                                 SQLiteDatabase db_2 = this.getWritableDatabase();
@@ -2670,7 +2741,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-
+/*
     //Check if a location contains any sublocations
     public String getStatus(int iId, int projId) {
         // Open a database for reading and writing
@@ -2679,7 +2750,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-/*
+
 
         selectQuery = "SELECT I."+COLUMN_PROPERTY_ID+", I."+COLUMN_ASSET_ID
                 +" FROM "+TABLE_A2D_INSPECTION_ITEM+" I"
@@ -2713,12 +2784,12 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
 
 
- */
+
 
         return "n";
 
     }
-
+*/
 
     public HashMap<String, String> getInspection(int projId, int iId) {
         // Open a database for reading and writing
@@ -3984,7 +4055,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT * "
                 + " FROM " + TABLE_ACTION_ITEM
           //      +" JOIN "+ TABLE_INSPECTION+" I ON A."+ COLUMN_PROJECT_ID+" = I."+COLUMN_PROJECT_ID
-                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID
+                +" WHERE "+ COLUMN_PROJECT_ID+" = "+ projID+" AND "+COLUMN_ITEM_STATUS+" = 'm'"
                 + " ORDER BY "+COLUMN_PROJECT_ID+", " + COLUMN_A_ID;
         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
@@ -4297,46 +4368,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-
-
-    public ArrayList<HashMap<String, String>> getZonesArray(String PropId) {
-
-
-        HashMap<String, String> locationItemMap;
-        ArrayList<HashMap<String, String>> locationArrayList;
-
-        locationArrayList = new ArrayList<HashMap<String, String>>();
-
-/*
-
-        SQLiteDatabase dtabase = this.getReadableDatabase();
-
-        String selectQuery = "SELECT "+COLUMN_LOCATION_ID+", "+COLUMN_LOCATION_DESCRIPTION
-
-                +" FROM "+TABLE_PROPERTY_LOCATIONS
-                +" WHERE "+COLUMN_PROPERTY_ID+" = "+PropId+" AND "+COLUMN_SUB_LOCATION_ID+" = 0 "
-                +" ORDER BY "+COLUMN_LOCATION_ID;
-        //add additional fields: status,  notes, print flag
-        Cursor cursor = dtabase.rawQuery(selectQuery, null);
-        int i = 1;
-        // Move to the first row
-        if (cursor.moveToFirst()) {
-            do {
-                locationItemMap = new HashMap<String, String>();
-
-                locationItemMap.put(MyConfig.TAG_LOCATION_ID, (String.valueOf(cursor.getInt(0))));
-                locationItemMap.put(MyConfig.TAG_LOCATION_DESC, cursor.getString(1));
-                locationArrayList.add(locationItemMap);
-            } while (cursor.moveToNext());
-        }
-
-        dtabase.close();
-
- */
-
-        return locationArrayList;
-
-    }
 
 
     public ArrayList<HashMap<String, String>> getInspectedItems_r(int projId, int iId) {

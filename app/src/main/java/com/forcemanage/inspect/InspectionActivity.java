@@ -580,9 +580,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         }
 
-        String status = dbHandler.getStatus(GlobalVariables.iId, projId);
-
-        //      dbHandler.updateStatus(projId, iID, "p", dayTime(1));
 
         Edited = false;
 

@@ -1103,7 +1103,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    loading = ProgressDialog.show(MainActivity.this, "connection with server", "please wait...", false, false);
+                    loading = ProgressDialog.show(MainActivity.this, "connecting .............", "please wait...", false, false);
                     progressBar1.setVisibility(View.VISIBLE);
                 }
 
@@ -1194,7 +1194,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
-                            loading = ProgressDialog.show(MainActivity.this, "connection with server", "please wait...", false, false);
+                            loading = ProgressDialog.show(MainActivity.this, "connecting ...........", "please wait...", false, false);
                         }
 
                         @Override
@@ -1357,8 +1357,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
             if(GlobalVariables.aId == 0) {
 
-                map_menu = new String[] {"Create a New Folder",
-                        "Add a Topic to the | " + branchTitle + " | Folder",
+                map_menu = new String[] {"Create a new standard Folder",
+                        "Create new folder from Template",
+                        "Save current [ " + branchTitle + " ] as Template",
                         "Cancel Request "};
 
                 builder.setItems(map_menu, new DialogInterface.OnClickListener() {
@@ -1408,7 +1409,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
                             case 1: {
 
-                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            /*    LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
                                 View promptView = layoutInflater.inflate(R.layout.add_location, null);
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                                 alertDialogBuilder.setView(promptView);
@@ -1442,6 +1443,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 AlertDialog alert = alertDialogBuilder.create();
                                 alert.show();
 
+                             */
+
                                 break;
 
                             }
@@ -1456,6 +1459,13 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                                 break;
                             }
 
+                            case 3: {
+
+
+
+
+                                break;
+                            }
 
                         }
 
@@ -3373,7 +3383,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "connection with server", "please wait...", false, false);
+                loading = ProgressDialog.show(MainActivity.this, "connecting ...............", "please wait...", false, false);
             }
 
             @Override
@@ -4109,7 +4119,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                     json.put(MyConfig.TAG_REPORT_IMAGE, ActionList.get(i).get(MyConfig.TAG_REPORT_IMAGE));
                     json.put(MyConfig.TAG_IMAGE1, ActionList.get(i).get(MyConfig.TAG_IMAGE1));
                     json.put(MyConfig.TAG_COM1, ActionList.get(i).get(MyConfig.TAG_COM1));
-                    json.put(MyConfig.TAG_ITEM_STATUS, ActionList.get(i).get(MyConfig.TAG_ITEM_STATUS));
+                    json.put(MyConfig.TAG_ITEM_STATUS, "p");
                     json.put(MyConfig.TAG_NOTES, ActionList.get(i).get(MyConfig.TAG_NOTES));
                     jsonArray.put(json);
                     j = j + 1;

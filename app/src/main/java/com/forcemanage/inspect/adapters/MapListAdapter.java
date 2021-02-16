@@ -1308,13 +1308,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                 }
 
                                                 case 3:{
-                                                    dbHandler.changePos(node.getprojId(),node.getaID(),1,node.getcatId(),"UP", 1);
+                                                    dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),1,node.getcatId(),"UP", 1);
                                                     loadMap(node.getprojId());
                                                     break;
 
                                                 }
                                                 case 4:{
-                                                    dbHandler.changePos(node.getprojId(),node.getaID(),1,node.getcatId(),"UP", 1);
+                                                    dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),1,node.getcatId(),"DWN", 1);
                                                     loadMap(node.getprojId());
                                                     break;
                                                 }
@@ -1423,14 +1423,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                         case 2: {
 
-                                            dbHandler.changePos(node.getprojId(),node.getaID(),2,node.getcatId(),"UP", 2);
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),2,node.getcatId(),"UP", 2);
                                             loadMap(node.getprojId());
                                             break;
 
                                         }
                                         case 3: {
 
-                                            dbHandler.changePos(node.getprojId(),node.getaID(),2,node.getcatId(),"DWN", 2);
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),2,node.getcatId(),"DWN", 2);
                                             loadMap(node.getprojId());
                                             break;
 
