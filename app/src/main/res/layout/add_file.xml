@@ -14,16 +14,9 @@
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold"
         android:text="File Topic Label Title : "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Title for File Doc(s):  "
-        android:id="@+id/textView" />
+
 
     <EditText
         android:id="@+id/locationtext"
@@ -34,7 +27,7 @@
 
     <Spinner
         android:id="@+id/spinner_file"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="normal"

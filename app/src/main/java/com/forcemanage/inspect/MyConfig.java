@@ -121,4 +121,7 @@ public class MyConfig {
 
     //TableName
     public static final String TAG_TABLE_NAME = "TableName";
+
+    //Template
+    public static final String TAG_TEMPLATE_NAME = "TemplateName";
 }

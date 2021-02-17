@@ -1442,7 +1442,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         selectQuery = "SELECT " + COLUMN_CAT_ID+ " , "+COLUMN_LEVEL+" , "+ COLUMN_PARENT+" , "+COLUMN_LABEL
                                 +" , "+COLUMN_CHILD+" , "+COLUMN_A_ID+" FROM "+  TABLE_MAP
-                                + " WHERE " + COLUMN_PROJECT_ID + " = "+ projId;
+                                + " WHERE " + COLUMN_PROJECT_ID + " = "+ projId+" AND "
+                                + COLUMN_CHILD+ " < 9 AND "+COLUMN_CHILD+" < 2";
 
         cursor = db.rawQuery(selectQuery, null);
 
@@ -1461,6 +1462,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
+
+        db.close();
     }
 
 
@@ -3087,6 +3090,126 @@ public class DBHandler extends SQLiteOpenHelper {
         database.close();
         return summaryItem;
 
+
+    }
+
+
+    public ArrayList<String> getClientTemplate(String client) {
+        // Open a database for reading and writing
+
+        ArrayList<String> templateItem = new ArrayList<>();
+
+        ArrayList<String> templateItemList;
+        templateItemList = new ArrayList<String>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+
+        String selectQuery = "SELECT " + COLUMN_TEMPLATE_NAME
+                +" FROM "+  TABLE_TEMPLATE
+                + " WHERE " + COLUMN_CLIENT_NAME + " = '"+ client+"'"
+                + " GROUP BY "+COLUMN_TEMPLATE_NAME;
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                templateItem = new ArrayList<>();
+                templateItem.add(cursor.getString(0));
+              } while (cursor.moveToNext());
+        }
+
+
+        // return inspection data for propertyid, Jobid, inspection id
+        database.close();
+        return templateItem;
+
+
+    }
+
+
+    public void  getTemplate(String client, String template_name, String folder_name, int projID) {
+        // Open a database for reading and writing
+
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+
+        String selectQuery = "SELECT " + COLUMN_CAT_ID+ " , "+COLUMN_LEVEL+" , "+ COLUMN_PARENT+" , "+COLUMN_LABEL
+                +" , "+COLUMN_CHILD+" , "+COLUMN_A_ID+" FROM "+  TABLE_TEMPLATE
+                + " WHERE " + COLUMN_CLIENT_NAME + " = '"+ client+"' AND "
+                + COLUMN_TEMPLATE_NAME+ " = '"+template_name+"'";
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_PROJECT_ID, projID);
+                values.put(COLUMN_CAT_ID, cursor.getInt(0));
+                values.put(COLUMN_LEVEL, cursor.getInt(1));
+                values.put(COLUMN_PARENT, cursor.getInt(2));
+                if(cursor.getInt(2) == -1)
+                    values.put(COLUMN_LABEL, folder_name);
+                    else
+                    values.put(COLUMN_LABEL, cursor.getString(3));
+                values.put(COLUMN_CHILD, cursor.getInt(4));
+                switch (cursor.getInt(4)){
+
+                    case 0:{
+                        values.put(COLUMN_INSPECTION_ID, 0 );
+
+                        break;
+                    }
+
+                    case 1:{
+                        values.put(COLUMN_INSPECTION_ID, 1 );
+                        ContentValues values_1 = new ContentValues();
+                        values_1.put(COLUMN_INSPECTION_ID, 1);
+                        values_1.put(COLUMN_PROJECT_ID, projID);
+                        values_1.put(COLUMN_A_ID, cursor.getInt(5));
+                        values_1.put(COLUMN_DATE_INSPECTED, dayTime(1));
+                        values_1.put(COLUMN_OVERVIEW, "");
+                        values_1.put(COLUMN_RELEVANT_INFO, "");
+                        values_1.put(COLUMN_SERVICE_LEVEL, "1");
+                        values_1.put(COLUMN_SERVICED_BY, "");
+                        values_1.put(COLUMN_REPORT_IMAGE, "1");
+                        values_1.put(COLUMN_IMG1, "");
+                        values_1.put(COLUMN_COM1, "");
+                        values_1.put(COLUMN_IMG2, "");
+                        values_1.put(COLUMN_COM2, "");
+                        values_1.put(COLUMN_IMG3, "");
+                        values_1.put(COLUMN_COM3, "");
+                        values_1.put(COLUMN_IMG4, "");
+                        values_1.put(COLUMN_COM4, "");
+                        values_1.put(COLUMN_IMG5, "");
+                        values_1.put(COLUMN_COM5, "");
+                        values_1.put(COLUMN_IMG6, "");
+                        values_1.put(COLUMN_COM6, "");
+                        values_1.put(COLUMN_IMG7, "");
+                        values_1.put(COLUMN_COM7, "");
+                        values_1.put(COLUMN_ITEM_STATUS, "m");
+                        values_1.put(COLUMN_NOTES, "");
+
+                        database.insert(TABLE_INSPECTION_ITEM, null, values_1);
+
+                        break;
+                    }
+
+                }
+
+                values.put(COLUMN_A_ID, cursor.getInt(5));
+                database.insert(TABLE_MAP, null, values);
+
+            } while (cursor.moveToNext());
+        }
+
+
+        // return inspection data for propertyid, Jobid, inspection id
+
+
+        database.close();
 
     }
 

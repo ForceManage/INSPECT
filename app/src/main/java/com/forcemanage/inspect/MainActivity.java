@@ -31,6 +31,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -41,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -182,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     private TextView client;
     public String focus = "null";
     private FloatingActionButton fab_add;
+    private  String template;
 
 
 
@@ -1090,7 +1094,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
 
 
-    private void requestProject(final String project_Name, final int template) {
+    private void requestProject(final String project_Name, final String template_name, final int template) {
 
 
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -1139,8 +1143,15 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                         case 1: {
                             dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Topic 1", "", 0);  //this is the ESM category
                      //       dbHandler.addLevel(projId, 2, 0, 2, 1, 0, "Item Title 2", 0);  //this is the ESM category
-                            dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Information Page");  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Document 1");  //this is the ESM category
                      //       dbHandler.addReportBranch(projId, 1, 2, 2, 2, "Topic data Page");  //this is the ESM category
+                            Toast.makeText(MainActivity.this, "Folder added ............... ", Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        case 2:{
+
+                            dbHandler.getTemplate(CLIENT,template_name, project_Name, projId);
+                            Toast.makeText(MainActivity.this, "Folder added ............... ", Toast.LENGTH_LONG).show();
                             break;
                         }
                     }
@@ -1345,295 +1356,217 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
         }
 
 
-        if(v==fab_add){
+        if(v==fab_add) {
 
             final ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-            DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
+            final DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
             final String branchTitle = dbHandler.getMapBranchTitle(projId, 0);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Folders / Topics ");
             // add a list
 
 
-            if(GlobalVariables.aId == 0) {
+            map_menu = new String[]{"Create new Folder",
+                    "Create a new folder using a saved Template",
+                    "Create Template using the [ " + branchTitle + " ] Folder",
+                    "Cancel Request "};
 
-                map_menu = new String[] {"Create a new standard Folder",
-                        "Create new folder from Template",
-                        "Save current [ " + branchTitle + " ] as Template",
-                        "Cancel Request "};
+            builder.setItems(map_menu, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
 
-                builder.setItems(map_menu, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
+                        case 0: {
 
-                            case 0: {
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Create a New Folder and File  ");//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Title of project");
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (USER_ID > 0) {
+                                                requestProject(branchText.getText().toString(), "", 1);
 
-                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Create a New Folder and File  ");//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
-                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                branchText.setHint("Title of project");
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                if (USER_ID > 0) {
-                                                    requestProject(branchText.getText().toString(),1);
-
-                                                    //    downloadprojects();
-                                                } else
-                                                    Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
+                                                //    downloadprojects();
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
 
 
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
-
-                                break;
-
-                            }
-
-                            case 1: {
-
-                            /*    LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Add a Topic to " + branchTitle+ " Folder");//Integer.parseInt(locationId)
-                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                // setup a dialog window
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                //      photoBranch = "";
-                                                if (projId != 0)
-                                                    addLevel(1, branchText.getText().toString());
-
-                                                else
-                                                    Toast.makeText(MainActivity.this, "Create or Select a Folder", Toast.LENGTH_SHORT).show();
-
-
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
-
-                             */
-
-                                break;
-
-                            }
-
-
-
-                            case 2: {
-
-
-
-
-                                break;
-                            }
-
-                            case 3: {
-
-
-
-
-                                break;
-                            }
-
-                        }
-
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-
-                dialog.show();
-
-               }
-            else {
-
-                map_menu = new String[]{"Create a New Folder",
-                        "Add a Topic to the | " + branchTitle + " | Folder",
-                        "Place Sub Topic to the [ " + GlobalVariables.name + " ] Topic",
-                        "Cancel Request "};
-
-                builder.setItems(map_menu, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-
-                            case 0: {
-
-                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Create a New Folder and Document  ");//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
-                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                branchText.setHint("Title of project");
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                if (USER_ID > 0) {
-                                                    requestProject(branchText.getText().toString(), 1);
-
-                                                    //    downloadprojects();
-                                                } else
-                                                    Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
-
-
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
-
-                                break;
-
-                            }
-
-                            case 1: {
-
-                                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertDialogBuilder.setView(promptView);
-                                final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
-                                final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                locationText.setText("Add a Topic to " + branchTitle + " Folder");//Integer.parseInt(locationId)
-                                final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                // setup a dialog window
-                                alertDialogBuilder.setCancelable(false)
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                //      photoBranch = "";
-                                                if (projId != 0)
-                                                    addLevel(1, branchText.getText().toString());
-
-                                                else
-                                                    Toast.makeText(MainActivity.this, "Create or Select a Folder", Toast.LENGTH_SHORT).show();
-
-
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
-                                // create an alert dialog
-                                AlertDialog alert = alertDialogBuilder.create();
-                                alert.show();
-
-                                break;
-
-                            }
-
-                            case 2: {
-
-                                DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-
-                                final String branchTitle = dbHandler.getMapBranchTitle(projId, GlobalVariables.catId); //get Branch head
-
-                                // setup the alert builder
-
-                                final MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
-
-                                if (node.getNodeLevel() > 0) {
-                                    LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                    alertDialogBuilder.setView(promptView);
-                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                    itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
-                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                    locationText.setText("Sub Topic to : " + node.getNodeName());//Integer.parseInt(locationId)
-                                    final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                    // setup a dialog window
-                                    alertDialogBuilder.setCancelable(false)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    if (node.getNodeName() == "NULL" || node.getNodeName() == null)
-                                                        Toast.makeText(MainActivity.this, "Select a Topic", Toast.LENGTH_SHORT).show();
-                                                    else
-                                                        addLevel((node.getNodeLevel() + 1), branchText.getText().toString());
-
+                                                    dialog.cancel();
                                                 }
-                                            })
-                                            .setNegativeButton("Cancel",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                            });
 
-                                    // create an alert dialog
-                                    AlertDialog alert = alertDialogBuilder.create();
-                                    alert.show();
-                                } else
-                                    Toast.makeText(MainActivity.this, "Select a Topic in the folder", Toast.LENGTH_SHORT).show();
-                                break;
-                            }
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
 
-
-                            case 3: {
-
-
-                                break;
-                            }
-
+                            break;
 
                         }
 
+                        case 1: {
+
+
+                            ArrayList<String> templateItems = dbHandler.getClientTemplate(CLIENT);
+
+
+                            final String[] template_names = new String[templateItems.size() + 1];
+                            template_names[0] = "Select Template from list";
+                            for (int i = 0; i < templateItems.size(); i++) {
+                                template_names[i + 1] = templateItems.get(i);
+                            }
+
+
+                            //     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner, pdf_files);
+
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_file, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Create new Folder");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Name of new folder");
+                            //  final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
+                            final Spinner spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, R.layout.my_spinner, template_names);
+                            spnrFiles.setAdapter(adapter);
+
+                            AdapterView.OnItemSelectedListener fileSelectedListener = new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> my_spinner, View container,
+                                                           int position, long id) {
+                                    if (position != 0)
+                                        //        file_name.setText(pdf_files[position]);
+                                        template = template_names[position];
+                                    //     dbHandler.updateMap(node.getprojId(), node.getaID(),pdf_files[position]);
+                                    //  Edited = true;
+                                    spnrFiles.setSelection(position);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> arg0) {
+                                    // TODO Auto-generated method stub
+                                }
+                            };
+
+
+                            spnrFiles.setOnItemSelectedListener(fileSelectedListener);
+
+
+                            // setup a dialog window
+                            alertDialogBuilder.setCancelable(true)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if(branchText.getText().toString() != null) {
+                                                if (template != null) {
+                                                    if (USER_ID > 0) {
+                                                        requestProject(branchText.getText().toString(), template, 2);
+                                                        loadMap(projId);
+                                                        //    downloadprojects();
+                                                    } else
+                                                        Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
+
+                                                } else
+                                                    Toast.makeText(MainActivity.this, "Select template", Toast.LENGTH_LONG).show();
+                                                //       int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
+                                                //       loadMap(node.getprojId());
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Folder name is blank", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+                            break;
+
+                        }
+
+
+                        case 2: {
+
+
+                            LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            alertDialogBuilder.setView(promptView);
+                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                            itemTitle.setText("Create a new template ");//Integer.parseInt(locationId)
+                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                            locationText.setText("Template Name : ");//Integer.parseInt(locationId)
+                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                            branchText.setHint("Template name");
+                            alertDialogBuilder.setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (USER_ID > 0) {
+
+                                                dbHandler.saveTemplate(CLIENT, branchText.getText().toString(), projId);
+                                                Toast.makeText(MainActivity.this, "Template Saved .......... ", Toast.LENGTH_LONG).show();
+
+                                                //    downloadprojects();
+                                            } else
+                                                Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                            // create an alert dialog
+                            AlertDialog alert = alertDialogBuilder.create();
+                            alert.show();
+
+
+                            break;
+                        }
+
+                        case 3: {
+
+
+                            break;
+                        }
+
                     }
-                });
 
-                AlertDialog dialog = builder.create();
+                }
+            });
 
-                dialog.show();
+            AlertDialog dialog = builder.create();
 
-            }
+            dialog.show();
+
+
         }
+
 
         if(v == Folders_img) {
 

@@ -1562,10 +1562,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                                             alertDialogBuilder.setView(promptView);
                                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                            itemTitle.setText("Topic Title: " + "branchTitle");//Integer.parseInt(locationId)
-                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                            locationText.setText("Sub-Title of: " + node.getNodeName());//Integer.parseInt(locationId)
+                                            itemTitle.setText("PDF file label");//Integer.parseInt(locationId)
                                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            branchText.setHint("Label Title ... file name, etc");
                                           //  final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
                                             final Spinner spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
 
@@ -1598,9 +1597,11 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             alertDialogBuilder.setCancelable(true)
                                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
-
-                                                            int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
-                                                            loadMap(node.getprojId());
+                                                            if(pdf_name != null) {
+                                                                int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
+                                                                loadMap(node.getprojId());
+                                                            }
+                                                            else Toast.makeText(getContext(), "Select a PDF file", Toast.LENGTH_SHORT).show();
 
                                                         }
                                                     })
