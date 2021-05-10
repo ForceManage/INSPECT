@@ -4,13 +4,10 @@ package com.forcemanage.inspect;
  * Created by cindyoakes on 9/23/16.
  */
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.fragment.app.ListFragment;
 
@@ -130,7 +127,7 @@ public class MapViewFragment extends ListFragment {
 
 
 
-            tabchangelistener listener = (tabchangelistener) getActivity();
+            OnDocChangeListener listener = (OnDocChangeListener) getActivity();
             listener.OnTabChanged(GlobalVariables.pos);
 
 

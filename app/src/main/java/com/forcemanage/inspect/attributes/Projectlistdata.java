@@ -10,8 +10,6 @@ public class Projectlistdata {
     private String suburb;
 
 
-    public Projectlistdata() {
-    }
 
     public Projectlistdata(String address, String projectId, String addressNo, String status, String type, String suburb) {
 

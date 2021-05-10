@@ -1940,7 +1940,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
-            if (cursor.getInt(0) != 0){cursor.close();}
+            if (cursor.getInt(0) != 0)
+            {cursor.close();}
                 else{
 
  /*               //check if there a subbranch exists
@@ -1967,7 +1968,8 @@ public class DBHandler extends SQLiteOpenHelper {
                             result = 0;
                         } else //inspection doesn't exist
                         {
-     */                       result = 1;
+     */
+                            result = 1;
 
                             int newId = addLevel(projId, aId, iId, CatID, Level, aId, Label, "", 1); //first aId is aId second aId passed as the parent
                                                                                                     //of the new branch
@@ -2544,10 +2546,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
         cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst())
-        //Reference tab exists
-        {
-            selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
+        if (cursor.moveToFirst())   //if Reference tab exists
+          {
+        /*    selectQuery = "SELECT  " + COLUMN_CHILD + " FROM "
                     + TABLE_MAP + " WHERE " + COLUMN_CHILD + " = 11 "
                     +" AND "+COLUMN_PROJECT_ID+" = "+projId;
 
@@ -2555,9 +2556,9 @@ public class DBHandler extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
 
             }
-            else{
-
-                selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
+            else
+            {
+           */    selectQuery = "SELECT MAX(M." + COLUMN_A_ID + ") FROM "
                         + TABLE_MAP + " M"
                         + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId;  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
@@ -2569,7 +2570,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 }
 
-                selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
+         /*       selectQuery = "SELECT M." + COLUMN_A_ID + " FROM "
                         + TABLE_MAP + " M"
                         + " WHERE M." + COLUMN_PROJECT_ID + " = " + projId+" AND "+COLUMN_CAT_ID+" = 510";  //+" AND E2."+COLUMN_LOCATION_ID+" = "+locationId;
 
@@ -2578,13 +2579,14 @@ public class DBHandler extends SQLiteOpenHelper {
                     certId = cursor.getInt(0);
 
                 }
-
+*/
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_CAT_ID, CatID);
-                values.put(COLUMN_PARENT, certId);
+               // values.put(COLUMN_PARENT, certId);
+              values.put(COLUMN_PARENT, aId);
                 values.put(COLUMN_PROJECT_ID, projId);
-                values.put(COLUMN_LABEL, "list");
-                values.put(COLUMN_LEVEL, 1);
+                values.put(COLUMN_LABEL, Label);
+                values.put(COLUMN_LEVEL, Level);
                 values.put(COLUMN_A_ID, maxAId);
                 values.put(COLUMN_INSPECTION_ID, 0);
                 values.put(COLUMN_CHILD,11);
@@ -2630,7 +2632,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 result = 1;
 
 
-            }
+          //  }
 
         }  //end if Reference does exist
         //if Reference tab doesn't exist
@@ -2862,7 +2864,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT I." + COLUMN_DATE_INSPECTED + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1
                 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4
                 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 + ", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", I." + COLUMN_IMG7 + ", I." + COLUMN_COM7
-                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY+ ", I." + COLUMN_REPORT_IMAGE
+                + ", I." + COLUMN_ITEM_STATUS + ", I." + COLUMN_NOTES + ", I." + COLUMN_SERVICED_BY+ ", I." + COLUMN_SERVICE_LEVEL+ ", I." + COLUMN_REPORT_IMAGE
                 + " FROM " + TABLE_INSPECTION_ITEM + " I "
                 + " WHERE I." + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_INSPECTION_ID + " = " + iId + " AND " + COLUMN_A_ID + " = " + aId;
 
@@ -2894,7 +2896,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 inspectionItem.put(MyConfig.TAG_ITEM_STATUS, cursor.getString(17));
                 inspectionItem.put(MyConfig.TAG_NOTES, cursor.getString(18));
                 inspectionItem.put(MyConfig.TAG_SERVICED_BY, cursor.getString(19));
-                inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(20));
+                inspectionItem.put(MyConfig.TAG_SERVICE_LEVEL, cursor.getString(20));
+                inspectionItem.put(MyConfig.TAG_REPORT_IMAGE, cursor.getString(21));
                 inspectionItemList.add(inspectionItem);
             } while (cursor.moveToNext());
         }

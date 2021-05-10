@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class SummaryFragment extends Fragment implements View.OnClickListener {
 
@@ -60,6 +62,12 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     private TextView HeadA;
     private TextView HeadB;
     private TextView HeadC;
+    private ImageView play1;
+    private ImageView play2;
+    private ImageView play3;
+    TextToSpeech t1;
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -114,6 +122,42 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
          HeadA = (TextView) view.findViewById(R.id.Head_A);
         HeadB = (TextView) view.findViewById(R.id.Head_B);
         HeadC = (TextView) view.findViewById(R.id.Head_C);
+        play1 = (ImageView) view.findViewById(R.id.title1_voice);
+        play2 = (ImageView) view.findViewById(R.id.title2_voice);
+        play3 = (ImageView) view.findViewById(R.id.title3_voice);
+
+        t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
+        play1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = ComA.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
+
+        play2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = ComB.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
+
+        play3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = ComC.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
 
 
         title.setText(branchTitle);

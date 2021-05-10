@@ -19,13 +19,9 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,24 +31,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.amazonaws.services.dynamodbv2.model.GlobalTableAlreadyExistsException;
 import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.fragments.ActionItemFragment;
 import com.forcemanage.inspect.fragments.BaseFragment;
-import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
 import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
-import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
-import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
-import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.fragments.SummaryFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,9 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements  tabchangelistener, View.OnClickListener {
+public class InspectionActivity extends AppCompatActivity implements OnDocChangeListener {
 
-    DBHandler ESMdb;
     private String projectId;
     private String inspectionId;
     private String seq = "cur";
@@ -180,7 +169,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalVariables.doc_mode = 1;
-        ESMdb = new DBHandler(this, null, null, 1);
         setContentView(R.layout.activity_inspection);
         cameraSnap = "0";
         CLIENT = getIntent().getExtras().getString("CLIENT");
@@ -188,9 +176,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
         projectId = getIntent().getExtras().getString("PROJECT_ID");
         inspectionId = getIntent().getExtras().getString("INSPECTION_ID");
         logTime = getIntent().getExtras().getBoolean("logTime");
-
-        tab_edit = (ImageView) findViewById(R.id.image_edit);
-        tab_edit.setOnClickListener(this);
 
         zone = 0;
         projId = Integer.parseInt(projectId);
@@ -210,8 +195,8 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         startTime = dayTime(4);
 
-        DBHandler dbHandlerA = new DBHandler(this, null, null, 1);
-        dbHandlerA.updateInspectionItemdate();
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        dbHandler.updateInspectionItemdate();
 
         //  ItemNumbers = (TextView) findViewById(R.id.RecordCount);
         //  ItemNumbers.setText("Property has "+Integer.toString(itemNumbers.size())+" items.");
@@ -219,7 +204,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
         init();
 
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandlerA.getMap(projId, iID, 15); //child < 15 includes all types
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iID, 15); //child < 15 includes all types
 
         listItems = new ArrayList<>();
         MapViewData listItem;
@@ -531,13 +516,6 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     }
 
-    @Override
-    public void OnTabChanged_(int treeNameIndex){
-
-
-    }
-
-
 
     private void getORArray(String Cat_Table, String subCat) {
 
@@ -777,7 +755,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
                        com5 = list.get(MyConfig.TAG_COM5);
                        Notes = list.get(MyConfig.TAG_NOTES);
                        String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
-                       String prntReport = list.get(MyConfig.TAG_REPORT_IMAGE);
+                       String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
 
                        Bundle bundle = new Bundle();
@@ -966,7 +944,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
                case 11: {
 
-                   if (Level > 1) { //only fires if there is a content tab
+                   if (Level > 0) { //only fires if there is a content tab
                        HashMap<String, String> list = dbHandler.getReferenceItem(projId, aID);
                        if(list.size() > 0) {
                            com1 = list.get(MyConfig.TAG_COM1);
@@ -1035,149 +1013,7 @@ public class InspectionActivity extends AppCompatActivity implements  tabchangel
 
     public void onClick(View v) {
 
-        if (v == tab_edit) {
-
-            final DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-            final String branchTitle = dbHandler.getMapBranchTitle(projId, catId); //get Branch head
-
-            // setup the alert builder
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(InspectionActivity.this);
-            builder.setTitle("Edit Document Outline ");
-            // add a list
-            String[] actions = {"Change Selected Text",
-                    "Move Selected Page location",
-                    "Delete Selected Page/title",
-                    ""};
-
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0: {
-
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("File TAB name: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Current TAB name : " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                            LocationText.setText(branchLabel);
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            editLocation(LocationText.getText().toString());
-
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-                            break;
-                        }
-
-                        case 1: {//
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("File Parent TAB: " + branchTitle);//Integer.parseInt(locationId)
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Move Current TAB : " + branchLabel);//Integer.parseInt(locationId)
-                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
-                            LocationText.setHint("Moveto TAB id ->");
-                            // setup a dialog window
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dbHandler.moveTAB(projId, aID, Integer.parseInt(LocationText.getText().toString()));
-
-                                            loadMap();
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-                            break;
-                        }
-
-
-                        case 2: {
-
-                            LayoutInflater layoutInflater = LayoutInflater.from(InspectionActivity.this);
-                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspectionActivity.this);
-                            alertDialogBuilder.setView(promptView);
-                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Warning - this will delete the Branch and ALL the associated data");//location.getText().toString());
-
-                            alertDialogBuilder.setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            deleteInspectionItem();
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBuilder.create();
-                            alert.show();
-
-
-                            break;
-
-
-                        } //end of case 0
-                    }
-
-                }
-            });
-            // create and show the alert dialog
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-
-        }
-
-
-
-
-
-
-     }
-
-
-
-
+      }
 
 
 

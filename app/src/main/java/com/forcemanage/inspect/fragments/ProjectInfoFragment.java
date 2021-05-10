@@ -3,18 +3,11 @@ package com.forcemanage.inspect.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,38 +16,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.DetailFragment;
-import com.forcemanage.inspect.DetailProjectFragment;
 import com.forcemanage.inspect.GlobalVariables;
-import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
-import com.forcemanage.inspect.MapViewLists;
-import com.forcemanage.inspect.OnVerseNameSelectionChangeListener;
-import com.forcemanage.inspect.ProjectDetailFragment;
 import com.forcemanage.inspect.ProjectViewFragment;
 import com.forcemanage.inspect.ProjectViewList;
-import com.forcemanage.inspect.adapters.ReportDocsAdapter;
-import com.forcemanage.inspect.attributes.MapViewData;
-import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.R;
-import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectData;
-import com.forcemanage.inspect.attributes.ProjectNode;
-import com.forcemanage.inspect.attributes.Projectlistdata;
-import com.forcemanage.inspect.tabchangelistener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.forcemanage.inspect.OnDocChangeListener;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,7 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProjectInfoFragment extends Fragment implements tabchangelistener, View.OnClickListener {
+public class ProjectInfoFragment extends Fragment implements OnDocChangeListener, View.OnClickListener {
 
     private MainActivity globalVariables;
 
@@ -549,12 +522,6 @@ public class ProjectInfoFragment extends Fragment implements tabchangelistener, 
 
     @Override
     public void OnTabChanged(int treeNameIndex) {
-
-    }
-
-
-    @Override
-    public void OnTabChanged_(int treeNameIndex) {
 
     }
 

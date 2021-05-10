@@ -9,7 +9,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,18 +26,12 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -52,8 +45,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -69,7 +60,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.attributes.A_Attributes;
 import com.forcemanage.inspect.attributes.ActionItemAttributes;
 import com.forcemanage.inspect.attributes.CertificateInspectionAttributes;
@@ -82,19 +72,13 @@ import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectAttributes;
 import com.forcemanage.inspect.attributes.ProjectData;
 import com.forcemanage.inspect.attributes.ProjectNode;
-import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
-import com.forcemanage.inspect.fragments.BaseFragment;
 import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
-import com.forcemanage.inspect.fragments.BaseInfoFragment;
-import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
-import com.forcemanage.inspect.fragments.ReportFragment;
-import com.forcemanage.inspect.InspectionActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -108,7 +92,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOError;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -117,7 +100,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -126,7 +108,7 @@ import static com.forcemanage.inspect.InspectionActivity.copy;
 import static java.lang.Integer.parseInt;
 
 
-public class MainActivity extends AppCompatActivity implements OnVerseNameSelectionChangeListener, tabchangelistener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnProjectSelectionChangeListener, OnDocChangeListener, View.OnClickListener {
 
     public static final int REQUEST_CODE = 20;
 
@@ -680,7 +662,7 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
     }
 
 
-
+/*
     @Override
     public void OnTabChanged_(int Index){
 
@@ -824,6 +806,8 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     }
 
+
+ */
 
 
     @Override
@@ -3743,7 +3727,9 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
 
     //Upload tablet inspection data to the server
     private String inspToServer() throws IOError {
+
         String res = "initiated";
+
         HashMap<String, String> inspMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
 
@@ -4417,10 +4403,10 @@ public class MainActivity extends AppCompatActivity implements OnVerseNameSelect
                 RequestHandler_ rh = new RequestHandler_();
                         if(CLIENT.substring(0,2).equals("no")){
 
-                        message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, "iapp-NOCLIENT"+".php?projId="+ projectId+"&iId="+ inspectionId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);}
+                        message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, "iapp-NOCLIENT"+".php?projId="+ projectId+"&iId="+ GlobalVariables.iId+"&EMAIL="+email+"&USERID="+USER_ID+"&TYPE="+type);}
                                else{
 
-                     message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, CLIENT + ".php?projId=" + projectId + "&iId=" + inspectionId + "&EMAIL=" + email + "&USERID=" + USER_ID + "&TYPE=" + type);
+                     message = rh.sendRequestParam(MyConfig.URL_EMAIL_REPORT, CLIENT + ".php?projId=" + projectId + "&iId=" + GlobalVariables.iId + "&EMAIL=" + email + "&USERID=" + USER_ID + "&TYPE=" + type);
                 }
                 return message;
             }

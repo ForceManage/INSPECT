@@ -1,16 +1,12 @@
 package com.forcemanage.inspect.fragments;
 
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,34 +14,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.forcemanage.inspect.BuildConfig;
-import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.DetailProjectFragment;
-import com.forcemanage.inspect.GlobalVariables;
-import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
-import com.forcemanage.inspect.MyConfig;
-import com.forcemanage.inspect.ProjectDetailFragment;
-import com.forcemanage.inspect.ProjectViewFragment;
-import com.forcemanage.inspect.ProjectViewList;
 import com.forcemanage.inspect.R;
-import com.forcemanage.inspect.attributes.ProjectData;
-import com.forcemanage.inspect.attributes.ProjectNode;
-import com.forcemanage.inspect.tabchangelistener;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class ProjectInfoFolderFragment extends Fragment implements  View.OnClickListener {
 

@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.DetailFragment;
 import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
@@ -35,14 +33,11 @@ import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.R;
-import com.forcemanage.inspect.attributes.ProjectNode;
-import com.forcemanage.inspect.tabchangelistener;
+import com.forcemanage.inspect.OnDocChangeListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
-
 
 
 public class MapListAdapter extends ArrayAdapter<MapViewNode>
@@ -272,7 +267,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                 if (GlobalVariables.doc_mode == 0) { //Folder template project setup
 
-                    if(node.getcatId() == 0){ // if Folder label
+                    if(node.getcatId() == 0){ // if the Folder label is selected
 
                         String[] actions = {"Edit Folder Title",
                                 "Add Topic Label ",
@@ -403,7 +398,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
 
-                    else { // Still in project mode but if not folder
+                    else { // Still in project mode but the subfolder is selected
 
                         String[] actions = {"Edit Topic Label",
                                 "Add Topic Sub-Label ",
@@ -524,16 +519,19 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         dialog.show();
                     } // else if not folder
 
-                }  else //In doc mode
+                }  else //if not in folder mode then must be In doc fragment
 
                     {
 
                     final DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
                     switch (node.getbranchCat()) {
 
-                        case 0: { //first order tabs id doc
 
-                            if (node.getNodeLevel() == 0) { // if folder tab
+
+                        case 0: { //first order tabs id doc. The location tabs, not the discusssion, reference tabs, etc
+
+                            if (node.getNodeLevel() == 0) { // if focus is the folder tab fragment
 
 
                                 String[] actions = {
@@ -643,7 +641,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                 break;
 
 
-                            } else { //if doc is true
+                            } else //focus other than the folder tab, and if doc is true
+
+                                {
 
 
                                   if(node.getcatId() == 505) { //if label is pdf
@@ -824,10 +824,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                       AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                                                       alertDialogBuilder.setView(promptView);
                                                       final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                      itemTitle.setText("Topic Title: " + "branchTitle");//Integer.parseInt(locationId)
+                                                      itemTitle.setText("Attach PDF file");//Integer.parseInt(locationId)
                                                       final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                      locationText.setText("Sub-Title of: " + node.getNodeName());//Integer.parseInt(locationId)
                                                       final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                      branchText.setHint("Label for pdf file");
                                                   //    final TextView file_name = (TextView) promptView.findViewById(R.id.file_name);
                                                       final Spinner spnrFiles = (Spinner) promptView.findViewById(R.id.spinner_file);
 
@@ -861,8 +861,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                                   public void onClick(DialogInterface dialog, int id) {
 
-                                                                      int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
-                                                                      loadMap(node.getprojId());
+                                                                            int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
+                                                                            loadMap(node.getprojId());
+
 
                                                                   }
                                                               })
@@ -904,7 +905,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
 
-                                  } // end if cat = 505
+                                  } // end if the PDF tab cat = 505
 
                                   else {
 
@@ -1457,10 +1458,210 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         } // end case branchcat = 2 - supplementary page cat
 
 
+                        case 11:{ //if focus is the reference tab
+
+
+                            String[] actions = {"Edit Topic Label",
+                                    "Add Information subLabel under the [ " + node.getNodeName() + " ] tab",
+                                    "Delete label",
+                                    "Cancel "};
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
+                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    switch (which) {
+
+                                        case 0: { //Edit topic label goes into sub menu
+
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Edit Document Outline ");
+                                            // add a list
+                                            String[] actions = {"Change Label Text",
+                                                    "Delete tab",
+                                                    "Cancel"};
+
+                                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog_sub, int which) {
+                                                    switch (which) {
+                                                        case 0: {
+
+
+                                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                            alertDialogBuilder.setView(promptView);
+                                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                            itemTitle.setText("Label: " + branchTitle);//Integer.parseInt(locationId)
+                                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                            locationText.setText("Label name : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                            LocationText.setText(node.getNodeName());
+                                                            // setup a dialog window
+                                                            alertDialogBuilder.setCancelable(false)
+                                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+
+
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("Cancel",
+                                                                            new DialogInterface.OnClickListener() {
+                                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                                    dialog.cancel();
+                                                                                }
+                                                                            });
+
+                                                            // create an alert dialog
+                                                            AlertDialog alert = alertDialogBuilder.create();
+                                                            alert.show();
+                                                            break;
+                                                        }
+
+
+                                                        case 1:{
+                                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                            alertDialogBuilder.setView(promptView);
+                                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                            locationText.setText("Warning - this will delete the label and ALL the associated data");//location.getText().toString());
+
+                                                            alertDialogBuilder.setCancelable(false)
+                                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            deleteInspectionItem(node.getprojId(), node.getaID());
+
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("Cancel",
+                                                                            new DialogInterface.OnClickListener() {
+                                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                                    dialog.cancel();
+                                                                                }
+                                                                            });
+
+                                                            // create an alert dialog
+                                                            AlertDialog alert = alertDialogBuilder.create();
+                                                            alert.show();
+
+                                                            break;
+                                                        }
+                                                        case 2: {
+
+                                                            break;
+                                                        }
+
+                                                    }
+                                                }
+                                            });
+
+                                            AlertDialog dialog_sub = builder.create();
+
+
+                                            dialog_sub.show();
+
+                                            break;
+                                        }
+
+
+
+
+                                        case 1: { //add page to label
+
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Topic Title: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("File page in the [ " + node.getNodeName() + " ] folder label");//Integer.parseInt(locationId)
+                                            final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            // setup a dialog window
+
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            //        InspectionVariables.photoBranch = "";
+                                                            int result = dbHandler.addReference(node.getprojId(), GlobalVariables.iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
+                                                            loadMap(node.getprojId());
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+                                            break;
+
+                                        }
+
+                                        case 2: { //delete
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Warning - this will delete the label and ALL the associated data");//location.getText().toString());
+
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            deleteInspectionItem(node.getprojId(), node.getaID());
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+                                            break;
+                                        }
+
+                                        case 3: {
+
+
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+
+
+                            dialog.show();
+
+                            break;
+
+                        }
+
+
                         case 12: { // if pdf label
 
                             String[] actions = {"Edit Label",
-                                    "Add sublabel ",
+                                    "Add PDF sublabel ",
                                     "Place PDF file in ["+node.getNodeName()+"] label",
                                     "Delete label",
                                     "Cancel "};
@@ -1849,7 +2050,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         MapViewLists.LoadInitialData();
         MapViewLists.LoadDisplayList();
 
-        tabchangelistener listener = (tabchangelistener) getContext();
+        OnDocChangeListener listener = (OnDocChangeListener) getContext();
         listener.OnTabChanged(0);
 
 

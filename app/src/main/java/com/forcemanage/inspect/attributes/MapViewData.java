@@ -16,7 +16,6 @@ public class MapViewData
     private String image1;
     private String notes;
 
-    public MapViewData() {}
 
     public MapViewData(int projId, int Level, int CatID, int branchCat, String Label, int aID, int iID, int Parent, String Image1, String Notes)
     {

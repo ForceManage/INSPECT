@@ -90,6 +90,10 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:orientation="vertical"
            >
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/Head_A"
             android:layout_width="wrap_content"
@@ -101,6 +105,16 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:textColor="@android:color/black"
             android:textStyle="normal|bold" />
 
+                <ImageView
+                    android:id="@+id/title1_voice"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    app:srcCompat="@android:drawable/ic_media_play" />
+
+            </FrameLayout>
 
         <EditText
             android:id="@+id/comA"
@@ -120,6 +134,11 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
                 android:orientation="vertical"
                 >
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
                 <TextView
                     android:id="@+id/Head_B"
                     android:layout_width="wrap_content"
@@ -130,7 +149,16 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
                     android:textColor="@android:color/black"
                     android:textSize="20dp"
                     android:textStyle="normal|bold" />
+               <ImageView
+                    android:id="@+id/title2_voice"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    app:srcCompat="@android:drawable/ic_media_play" />
 
+            </FrameLayout>
 
                 <EditText
                     android:id="@+id/comB"
@@ -144,6 +172,10 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
 
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/Head_C"
             android:layout_width="wrap_content"
@@ -155,6 +187,17 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
             android:textColor="@android:color/black"
             android:textStyle="normal|bold" />
 
+
+               <ImageView
+                    android:id="@+id/title3_voice"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    app:srcCompat="@android:drawable/ic_media_play" />
+
+            </FrameLayout>
 
         <EditText
             android:id="@+id/comC"

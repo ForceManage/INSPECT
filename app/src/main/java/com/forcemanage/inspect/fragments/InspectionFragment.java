@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.speech.tts.TextToSpeech;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -121,6 +123,9 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private boolean logTime;
     private String Prnt;
     private ImageView addPage;
+    private ImageView play1;
+    private ImageView play2;
+    TextToSpeech t1;
 
 
     @Override
@@ -191,7 +196,17 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
         Log.d(TAG, "oncreateview: started");
 
+        t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
 
+        play1 = (ImageView) view.findViewById(R.id.title1_voice);
+        play2 = (ImageView) view.findViewById(R.id.title2_voice);
 
         projId = Integer.parseInt(projectId);
         iId= Integer.parseInt(inspectionId);
@@ -298,7 +313,21 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com5Text.setText(com5);
 
 
+        play1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = Overview.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
 
+        play2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = RelevantInfo.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
 
 
         cam1.setOnClickListener(new View.OnClickListener() {
@@ -929,7 +958,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
            DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
                dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
-                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", Prnt,
+                       ServiceCont.getText().toString(), RelevantInfo.getText().toString(), Prnt, "1",
                        com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                        ,  com4Text.getText().toString(),
                        com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());
@@ -947,7 +976,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
             dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
-                    ServiceCont.getText().toString(), RelevantInfo.getText().toString(), "1", Prnt,
+                    ServiceCont.getText().toString(), RelevantInfo.getText().toString(),Prnt ,"1" ,
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
                     com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());

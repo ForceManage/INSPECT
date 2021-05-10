@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class InspectionInfoFolderFragment extends Fragment implements View.OnClickListener{
 
@@ -63,6 +66,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
     private String endTime;
     private String inspPhoto;
     private ImageView printer;
+    TextToSpeech t1;
 
 
 
@@ -102,9 +106,19 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
 
 
 
+         t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
+
 
         Note2 = (EditText) view.findViewById(R.id.preamble);
-        Label = (TextView) view.findViewById(R.id.Text1);
+        Label = (TextView) view.findViewById(R.id.Brieftitle);
 
         mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
         photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
@@ -116,6 +130,17 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
 
             }
         });
+
+        Label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toSpeak = Note2.getText().toString();
+                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
+            }
+        });
+
+
 
         info_file = (ImageView) view.findViewById(R.id.imageView_info);
         info_file.setOnClickListener(new View.OnClickListener() {
@@ -243,7 +268,13 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
     }
 
 
-
+    public void onPause(){
+        if(t1 !=null){
+            t1.stop();
+            t1.shutdown();
+        }
+        super.onPause();
+    }
 
      public void saveData(){
 

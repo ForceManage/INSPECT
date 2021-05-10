@@ -10,11 +10,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import androidx.fragment.app.ListFragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
-import com.forcemanage.inspect.adapters.MapListAdapter;
 import com.forcemanage.inspect.adapters.ProjectListAdapter;
-import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectNode;
 
 
@@ -68,7 +65,7 @@ public class ProjectViewFragment extends ListFragment {
         l.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         l.setItemChecked(GlobalVariables.doc_pos,true);
 
-        OnVerseNameSelectionChangeListener listener = (OnVerseNameSelectionChangeListener) getActivity();
+        OnProjectSelectionChangeListener listener = (OnProjectSelectionChangeListener) getActivity();
         listener.OnProjectChanged(position);
 
         v.post(new Runnable() {

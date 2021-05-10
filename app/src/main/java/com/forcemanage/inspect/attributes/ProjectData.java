@@ -16,8 +16,6 @@ public class ProjectData
     private String image1;
     private String notes;
 
-    public ProjectData() {}
-
     public ProjectData(int projId, int Level, int CatID, int branchCat, String Label, int aID, int iID, int Parent, String Image1, String Notes)
     {
         this.projId = projId;
