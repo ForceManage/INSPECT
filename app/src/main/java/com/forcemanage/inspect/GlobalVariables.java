@@ -7,9 +7,6 @@ import com.forcemanage.inspect.attributes.ProjectNode;
 
 import java.util.ArrayList;
 
-/**
- * Created by cindyoakes on 9/23/16.
- */
 public class GlobalVariables
 {
     public static String TRUE = "true";
@@ -33,6 +30,7 @@ public class GlobalVariables
     public static String name;
     public static int User_id;
     public static int folderIndex;
+    public static int Hres = 0;
 
 
     public static Boolean modified = false;

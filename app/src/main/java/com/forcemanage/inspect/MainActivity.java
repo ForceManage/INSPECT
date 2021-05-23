@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private ImageView imgCloud;
     private ImageView imgLogin;
     public File photo;
+    public File photo_HR;
     private String dirName;
     public String inspectionId;
     public String projectId = "null";
@@ -1240,8 +1241,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             builder.setTitle("Settings");
             // add a list
             String[] actions = {"Change User Code",
-                    " ",
-                    " "};
+                    "Save additional High Resolution photos ",
+                    "Cancel "};
 
             builder.setItems(actions, new DialogInterface.OnClickListener() {
                 @Override
@@ -2105,11 +2106,12 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         photo = null;
         try {
             photo = createPhotoFile();
+            photo_HR = createPhotoFileHR();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo));
+        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo_HR));
         startActivityForResult(camera_intent, ACTIVITY_START_CAMERA_APP);
 
     }
@@ -2144,6 +2146,11 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 }
 
             try {
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
+
+                copy(photo_HR, photo) ;
+
+
                 rotateImage(resizePhoto());
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
@@ -2397,13 +2404,29 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         // Toast.makeText(this, "string root name = "+root ,Toast.LENGTH_SHORT).show();
         if (!storageDirectory.exists()){storageDirectory.mkdirs();}
         File image = File.createTempFile(fname, ".jpg", storageDirectory);
-        // codeBox.setText(image.getName())
 
-        //set photo (file) to image
         photo = image;
 
         mImageFileLocation = image.getAbsolutePath();
         return image;
+    }
+
+    File createPhotoFileHR()throws IOException {
+
+        fname = dayTime(3);
+        dirName = dayTime(1);
+        fname = projectId+"_"+fname;
+        String root = Environment.getExternalStorageDirectory().toString();
+        File storageDirectory = new File(root + "/A2D_"+dirName+"_HR/");
+        if (!storageDirectory.exists()){storageDirectory.mkdirs();}
+        File image_HR = File.createTempFile(fname, "HR.jpg", storageDirectory);
+        // codeBox.setText(image.getName())
+
+        //set photo (file) to image
+        photo_HR = image_HR;
+
+        mImageFileLocation = image_HR.getAbsolutePath();
+        return image_HR;
     }
 
     private Bitmap resizeImage(File image) throws IOException {

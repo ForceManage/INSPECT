@@ -124,6 +124,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String TABLE_USER_LIST = "UserList";
     public static final String TABLE_LOG_TIME = "LogTime";
 
+
     public static final String COLUMN_NUM = "Num";
     public static final String COLUMN_SUB_CAT = "Subcat";
     public static final String COLUMN_TYPE = "Type";
@@ -141,7 +142,8 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String TABLE_TEMPLATE = "Template";
     public static final String COLUMN_TEMPLATE_NAME = "TemplateName";
 
-
+    public static final String TABLE_PREFERENCE = "Preference";
+    public static final String COLUMN_HRES = "HighRes";
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -319,6 +321,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_TEMPLATE_TABLE);
 
+        String CREATE_PREFERENCE_TABLE = "CREATE TABLE " +
+                TABLE_PREFERENCE + "("
+                + COLUMN_PROJECT_ID + " INTEGER PRIMARY KEY,"
+                + COLUMN_INSPECTION_ID + " INTEGER,"
+                + COLUMN_HRES + " INTEGER)";
+
+        db.execSQL(CREATE_PREFERENCE_TABLE);
+
 
         String CREATE_A_OR_TABLE = "CREATE TABLE " +
                 TABLE_A_OR + "("
@@ -394,6 +404,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOG_TIME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEMPLATE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PREFERENCE);
         onCreate(db);
     }
 
@@ -414,6 +425,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_LOG_TIME, null, null);
         db.delete(TABLE_NAME, null, null);
         db.delete(TABLE_TEMPLATE, null, null);
+        db.delete(TABLE_PREFERENCE, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -1431,6 +1443,28 @@ public class DBHandler extends SQLiteOpenHelper {
             db.close();
 
             return  diffHours;
+
+    }
+
+
+    public int HRes(Integer projId, Integer iId) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        int Hres = 0;
+
+        selectQuery = "SELECT " + COLUMN_HRES + " FROM "
+                + TABLE_PREFERENCE
+                + " WHERE "+ COLUMN_PROJECT_ID + " = "+ projId+ " AND " + COLUMN_INSPECTION_ID + " = "+ iId;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            Hres = cursor.getInt(0);
+        }
+
+        return Hres;
 
     }
 
@@ -4075,7 +4109,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
                 + " FROM " + TABLE_MAP + " M"
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
-                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
+                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID+", M." + COLUMN_PARENT+ ", M."+ COLUMN_CHILD+ " DESC" ;
         //add additional fields: status,  notes, print flag
 
 

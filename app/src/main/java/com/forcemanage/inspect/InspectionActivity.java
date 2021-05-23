@@ -101,6 +101,7 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
     public int photoframe;
     private File photo;
+    private File photo_HR;
     public String com1 = "";
     public String com2 = "";
     public String com3 = "";
@@ -1141,11 +1142,12 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
         photo = null;
         try {
             photo = createPhotoFile();
+            photo_HR = createPhotoFileHR();
         } catch (IOException  e) {
             e.printStackTrace();
         }
 
-        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID + ".provider", photo));
+        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(InspectionActivity.this,BuildConfig.APPLICATION_ID + ".provider", photo_HR));
         startActivityForResult(camera_intent, ACTIVITY_START_CAMERA_APP);
 
     }
@@ -1405,6 +1407,8 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
             try {
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
+                copy(photo_HR, photo) ;
                 rotateImage(resizePhoto());
                 cameraSnap = "1";
                 //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
@@ -1591,6 +1595,24 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
         mImageFileLocation = image.getAbsolutePath();
         return image;
+    }
+
+    File createPhotoFileHR()throws IOException {
+
+        fname = dayTime(3);
+        dirName = dayTime(1);
+        fname = projectId+"_"+fname;
+        String root = Environment.getExternalStorageDirectory().toString();
+        File storageDirectory = new File(root + "/A2D_"+dirName+"_HR/");
+        if (!storageDirectory.exists()){storageDirectory.mkdirs();}
+        File image_HR = File.createTempFile(fname, "HR.jpg", storageDirectory);
+        // codeBox.setText(image.getName())
+
+        //set photo (file) to image
+        photo_HR = image_HR;
+
+        mImageFileLocation = image_HR.getAbsolutePath();
+        return image_HR;
     }
 
     private Bitmap resizeImage(File image) throws IOException {

@@ -124,4 +124,8 @@ public class MyConfig {
 
     //Template
     public static final String TAG_TEMPLATE_NAME = "TemplateName";
+
+    //Preferences
+    public static final String TAG_PREFERENCE = "Preference";
+    public static final String TAG_HIGHRES = "Highres";
 }
