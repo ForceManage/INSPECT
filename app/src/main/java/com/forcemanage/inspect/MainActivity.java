@@ -1092,7 +1092,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    loading = ProgressDialog.show(MainActivity.this, "connecting .............", "please wait...", false, false);
+                    loading = ProgressDialog.show(MainActivity.this, "Connecting to Network .............", "please wait...", false, false);
                     progressBar1.setVisibility(View.VISIBLE);
                 }
 
@@ -1126,9 +1126,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     switch (template){
 
                         case 1: {
-                            dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Topic 1", "", 0);  //this is the ESM category
+                            dbHandler.addLevel(projId, 1, 0, 1, 1, 0, "Heading 1", "", 0);  //this is the ESM category
                      //       dbHandler.addLevel(projId, 2, 0, 2, 1, 0, "Item Title 2", 0);  //this is the ESM category
-                            dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Document 1");  //this is the ESM category
+                            dbHandler.addReportBranch(projId, 1, 1, 2, 1, "Recorded Information Title");  //this is the ESM category
                      //       dbHandler.addReportBranch(projId, 1, 2, 2, 2, "Topic data Page");  //this is the ESM category
                             Toast.makeText(MainActivity.this, "Folder added ............... ", Toast.LENGTH_LONG).show();
                             break;
@@ -1368,9 +1368,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                             alertDialogBuilder.setView(promptView);
                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                            itemTitle.setText("Create a New Folder and File  ");//Integer.parseInt(locationId)
+                            itemTitle.setText("Create a New Folder and Document File  ");//Integer.parseInt(locationId)
                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                            locationText.setText("Folder Name : ");//Integer.parseInt(locationId)
+                            locationText.setText("Folder Title : ");//Integer.parseInt(locationId)
                             final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                             branchText.setHint("Title of project");
                             alertDialogBuilder.setCancelable(false)

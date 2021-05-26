@@ -425,7 +425,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_LOG_TIME, null, null);
         db.delete(TABLE_NAME, null, null);
         db.delete(TABLE_TEMPLATE, null, null);
-        db.delete(TABLE_PREFERENCE, null, null);
+//        db.delete(TABLE_PREFERENCE, null, null);
         db.close();
     }
     // public boolean insertLocation(int propertyId, int locationId, int subLocationId,  String locationDescription){
@@ -1658,7 +1658,7 @@ public class DBHandler extends SQLiteOpenHelper {
         valuesi2.put(COLUMN_INSPECTOR, user_id );
         valuesi2.put(COLUMN_DATE_TIME_START, dayTime(4));
         valuesi2.put(COLUMN_DATE_TIME_FINISH, dayTime(4));
-        valuesi2.put(COLUMN_LABEL, "Document 1");
+        valuesi2.put(COLUMN_LABEL, "Document Title");
         valuesi2.put(COLUMN_LEVEL, "1");
         valuesi2.put(COLUMN_PARENT,  pID );
         valuesi2.put(COLUMN_P_ID, Integer.valueOf(pID)+1);
@@ -1743,10 +1743,39 @@ public class DBHandler extends SQLiteOpenHelper {
             else return;
         }
             ContentValues values = new ContentValues();
-
-            switch (branchcat ) {
+             switch (branchcat ) {
 
                 case 1:{
+
+                    selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                            + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId;
+
+                    cursor = db.rawQuery(selectQuery, null);
+                    if (cursor.getCount() > 0) {
+                        values.put(COLUMN_REPORT_IMAGE, aSwap);
+                        values.put(COLUMN_ITEM_STATUS, "m");
+                        db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId, null);
+                        values.clear();
+                        values.put(COLUMN_PARENT, aSwap);
+                        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId, null);
+                        values.clear();
+                    }
+                    else {
+
+                        selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                                + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap;
+
+                        cursor = db.rawQuery(selectQuery, null);
+                        if (cursor.getCount() > 0) {
+                            values.put(COLUMN_REPORT_IMAGE, aId);
+                            values.put(COLUMN_ITEM_STATUS, "m");
+                            db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap, null);
+                            values.clear();
+                            values.put(COLUMN_PARENT, aId);
+                            db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aSwap, null);
+                            values.clear();
+                        }
+                    }
 
                     values.put(COLUMN_A_ID, -(aSwap));
                     values.put(COLUMN_ITEM_STATUS, "m");
@@ -1757,7 +1786,12 @@ public class DBHandler extends SQLiteOpenHelper {
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
 
+
+
+
+
                     values.put(COLUMN_A_ID, aSwap);
+                    values.put(COLUMN_ITEM_STATUS, "m");
                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
                     values.put(COLUMN_A_ID, aId);
