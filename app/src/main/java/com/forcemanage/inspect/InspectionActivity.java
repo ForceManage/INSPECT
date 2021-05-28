@@ -40,6 +40,7 @@ import com.forcemanage.inspect.fragments.BaseFragment;
 import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
+import com.forcemanage.inspect.fragments.PhotoEditFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
 import com.forcemanage.inspect.fragments.SummaryFragment;
@@ -123,13 +124,9 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
     private EditText Note;
     private TextView ItemNumbers;
     private TextView docTitle;
-    //  private String location;
+    private String FPhoto;
     //  private TextView SubLocation;
-    private String ESMtxt;
-    private String itemlocation;
-    private String[] locationsArr;
-    private String[] sublocationsArr;
-    private String[] iTitle;
+
     private String editing = "NO";
     private Integer catId;
     private String[] observations;
@@ -324,7 +321,7 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
         return daytime;
     }
 
-    private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
+    public void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
         transaction.replace(R.id.mainfragment_container, fragment, name);
@@ -333,6 +330,18 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
         }
         transaction.commit();
     }
+
+    private void doPhotoFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragDisplay = name;
+        transaction.replace(R.id.photo_container, fragment, name);
+        if (addToBackStack) {
+            transaction.addToBackStack(name);
+        }
+        transaction.commit();
+    }
+
+
 
 
     public void loadMap() {
@@ -558,7 +567,6 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
             dbHandler.updateActionItemPhoto(projectId, inspectionId, aID,  photo1);
 
         }
-
 
         Edited = false;
 
@@ -1095,6 +1103,43 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
     }
 
+
+    public void photo_load(String fPhoto){
+        Bundle bundle = new Bundle();
+        bundle.putInt("projectID", projId);
+        bundle.putInt("inspectionID", iID);
+        bundle.putString("fPhoto", fPhoto);
+        bundle.putInt("aID", aID);
+
+        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+        HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, aID);
+        if (list.size() > 0) {
+            photos[0] = list.get(MyConfig.TAG_IMAGE1);
+            photos[1] = list.get(MyConfig.TAG_IMAGE2);
+            photos[2] = list.get(MyConfig.TAG_IMAGE3);
+            photos[3] = list.get(MyConfig.TAG_IMAGE4);
+            photos[4] = list.get(MyConfig.TAG_IMAGE5);
+
+            //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+            String tag = list.get(MyConfig.TAG_IMAGE1);
+
+            photo1 = photos[0];
+            photo2 = photos[1];
+            photo3 = photos[2];
+            photo4 = photos[3];
+            photo5 = photos[4];
+            photo6 = photos[5];
+            photo7 = photos[6];
+        }
+
+        PhotoEditFragment photoEditFragment = new PhotoEditFragment();
+        doFragmentTransaction(photoEditFragment, "PhotoEditFragment",true,"");
+        photoEditFragment.setArguments(bundle);
+        FPhoto = fPhoto;
+    }
+
+
     private void reportMailer(final int type, final String email) {
 
         class Send_Report extends AsyncTask<Void, Void, String> {
@@ -1316,7 +1361,20 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
             }
 
+            if (FragDisplay == "PhotoEditFragment") {
 
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("PhotoEditFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.photo_insert);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+
+                }
+
+            }
 
 
             fname = dayTime(3);

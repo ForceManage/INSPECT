@@ -16,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -83,6 +84,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView del_img3;
     private ImageView del_img4;
     private ImageView del_img5;
+    private ImageView Photo_insert;
+    private ImageView Photo_insert2;
+    private ImageView Photo_insert3;
+    private ImageView Photo_insert4;
+    private ImageView Photo_insert5;
+    private ImageView Photo_insert6;
     private Spinner sprTitle;
     private Spinner sprbuildcat;
     private Spinner sprasset;
@@ -125,6 +132,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView addPage;
     private ImageView play1;
     private ImageView play2;
+
     TextToSpeech t1;
 
 
@@ -266,7 +274,20 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         del_img5 = (ImageView) view.findViewById(R.id.imageView5_del);
         del_img5.setOnClickListener(this);
 
+        Photo_insert = (ImageView) view.findViewById(R.id.insert_file);
+        Photo_insert.setOnClickListener(this);
 
+        Photo_insert2 = (ImageView) view.findViewById(R.id.insert_file2);
+        Photo_insert2.setOnClickListener(this);
+
+        Photo_insert3 = (ImageView) view.findViewById(R.id.insert_file3);
+        Photo_insert3.setOnClickListener(this);
+
+        Photo_insert4 = (ImageView) view.findViewById(R.id.insert_file4);
+        Photo_insert4.setOnClickListener(this);
+
+        Photo_insert5 = (ImageView) view.findViewById(R.id.insert_file5);
+        Photo_insert5.setOnClickListener(this);
 
          if(!globalVariables.photo1.equals(""))
             cam1.setBackgroundResource(R.drawable.edit_border_solid);
@@ -393,8 +414,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photoA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_VIEW);
+                Intent galleryIntent = new Intent(Intent.ACTION_VIEW, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+               // galleryIntent.setAction(Intent.ACTION_VIEW);
                 try {
                     String dirName = globalVariables.photo1.substring(6, 14);
                     String root = Environment.getExternalStorageDirectory().toString();
@@ -407,6 +428,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     galleryIntent.setDataAndType(data,"image/*");
 
                     startActivity(galleryIntent);
+                 //   startActivity(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
+
                 }
                 catch(Exception e){};
 
@@ -441,6 +464,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         photo_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 globalVariables.filephoto = 1;
                 Intent galleryIntent = new Intent();
                 // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -450,6 +474,18 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 galleryIntent.setType("image/*");
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
                 Edited=true;
+
+
+            }
+        });
+
+        Photo_insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 1;
+                globalVariables.photo_load("photoA");
+
             }
         });
 
@@ -522,6 +558,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        Photo_insert2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 2;
+                globalVariables.photo_load("photoB");
+
+            }
+        });
+
         photoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -588,6 +634,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        Photo_insert3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 3;
+                globalVariables.photo_load("photoC");
+
             }
         });
 
@@ -659,6 +715,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        Photo_insert4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 4;
+                globalVariables.photo_load("photoD");
+
+            }
+        });
+
         photoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -724,6 +790,16 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        Photo_insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 5;
+                globalVariables.photo_load("photoE");
+
             }
         });
 

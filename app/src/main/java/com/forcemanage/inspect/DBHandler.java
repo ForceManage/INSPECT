@@ -917,6 +917,31 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void updateInspectionItemPhoto_insert(int projId, int iId, int aId, String Image, int Img) {
+
+        String inspectionId = String.valueOf(iId);
+        String a_Id = String.valueOf(aId);
+        String proj_id = String.valueOf(projId);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        switch (Img){
+
+            case 1:
+            contentValues.put(COLUMN_IMG1, Image);
+            break;
+            case 2:
+            contentValues.put(COLUMN_IMG2, Image);
+            break;
+        }
+
+        contentValues.put(COLUMN_ITEM_STATUS, "m");
+        db.update(TABLE_INSPECTION_ITEM, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? AND " + COLUMN_A_ID + " = ? ", new String[]{proj_id, inspectionId, a_Id});
+        db.close();
+
+
+    }
+
 
 
     public void updateInspectionItemdate() {
