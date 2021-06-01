@@ -3738,6 +3738,7 @@ public class DBHandler extends SQLiteOpenHelper {
         cursorI.close();
 
         database.close();
+
         // return contact list
         return photoArrayList;
     }
