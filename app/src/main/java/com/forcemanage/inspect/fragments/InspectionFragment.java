@@ -68,11 +68,13 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView cam3;
     private ImageView cam4;
     private ImageView cam5;
+    private ImageView cam6;
     private ImageView photoA;
     private ImageView photoB;
     private ImageView photoC;
     private ImageView photoD;
     private ImageView photoE;
+    private ImageView photoF;
     private ImageView photo_cam;
     private ImageView photo_draw;
     private ImageView photo_file;
@@ -80,10 +82,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private ImageView photo_file3;
     private ImageView photo_file4;
     private ImageView photo_file5;
+    private ImageView photo_file6;
     private ImageView del_img2;
     private ImageView del_img3;
     private ImageView del_img4;
     private ImageView del_img5;
+    private ImageView del_img6;
     private ImageView Photo_insert;
     private ImageView Photo_insert2;
     private ImageView Photo_insert3;
@@ -102,6 +106,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private EditText com3Text;
     private EditText com4Text;
     private EditText com5Text;
+    private EditText com6Text;
     private TextView Buildcat;
     private TextView imageName1;
     private Button reportBtn;
@@ -111,6 +116,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
     private String com3 = "";
     private String com4 = "";
     private String com5 = "";
+    private String com6 = "";
     private String branchTitle = "Title";
     private String branchName = "Branch";
     private String aProvider = "Trade";
@@ -165,6 +171,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             com3 = bundle.getString("com3");
             com4 = bundle.getString("com4");
             com5 = bundle.getString("com5");
+            com6 = bundle.getString("com6");
             Prnt = bundle.getString("prnt");
 
         }
@@ -224,70 +231,75 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         notes = (EditText) view.findViewById(R.id.note);
 
         cam1 = (ImageView) view.findViewById(R.id.cameraClick1);
-        cam1.setOnClickListener(this);
+       // cam1.setOnClickListener(this);
         cam2 = (ImageView) view.findViewById(R.id.cameraClick2);
-        cam2.setOnClickListener(this);
+      //  cam2.setOnClickListener(this);
         cam3 = (ImageView) view.findViewById(R.id.cameraClick3);
-        cam3.setOnClickListener(this);
+     //   cam3.setOnClickListener(this);
         cam4 = (ImageView) view.findViewById(R.id.cameraClick4);
-        cam4.setOnClickListener(this);
+     //   cam4.setOnClickListener(this);
         cam5 = (ImageView) view.findViewById(R.id.cameraClick5);
-        cam5.setOnClickListener(this);
+     //   cam5.setOnClickListener(this);
+        cam6 = (ImageView) view.findViewById(R.id.cameraClick6);
         photoA = (ImageView) view.findViewById(R.id.imageView);
         //photoA.setOnClickListener(this);
         photoB = (ImageView) view.findViewById(R.id.imageView2);
-        photoB.setOnClickListener(this);
+    //    photoB.setOnClickListener(this);
         photoC = (ImageView) view.findViewById(R.id.imageView3);
-        photoC.setOnClickListener(this);
+    //    photoC.setOnClickListener(this);
         photoD = (ImageView) view.findViewById(R.id.imageView4);
-        photoD.setOnClickListener(this);
+    //    photoD.setOnClickListener(this);
         photoE = (ImageView) view.findViewById(R.id.imageView5);
-        photoE.setOnClickListener(this);
+        photoF = (ImageView) view.findViewById(R.id.imageView6);
+   //     photoE.setOnClickListener(this);
 
         photo_draw = (ImageView) view.findViewById(R.id.imageView_draw);
         photo_draw.setOnClickListener(this);
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
-        photo_file.setOnClickListener(this);
+    //    photo_file.setOnClickListener(this);
 
         photo_file2 = (ImageView) view.findViewById(R.id.imageView2_file);
-        photo_file2.setOnClickListener(this);
+    //    photo_file2.setOnClickListener(this);
 
         photo_file3 = (ImageView) view.findViewById(R.id.imageView3_file);
-        photo_file3.setOnClickListener(this);
+   //     photo_file3.setOnClickListener(this);
 
         photo_file4 = (ImageView) view.findViewById(R.id.imageView4_file);
-        photo_file4.setOnClickListener(this);
+    //    photo_file4.setOnClickListener(this);
 
         photo_file5 = (ImageView) view.findViewById(R.id.imageView5_file);
-        photo_file5.setOnClickListener(this);
+        photo_file6 = (ImageView) view.findViewById(R.id.imageView6_file);
+    //    photo_file5.setOnClickListener(this);
 
         del_img2 = (ImageView) view.findViewById(R.id.imageView2_del);
-        del_img2.setOnClickListener(this);
+    //    del_img2.setOnClickListener(this);
 
         del_img3 = (ImageView) view.findViewById(R.id.imageView3_del);
-        del_img3.setOnClickListener(this);
+    //    del_img3.setOnClickListener(this);
 
         del_img4 = (ImageView) view.findViewById(R.id.imageView4_del);
-        del_img4.setOnClickListener(this);
+   //     del_img4.setOnClickListener(this);
 
         del_img5 = (ImageView) view.findViewById(R.id.imageView5_del);
-        del_img5.setOnClickListener(this);
+        del_img6 = (ImageView) view.findViewById(R.id.imageView6_del);
+   //     del_img5.setOnClickListener(this);
 
         Photo_insert = (ImageView) view.findViewById(R.id.insert_file);
-        Photo_insert.setOnClickListener(this);
+  //      Photo_insert.setOnClickListener(this);
 
         Photo_insert2 = (ImageView) view.findViewById(R.id.insert_file2);
-        Photo_insert2.setOnClickListener(this);
+  //      Photo_insert2.setOnClickListener(this);
 
         Photo_insert3 = (ImageView) view.findViewById(R.id.insert_file3);
-        Photo_insert3.setOnClickListener(this);
+    //    Photo_insert3.setOnClickListener(this);
 
         Photo_insert4 = (ImageView) view.findViewById(R.id.insert_file4);
-        Photo_insert4.setOnClickListener(this);
+    //    Photo_insert4.setOnClickListener(this);
 
         Photo_insert5 = (ImageView) view.findViewById(R.id.insert_file5);
-        Photo_insert5.setOnClickListener(this);
+        Photo_insert6 = (ImageView) view.findViewById(R.id.insert_file6);
+    //    Photo_insert5.setOnClickListener(this);
 
          if(!globalVariables.photo1.equals(""))
             cam1.setBackgroundResource(R.drawable.edit_border_solid);
@@ -299,6 +311,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             cam4.setBackgroundResource(R.drawable.edit_border_solid);
         if(!globalVariables.photo5.equals(""))
             cam5.setBackgroundResource(R.drawable.edit_border_solid);
+        if(!globalVariables.photo6.equals(""))
+            cam6.setBackgroundResource(R.drawable.edit_border_solid);
       //  else
        //     cam1.setBackgroundResource(R.drawable.edit_border);
 
@@ -311,6 +325,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
          com3Text  = (EditText) view.findViewById(R.id.com3);
          com4Text  = (EditText) view.findViewById(R.id.com4);
          com5Text  = (EditText) view.findViewById(R.id.com5);
+         com6Text  = (EditText) view.findViewById(R.id.com6);
 
          final CheckBox checkBox = (CheckBox) view.findViewById(R.id.sign_checkBox);
 
@@ -332,7 +347,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         com3Text.setText(com3);
         com4Text.setText(com4);
         com5Text.setText(com5);
-
+        com6Text.setText(com6);
 
         play1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -411,6 +426,18 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        cam6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 6;
+                globalVariables.mPhotoImageView = photoF;
+                globalVariables.takeImageFromCamera(null);
+                cam6.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
         photoA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -482,9 +509,8 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
         Photo_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                globalVariables.filephoto = 1;
-                globalVariables.photo_load("photoA");
+               globalVariables.filephoto = 1;
+               globalVariables.photo_load();
 
             }
         });
@@ -563,7 +589,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
 
                 globalVariables.filephoto = 2;
-                globalVariables.photo_load("photoB");
+                globalVariables.photo_load();
 
             }
         });
@@ -642,7 +668,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
 
                 globalVariables.filephoto = 3;
-                globalVariables.photo_load("photoC");
+                globalVariables.photo_load();
 
             }
         });
@@ -720,7 +746,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
 
                 globalVariables.filephoto = 4;
-                globalVariables.photo_load("photoD");
+                globalVariables.photo_load();
 
             }
         });
@@ -793,12 +819,91 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        Photo_insert.setOnClickListener(new View.OnClickListener() {
+        Photo_insert5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 globalVariables.filephoto = 5;
-                globalVariables.photo_load("photoE");
+                globalVariables.photo_load();
+
+            }
+        });
+
+
+        photoF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo6.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo6 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
+            }
+        });
+
+        photo_file6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.filephoto = 6;
+                Intent galleryIntent = new Intent();
+                // galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                // galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"),globalVariables.ACTIVITY_GET_FILE);
+                Edited=true;
+            }
+        });
+
+        del_img6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+
+                                dbHandler.updateInspectionItemPhoto(projId,iId,aId,globalVariables.photo1,globalVariables.photo2,
+                                        globalVariables.photo3, globalVariables.photo4,globalVariables.photo5,"", "Img7");
+                                com5Text.setText("");
+                                globalVariables.photo6 ="";
+                                Edited=true;
+                                photoF.setImageResource(R.drawable.ic_camera);
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes",dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        Photo_insert6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.filephoto = 6;
+                globalVariables.photo_load();
 
             }
         });
@@ -868,7 +973,13 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        com6Text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
 
+            }
+        });
         notes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -877,7 +988,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             if (globalVariables.photos[i] == null) {
                 globalVariables.photos[i] = "";
                 //    cameraSnap = photos[i];
@@ -921,6 +1032,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                         //         imageName5.setText(dirName);
                         break;
 
+                    case 5:
+                        //           mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                        photoF.setImageBitmap(myBitmap);
+                        //         imageName5.setText(dirName);
+                        break;
+
 
                 } //End of switch
             } //End if there is an image file
@@ -954,6 +1071,12 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     case 4:
                         //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
                                 photoE.setImageResource(R.drawable.ic_camera);
+                        //        imageName5.setText("No Photo Record");
+                        break;
+
+                    case 5:
+                        //        mPhotoImageView = (ImageView) findViewById(R.id.imageView5);
+                        photoF.setImageResource(R.drawable.ic_camera);
                         //        imageName5.setText("No Photo Record");
                         break;
 
@@ -1037,7 +1160,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                        ServiceCont.getText().toString(), RelevantInfo.getText().toString(), Prnt, "1",
                        com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                        ,  com4Text.getText().toString(),
-                       com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());
+                       com5Text.getText().toString(),  com6Text.getText().toString(), " com6", "m", notes.getText().toString());
 
                dbHandler.statusChanged(projId,iId);
 
@@ -1055,7 +1178,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                     ServiceCont.getText().toString(), RelevantInfo.getText().toString(),Prnt ,"1" ,
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
-                    com5Text.getText().toString(), "Img6", " com6", "m", notes.getText().toString());
+                    com5Text.getText().toString(), com6Text.getText().toString(), " com6", "m", notes.getText().toString());
 
             dbHandler.statusChanged(projId, iId);
 

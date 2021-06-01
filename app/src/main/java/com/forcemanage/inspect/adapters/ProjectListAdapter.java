@@ -1,8 +1,5 @@
 package com.forcemanage.inspect.adapters;
 
-/**
- * Created by cindyoakes on 9/23/16.
- */
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +24,7 @@ import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.ProjectListViewHolder;
+import com.forcemanage.inspect.ProjectViewList;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectNode;
@@ -116,8 +115,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
 
-                //   holder.arrow.setImageResource(R.drawable.ic_folder_24);
-                   holder.arrow.setVisibility(View.GONE);
+                   holder.arrow.setImageResource(R.drawable.ic_book);
+               //    holder.arrow.setVisibility(View.GONE);
                    holder.menu.setImageResource(R.drawable.ic_more_vert);
                    break;
             }
@@ -172,17 +171,18 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
     public OnClickListener mArrowClickListener, mFileClickListener, mMenuClickListener;
 
-
-    {
+      {
 
 
 
             mMenuClickListener = new OnClickListener() {
                 //   @Override
                 public void onClick(View v) {
+
+
                     final int position = (int) v.getTag();
                     final ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
-                    if(position == 0){
+                    if(node.getNodeLevel() == 0){
                         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                         View promptView = layoutInflater.inflate(R.layout.add_location, null);
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
@@ -322,6 +322,8 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                 }
         };
 
+
+
     }
 
     public void reset() {
@@ -339,7 +341,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
         }
 
-        //   TreeViewLists.LoadDisplayList();
+        ProjectViewList.LoadDisplayList();
         notifyDataSetChanged();
 
         //

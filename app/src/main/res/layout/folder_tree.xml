@@ -98,7 +98,7 @@
 
                         <fragment
                             android:id="@+id/tree1_fragment"
-                            android:name="com.forcemanage.inspect.ProjectViewFragment"
+                            android:name="com.forcemanage.inspect.MapViewFragment"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="2dp"
@@ -108,7 +108,7 @@
 
                         <fragment
                             android:id="@+id/detail1_text"
-                            android:name="com.forcemanage.inspect.DetailProjectFragment"
+                            android:name="com.forcemanage.inspect.DetailFragment"
                             android:layout_width="0dp"
                             android:layout_height="0dp" />
 

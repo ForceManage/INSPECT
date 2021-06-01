@@ -1745,7 +1745,7 @@ public class DBHandler extends SQLiteOpenHelper {
         int pos = 0;
 
         selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_CAT_ID + " = " + catId + " AND "+ COLUMN_CHILD + " = "+ child;
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_CAT_ID + " = " + catId + " AND "+ COLUMN_CHILD + " < 9  ";
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -1846,6 +1846,120 @@ public class DBHandler extends SQLiteOpenHelper {
                     statusChanged(projId,iId);
                     break;
                 }
+
+                 case 3:{
+
+                     selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                             + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId;
+
+                     cursor = db.rawQuery(selectQuery, null);
+                     if (cursor.getCount() > 0) {
+                         values.put(COLUMN_REPORT_IMAGE, aSwap);
+                         values.put(COLUMN_ITEM_STATUS, "m");
+                         db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId, null);
+                         values.clear();
+                         values.put(COLUMN_PARENT, aSwap);
+                         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId, null);
+                         values.clear();
+                     }
+                     else {
+
+                         selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                                 + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap;
+
+                         cursor = db.rawQuery(selectQuery, null);
+                         if (cursor.getCount() > 0) {
+                             values.put(COLUMN_REPORT_IMAGE, aId);
+                             values.put(COLUMN_ITEM_STATUS, "m");
+                             db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap, null);
+                             values.clear();
+                             values.put(COLUMN_PARENT, aId);
+                             db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aSwap, null);
+                             values.clear();
+                         }
+                     }
+
+                     values.put(COLUMN_A_ID, -(aSwap));
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                     values.put(COLUMN_A_ID, -(aId));
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+
+
+
+
+
+                     values.put(COLUMN_A_ID, aSwap);
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                     values.put(COLUMN_A_ID, aId);
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId), null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId) , null);
+                     statusChanged(projId,iId);
+                     break;
+                 }
+
+
+                 case 5:{
+
+                     selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                             + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId;
+
+                     cursor = db.rawQuery(selectQuery, null);
+                     if (cursor.getCount() > 0) {
+                         values.put(COLUMN_REPORT_IMAGE, aSwap);
+                         values.put(COLUMN_ITEM_STATUS, "m");
+                         db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aId, null);
+                         values.clear();
+                         values.put(COLUMN_PARENT, aSwap);
+                         db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aId, null);
+                         values.clear();
+                     }
+                     else {
+
+                         selectQuery = "SELECT  " + COLUMN_REPORT_IMAGE + " FROM "
+                                 + TABLE_ACTION_ITEM + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap;
+
+                         cursor = db.rawQuery(selectQuery, null);
+                         if (cursor.getCount() > 0) {
+                             values.put(COLUMN_REPORT_IMAGE, aId);
+                             values.put(COLUMN_ITEM_STATUS, "m");
+                             db.update(TABLE_ACTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_REPORT_IMAGE + " = " + aSwap, null);
+                             values.clear();
+                             values.put(COLUMN_PARENT, aId);
+                             db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_PARENT + " = " + aSwap, null);
+                             values.clear();
+                         }
+                     }
+
+                     values.put(COLUMN_A_ID, -(aSwap));
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aId, null);
+                     values.put(COLUMN_A_ID, -(aId));
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
+
+
+
+
+
+                     values.put(COLUMN_A_ID, aSwap);
+                     values.put(COLUMN_ITEM_STATUS, "m");
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aSwap), null);
+                     values.put(COLUMN_A_ID, aId);
+                     db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId), null);
+                     db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + -(aId) , null);
+                     statusChanged(projId,iId);
+                     break;
+                 }
+
             }
 
         db.close();
@@ -1925,6 +2039,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         break;
 
                     }
+                    // Add a standard page
                     case (1): {
 
                         ContentValues values = new ContentValues();
@@ -1944,8 +2059,49 @@ public class DBHandler extends SQLiteOpenHelper {
 
                         break;
                     }
-
+                    // Add a scope page
                     case (2): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_ITEM_STATUS, "m");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+                    // Add a Multi pic page
+                    case (3): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_ITEM_STATUS, "m");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+                    // Add a Blanc page
+
+                    case (5): {
 
                         ContentValues values = new ContentValues();
 
@@ -2018,7 +2174,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label) {
+    public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label, int Type) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -2064,12 +2220,28 @@ public class DBHandler extends SQLiteOpenHelper {
      */
                             result = 1;
 
-                            int newId = addLevel(projId, aId, iId, CatID, Level, aId, Label, "", 1); //first aId is aId second aId passed as the parent
+                            int newId = addLevel(projId, aId, iId, CatID, Level, aId, Label, "", Type); //first aId is aId second aId passed as the parent
                                                                                                     //of the new branch
                             SQLiteDatabase db_2 = this.getWritableDatabase();
 
                             ContentValues values = new ContentValues();
 
+                            values.put(COLUMN_SERVICED_BY, ""); //Initial value then check
+
+                            switch (Type) {
+                                case 1:
+                                    values.put(COLUMN_SERVICED_BY, "COMMENTARY");
+                                    break;
+                                case 2:
+                                    values.put(COLUMN_SERVICED_BY, "SCOPE");
+                                    break;
+                                case 3:
+                                    values.put(COLUMN_SERVICED_BY, "MULTIPIC");
+                                    break;
+                                case 5:
+                                    values.put(COLUMN_SERVICED_BY, "BLANK");
+                                    break;
+                            }
                             values.put(COLUMN_PROJECT_ID, projId);
                             values.put(COLUMN_INSPECTION_ID, iId);
                             values.put(COLUMN_DATE_INSPECTED, dayTime(1));
@@ -2077,7 +2249,6 @@ public class DBHandler extends SQLiteOpenHelper {
                             values.put(COLUMN_OVERVIEW, "");
                             values.put(COLUMN_RELEVANT_INFO, "");
                             values.put(COLUMN_SERVICE_LEVEL, "1");
-                            values.put(COLUMN_SERVICED_BY, "");
                             values.put(COLUMN_REPORT_IMAGE, "1");
                             values.put(COLUMN_IMG1, "");
                             values.put(COLUMN_COM1, "");
@@ -2099,51 +2270,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             db_2.insert(TABLE_INSPECTION_ITEM, null, values);
                             db_2.close();
                         }
-     /*               }
 
-                }
-            } else {
-                result = 1;
-
-                int newId = addLevel(projId, aId, CatID, Level, aId, Label, 1);
-
-                SQLiteDatabase db_1 = this.getWritableDatabase();
-
-                ContentValues values = new ContentValues();
-
-                values.put(COLUMN_PROJECT_ID, projId);
-                values.put(COLUMN_INSPECTION_ID, iId);
-                values.put(COLUMN_DATE_INSPECTED, 20200101);
-                values.put(COLUMN_A_ID, newId);
-                values.put(COLUMN_OVERVIEW, "");
-                values.put(COLUMN_RELEVANT_INFO, "");
-                values.put(COLUMN_SERVICE_LEVEL, "1");
-                values.put(COLUMN_SERVICED_BY, "");
-                values.put(COLUMN_REPORT_IMAGE, "0");
-                values.put(COLUMN_IMG1, "");
-                values.put(COLUMN_COM1, "");
-                values.put(COLUMN_IMG2, "");
-                values.put(COLUMN_COM2, "");
-                values.put(COLUMN_IMG3, "");
-                values.put(COLUMN_COM3, "");
-                values.put(COLUMN_IMG4, "");
-                values.put(COLUMN_COM4, "");
-                values.put(COLUMN_IMG5, "");
-                values.put(COLUMN_COM5, "");
-                values.put(COLUMN_IMG6, "");
-                values.put(COLUMN_COM6, "");
-                values.put(COLUMN_IMG7, "");
-                values.put(COLUMN_COM7, "");
-                values.put(COLUMN_ITEM_STATUS, "");
-                values.put(COLUMN_NOTES, "");
-
-                db_1.insert(TABLE_INSPECTION_ITEM, null, values);
-
-                db_1.close();
-            }
-
-
-        }*///close if first query did not return a position branch
         db.close();
         return result;
     }
@@ -3571,7 +3698,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 projID = cursorI.getString(0);
 
 
-        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5
+        String selectQuery = "SELECT I." + COLUMN_IMG1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_IMG4 + ", I." + COLUMN_IMG5+ ", I." + COLUMN_IMG6
                 + " FROM " + TABLE_INSPECTION_ITEM +" I "
                 + " WHERE  I."+COLUMN_PROJECT_ID+" = "+projID+" AND I."+ COLUMN_ITEM_STATUS+" = 'm'";
 
@@ -3599,6 +3726,8 @@ public class DBHandler extends SQLiteOpenHelper {
                     photoMap.put(MyConfig.TAG_IMAGE4, cursor.getString(3));
                 if (cursor.getString(4) != "")
                     photoMap.put(MyConfig.TAG_IMAGE5, cursor.getString(4));
+                if (cursor.getString(5) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE6, cursor.getString(5));
 
                 photoArrayList.add(photoMap);
             } while (cursor.moveToNext()); // Move Cursor to the next row
@@ -3923,7 +4052,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getFolders(int user_id, int folder_id) {
+    public ArrayList<HashMap<String, String>> getFolders(int user_id) {
 
 
         HashMap<String, String> ProjectMap;
@@ -3934,18 +4063,62 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
-    /*    String selectQuery = "SELECT P."+COLUMN_PROJECT_ADDRESS+", P." +  COLUMN_PROJECT_ID + ", P." + COLUMN_PROJECT_PHOTO + ", I." + COLUMN_INSPECTION_ID
-                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT + " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE+", I."+COLUMN_P_ID
 
-                + " FROM " + TABLE_PROJECT_INFO + " P"
+        String selectQuery = "SELECT M."+COLUMN_PROJECT_ID + ", M." +  COLUMN_CAT_ID + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT
+                + ", I." + COLUMN_LABEL + ", M." + COLUMN_CHILD + ", I." +COLUMN_P_ID +", I."+ COLUMN_INSPECTION_ID+ " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE
+
+                + " FROM " + TABLE_MAP + " M"
                 + " JOIN " + TABLE_INSPECTION + " I"
-                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
-                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id;
-
-     */
+                + " ON M." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id + " AND M." + COLUMN_CAT_ID + " = " + 0 + " ORDER BY I." + COLUMN_INSPECTION_ID ;
 
 
-        String selectQuery = "SELECT M."+COLUMN_PROJECT_ID+", M." +  COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M."+ COLUMN_PARENT+", M." + COLUMN_LABEL
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProjectMap = new HashMap<String, String>();
+
+                ProjectMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
+                ProjectMap.put(MyConfig.TAG_CAT_ID, (String.valueOf(cursor.getInt(1))));
+                ProjectMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
+                ProjectMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
+                ProjectMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
+                ProjectMap.put(MyConfig.TAG_CHILD, (String.valueOf(cursor.getInt(5))));
+                ProjectMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(6))));
+                ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
+                ProjectMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
+                ProjectMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
+
+                ProjectMapArrayList.add(ProjectMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return ProjectMapArrayList;
+
+
+
+    }
+
+
+    public ArrayList<HashMap<String, String>> getFolderMap(int user_id, int folder_id) {
+
+
+        HashMap<String, String> ProjectMap;
+        ArrayList<HashMap<String, String>> ProjectMapArrayList;
+
+        ProjectMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+
+
+
+        String selectQuery = "SELECT M."+COLUMN_PROJECT_ID+", M." +  COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", I."+ COLUMN_PARENT+", M." + COLUMN_LABEL
                 + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID +", I." + COLUMN_INSPECTION_ID + " , M."+COLUMN_IMG1+ ", M." + COLUMN_NOTES
 
                 + " FROM " + TABLE_MAP + " M "
@@ -3957,9 +4130,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 + " AND I."+ COLUMN_INSPECTION_ID+ " = '0' "
                 + " AND M."+ COLUMN_INSPECTION_ID+ " = '0' "
                 + " AND M."+ COLUMN_CAT_ID+ " < '9' "
-                + " AND (M."+ COLUMN_PROJECT_ID+ " =  "+folder_id+ " OR M."+COLUMN_PARENT+ " = '-1')";
+                + " AND M."+ COLUMN_PROJECT_ID+ " =  "+folder_id;
 
-        //add additional fields: status,  notes, print flag
+
+
+         //add additional fields: status,  notes, print flag
         Cursor cursor = dtabase.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -3976,6 +4151,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
                 ProjectMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
                 ProjectMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
+
 
                 ProjectMapArrayList.add(ProjectMap);
             } while (cursor.moveToNext());
@@ -4092,67 +4268,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
-    //Get a list of sublocations to populate the sub location spinner
-    public ArrayList<HashMap<String, String>> getFolderMap(int projID, int iID, int Child) {
-
-
-        HashMap<String, String> SiteMap;
-        ArrayList<HashMap<String, String>> SiteMapArrayList;
-
-        SiteMapArrayList = new ArrayList<HashMap<String, String>>();
-
-
-        SQLiteDatabase dtabase = this.getReadableDatabase();
-/*
-        String selectQuery = "SELECT M."+ COLUMN_PROJECT_ID+ ", M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
-                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
-                + " FROM " + TABLE_MAP + " M"
-                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
-                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID;
-        //add additional fields: status,  notes, print flag
-
- */
-
-        String selectQuery = "SELECT P."+COLUMN_PROJECT_ID+", I." +  COLUMN_LEVEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT
-                + ", I." + COLUMN_LABEL + ", I." + COLUMN_LEVEL + ", I." + COLUMN_P_ID + " ,I."+COLUMN_INSPECTION_ID+ ", I." + COLUMN_IMAGE+", I."+COLUMN_NOTE
-
-                + " FROM " + TABLE_PROJECT_INFO + " P"
-                + " JOIN " + TABLE_INSPECTION + " I"
-                + " ON P." + COLUMN_PROJECT_ID + " = I."+ COLUMN_PROJECT_ID
-                + " WHERE I."+COLUMN_PROJECT_ID+" = "+projID;
-
-
-
-        Cursor cursor = dtabase.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                SiteMap = new HashMap<String, String>();
-                    SiteMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
-                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
-                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(2))));
-                    SiteMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(3))));
-                    SiteMap.put(MyConfig.TAG_LABEL, cursor.getString(4));
-                    SiteMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(5))));
-                    SiteMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(6))));
-                    SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
-                    SiteMap.put(MyConfig.TAG_IMAGE, cursor.getString(8));
-                    SiteMap.put(MyConfig.TAG_NOTE, cursor.getString(9));
-
-
-                SiteMapArrayList.add(SiteMap);
-
-            } while (cursor.moveToNext());
-        }
-
-        dtabase.close();
-
-        return SiteMapArrayList;
-
-    }
-
-
     public ArrayList<HashMap<String, String>> getMap(int projID, int iID, int Child) {
 
 
@@ -4168,7 +4283,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
                 + " FROM " + TABLE_MAP + " M"
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
-                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID+", M." + COLUMN_PARENT+ ", M."+ COLUMN_CHILD+ " DESC" ;
+                + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID+", M." + COLUMN_A_ID+", M." + COLUMN_PARENT+ ", M."+ COLUMN_CHILD+ " DESC" ;
         //add additional fields: status,  notes, print flag
 
 

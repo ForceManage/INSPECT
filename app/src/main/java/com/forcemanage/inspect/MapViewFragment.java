@@ -62,7 +62,7 @@ public class MapViewFragment extends ListFragment {
 
 
             DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
-            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(GlobalVariables.User_id, proj);
+            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(GlobalVariables.User_id);
             List<MapViewData> maplistItems = new ArrayList<>();
 
             //   projectlistItems = new ArrayList<>();

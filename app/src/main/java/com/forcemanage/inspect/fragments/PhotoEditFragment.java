@@ -54,11 +54,11 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;
-    private String fPhoto;
+    private int frame;
     private boolean Edited = false;
     private float xCoOrdinate, yCoOrdinate, xPos, yPos;
     public Bitmap mybitmap,newbmp,bitmap,bmp;
-    private ImageView photo, cam1, cam2, photo_insert;
+    private ImageView photo, camera, close, save, photo_insert;
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector mGestureDetector;
     private float mScaleFactor = 0.5f;
@@ -79,8 +79,6 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
                 projectId = bundle.getInt("projectID");
                 inspectionId = bundle.getInt("inspectionID");
                 aId = bundle.getInt("aID");
-                fPhoto = bundle.getString("fPhoto");
-
 
         }
 
@@ -107,10 +105,9 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
 
         photo = (ImageView) view.findViewById(R.id.imageView);
         photo_insert = (ImageView) view.findViewById(R.id.photo_insert);
-        cam1 = (ImageView) view.findViewById(R.id.cameraClick);
-        cam1.setOnClickListener(this);
-        cam2 = (ImageView) view.findViewById(R.id.camera2);
-        cam2.setOnClickListener(this);
+        camera = (ImageView) view.findViewById(R.id.cameraClick);
+        close = (ImageView) view.findViewById(R.id.Close);
+        save = (ImageView) view.findViewById(R.id.Save);
 
         photo_insert.setOnTouchListener(this);
 
@@ -119,19 +116,29 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
 
 
 
-        cam1.setOnClickListener(new View.OnClickListener() {
+        camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 globalVariables.photoframe = 1;
                 globalVariables.mPhotoImageView = photo_insert;
                 globalVariables.takeImageFromCamera(null);
-                cam1.setBackgroundResource(R.drawable.edit_border_solid);
+                close.setBackgroundResource(R.drawable.edit_border_solid);
                 Edited=true;
 
             }
         });
 
-        cam2.setOnClickListener(new View.OnClickListener() {
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 photo.setDrawingCacheEnabled(true);
@@ -151,7 +158,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
                 }
 
                 DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-                dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name,1);
+                dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name,globalVariables.filephoto);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
 
@@ -160,36 +167,15 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
             }
         });
 
-        int i =0;
 
-        if ( globalVariables.photos[i].length() > 12) {
-            String dirName =  globalVariables.photos[i].substring(6, 14);
+        if ( globalVariables.photos[globalVariables.filephoto-1].length() > 12) {
+            String dirName =  globalVariables.photos[globalVariables.filephoto-1].substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/A2D_" + dirName + "/" +  globalVariables.photos[i]);
+            File Image = new File(root + "/A2D_" + dirName + "/" +  globalVariables.photos[globalVariables.filephoto-1]);
             mybitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
+            photo.setImageBitmap(mybitmap);
 
-            switch (i) {
-                case 0:
-                    // globalVariables.mPhotoImageView = (ImageView) view.findViewById(R.id.imageView);
-                    photo.setImageBitmap(mybitmap);
-
-                    break;
-
-
-            } //End of switch
         } //End if there is an image file
-        else {
-
-            switch (i) {
-
-                case 0:
-                    //   mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-                    photo.setImageResource(R.drawable.ic_camera);
-                    break;
-
-            }//End of switch
-        }//End of else
-
 
 
 

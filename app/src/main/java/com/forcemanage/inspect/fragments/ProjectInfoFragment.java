@@ -21,10 +21,12 @@ import androidx.fragment.app.Fragment;
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.MainActivity;
+import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.ProjectViewFragment;
 import com.forcemanage.inspect.ProjectViewList;
 import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.R;
+import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.ProjectData;
 import com.forcemanage.inspect.OnDocChangeListener;
 
@@ -78,6 +80,7 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
     private String folderPhoto;
     private String FragDisplay;
     private List<ProjectData> listItems;
+    private List<MapViewData> maplistItems;
     private  int aId;
     private int Level;
     private int catId;
@@ -140,6 +143,7 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
             Level = bundle.getInt("Level");
             catId = bundle.getInt("catId");
             aId = bundle.getInt("aID");
+            iId = bundle.getInt("iID");
 
 
 
@@ -196,7 +200,62 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID,projId, Level, catId, aId); //child 9 shows only the types <9
+
+
+        maplistItems = new ArrayList<>();
+
+        //   projectlistItems = new ArrayList<>();
+        //  MapViewData listItem;
+
+
+
+
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iId, 15); //child < 15 includes all types
+
+        listItems = new ArrayList<>();
+        MapViewData listItem;
+
+        for (int i = 0; i < (SiteMapData.size()); i++) {
+
+            listItem = new MapViewData(
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+            );
+            maplistItems.add(listItem);
+        }
+
+        GlobalVariables.dataList = (ArrayList<MapViewData>)  maplistItems;
+        //  MapViewLists.LoadDisplayList();
+
+        GlobalVariables.modified = true;
+
+
+        if (view.findViewById(R.id.fragment_container) != null) {
+
+            // However if we are being restored from a previous state, then we don't
+            // need to do anything and should return or we could end up with overlapping Fragments
+            ProjectViewFragment projectViewFragment = new ProjectViewFragment();
+            getChildFragmentManager().beginTransaction().add(R.id.fragment_container, projectViewFragment)
+                    .commit();
+            // Create an Instance of Fragment
+
+
+        }
+
+
+
+
+/*
+
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getProjects(USER_ID, projId, Level, catId, aId); //child 9 shows only the types <9
 
         listItems = new ArrayList<>();
         ProjectData listItem;
@@ -241,6 +300,10 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
             getChildFragmentManager().beginTransaction().add(R.id.fragment_folder, projectViewFragment)
                     .commit();
         }
+
+ */
+
+
 
         if(globalVariables.focus == "DOCS") {
             TextView inspectDate = (TextView) view.findViewById(R.id.Text_2);

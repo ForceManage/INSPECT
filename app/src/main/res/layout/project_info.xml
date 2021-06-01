@@ -92,12 +92,12 @@
                 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     >
 
@@ -105,7 +105,7 @@
 
 
                     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/fragment_folder"
+                    android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/image_border"
@@ -119,9 +119,9 @@
 
                     <fragment
                         android:id="@+id/tree1_fragment"
-                        android:name="com.forcemanage.inspect.ProjectViewFragment"
+                        android:name="com.forcemanage.inspect.MapViewFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="155dp"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
                         android:layout_marginTop="5dp"
@@ -129,7 +129,7 @@
 
                     <fragment
                         android:id="@+id/detail1_text"
-                        android:name="com.forcemanage.inspect.DetailProjectFragment"
+                        android:name="com.forcemanage.inspect.DetailFragment"
                         android:layout_width="0dp"
                         android:layout_height="0dp" />
 
