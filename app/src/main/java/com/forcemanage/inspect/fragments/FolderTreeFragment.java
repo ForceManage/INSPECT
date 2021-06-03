@@ -150,6 +150,9 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
         // if (GlobalVariables.dataList.isEmpty() != true)
         GlobalVariables.modified = true;
 
+        if(doc == false) view.findViewById(R.id.folder_info).setVisibility(View.VISIBLE);
+           else view.findViewById(R.id.document_info).setVisibility(View.VISIBLE);
+
          return view;
 
     }

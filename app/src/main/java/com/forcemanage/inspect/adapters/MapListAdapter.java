@@ -329,7 +329,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                         itemTitle.setText("Folder Information ");//Integer.parseInt(locationId)
                                         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                        locationText.setText("Current Label: " + node.getNodeName());//Integer.parseInt(locationId)
+                                        locationText.setText("Current Folder Title: " + node.getNodeName());//Integer.parseInt(locationId)
                                         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                         branchText.setHint("Folder title");
                                         // setup a dialog window
@@ -382,7 +382,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                         itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
                                         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                        locationText.setText("Add a Title Label to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                        locationText.setText("Add a Title Heading Tab to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
                                         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                         // setup a dialog window
                                         alertDialogBuilder.setCancelable(false)
@@ -575,10 +575,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
                                 String[] actions = {
-                                        "Add Title Label to Folder",
+                                        "Add Title Heading Tab Label to the Folder",
                                         "Add Commentry Section to the document",
                                         "Add Certificate to the document ",
-                                        "Add Miscellaneous Information Tab",
+                                        "Add General Information Tab",
                                         "Add PDF Document Tab",
                                         "Cancel "};
 
@@ -597,7 +597,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                                 itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
                                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                locationText.setText("Add a Title Label to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                locationText.setText("Add a Title Heading Tab Label to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
                                                 final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                                 // setup a dialog window
                                                 alertDialogBuilder.setCancelable(false)
@@ -812,7 +812,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                       final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                                       itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
                                                       final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                      locationText.setText("Add a Title to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                      locationText.setText("Add a Title Heading Tab to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
                                                       final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                                       // setup a dialog window
                                                       alertDialogBuilder.setCancelable(false)
@@ -986,7 +986,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                     final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                                                     itemTitle.setText("Label: " + branchTitle);//Integer.parseInt(locationId)
                                                                     final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                                    locationText.setText("Title label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                                                    locationText.setText("Title Heaning Tab label : " + node.getNodeName());//Integer.parseInt(locationId)
                                                                     final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
                                                                     LocationText.setText(node.getNodeName());
                                                                     // setup a dialog window
@@ -1105,7 +1105,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                     final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                                     itemTitle.setText("Folder: " + branchTitle);//Integer.parseInt(locationId)
                                                     final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                    locationText.setText("Add a Title to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                    locationText.setText("Add a Title Heading Tab to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
                                                     final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                                     // setup a dialog window
                                                     alertDialogBuilder.setCancelable(false)

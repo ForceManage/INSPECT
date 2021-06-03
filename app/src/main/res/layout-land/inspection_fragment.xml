@@ -423,7 +423,7 @@
                                 android:layout_height="70dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_margin="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                          </FrameLayout>
 
@@ -491,7 +491,7 @@
                                 android:layout_height="70dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_margin="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                         </FrameLayout>
 
@@ -561,7 +561,7 @@
                                 android:layout_height="70dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_margin="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                         </FrameLayout>
 
@@ -627,7 +627,7 @@
                                 android:layout_height="70dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_margin="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                          </FrameLayout>
 
@@ -692,7 +692,7 @@
                                 android:layout_height="70dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_margin="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                         </FrameLayout>
                         <EditText
@@ -757,7 +757,7 @@
                                 android:layout_height="75dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="10dp"
-                                android:foreground="@drawable/pict_insert" />
+                                android:foreground="@drawable/picture_picture" />
 
                         </FrameLayout>
                         <EditText

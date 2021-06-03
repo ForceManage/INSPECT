@@ -1745,7 +1745,7 @@ public class DBHandler extends SQLiteOpenHelper {
         int pos = 0;
 
         selectQuery = "SELECT  " + COLUMN_A_ID + " FROM "
-                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_CAT_ID + " = " + catId + " AND "+ COLUMN_CHILD + " < 9  ";
+                + TABLE_MAP + " WHERE " + COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_CAT_ID + " = " + catId + " AND "+ COLUMN_CHILD + " IN (1,3,5)";
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -1887,10 +1887,6 @@ public class DBHandler extends SQLiteOpenHelper {
                      values.put(COLUMN_ITEM_STATUS, "m");
                      db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
                      db.update(TABLE_INSPECTION_ITEM, values, COLUMN_PROJECT_ID + " = " + projId + " AND " + COLUMN_A_ID + " = " + aSwap, null);
-
-
-
-
 
                      values.put(COLUMN_A_ID, aSwap);
                      values.put(COLUMN_ITEM_STATUS, "m");

@@ -67,12 +67,14 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
             TextView com5 = (TextView) row.findViewById(R.id.Observation5);
             TextView label = (TextView) row.findViewById(R.id.branchName);
             TextView relInfo = (TextView) row.findViewById(R.id.RelevantInfo);
-
+/*
             TextView fig0 = (TextView) row.findViewById(R.id.fig0);
             TextView fig1 = (TextView) row.findViewById(R.id.fig1);
             TextView fig2 = (TextView) row.findViewById(R.id.fig2);
             TextView fig3 = (TextView) row.findViewById(R.id.fig3);
             TextView fig4 = (TextView) row.findViewById(R.id.fig4);
+
+ */
 
 
             title.setText(listItem.getBranchHead());
@@ -116,31 +118,31 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                             case 0: {
                                 image1.setVisibility(View.VISIBLE);
                                 image1.setImageBitmap(myBitmap);
-                                fig0.setText("Fig " + itemNo + ".0");
+                             //   fig0.setText("Fig " + itemNo + ".0");
                                 break;
                             }
                             case 1: {
                                 image2.setImageBitmap(myBitmap);
                                 image2.setVisibility(View.VISIBLE);
-                                fig1.setText("Fig " + itemNo + ".1");
+                         //       fig1.setText("Fig " + itemNo + ".1");
                                 break;
                             }
                             case 2: {
                                 image3.setImageBitmap(myBitmap);
                                 image3.setVisibility(View.VISIBLE);
-                                fig2.setText("Fig " + itemNo + ".2");
+                       //         fig2.setText("Fig " + itemNo + ".2");
                                 break;
                             }
                             case 3: {
                                 image4.setImageBitmap(myBitmap);
                                 image4.setVisibility(View.VISIBLE);
-                                fig3.setText("Fig " + itemNo + ".3");
+                        //        fig3.setText("Fig " + itemNo + ".3");
                                 break;
                             }
                             case 4: {
                                 image5.setImageBitmap(myBitmap);
                                 image5.setVisibility(View.VISIBLE);
-                                fig4.setText("Fig " + itemNo + ".4");
+                        //        fig4.setText("Fig " + itemNo + ".4");
                                 break;
                             }
                         }

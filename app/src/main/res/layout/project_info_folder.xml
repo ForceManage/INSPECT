@@ -48,11 +48,11 @@
                     >
 
                     <ImageView
-                        android:id="@+id/imageView_cam"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginLeft="10dp"
+                        android:id="@+id/cam1"
+                        android:layout_width="51dp"
+                        android:layout_height="47dp"
                         android:layout_gravity="bottom|left"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:saveEnabled="false"
                         app:srcCompat="@android:drawable/ic_menu_camera" />

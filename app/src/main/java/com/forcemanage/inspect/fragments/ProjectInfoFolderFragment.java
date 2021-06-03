@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.BuildConfig;
+import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
@@ -36,7 +37,7 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
     private TextView branch;
     private EditText bNote;
     private ImageView mPhotoImageView;
-    private ImageView photo_cam;
+    private ImageView cam1;
     private ImageView info_file;
     private ImageView photo_file;
     private String projectId;
@@ -46,6 +47,7 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
     private  int aId;
     private int Level;
     private int USER_ID = 0;
+    private Boolean Edited = false;
 
 
     @Override
@@ -81,12 +83,13 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
 
 
         mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
-        photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
-        photo_cam.setOnClickListener(new View.OnClickListener() {
+        cam1 = (ImageView) view.findViewById(R.id.cam1);
+        cam1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 globalVariables.mPhotoImageView = mPhotoImageView;
                 globalVariables.takeImageFromCamera(null);
+                Edited = true;
             }
         });
 
@@ -159,6 +162,8 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
                 galleryIntent.setType("image/*");
 
                 globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
+
+
             }
 
 
@@ -187,6 +192,8 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
     public void onClick(View v) {
 
     }
+
+
 
 
 }

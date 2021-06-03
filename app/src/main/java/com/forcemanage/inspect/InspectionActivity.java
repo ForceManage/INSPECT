@@ -569,6 +569,11 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
         }
 
+        if (FragDisplay == "MultiPicFragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, aID, photo1, photo2, photo3, photo4,
+                    photo5, photo6, photo7);
+        }
+
         Edited = false;
 
     }
@@ -870,13 +875,6 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                        relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                        Overview = list.get(MyConfig.TAG_OVERVIEW);
                        aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                       com1 = list.get(MyConfig.TAG_COM1);
-                       com2 = list.get(MyConfig.TAG_COM2);
-                       com3 = list.get(MyConfig.TAG_COM3);
-                       com4 = list.get(MyConfig.TAG_COM4);
-                       com5 = list.get(MyConfig.TAG_COM5);
-                       com6 = list.get(MyConfig.TAG_COM6);
-                       Notes = list.get(MyConfig.TAG_NOTES);
                        String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
                        String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
@@ -893,13 +891,6 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                        bundle.putString("overview", Overview);
                        bundle.putString("date", dateInspected);
                        bundle.putString("relevantInfo", relevantInfo);
-                       bundle.putString("notes", Notes);
-                       bundle.putString("com1", com1);
-                       bundle.putString("com2", com2);
-                       bundle.putString("com3", com3);
-                       bundle.putString("com4", com4);
-                       bundle.putString("com5", com5);
-                       bundle.putString("com6", com6);
                        bundle.putString("prnt", prntReport);
 
 
@@ -1376,6 +1367,51 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                 }
 
             }
+
+            if (FragDisplay == "MultiPicFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                    case 7:
+                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
+                        photoG.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
 
             if (FragDisplay == "ReferenceFragment") {
 

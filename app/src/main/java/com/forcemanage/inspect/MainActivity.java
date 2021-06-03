@@ -75,6 +75,7 @@ import com.forcemanage.inspect.attributes.ProjectNode;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
+import com.forcemanage.inspect.fragments.DocPageViewFragment;
 import com.forcemanage.inspect.fragments.FolderTreeFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     public String focus = "null";
     private FloatingActionButton fab_add;
     private  String template;
+    public String[] photos = new String[7];
 
 
 
@@ -373,8 +375,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
     private void init() {
 
-        ProjectInfoFragment fragment = new ProjectInfoFragment();
-        doFragmentTransaction(fragment, "ProjectInfoFragment", false, "");
+        FolderTreeFragment fragment = new FolderTreeFragment();
+        doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
 
     }
 
@@ -541,6 +543,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
           // inspectionId = Integer.toString(node.getiID());
            projId = node.getprojId();
 
+        Bundle bundle = new Bundle();
+
         //   iId = node.getiID();
 
 
@@ -572,13 +576,28 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         if(node.getNodeLevel() == 0) {
 
+            focus = "FOLDER";
+
+            fragment_obj = getSupportFragmentManager().findFragmentByTag("FolderTreeFragment");
+/*
+            LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
+            linearLayout.setVisibility(View.GONE);
+    */
+
+
+            TextView folder = fragment_obj.getView().findViewById(R.id.folder_name);
+            TextView InfoA = fragment_obj.getView().findViewById(R.id.text2);
+            TextView InfoB = fragment_obj.getView().findViewById(R.id.text3);
+            TextView InfoC = fragment_obj.getView().findViewById(R.id.text4);
+            TextView InfoD = fragment_obj.getView().findViewById(R.id.text5);
+
+
 
                HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
               //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
                 GlobalVariables.doc_pos = 0;
-                Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("iID", 0);
@@ -599,9 +618,36 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
 
-                FolderTreeFragment fragment = new FolderTreeFragment();
+
+
+               FolderTreeFragment fragment = new FolderTreeFragment();
                 doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
                 fragment.setArguments(bundle);
+
+
+
+                folder.setText(projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+                if(projectItem.get(MyConfig.TAG_INFO_A) == "" || projectItem.get(MyConfig.TAG_INFO_A)== null )
+                InfoA.setText("Note A");
+                    else
+                    InfoA.setText(projectItem.get(MyConfig.TAG_INFO_A));
+
+                if(projectItem.get(MyConfig.TAG_INFO_B)== "" | projectItem.get(MyConfig.TAG_INFO_B) == null )
+                InfoB.setText("Note B");
+                    else
+                    InfoB.setText(projectItem.get(MyConfig.TAG_INFO_B));
+
+                if(projectItem.get(MyConfig.TAG_INFO_C)== "" | projectItem.get(MyConfig.TAG_INFO_C) == null )
+                    InfoC.setText("Note C");
+                    else
+                    InfoC.setText(projectItem.get(MyConfig.TAG_INFO_C));
+
+                if(projectItem.get(MyConfig.TAG_INFO_D)== "" | projectItem.get(MyConfig.TAG_INFO_D) == null )
+                    InfoD.setText("Note D");
+                    else
+                    InfoD.setText(projectItem.get(MyConfig.TAG_INFO_D));
+
+
 
                 ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
                 doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", false, "");
@@ -619,6 +665,13 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 GlobalVariables.doc_pos = 1;
               //  if(aID == 0)  aID = 1;
               //  if(iID == 0)  iID = 1;
+            focus = "DOC";
+
+            fragment_obj = getSupportFragmentManager().findFragmentByTag("FolderTreeFragment");
+     /*
+            LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
+            linearLayout_.setVisibility(View.GONE);
+       */
 
                 inspectionId = Integer.toString(iID);
 
@@ -637,7 +690,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
           //      String branchHead = dbHandler.getMapBranchTitle(projId, catId);
 
-                Bundle bundle = new Bundle();
+
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("Level", node.getNodeLevel());
@@ -660,6 +713,22 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 fragment.setArguments(bundle);
 
 
+
+     /*       TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text_2);
+            TextView Hrs = fragment_obj.getView().findViewById(R.id.Text_5);
+            TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text_3);
+            TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text_4);
+            TextView doc_title = fragment_obj.getView().findViewById(R.id.doc_name);
+            doc_title.setText(projectItem.get(MyConfig.TAG_LABEL));
+            inspectDate.setText("Document created:  " + stringdate(projectItem.get(MyConfig.TAG_INSPECTION_DATE), 1));
+            inspectionType.setText("Document type:  " + projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+            if (!projectItem.get(MyConfig.TAG_START_DATE_TIME).equals("null"))
+                inspectedDate.setText("Initial log recorded: " + stringdate(projectItem.get(MyConfig.TAG_START_DATE_TIME), 2) + "  -  " + stringdate(projectItem.get(MyConfig.TAG_END_DATE_TIME), 2));
+            Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
+
+
+      */
+
                 BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
                 doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
                 fragment2.setArguments(bundle);
@@ -677,22 +746,59 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     @Override
     public void OnTabChanged(int treeNameIndex){
 
-        ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
-
-            GlobalVariables.aId = node.getaID();
-            GlobalVariables.Level = node.getNodeLevel();
-            GlobalVariables.iId = node.getiID();
+       // ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
+            MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
+         //   GlobalVariables.aId = node.getaID();
+          //  GlobalVariables.Level = node.getNodeLevel();
+         //   GlobalVariables.iId = node.getiID();
        //     GlobalVariables.catId = node.getcatId();
-            GlobalVariables.name = node.getNodeName();
+        ///    GlobalVariables.name = node.getNodeName();
      //   GlobalVariables.modified = true;
 
         Bundle bundle = new Bundle();
-        switch (node.getNodeLevel()) {
-
+        switch (node.getbranchCat()) {
 
             case 0: {
+                BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+                doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+                fragment2.setArguments(bundle);
+                break;
 
-          //      focus = "FOLDER";
+
+            }
+            case 1: {
+
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
+
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                photos[5] = list.get(MyConfig.TAG_IMAGE6);
+
+                bundle.putString("IMG1",photos[0]);
+                bundle.putString("IMG2",photos[1]);
+                bundle.putString("IMG3",photos[2]);
+                bundle.putString("IMG4",photos[3]);
+                bundle.putString("IMG5",photos[4]);
+                bundle.putString("IMG6",photos[5]);
+
+                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
+
+                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
+                bundle.putString("title", branchHead);
+                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
+                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
+
+                DocPageViewFragment fragment2 = new DocPageViewFragment();
+                doFragmentFolderInfoTransaction(fragment2, "DocPageViewFragment", false, "");
+                fragment2.setArguments(bundle);
+
+                break;
+
+                //      focus = "FOLDER";
 /*
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
 
@@ -702,7 +808,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 linearLayout_.setVisibility(View.VISIBLE);
 
 
-               DBHandler dbHandler = new DBHandler(this, null, null, 1);
+               ;
 
                 HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
@@ -2101,7 +2207,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
              }
 
 
-            if (FragDisplay == "ProjectInfoFolderFragment") {
+            if (FragDisplay == "FolderTreeFragment") {
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFolderFragment");
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
@@ -2158,7 +2264,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 dbHandler.updateInspectionPhoto(projectId, inspectionId, inspectionPhoto);
             }
 
-            if (FragDisplay == "ProjectInfoFolderFragment") {
+            if (FragDisplay == "FolderTreeFragment") {
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 String projectPhoto = to.getName();
                 dbHandler.updatePropPhoto(projectId, projectPhoto);
@@ -2524,7 +2630,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
-         projectlist_title.setText("Folder list for: "+dbHandler.getUser(USER_ID));
+         projectlist_title.setText("Folders/documents for: "+dbHandler.getUser(USER_ID));
 
 
         ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID);
