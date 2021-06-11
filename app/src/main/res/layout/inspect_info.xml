@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.38"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/image_border"
+            android:orientation="vertical"
+            >
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/head_frame"
+                >
+
+                <TextView
+                    android:id="@+id/branchTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:paddingTop="6dp"
+                    android:layout_marginLeft="55dp"
+                    android:paddingLeft="10dp"
+                    android:text="Title:  "
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="normal|bold"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="5dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="File TAB "
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        android:textStyle="normal|bold" />
+
+                    <ImageView
+                        android:id="@+id/file"
+                        android:layout_width="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/document" />
+
+
+                    <TextView
+                        android:id="@+id/branchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="10dp"
+                        android:text="Document Information  "
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal"
+                        android:visibility="gone"/>
+
+
+
+                </LinearLayout>
+
+
+            </FrameLayout>
+
+            <ScrollView
+
+                android:id="@+id/scroll_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="5dp"
+                    android:orientation="vertical">
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_margin="5dp"
+                        android:weightSum="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/Text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:hint="Document Title"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold"
+                            android:textSize="18sp"/>
+
+                        <ImageView
+                            android:id="@+id/printer"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="right"
+                            app:srcCompat="@drawable/ic_print_24px" />
+
+
+
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/Text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Doc created:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Type of Doc:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Author:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:paddingLeft="10dp"
+                        android:text=":  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Document description:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Describe document (Output)"
+                        android:textSize="16sp"/>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.62"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/edit_border"
+            android:orientation="vertical"
+            >
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#0B2459"
+                    >
+
+                    <ImageView
+                        android:id="@+id/imageView_cam"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:saveEnabled="false"
+                        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+                    <ImageView
+                        android:id="@+id/imageView_file"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="100dp"
+                        android:layout_gravity="right"
+                        android:foreground="@android:drawable/ic_menu_gallery" />
+
+                    <ImageView
+                        android:id="@+id/imageView_info"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="10dp"
+                        android:saveEnabled="false"
+                        app:srcCompat="@android:drawable/ic_menu_info_details" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <ScrollView
+
+                android:id="@+id/scroll_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        >
+
+                        <ImageView
+                            android:id="@+id/photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:baselineAlignBottom="true"
+                            android:cropToPadding="false"
+                            android:layout_marginTop="5dp"
+                            android:padding="3dp"
+                            app:srcCompat="@drawable/ic_camera"
+                            ></ImageView>
+
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/Brieftitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="10dp"
+                        android:text="Preamable:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/preamble"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Preamble Notes"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

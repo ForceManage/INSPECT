@@ -4,13 +4,16 @@ package com.forcemanage.inspect;
  * Created by cindyoakes on 9/23/16.
  */
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+
+import com.forcemanage.inspect.attributes.MapViewNode;
 
 
 public class MapDetailFragment extends Fragment
@@ -91,7 +94,7 @@ public class MapDetailFragment extends Fragment
         super.onSaveInstanceState(outState);
 
         // Save the current description selection in case we need to recreate the fragment
-        outState.putInt(KEY_POSITION,mCurrentPosition);
+        outState.putInt(KEY_POSITION, mCurrentPosition);
     //    outState.clear();
      //   onSaveInstanceState(Bundle.EMPTY);
 

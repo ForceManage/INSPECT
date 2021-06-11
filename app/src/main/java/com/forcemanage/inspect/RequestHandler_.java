@@ -155,8 +155,26 @@ public class RequestHandler_ {
 
             String s;
             while((s=bufferedReader.readLine())!=null){
-                sb.append(s+"\n");
+                sb.append(s); //sb.append(s+"\n");
+              }
+        }catch(Exception e){
+        }
+        return sb.toString();
+    }
+
+    public String sendRequestParam(String requestURL, String annex){
+        StringBuilder sb =new StringBuilder();
+        try {
+            URL url = new URL(requestURL+annex);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            String response;
+            //Reading server response
+            while ((response = bufferedReader.readLine()) != null){
+                sb.append(response+"\n");
             }
+
         }catch(Exception e){
         }
         return sb.toString();

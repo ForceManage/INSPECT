@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:paddingTop="5dp"
     tools:context="com.forcemanage.inspect.MainActivity">
-
-
-
 
 
     <LinearLayout
@@ -32,100 +28,145 @@
             android:layout_height="match_parent"
             android:background="@drawable/image_border"
             android:layout_weight="0.25"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             >
-
-            <Switch
-                android:id="@+id/switch2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="10dp"
-                android:text="TABLET" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnDownloadJobs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#0B2459"
+                    android:text="Download"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_cloud_download_outline"
+                    />
+
+
+                <Button
+                    android:id="@+id/btnSyncAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#0B2459"
+                    android:text="Upload"
+                    android:textSize="11sp"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:drawableStart="@drawable/ic_cloud_upload_outline"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 >
+
+                <Switch
+                    android:id="@+id/switch2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:text="TABLET" />
+
                 <TextView
                     android:id="@+id/inspectorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:text="Inspector"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:paddingLeft="5dp"
+                    android:text="Author"
+                         />
 
                 <Spinner
                     android:id="@+id/spinnerInspectorID"
-                    android:layout_width="87dp"
-
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/ProjectList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Projects"
+                />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:layout_weight="0.5"
+                android:paddingTop="10dp"
+                android:orientation="horizontal">
+
+
+                <fragment
+                    android:id="@+id/tree_fragment"
+                    android:name="com.forcemanage.inspect.MapViewFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <fragment
+                    android:id="@+id/detail_text"
+                    android:name="com.forcemanage.inspect.DetailFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
 
             </LinearLayout>
 
+
+
+
+
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom">
 
                 <Button
+                    android:id="@+id/addProject"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="Add"
+                    android:textSize="11sp"
+                    android:drawableStart="@drawable/ic_text_box_plus_outline"
+
+                    />
+
+                <Button
                     android:id="@+id/btnloadJobs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/tertiary_text_light"
-                    android:drawableLeft="@android:drawable/ic_menu_view"
-                    android:text="SHOW DOWNLOADED JOBS "
-                    android:textSize="14sp"
-                    android:textColor="@android:color/white" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:backgroundTint="#DFB005"
+                    android:text="List"
+                    android:textSize="11sp"
+                    android:drawableLeft="@drawable/ic_format_list_checkbox"
+                     />
 
-                <Button
-                    android:id="@+id/btnDownloadJobs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_jobs"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btnDownloadPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_photos"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btnDownload_O_R"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/arrow_down_float"
-                    android:text="@string/download_comments"
-                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
 
-                <Button
-                    android:id="@+id/btnSyncPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/ic_menu_upload"
-                    android:text="@string/upload_photos"
-                    android:textColor="@android:color/white" />
 
-                <Button
-                    android:id="@+id/btnSyncAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#092877"
-                    android:drawableStart="@android:drawable/ic_menu_upload_you_tube"
-                    android:text="@string/upload_data"
-                    android:textColor="@android:color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -150,191 +191,95 @@
                         android:enabled="false"
                         android:text="@string/clear_tablet_data"
                         android:textColor="@android:color/white" />
+
                 </LinearLayout>
-            </LinearLayout>
+
+
+
+
 
         </LinearLayout>
+
+
+        <LinearLayout
+
+            android:id="@+id/mainfragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:paddingLeft="6dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
 
 
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:paddingLeft="6dp"
+            android:layout_marginLeft="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_weight="0.45"
             android:orientation="vertical"
-            android:layout_weight="0.35">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="5dp"
-                android:background="@drawable/image_border"
-                android:layout_weight="0.65"
-                android:layout_gravity="bottom"
-                >
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="INFORMATION:"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/cardview_dark_background" />
-
-                <EditText
-                    android:id="@+id/editText6"
-                    android:layout_width="match_parent"
-                    android:layout_height="159dp"
-                    android:layout_marginLeft="0dp"
-                    android:text="INFO"
-                    android:background="@android:color/transparent"/>
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                />
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:background="@drawable/image_border"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:layout_weight="0.35"
-                        android:layout_gravity="bottom"
-                        >
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Inspections:"
-                            android:paddingBottom="12dp"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/cardview_dark_background" />
-
-
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/reportView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-
-                    </LinearLayout>
-
-
-            </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:layout_weight="0.4"
+            android:background="@drawable/image_border"
             android:baselineAligned="false">
 
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/image_border"
-                        android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/imageView_cam"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="bottom|left"
+                    android:layout_marginTop="10dp"
+                    android:saveEnabled="false"
+                    app:srcCompat="@android:drawable/ic_menu_camera" />
 
+                <ImageView
+                    android:id="@+id/imageView_info"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginTop="10dp"
+                    android:saveEnabled="false"
+                    app:srcCompat="@android:drawable/ic_menu_info_details" />
+                </FrameLayout>
 
-
-                        <Button
-                            android:id="@+id/btnInspection"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                           android:layout_margin="5dp"
-                            android:backgroundTint="@android:color/tertiary_text_light"
-                            android:drawableLeft="@android:drawable/ic_media_ff"
-                            android:text="INSPECTION"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
             </LinearLayout>
 
 
-
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.6">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                    >
 
                         <ImageView
                             android:id="@+id/imageView6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:adjustViewBounds="true"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/image_border"
+                            android:baselineAlignBottom="true"
+                            android:cropToPadding="false"
+                            android:layout_marginTop="5dp"
                             android:padding="3dp"
                             app:srcCompat="@drawable/ic_camera"
-                            android:contentDescription="TODO"></ImageView>
-
-                        <ImageView
-                            android:id="@+id/imageView_info"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="bottom|left"
-                            android:layout_marginBottom="10dp"
-                            android:saveEnabled="false"
-                            app:srcCompat="@android:drawable/ic_menu_info_details" />
+                            ></ImageView>
 
 
-                        <ImageView
-                            android:id="@+id/imageView_cam"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="bottom|right"
-                            android:layout_marginBottom="10dp"
-                            android:saveEnabled="false"
-                            app:srcCompat="@android:drawable/ic_menu_camera" />
-
-
-                    </FrameLayout>
-
-              </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="10dp"
-                        android:text="Project Address"
-                        android:textSize="18sp"
-                        android:textStyle="normal" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -343,4 +288,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

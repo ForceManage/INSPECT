@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/my_selector"
+    android:padding="3dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/spacer"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/my_selector"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:src="@drawable/folder2_red" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingLeft="5dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/my_selector"
+        android:textStyle="normal"
+        android:text="test case"
+        android:textSize="14dp"
+        android:choiceMode="singleChoice"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/btn_note"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:src="@drawable/ic_edit_folder_btn" />
+
+    <ImageView
+        android:id="@+id/btn_menu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:src="@drawable/ic_more_vert" />
+
+
+
+
+
+</LinearLayout>

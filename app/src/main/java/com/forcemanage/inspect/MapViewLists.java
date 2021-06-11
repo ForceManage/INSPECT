@@ -3,8 +3,10 @@ package com.forcemanage.inspect;
 
 import android.util.Log;
 
+import com.forcemanage.inspect.attributes.MapViewData;
+import com.forcemanage.inspect.attributes.MapViewNode;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -13,8 +15,6 @@ import java.util.HashMap;
 
 public class MapViewLists
 {
-
-
 
 
     public static ArrayList<MapViewData> LoadInitialData() {
@@ -46,21 +46,11 @@ public class MapViewLists
 */
 
 
-
-
-
-
-     //   TreeViewLists.LoadDisplayList();
+     //   MapViewLists.LoadDisplayList();
         return GlobalVariables.dataList;
-
-        // return GlobalVariables.dataList;
 
 
       }
-
-
-
-
 
 
     public static ArrayList<MapViewNode> LoadInitialNodes(ArrayList<MapViewData> dataList)
@@ -75,11 +65,14 @@ public class MapViewLists
             Log.v("LoadInitialNodes", data.getLabel());
 
             MapViewNode node = new MapViewNode();
+            node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setIsExpanded(GlobalVariables.FALSE);
             node.setNodeName(data.getLabel());
-            node.setbrancCat(data.getBranchCat());
+            node.setcatId(data.getCatID());
+            node.setbrancCat(data.getBranchCat());//child
             node.setaID(data.getaID());
+            node.setiID(data.getiID());
             int newLevel = data.getLevel() + 1;
             node.setNodeChildern(null);
             ArrayList<MapViewNode> children = LoadChildrenNodes(dataList, newLevel, data.getaID());
@@ -114,9 +107,12 @@ public class MapViewLists
 
 
             MapViewNode node = new MapViewNode();
+            node.setiprojId(data.getProjId());
             node.setNodeLevel(data.getLevel());
             node.setNodeName(data.getLabel());
+            node.setcatId(data.getCatID());
             node.setaID(data.getaID());
+            node.setiID(data.getiID());
             node.setbrancCat(data.getBranchCat());
             node.setIsExpanded(GlobalVariables.FALSE);
             int newLevel = level + 1;
@@ -139,6 +135,16 @@ public class MapViewLists
 
 
         return nodes;
+    }
+
+
+    public static  void ClearExpandedNodes(){
+
+        for(int i = 0; i < GlobalVariables.nodes.size(); i++) {
+            MapViewNode node = GlobalVariables.nodes.get(i);
+            node.setIsExpanded(GlobalVariables.FALSE);
+        }
+
     }
 
 
@@ -179,14 +185,6 @@ public class MapViewLists
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

@@ -3,14 +3,15 @@ package com.forcemanage.inspect;
 /**
  * Created by cindyoakes on 9/23/16.
  */
-
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.forcemanage.inspect.attributes.MapViewNode;
 
 
 public class DetailFragment extends Fragment
@@ -21,6 +22,9 @@ public class DetailFragment extends Fragment
     int mCurrentPosition = -1;
     int id;
     int aID;
+    int cat;
+
+
     String Name;
 
     TextView mDetailTextView;
@@ -41,7 +45,7 @@ public class DetailFragment extends Fragment
         // This is necessary when in two pane layout
 
         if (savedInstanceState != null){
-            mCurrentPosition = savedInstanceState.getInt(KEY_POSITION);
+            mCurrentPosition = GlobalVariables.pos;  //savedInstanceState.getInt(KEY_POSITION);
             id=mCurrentPosition;
         }
 
@@ -82,7 +86,9 @@ public class DetailFragment extends Fragment
             mCurrentPosition = detailIndex;
             mDetailTextView.setText(node.getNodeName());
             Name = node.getNodeName();
-            aID = node.getID();
+            aID = node.getaID();
+            cat = node.getbranchCat();
+
         }
         else   Log.v("set Detail ", "index > display Nodes ");
 
@@ -92,8 +98,10 @@ public class DetailFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the current description selection in case we need to recreate the fragment
+         // Save the current description selection in case we need to recreate the fragment
         outState.putInt(KEY_POSITION,mCurrentPosition);
+
+
     //    outState.clear();
      //   onSaveInstanceState(Bundle.EMPTY);
 

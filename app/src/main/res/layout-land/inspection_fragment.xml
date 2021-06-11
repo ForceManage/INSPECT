@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:weightSum="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@drawable/image_border"
+            android:orientation="vertical">
+
+
+            <ScrollView
+
+                android:id="@+id/scroll_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/head_frame"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="Page Content  "
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="3dp"
+                        android:paddingLeft="10dp"
+                        android:text="Title:  "
+                        android:textSize="16sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:paddingTop="3dp"
+                        android:paddingLeft="10dp"
+                        android:text="Branch  "
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="7dp"
+                        >
+
+
+
+
+                    </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/Service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="Addressed to:  "
+                            android:textColor="@android:color/black"
+                            android:textStyle="normal|bold" />
+
+                        <EditText
+                            android:id="@+id/textServicedBy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Relevant to"
+                            android:textSize="16sp"/>
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Commentary/Discussion :  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+                        <ImageView
+                            android:id="@+id/title1_voice"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="20dp"
+                            app:srcCompat="@android:drawable/ic_media_play" />
+                </FrameLayout>
+
+                    <EditText
+                        android:id="@+id/Overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Overview of recorded information."
+                        android:textSize="16sp"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/relevantInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Additional comments  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+                        <ImageView
+                            android:id="@+id/title2_voice"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="20dp"
+                            app:srcCompat="@android:drawable/ic_media_play" />
+
+                </FrameLayout>
+
+                    <EditText
+                        android:id="@+id/RelevantInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Other Subject information "
+                        android:textSize="16sp"/>
+
+
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Field Notes:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Author notes (text not printed)"
+                        android:textSize="16sp"/>
+
+
+
+                    <CheckBox
+                        android:id="@+id/print_checkBox"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Include this page in document" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:layout_gravity="bottom">
+
+             </FrameLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+
+            android:orientation="vertical"
+            android:paddingLeft="3dp"
+            >
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:background="#0B2459">
+
+                <ImageView
+                    android:id="@+id/cameraClick1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                <ImageView
+                    android:id="@+id/cameraClick2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                <ImageView
+                    android:id="@+id/cameraClick3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+
+                <ImageView
+                    android:id="@+id/cameraClick4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                <ImageView
+                    android:id="@+id/cameraClick5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                <ImageView
+                    android:id="@+id/cameraClick6"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:cropToPadding="false"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/edit_border"
+                    app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                <ImageView
+                    android:id="@+id/imageView_draw"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="bottom|center"
+                    android:layout_weight="0.2"
+                    android:visibility="visible"
+
+                    android:layout_margin="2dp"
+                    android:foreground="@android:drawable/ic_menu_edit" />
+
+
+
+            </LinearLayout>
+
+
+            <ScrollView
+
+                android:id="@+id/scroll_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="false"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="5dp"
+                                android:paddingBottom="5dp"
+                                app:srcCompat="@drawable/ic_camera" />
+
+                            <ImageView
+                                android:id="@+id/imageView_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="10dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_margin="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                         </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/com1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:layout_margin="5dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:baselineAlignBottom="false"
+                                android:cropToPadding="false"
+                                android:padding="5dp"
+                                app:srcCompat="@drawable/ic_camera">
+
+                            </ImageView>
+
+                            <ImageView
+                                android:id="@+id/imageView2_del"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|left"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView2_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file2"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_margin="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/com2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_border"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border"
+                        >
+
+                        <FrameLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageView3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:baselineAlignBottom="true"
+                                android:cropToPadding="false"
+                                android:padding="2dp"
+                                app:srcCompat="@drawable/ic_camera"></ImageView>
+
+
+                            <ImageView
+                                android:id="@+id/imageView3_del"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|left"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView3_file"
+                                android:layout_width="72dp"
+                                android:layout_height="67dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file3"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_margin="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/com3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border">
+
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageView4"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:baselineAlignBottom="true"
+                                android:cropToPadding="false"
+                                android:padding="5dp"
+                                app:srcCompat="@drawable/ic_camera"></ImageView>
+
+                            <ImageView
+                                android:id="@+id/imageView4_del"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|left"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView4_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file4"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_margin="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                         </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/com4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageView5"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:baselineAlignBottom="true"
+                                android:cropToPadding="false"
+                                android:padding="5dp"
+                                app:srcCompat="@drawable/ic_camera"></ImageView>
+
+                            <ImageView
+                                android:id="@+id/imageView5_del"
+                                android:layout_width="66dp"
+                                android:layout_height="77dp"
+                                android:layout_gravity="bottom|left"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView5_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file5"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_margin="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                        </FrameLayout>
+                        <EditText
+                            android:id="@+id/com5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/image_border"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageView6"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:baselineAlignBottom="true"
+                                android:cropToPadding="false"
+                                android:padding="5dp"
+                                app:srcCompat="@drawable/ic_camera"></ImageView>
+
+                            <ImageView
+                                android:id="@+id/imageView6_del"
+                                android:layout_width="66dp"
+                                android:layout_height="77dp"
+                                android:layout_gravity="bottom|left"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_delete" />
+
+                            <ImageView
+                                android:id="@+id/imageView6_file"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|center"
+                                android:layout_marginBottom="5dp"
+                                android:foreground="@android:drawable/ic_menu_gallery" />
+
+                            <ImageView
+                                android:id="@+id/insert_file6"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginBottom="10dp"
+                                android:foreground="@drawable/picture_picture" />
+
+                        </FrameLayout>
+                        <EditText
+                            android:id="@+id/com6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_border"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Descriptive text for photograph"
+                            android:textSize="16sp">
+
+                        </EditText>
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

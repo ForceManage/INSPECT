@@ -2,15 +2,30 @@ package com.forcemanage.inspect;
 
 public class MyConfig {
 
-
+    public static final String URL_GET_PROJECTS = "https://dev.force-management.com/TAB_INSPECT/Inspection/getProjects.php?InspectorId=";
     public static final String URL_GET_PROJECT_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getInspectionInfo.php?InspectorId=";
     public static final String URL_GET_ADDITIONAL_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/getAdditionalInfo.php?InspectorId=";
+    public static final String URL_GET_ACTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getActionItem.php?InspectorId=";
+    public static final String URL_GET_CERT_INSPECTION = "https://dev.force-management.com/TAB_INSPECT/Inspection/getCertInsp.php?InspectorId=";
+    public static final String URL_GET_SUMMARY = "https://dev.force-management.com/TAB_INSPECT/Inspection/getSummary.php?InspectorId=";
     public static final String URL_GET_OR_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_OR_Info.php?cat=";
+    public static final String URL_GET_USER_INFO = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_login.php?user=";
+    public static final String URL_GET_LOG = "https://dev.force-management.com/TAB_INSPECT/Inspection/get_LOG.php?InspectorId=";
+    public static final String URL_CHANGE_USER_CODE = "https://dev.force-management.com/TAB_INSPECT/Inspection/user_change_code.php?user_id=";
     public static final String URL_SYNC_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspectionToServer.php";
     public static final String URL_SYNC_INSPECTION_ITEMS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncInspItemsToServer.php";
     public static final String URL_SYNC_MAP_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncMAPToServer.php";
     public static final String URL_SYNC_PROJECT_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncProjectToServer.php";
     public static final String URL_SYNC_ACTIONS_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncActionsToServer.php";
+    public static final String URL_SYNC_CERT_INSPECTION_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncCertInspToServer.php";
+    public static final String URL_SYNC_SUMMARY_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncSummaryToServer.php";
+    public static final String URL_SYNC_LOG_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncLOGToServer.php";
+    public static final String URL_SYNC_DELETED_TO_SERVER = "https://dev.force-management.com/TAB_INSPECT/Inspection/syncDeletedToServer.php";
+
+    public static final String URL_REQUEST_ACTIVITY= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestActivity.php?projId=";
+    public static final String URL_REQUEST_PROJECT= "https://dev.force-management.com/TAB_INSPECT/Inspection/requestProject.php?projId=";
+    public static final String URL_EMAIL_REPORT= "https://dev.force-management.com/TAB_INSPECT/Inspection/";
+
     //JSON Tags
     //Property informtion
     public static final String TAG_JSON_ARRAY="result";
@@ -18,14 +33,16 @@ public class MyConfig {
     public static final String TAG_ADDRESS_NO = "AddressNo";
     public static final String TAG_PROJECT_ADDRESS = "ProjectAddress";
     public static final String TAG_PROJECT_SUBURB = "ProjectSuburb";
-    public static final String TAG_BUILD_PERMIT_NMBR = "BuildPermitNmbr";
-    public static final String TAG_BUILD_TYPE = "BuildType";
-    public static final String TAG_BUILD_CLASS = "BuildingClass";
-    public static final String TAG_KEY_REQUIRED = "KeyRequired";
-    public static final String TAG_NMBR_LEVELS = "NoLevels";
-    public static final String TAG_FLOOR_TYPE = "FloorType";
-    public static final String TAG_ROOF_TYPE = "RoofType";
-    public static final String TAG_WALL_TYPE = "WallType";
+    public static final String TAG_INFO_B = "InfoB";
+    public static final String TAG_INFO_A = "InfoA";
+    public static final String TAG_INFO_C = "InfoC";
+    public static final String TAG_INFO_E = "InfoE";
+    public static final String TAG_INFO_D = "InfoD";
+    public static final String TAG_INFO_F = "InfoF";
+    public static final String TAG_INFO_G = "InfoG";
+    public static final String TAG_INFO_H = "InfoH";
+    public static final String TAG_INFO_I = "InfoI";
+    public static final String TAG_INFO_J = "InfoJ";
     public static final String TAG_PROJECT_NOTE = "ProjectNote";
     public static final String TAG_PROJECT_PHOTO = "ProjectPhoto";
 
@@ -40,6 +57,8 @@ public class MyConfig {
 
 
     //Inspection Item
+    public static final String TAG_IMAGE = "Image";
+    public static final String TAG_P_ID = "pID";
     public static final String TAG_A_ID = "aID";
     public static final String TAG_DATE_INSPECTED = "dateInspected";
     public static final String TAG_OVERVIEW = "Overview";
@@ -66,6 +85,7 @@ public class MyConfig {
 
 
 
+
     //Map
     public static final String TAG_CAT_ID = "CatID";
     public static final String TAG_LEVEL = "Level";
@@ -73,13 +93,39 @@ public class MyConfig {
     public static final String TAG_LABEL = "Label";
     public static final String TAG_CHILD = "Child";
 
+    //Certificate Inspection
+    public static final String TAG_DATE_TIME = "DateTime";
+    public static final String TAG_PERMIT = "Permit";
+    public static final String TAG_STAGE = "Stage";
 
-
-
+    //Summary
+    public static final String TAG_HEAD_A = "headA";
+    public static final String TAG_HEAD_B = "headB";
+    public static final String TAG_HEAD_C = "headC";
+    public static final String TAG_COM_A = "comA";
+    public static final String TAG_COM_B = "comB";
+    public static final String TAG_COM_C = "comC";
 
     //A category Observation and recommendations
     public static final String TAG_NUM = "num";
     public static final String TAG_SUBCAT = "subCat";
     public static final String TAG_TYPE = "type";
-    public static final String TAG_NOTE = "note";
+    public static final String TAG_NOTE = "Note";
+    public static final String TAG_NOTE_2 = "Note_2";
+
+    //Users
+    public static final String TAG_USER_ID = "userID";
+    public static final String TAG_USER_NAME = "userName";
+    public static final String TAG_USER_CODE = "userCode";
+    public static final String TAG_CLIENT_NAME = "clientName";
+
+    //TableName
+    public static final String TAG_TABLE_NAME = "TableName";
+
+    //Template
+    public static final String TAG_TEMPLATE_NAME = "TemplateName";
+
+    //Preferences
+    public static final String TAG_PREFERENCE = "Preference";
+    public static final String TAG_HIGHRES = "Highres";
 }

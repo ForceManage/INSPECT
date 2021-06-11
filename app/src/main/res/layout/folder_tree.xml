@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/image_border"
+            android:orientation="vertical"
+            android:weightSum="1"
+            >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/head_frame"
+                android:paddingBottom="5dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageView_folder"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_gravity="left"
+                        android:foreground="@drawable/documents" />
+
+                    <TextView
+                        android:id="@+id/branchTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:paddingTop="6dp"
+                        android:paddingLeft="5dp"
+                        android:text="Folder Tab Headings:  "
+                        android:textSize="16sp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/branchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="10dp"
+                        android:layout_marginLeft="50dp"
+                        android:layout_gravity="bottom"
+                        android:text="Document Layout  "
+                        android:textColor="@android:color/white"
+                        android:textStyle="normal" />
+f                </FrameLayout>
+
+
+
+            </LinearLayout>
+
+
+
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/fragment_folder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/image_border"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:paddingTop="5dp"
+                        android:layout_marginBottom="7dp"
+                        android:backgroundTint="@color/light"
+                        android:orientation="horizontal"
+
+                        >
+
+                        <fragment
+                            android:id="@+id/tree1_fragment"
+                            android:name="com.forcemanage.inspect.MapViewFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="5dp"
+                            />
+
+                        <fragment
+                            android:id="@+id/detail1_text"
+                            android:name="com.forcemanage.inspect.DetailFragment"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp" />
+
+
+                    </LinearLayout>
+
+            <ScrollView
+
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp">
+
+                <LinearLayout
+                    android:id="@+id/document_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:orientation="vertical"
+                    android:background="@color/light"
+                    android:visibility="gone"
+                    >
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            android:id="@+id/Doc_Head"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Document Information  "
+                            android:background="@drawable/grey_blue"
+                            android:textColor="@android:color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+
+
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/doc_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Document Title:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold"/>
+
+
+
+                    <TextView
+                        android:id="@+id/doc_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="10dp"
+                        android:text="Document Title"
+                        android:textSize="20sp"/>
+
+
+                    <TextView
+                        android:id="@+id/Text_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:text="Document created:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Type of Document:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Author:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Text_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:paddingLeft="10dp"
+                        android:text=":  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:text="Document notes:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/siteNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Document notes (Non Output)"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/folder_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:orientation="vertical"
+                    android:background="@color/light"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:id="@+id/Doc_Head1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="Folder Information  "
+                        android:textColor="@android:color/black"
+                        android:background="@drawable/grey_blue"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/Service"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Folder Name:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+                    <TextView
+                        android:id="@+id/folder_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Folder Title - Eg. Project Address/Project name/ etc"
+                        android:textSize="22sp"/>
+
+                    <TextView
+                        android:id="@+id/infotitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="8dp"
+                        android:paddingLeft="10dp"
+                        android:text="Folder Information:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note A "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note B"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note C"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note D"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note E"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note F"
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Folder Note G "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="Folder Note H "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal" />
+
+
+                    <TextView
+                        android:id="@+id/note_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:text="Folder Notes:  "
+                        android:textColor="@android:color/black"
+                        android:textStyle="normal|bold" />
+
+
+
+                    <EditText
+                        android:id="@+id/folder_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="10dp"
+                        android:hint="Author notes (text not printed)"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"/>
+
+
+
+                </LinearLayout>
+
+                    </LinearLayout>
+
+            </ScrollView>
+
+
+
+                </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>

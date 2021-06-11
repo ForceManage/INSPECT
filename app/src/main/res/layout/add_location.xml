@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="Branch Title : "
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:text="Topic Tab Title : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -19,13 +21,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Parent Title:  "
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Topic Title:  "
         android:id="@+id/textView" />
 
     <EditText
         android:id="@+id/locationtext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Describe the item's location...Basement, West side of building ....etc"
+        android:hint="Title for the tab "
         android:padding="10dp" />
 </LinearLayout>
