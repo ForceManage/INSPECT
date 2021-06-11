@@ -4655,10 +4655,11 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         //Get the property information for all the properties to inspect
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> list = dbHandler.getAllProjects(USER_ID, "m");
-        //Get a list of all the images for the properties to inspect
+        ArrayList<HashMap<String, String>> maplist = dbHandler.getMapPhotos(USER_ID);
         ArrayList<HashMap<String, String>> photolist = dbHandler.getInspectedItemPhotos(USER_ID);
         ArrayList<HashMap<String, String>> inspectphotolist = dbHandler.getInspectionPhotos(USER_ID);
         ArrayList<HashMap<String, String>> actionlist = dbHandler.getActionPhotos(USER_ID);
+
 
 
         String photo_name;
@@ -4689,6 +4690,16 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             photo_name = photolist.get(i).get(MyConfig.TAG_IMAGE6);
+            if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
+
+            i++;
+        }
+
+        i = 0;
+
+        while (i  < maplist.size() ) {   //photolist.size()
+
+            photo_name = maplist.get(i).get(MyConfig.TAG_IMAGE1);
             if(!photo_name.equals("")) uploadFileToS3(view, photo_name);
 
             i++;
@@ -5076,6 +5087,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         ArrayList<HashMap<String, String>> plist = dbHandler.dwnLoadPropertyPhoto(projId);
         ArrayList<HashMap<String, String>> list = dbHandler.dwnLoadInspectionPhotos(projId);
+        ArrayList<HashMap<String, String>> maplist = dbHandler.dwnLoadMapPhotos(projId);
         //Get a list of all the images for the properties to inspect
         ArrayList<HashMap<String, String>> ilist = dbHandler.dwnLoadInspectionItemPhotos(projId);
         ArrayList<HashMap<String, String>> photolist = dbHandler.dwnLoadActionPhotos(projId);
@@ -5085,6 +5097,14 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             if (plist.get(i).get(MyConfig.TAG_IMAGE) != null || plist.get(i).get(MyConfig.TAG_IMAGE) != "")
                 downloadFileFromS3(view, plist.get(i).get(MyConfig.TAG_IMAGE));
             String s = plist.get(i).get(MyConfig.TAG_IMAGE);
+            i++;
+        }
+
+        i = 0;
+        while (i < maplist.size()) {
+            if (maplist.get(i).get(MyConfig.TAG_IMAGE1) != null || maplist.get(i).get(MyConfig.TAG_IMAGE1) != "")
+                downloadFileFromS3(view, maplist.get(i).get(MyConfig.TAG_IMAGE1));
+            String s = maplist.get(i).get(MyConfig.TAG_IMAGE1);
             i++;
         }
 

@@ -3556,6 +3556,34 @@ public class DBHandler extends SQLiteOpenHelper {
         return photoArrayList;
     }
 
+    public ArrayList<HashMap<String, String>> dwnLoadMapPhotos(int proj_id) {
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String selectQuery = "SELECT E." + COLUMN_IMG1
+                + " FROM " + TABLE_MAP +" E "
+                + " WHERE E." + COLUMN_PROJECT_ID + " = " +proj_id;
+
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> photoMap = new HashMap<String, String>();
+
+                if (cursor.getString(0) != "")
+                    photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
+
+                photoArrayList.add(photoMap);
+            } while (cursor.moveToNext()); // Move Cursor to the next row
+        }
+        cursor.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
 
     public ArrayList<HashMap<String, String>> dwnLoadInspectionPhotos(int proj_id) {
 
@@ -3809,6 +3837,57 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
         cursor.close();
+            } while (cursorI.moveToNext()); // Move Cursor to the next row
+        }
+        cursorI.close();
+
+        database.close();
+        // return contact list
+        return photoArrayList;
+    }
+
+
+    public ArrayList<HashMap<String, String>> getMapPhotos(int user_id) {
+
+        // ArrayList that contains every row in the database
+        // and each row key / value stored in a HashMap
+
+        ArrayList<HashMap<String, String>> photoArrayList;
+
+        photoArrayList = new ArrayList<HashMap<String, String>>();
+
+        String projID;
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        String selectQueryI = "SELECT I."+COLUMN_PROJECT_ID
+                + " FROM " + TABLE_INSPECTION + " I "
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id
+                + " GROUP BY I."+ COLUMN_PROJECT_ID;
+
+        Cursor cursorI = database.rawQuery(selectQueryI, null);
+        if (cursorI.moveToFirst()) {
+            do {
+                projID = cursorI.getString(0);
+
+                String selectQuery = "SELECT A." + COLUMN_IMG1
+
+                        + " FROM " + TABLE_MAP +" A "
+                        + " WHERE A." + COLUMN_PROJECT_ID + " = "+projID+" AND A."+COLUMN_ITEM_STATUS+" = 'm'";
+
+
+                Cursor cursor = database.rawQuery(selectQuery, null);
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        HashMap<String, String> photoMap = new HashMap<String, String>();
+                        if (cursor.getString(0) != "")
+                            photoMap.put(MyConfig.TAG_IMAGE1, cursor.getString(0));
+
+                        photoArrayList.add(photoMap);
+                    } while (cursor.moveToNext()); // Move Cursor to the next row
+
+                }
+                cursor.close();
             } while (cursorI.moveToNext()); // Move Cursor to the next row
         }
         cursorI.close();
