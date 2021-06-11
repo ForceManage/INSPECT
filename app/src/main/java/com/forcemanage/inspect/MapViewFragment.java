@@ -52,7 +52,7 @@ public class MapViewFragment extends ListFragment {
 
         MapViewNode node = GlobalVariables.displayNodes.get(position);
 
-
+        if(position == 0) node.setIsExpanded(GlobalVariables.FALSE);
         int proj = node.getprojId();
 
 
@@ -131,8 +131,8 @@ public class MapViewFragment extends ListFragment {
             listener.OnTabChanged(GlobalVariables.pos);
 
 
-
             MapViewLists.LoadDisplayList();
+
 
 
 

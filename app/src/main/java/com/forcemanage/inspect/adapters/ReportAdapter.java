@@ -65,6 +65,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
             TextView com3 = (TextView) row.findViewById(R.id.Observation3);
             TextView com4 = (TextView) row.findViewById(R.id.Observation4);
             TextView com5 = (TextView) row.findViewById(R.id.Observation5);
+            TextView com6 = (TextView) row.findViewById(R.id.Observation6);
             TextView label = (TextView) row.findViewById(R.id.branchName);
             TextView relInfo = (TextView) row.findViewById(R.id.RelevantInfo);
 /*
@@ -79,6 +80,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
             title.setText(listItem.getBranchHead());
             parentLabel.setText(listItem.getParentLabel());
+            label.setText(listItem.getLabel());
             overview.setText(listItem.getOverview());
             String itemNo = Integer.toString(position + 1);
             if (!listItem.getImage1().equals(""))
@@ -91,19 +93,20 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                 com4.setText(listItem.getCom4() + " (Fig " + itemNo + ".3)");
             if (!listItem.getImage5().equals(""))
                 com5.setText(listItem.getCom5() + " (Fig " + itemNo + ".4)");
+                if (!listItem.getImage6().equals(""))
+                    com6.setText(listItem.getCom6() + " (Fig " + itemNo + ".5)");
 
-            label.setText(listItem.getLabel());
             relInfo.setText(listItem.getRelevantInfo());
 
-            String[] photos = {listItem.getImage1(), listItem.getImage2(), listItem.getImage3(), listItem.getImage4(), listItem.getImage5()};
+            String[] photos = {listItem.getImage1(), listItem.getImage2(), listItem.getImage3(), listItem.getImage4(), listItem.getImage5(), listItem.getImage6()};
             ImageView image1 = (ImageView) row.findViewById(R.id.imageView1);
             ImageView image2 = (ImageView) row.findViewById(R.id.imageView2);
             ImageView image3 = (ImageView) row.findViewById(R.id.imageView3);
             ImageView image4 = (ImageView) row.findViewById(R.id.imageView4);
             ImageView image5 = (ImageView) row.findViewById(R.id.imageView5);
+            ImageView image6 = (ImageView) row.findViewById(R.id.imageView6);
 
-
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
 
                 if (photos[i].length() > 12) {
 
@@ -145,6 +148,12 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                         //        fig4.setText("Fig " + itemNo + ".4");
                                 break;
                             }
+                            case 5: {
+                                image6.setImageBitmap(myBitmap);
+                                image6.setVisibility(View.VISIBLE);
+                                //        fig4.setText("Fig " + itemNo + ".4");
+                                break;
+                            }
                         }
                     } else {
 
@@ -170,7 +179,10 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                                 image5.setVisibility(View.GONE);
                                 break;
                             }
-
+                            case 5: {
+                                image6.setVisibility(View.GONE);
+                                break;
+                            }
                         }
                     }
 
@@ -198,7 +210,10 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                             image5.setVisibility(View.GONE);
                             break;
                         }
-
+                        case 5: {
+                            image6.setVisibility(View.GONE);
+                            break;
+                        }
                     }
                 }
             }

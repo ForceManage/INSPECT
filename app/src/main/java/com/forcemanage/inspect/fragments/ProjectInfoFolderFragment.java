@@ -87,6 +87,7 @@ public class ProjectInfoFolderFragment extends Fragment implements  View.OnClick
         cam1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 globalVariables.mPhotoImageView = mPhotoImageView;
                 globalVariables.takeImageFromCamera(null);
                 Edited = true;

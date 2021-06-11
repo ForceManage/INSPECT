@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ReportFragment extends Fragment {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
 
     private static final String TAG = "Report Fragment";
@@ -53,7 +53,7 @@ public class ReportFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-       globalVariables = (InspectionActivity) getActivity();
+       globalVariables = (MainActivity) getActivity();
     }
 /*
     @Override
@@ -95,42 +95,17 @@ public class ReportFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.listitem, container, false);
 
-         listItems = globalVariables.reportlistItems;
+        listItems = globalVariables.reportlistItems;
 
         listView = (ListView) view.findViewById(R.id.list);
 
 
        ReportAdapter adapter = new ReportAdapter(getActivity(), 0, globalVariables.reportlistItems);
-        exit = (Button) view.findViewById(R.id.btncloseReport);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InspectionInfoFolderFragment info = new InspectionInfoFolderFragment();
 
-                FragmentManager manager = getFragmentManager();
-                FragmentTransaction trans = getFragmentManager().beginTransaction();
-               trans.remove(manager.findFragmentByTag("ReportFragment"));
-
-                trans.replace(R.id.mainfragment_container, manager.findFragmentByTag("InspectInfoFragment"));
-
-                trans.commit();
-                manager.findFragmentByTag("InspectInfoFragment").setArguments(bundle);
-
-            }
-        });
 
         listView.setAdapter(adapter);
 
-         // adapter = new ReportAdapter(reportlistItems, this);
-        //  recyclerView.setAdapter(adapter);
-        //setListAdapter();
 
-       // ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource()
-
-
-    //   View header = getLayoutInflater().inflate(R.layout.report_header, null);
-
-     //   listView.addHeaderView(header);
         return view;
 
 

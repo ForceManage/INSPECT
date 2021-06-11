@@ -68,6 +68,8 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     private String fname;
     private String dirName;
     private String name;
+    private ImageView photo_file;
+    private ImageView mPhotoImageView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,9 +85,6 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
         }
 
         Edited = false;
-
-
-
 
     }
 
@@ -113,7 +112,25 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
 
 
 
+        photo_file = (ImageView) view.findViewById(R.id.imageView_file);
 
+        photo_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                globalVariables.mPhotoImageView = mPhotoImageView;
+                Intent galleryIntent = new Intent();
+
+                galleryIntent.setAction(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+
+                globalVariables.startActivityForResult(galleryIntent.createChooser(galleryIntent, "Select Picture"), 1);
+
+
+            }
+
+
+        });
 
 
         camera.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +175,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
                 }
 
                 DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-                dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name,globalVariables.filephoto);
+                dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name, globalVariables.filephoto);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
 

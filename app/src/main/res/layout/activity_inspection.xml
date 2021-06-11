@@ -71,7 +71,7 @@
                             android:paddingStart="60dp"
                             android:textColor="@color/color_edit"
                             android:layout_gravity="center_vertical"
-                            android:text="Folder -> Document content"
+                            android:text="Document content"
 
                             android:textStyle="normal|bold" />
 

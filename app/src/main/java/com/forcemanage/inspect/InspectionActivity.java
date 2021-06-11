@@ -40,7 +40,8 @@ import com.forcemanage.inspect.fragments.BaseFragment;
 import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
-import com.forcemanage.inspect.fragments.MultiPicFragment;
+import com.forcemanage.inspect.fragments.MultiPic4Fragment;
+import com.forcemanage.inspect.fragments.MultiPic6Fragment;
 import com.forcemanage.inspect.fragments.PhotoEditFragment;
 import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
@@ -395,8 +396,6 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
         final MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
         aID = node.getaID();
 
-
-
         if (detailFragment != null) {
             // If description is available, we are in two pane layout
             // so we call the method in DescriptionFragment to update its content
@@ -450,6 +449,10 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
             GlobalVariables.modified = false;
 
       //      OnTabChanged(GlobalVariables.pos);
+
+        }
+
+        if(treeNameIndex == 0){
 
 
         }
@@ -569,9 +572,14 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
         }
 
-        if (FragDisplay == "MultiPicFragment") {
+        if (FragDisplay == "MultiPic6Fragment") {
             dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, aID, photo1, photo2, photo3, photo4,
                     photo5, photo6, photo7);
+        }
+
+        if (FragDisplay == "MultiPic4Fragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, aID, photo1, photo2, photo3, photo4,
+                    "", "", "");
         }
 
         Edited = false;
@@ -604,7 +612,11 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                 loadMap();
                 break;
             }
-            case (1):{
+
+            case (1):
+            case (3):
+            case (4):
+            case (5):    {
 
                 dbHandler.deleteMapBranch(projId, aID);
                 dbHandler.deleteRec("MAP",projId,GlobalVariables.iId,aID);
@@ -628,6 +640,7 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                 loadMap();
                 break;
             }
+
 
             case (9):{
 
@@ -871,10 +884,18 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
 
                    HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, aID);
+
                    if (list.size() > 0) {
                        relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
                        Overview = list.get(MyConfig.TAG_OVERVIEW);
                        aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                       com1 = list.get(MyConfig.TAG_COM1);
+                       com2 = list.get(MyConfig.TAG_COM2);
+                       com3 = list.get(MyConfig.TAG_COM3);
+                       com4 = list.get(MyConfig.TAG_COM4);
+                       com5 = list.get(MyConfig.TAG_COM5);
+                       com6 = list.get(MyConfig.TAG_COM6);
+                       Notes = list.get(MyConfig.TAG_NOTES);
                        String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
                        String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
@@ -891,6 +912,13 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                        bundle.putString("overview", Overview);
                        bundle.putString("date", dateInspected);
                        bundle.putString("relevantInfo", relevantInfo);
+                       bundle.putString("notes", Notes);
+                       bundle.putString("com1", com1);
+                       bundle.putString("com2", com2);
+                       bundle.putString("com3", com3);
+                       bundle.putString("com4", com4);
+                       bundle.putString("com5", com5);
+                       bundle.putString("com6", com6);
                        bundle.putString("prnt", prntReport);
 
 
@@ -911,10 +939,10 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                        photo6 = photos[5];
 
 
-                       MultiPicFragment fragment = new MultiPicFragment();
+                       MultiPic6Fragment fragment = new MultiPic6Fragment();
                        fragment.setArguments(bundle);
 
-                       doFragmentTransactionMI(fragment, "MultiPicFragment", false, "");
+                       doFragmentTransactionMI(fragment, "MultiPic6Fragment", false, "");
 
                        //   int itemNos = dbHandler.getSubItemMap(projId, aID);
                    } else
@@ -925,6 +953,73 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
                }
 
+               case 4: {
+
+
+                   HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, aID);
+
+                   if (list.size() > 0) {
+                       relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                       Overview = list.get(MyConfig.TAG_OVERVIEW);
+                       aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                       com1 = list.get(MyConfig.TAG_COM1);
+                       com2 = list.get(MyConfig.TAG_COM2);
+                       com3 = list.get(MyConfig.TAG_COM3);
+                       com4 = list.get(MyConfig.TAG_COM4);
+
+                       String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                       String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
+
+
+                       Bundle bundle = new Bundle();
+                       bundle.putString("projectID", projectId);
+                       bundle.putString("inspectionID", inspectionId);
+                       bundle.putInt("aID", aID);
+                       bundle.putInt("Level", Level);
+                       bundle.putInt("catId", catId);
+                       bundle.putString("branchHead", branchHead);
+                       bundle.putString("branchLabel", inspLabel);
+                       bundle.putString("aprovider", aProvider);
+                       bundle.putString("overview", Overview);
+                       bundle.putString("date", dateInspected);
+                       bundle.putString("relevantInfo", relevantInfo);
+                       bundle.putString("notes", Notes);
+                       bundle.putString("com1", com1);
+                       bundle.putString("com2", com2);
+                       bundle.putString("com3", com3);
+                       bundle.putString("com4", com4);
+
+                       bundle.putString("prnt", prntReport);
+
+
+                       photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                       photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                       photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                       photos[3] = list.get(MyConfig.TAG_IMAGE4);
+
+                       //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                       String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                       photo1 = photos[0];
+                       photo2 = photos[1];
+                       photo3 = photos[2];
+                       photo4 = photos[3];
+
+
+
+                       MultiPic4Fragment fragment = new MultiPic4Fragment();
+                       fragment.setArguments(bundle);
+
+                       doFragmentTransactionMI(fragment, "MultiPic4Fragment", false, "");
+
+                       //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+                   } else
+                       Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
+
+
+                   break;
+
+               }
 
                case 9: {
 
@@ -1091,83 +1186,6 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
       }
 
 
-
-    public void reportMenu() {
-
-       DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-
-
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("projectId", projId);
-                        bundle.putInt("iId", GlobalVariables.iId);
-
-
-                        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, GlobalVariables.iId);
-
-                        reportlistItems = new ArrayList<>();
-                        ReportItem listItem;
-
-                        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
-                            listItem = new ReportItem(
-                                    listItemsmap.get(i).get("typeObject"),
-                                    listItemsmap.get(i).get("BranchHead"),
-                                    listItemsmap.get(i).get("ParentLabel"),
-                                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
-                                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
-                                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
-                                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
-                                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
-                                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
-                                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
-                                    listItemsmap.get(i).get(MyConfig.TAG_STAGE),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_A),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_A),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_B),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_B),
-                                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_C),
-                                    listItemsmap.get(i).get(MyConfig.TAG_COM_C)
-
-                            );
-
-                            reportlistItems.add(listItem);
-
-                            Log.v("report list", listItemsmap.get(i).get("typeObject") + ", ");
-                        }
-
-
-                        HashMap<String, String> projectItem = dbHandler.getInspection(projId, GlobalVariables.iId);
-
-                        //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                        propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
-
-                        bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                        bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
-                        bundle.putString("projectId", projectId);
-                        bundle.putString("inspectionId", inspectionId);
-                        bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
-                        bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
-                        bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
-                        bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
-                        bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                        bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
-
-                        ReportFragment reportfragment = new ReportFragment();
-                        reportfragment.setArguments(bundle);
-                        doFragmentTransaction(reportfragment, "ReportFragment", false, "");
-                        reportfragment.setArguments(bundle);
-
-    }
 
 
     public void photo_load(){
@@ -1359,18 +1377,42 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                         photoF.setImageURI(selectedImage);
                         break;
 
-                    case 7:
-                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
-                        photoG.setImageURI(selectedImage);
-                        break;
-
                 }
 
             }
 
-            if (FragDisplay == "MultiPicFragment") {
+            if (FragDisplay == "MultiPic4Fragment") {
 
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic4Fragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                   }
+
+            }
+
+            if (FragDisplay == "MultiPic6Fragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic6Fragment");
 
                 switch (filephoto) {
                     case 1:
@@ -1403,12 +1445,7 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
                         photoF.setImageURI(selectedImage);
                         break;
 
-                    case 7:
-                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
-                        photoG.setImageURI(selectedImage);
-                        break;
-
-                }
+                  }
 
             }
 
@@ -1475,15 +1512,9 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
             if (FragDisplay == "PhotoEditFragment") {
 
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("PhotoEditFragment");
+                photoA = fragment_obj.getView().findViewById(R.id.photo_insert);
+                photoA.setImageURI(selectedImage);
 
-                switch (filephoto) {
-                    case 1:
-                        photoA = fragment_obj.getView().findViewById(R.id.photo_insert);
-                        photoA.setImageURI(selectedImage);
-                        break;
-
-
-                }
 
             }
 

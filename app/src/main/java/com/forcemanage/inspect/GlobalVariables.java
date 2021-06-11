@@ -31,6 +31,7 @@ public class GlobalVariables
     public static int User_id;
     public static int folderIndex;
     public static int Hres = 0;
+    public static int folders;
 
 
     public static Boolean modified = false;

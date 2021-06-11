@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
@@ -72,10 +73,13 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
             inspection = bundle.getString("inspection");
             branchNote = bundle.getString("notes");
             projectId = bundle.getString("projectID");
+            projId = bundle.getInt("projId");
             inspectionId = bundle.getString("inspectionID");
             aId = bundle.getInt("aID");
-            image = bundle.getString("image");
+            image = bundle.getString("branchPhoto");
          }
+
+        Edited = false;
 
       }
 
@@ -108,16 +112,19 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
         photo_file.setOnClickListener(this);
 
+
+        bNote = (EditText) view.findViewById(R.id.note);
+        bNote.setText(branchNote);
         title = (TextView) view.findViewById(R.id.title);
         //  activity = (TextView) view.findViewById(R.id.level);
         branch = (TextView) view.findViewById(R.id.Text1);
         TabId = (TextView) view.findViewById(R.id.aId);
 
-        bNote = (EditText) view.findViewById(R.id.note);
+
 
 
         branch.setText(branchLabel);
-        bNote.setText(branchNote);
+
 
 
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -132,7 +139,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         photo_cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(aId > 0) {
+                if(GlobalVariables.aId > 0) {
                  //   globalVariables.photoframe = 0;
                     globalVariables.mPhotoImageView = mPhotoImageView;
                     globalVariables.takeImageFromCamera(null);
@@ -225,12 +232,8 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         if (Edited) {
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            // String serviceDate = inspectionDate.getText().toString();
-            // work out the next service date in three months time
-            dbHandler.updateMap(projId, aId, bNote.getText().toString());
+            dbHandler.updateMap(projId, GlobalVariables.aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
-
-
 
         }
     }
@@ -240,12 +243,9 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         super.onDestroyView();
         if (Edited) {
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            // String serviceDate = inspectionDate.getText().toString();
-            // work out the next service date in three months time
-            if(projectId != null) {
-                dbHandler.updateMap(projId, aId, bNote.getText().toString());
-                dbHandler.statusChanged(projId,iId);
-            }
+            dbHandler.updateMap(projId, GlobalVariables.aId, bNote.getText().toString());
+            dbHandler.statusChanged(projId,iId);
+
         }
     }
 }

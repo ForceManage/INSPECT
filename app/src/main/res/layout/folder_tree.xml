@@ -74,8 +74,7 @@
                         android:text="Document Layout  "
                         android:textColor="@android:color/white"
                         android:textStyle="normal" />
-
-                </FrameLayout>
+f                </FrameLayout>
 
 
 
@@ -187,7 +186,8 @@
                         android:paddingLeft="10dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="10dp"
-                        android:textSize="16sp"/>
+                        android:text="Document Title"
+                        android:textSize="20sp"/>
 
 
                     <TextView
@@ -302,7 +302,7 @@
                         android:paddingTop="5dp"
                         android:paddingBottom="10dp"
                         android:hint="Folder Title - Eg. Project Address/Project name/ etc"
-                        android:textSize="16sp"/>
+                        android:textSize="22sp"/>
 
                     <TextView
                         android:id="@+id/infotitle"

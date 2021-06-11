@@ -39,7 +39,6 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
 
     private InspectionActivity globalVariables;
 
-
     private static final String TAG = "Project Info Fragment";
 
     private TextView title;
@@ -134,7 +133,7 @@ public class InspectInfoFragment extends Fragment implements View.OnClickListene
         printer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               globalVariables.reportMenu();
+         //      globalVariables.reportMenu();
 
             }
         });

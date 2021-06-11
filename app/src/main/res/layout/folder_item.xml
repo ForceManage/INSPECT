@@ -46,6 +46,17 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
+        android:id="@+id/btn_note"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:src="@drawable/ic_edit_folder_btn" />
+
+    <ImageView
         android:id="@+id/btn_menu"
         android:layout_width="25dp"
         android:layout_height="25dp"
@@ -55,6 +66,8 @@
         android:layout_marginTop="2dp"
         android:clickable="true"
         android:src="@drawable/ic_more_vert" />
+
+
 
 
 

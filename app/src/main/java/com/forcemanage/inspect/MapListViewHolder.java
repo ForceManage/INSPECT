@@ -10,6 +10,7 @@ public class MapListViewHolder {
 
     public ImageView arrow;
     public ImageView more;
+    public ImageView note;
     public TextView content;
     public int position;
 }

@@ -60,6 +60,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.forcemanage.inspect.adapters.ProjectListAdapter;
 import com.forcemanage.inspect.attributes.A_Attributes;
 import com.forcemanage.inspect.attributes.ActionItemAttributes;
 import com.forcemanage.inspect.attributes.CertificateInspectionAttributes;
@@ -72,15 +73,23 @@ import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.attributes.ProjectAttributes;
 import com.forcemanage.inspect.attributes.ProjectData;
 import com.forcemanage.inspect.attributes.ProjectNode;
+import com.forcemanage.inspect.attributes.Projectlistdata;
+import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
+import com.forcemanage.inspect.fragments.DocInfoFragment;
 import com.forcemanage.inspect.fragments.DocPageViewFragment;
 import com.forcemanage.inspect.fragments.FolderTreeFragment;
+import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
+import com.forcemanage.inspect.fragments.MultiPic4PageViewFragment;
+import com.forcemanage.inspect.fragments.MultiPic6Fragment;
+import com.forcemanage.inspect.fragments.MultiPic6PageViewFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
+import com.forcemanage.inspect.fragments.ReportFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private String fname;
     private String cat;
     public String photoBranch;
+    public List<ReportItem> reportlistItems;
     private List<MapViewData> maplistItems;
     private List<ProjectData> listItems;
     private String mImageFileLocation;
@@ -163,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //  private List<Joblistdata> jobList;
     private String FragDisplay;
     private Fragment fragment_obj;
-    public ArrayList reportlistItems;
+   // public ArrayList reportlistItems;
     public String propPhoto;
     private ProgressBar progressBar1;
     private Boolean connected;
@@ -225,9 +235,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             );
             listItems.add(listItem);
         }
-
+        GlobalVariables.doc_mode = 0;  //App is in the mainactivity section
         GlobalVariables.projectList = (ArrayList<ProjectData>) listItems;
-        //     TreeViewLists.LoadDisplayList();
+        GlobalVariables.folders = 1;  //The total project list is displayed
 
 
         if (findViewById(R.id.fragment_folder) != null) {
@@ -239,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             }
 
             // Create an Instance of Fragment
-            MapViewFragment treeFragment = new MapViewFragment();
+            ProjectViewFragment treeFragment = new ProjectViewFragment();
             treeFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_folder, treeFragment)
@@ -440,8 +450,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         FragDisplay = name;
         if(FragDisplay == "RegisterFragment"){
 
-
-
             LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
             main1.setVisibility(View.VISIBLE);
 
@@ -525,71 +533,138 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     @Override
     public void OnProjectChanged(int labelIndex){
 
-   //     GlobalVariables.modified = false;
-    //    focus = "FOLDER";
-      //  MapViewNode node = GlobalVariables.dataList.get(GlobalVariables.pos);
-      //  MapViewNode node =  GlobalVariables.displayNodes.get(labelIndex);
-      //  ProjectNode node =  GlobalVariables.projectnodes.get(labelIndex);
+
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.pos);
     //    GlobalVariables.pos = labelIndex;
         GlobalVariables.folder_Id = node.getprojId();
         GlobalVariables.name = node.getNodeName();
         GlobalVariables.aId = node.getaID();
+        projId = node.getprojId();
+        iId = node.getiID();
         if(node.getNodeLevel() == 0) GlobalVariables.folderIndex = labelIndex;
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
 
-           projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
-          // inspectionId = Integer.toString(node.getiID());
-           projId = node.getprojId();
+        if(GlobalVariables.folders == 1) {
+
+            ArrayList<HashMap<String, String>> Folders = dbHandler.getFolder(USER_ID, projId);
+            listItems = new ArrayList<>();
+
+            //   projectlistItems = new ArrayList<>();
+            ProjectData listItem;
+
+            for (int i = 0; i < (Folders.size()); i++) {
+
+                listItem = new ProjectData(
+
+
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                        Folders.get(i).get(MyConfig.TAG_LABEL),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_P_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                        Folders.get(i).get(MyConfig.TAG_IMAGE),
+                        Folders.get(i).get(MyConfig.TAG_NOTE)
+
+                );
+                listItems.add(listItem);
+            }
+            projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
+            // inspectionId = Integer.toString(node.getiID());
+
+            GlobalVariables.projectList = (ArrayList<ProjectData>) listItems;
+            ProjectViewList.LoadInitialData();
+            ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
+            ProjectViewList.LoadDisplayList();
+
+            getSupportFragmentManager().popBackStack();
+            Bundle bundle = new Bundle();
+            GlobalVariables.folders = 0;  //if the specific project folder is only displayed
+
+
+
+            //   iId = node.getiID();
+
+
+            ProjectViewFragment treeFragment = new ProjectViewFragment();
+            treeFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_folder, treeFragment)
+                    .commit();
+
+
+        }
 
         Bundle bundle = new Bundle();
 
-        //   iId = node.getiID();
 
-
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_text);
-
-        if (detailFragment != null) {
-            // If description is available, we are in two pane layout
-            // so we call the method in DescriptionFragment to update its content
-            detailFragment.setDetail(labelIndex);
-        } else {
-            DetailFragment newDetailFragment = new DetailFragment();
-            Bundle args = new Bundle();
-
-            args.putInt(DetailFragment.KEY_POSITION, labelIndex);
-            newDetailFragment.setArguments(args);
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        }
-
-
+        FolderTreeFragment fragment = new FolderTreeFragment();
+        doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
+        GlobalVariables.modified = false;
 
 
 
         if(node.getNodeLevel() == 0) {
 
             focus = "FOLDER";
+            GlobalVariables.doc_pos = 0;
 
-            fragment_obj = getSupportFragmentManager().findFragmentByTag("FolderTreeFragment");
-/*
-            LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
-            linearLayout.setVisibility(View.GONE);
-    */
+            //  ArrayList<HashMap<String, String>> Folders = dbHandler.getFolderMap(USER_ID, projId);
+            maplistItems = new ArrayList<>();
+
+            ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iId, 15); //child < 15 includes all types
+
+            listItems = new ArrayList<>();
+            MapViewData listItem;
+
+            for (int i = 0; i < (SiteMapData.size()); i++) {
+
+                if (i == 0 && GlobalVariables.doc_pos == 1)
+                    listItem = new MapViewData(
+
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                            GlobalVariables.name,
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                            SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                            SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+                    );
+                else
+
+                    listItem = new MapViewData(
+
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                            SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                            SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                            SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+                    );
+                maplistItems.add(listItem);
+            }
+
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+            //   MapViewLists.LoadDisplayList();
+
+            GlobalVariables.modified = false;
 
 
-            TextView folder = fragment_obj.getView().findViewById(R.id.folder_name);
-            TextView InfoA = fragment_obj.getView().findViewById(R.id.text2);
-            TextView InfoB = fragment_obj.getView().findViewById(R.id.text3);
-            TextView InfoC = fragment_obj.getView().findViewById(R.id.text4);
-            TextView InfoD = fragment_obj.getView().findViewById(R.id.text5);
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+            //     TreeViewLists.LoadDisplayList();
+            MapViewLists.LoadDisplayList();
+            // if (GlobalVariables.dataList.isEmpty() != true)
+            GlobalVariables.modified = true;
 
 
 
@@ -597,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
               //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
-                GlobalVariables.doc_pos = 0;
+
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("iID", 0);
@@ -620,33 +695,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
 
-               FolderTreeFragment fragment = new FolderTreeFragment();
-                doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
-                fragment.setArguments(bundle);
-
-
-
-                folder.setText(projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-                if(projectItem.get(MyConfig.TAG_INFO_A) == "" || projectItem.get(MyConfig.TAG_INFO_A)== null )
-                InfoA.setText("Note A");
-                    else
-                    InfoA.setText(projectItem.get(MyConfig.TAG_INFO_A));
-
-                if(projectItem.get(MyConfig.TAG_INFO_B)== "" | projectItem.get(MyConfig.TAG_INFO_B) == null )
-                InfoB.setText("Note B");
-                    else
-                    InfoB.setText(projectItem.get(MyConfig.TAG_INFO_B));
-
-                if(projectItem.get(MyConfig.TAG_INFO_C)== "" | projectItem.get(MyConfig.TAG_INFO_C) == null )
-                    InfoC.setText("Note C");
-                    else
-                    InfoC.setText(projectItem.get(MyConfig.TAG_INFO_C));
-
-                if(projectItem.get(MyConfig.TAG_INFO_D)== "" | projectItem.get(MyConfig.TAG_INFO_D) == null )
-                    InfoD.setText("Note D");
-                    else
-                    InfoD.setText(projectItem.get(MyConfig.TAG_INFO_D));
-
+               FolderTreeFragment fragment1 = new FolderTreeFragment();
+                doFragmentTransaction(fragment1, "FolderTreeFragment", false, "");
+                fragment1.setArguments(bundle);
 
 
                 ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
@@ -662,77 +713,113 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 Integer aID = node.getaID();
                 Integer iID = node.getiID();
                 GlobalVariables.iId = iID;
-                GlobalVariables.doc_pos = 1;
+
               //  if(aID == 0)  aID = 1;
               //  if(iID == 0)  iID = 1;
             focus = "DOC";
+            GlobalVariables.doc_pos = 1;
 
-            fragment_obj = getSupportFragmentManager().findFragmentByTag("FolderTreeFragment");
-     /*
-            LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
-            linearLayout_.setVisibility(View.GONE);
-       */
+             //  ArrayList<HashMap<String, String>> Folders = dbHandler.getFolderMap(USER_ID, projId);
+            maplistItems = new ArrayList<>();
+
+            //   projectlistItems = new ArrayList<>();
+            //  MapViewData listItem;
+
+
+            ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iId, 15); //child < 15 includes all types
+
+            listItems = new ArrayList<>();
+            MapViewData listItem;
+
+            for (int i = 0; i < (SiteMapData.size()); i++) {
+
+                if (i == 0 && GlobalVariables.doc_pos == 1)
+                    listItem = new MapViewData(
+
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                            GlobalVariables.name,
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                            SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                            SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+                    );
+                else
+
+                    listItem = new MapViewData(
+
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                            SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                            Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                            SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                            SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+                    );
+                maplistItems.add(listItem);
+            }
+
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+            //   MapViewLists.LoadDisplayList();
+
+            GlobalVariables.modified = false;
+
+
+
+            GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+            //     TreeViewLists.LoadDisplayList();
+            MapViewLists.LoadDisplayList();
+            // if (GlobalVariables.dataList.isEmpty() != true)
+            GlobalVariables.modified = true;
 
                 inspectionId = Integer.toString(iID);
 
-                    HashMap<String, String> mapItem = dbHandler.getMapItem(projId, aID, iID);
+                   HashMap<String, String> inspectionData = dbHandler.getInspectionData(projId, iID);
 
                 String MapBranch;
 
-       //         Integer catId = Integer.parseInt(mapItem.get(MyConfig.TAG_CAT_ID));
-       //         Integer Level = Integer.parseInt(mapItem.get(MyConfig.TAG_LEVEL));
-       //         Integer Parent = Integer.parseInt(mapItem.get(MyConfig.TAG_PARENT));
-                photoBranch = mapItem.get(MyConfig.TAG_IMAGE1);
-                String inspLabel = mapItem.get(MyConfig.TAG_LABEL); //This is the inspection label column
-                String branchLabel = mapItem.get("MAP_LABEL"); //This is the Map label column
-                String branchNote = mapItem.get(MyConfig.TAG_NOTES);
-        //        Integer branchCode = Integer.parseInt(mapItem.get(MyConfig.TAG_CHILD));
 
-          //      String branchHead = dbHandler.getMapBranchTitle(projId, catId);
+         //       photoBranch = inspectionData.get(MyConfig.TAG_IMAGE1);
+                String inspLabel = inspectionData.get(MyConfig.TAG_LABEL); //This is the inspection label column
+                String branchLabel = inspectionData.get("MAP_LABEL"); //This is the Map label column
+                String branchNote = inspectionData.get(MyConfig.TAG_NOTES);
+                String inspectionDate = inspectionData.get(MyConfig.TAG_INSPECTION_DATE);
+                String typeInspection = inspectionData.get(MyConfig.TAG_INSPECTION_TYPE);
+                String startTime = inspectionData.get(MyConfig.TAG_START_DATE_TIME);
+                String endTime = inspectionData.get(MyConfig.TAG_END_DATE_TIME);
+                String image = inspectionData.get(MyConfig.TAG_IMAGE);
 
 
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("Level", node.getNodeLevel());
                 bundle.putInt("catId", 1);
-          //      bundle.putString("branchHead", branchHead);
-                bundle.putString("inspection", inspLabel);
+                 bundle.putString("inspection", inspLabel);
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
                 bundle.putInt("iID", iID);
-                bundle.putString("image", photoBranch);
+                bundle.putString("date", inspectionDate);
+                bundle.putString("inspectType", typeInspection);
+                bundle.putString("startTime", startTime);
+                bundle.putString("endTime", endTime);
                 bundle.putString("MAP_LABEL", branchLabel);
                 bundle.putInt("aID", node.getaID());
                 bundle.putString("notes", branchNote);
+                bundle.putString("inspPhoto", image);
                 bundle.putBoolean("doc", true);
+
              //  bundle.putString("com2", com2);
 
              //   ProjectInfoFragment fragment = new ProjectInfoFragment();
-                FolderTreeFragment fragment = new FolderTreeFragment();
-                doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
-                fragment.setArguments(bundle);
-
-
-
-     /*       TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text_2);
-            TextView Hrs = fragment_obj.getView().findViewById(R.id.Text_5);
-            TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text_3);
-            TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text_4);
-            TextView doc_title = fragment_obj.getView().findViewById(R.id.doc_name);
-            doc_title.setText(projectItem.get(MyConfig.TAG_LABEL));
-            inspectDate.setText("Document created:  " + stringdate(projectItem.get(MyConfig.TAG_INSPECTION_DATE), 1));
-            inspectionType.setText("Document type:  " + projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-            if (!projectItem.get(MyConfig.TAG_START_DATE_TIME).equals("null"))
-                inspectedDate.setText("Initial log recorded: " + stringdate(projectItem.get(MyConfig.TAG_START_DATE_TIME), 2) + "  -  " + stringdate(projectItem.get(MyConfig.TAG_END_DATE_TIME), 2));
-            Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
-
-
-      */
-
-                BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+                DocInfoFragment fragment2 = new DocInfoFragment();
+                doFragmentFolderInfoTransaction(fragment2, "DocInfoFragment", false, "");
                 fragment2.setArguments(bundle);
-
 
             }
 
@@ -748,27 +835,56 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
        // ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
             MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
-         //   GlobalVariables.aId = node.getaID();
+            GlobalVariables.aId = node.getaID();
           //  GlobalVariables.Level = node.getNodeLevel();
          //   GlobalVariables.iId = node.getiID();
        //     GlobalVariables.catId = node.getcatId();
         ///    GlobalVariables.name = node.getNodeName();
      //   GlobalVariables.modified = true;
 
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        photoBranch = dbHandler.getBranchPhoto(projId, node.getaID());
+        String folderPhoto = dbHandler.getFolderPhoto(projId);
         Bundle bundle = new Bundle();
-        switch (node.getbranchCat()) {
+            bundle.putString("branchPhoto", photoBranch);
+            bundle.putString("folderPhoto", folderPhoto);
+            bundle.putInt("projId", projId);
+        switch (node.getbranchCat()) { //branchcat is the child column and classifies type of node
 
             case 0: {
-                BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
-                fragment2.setArguments(bundle);
-                break;
 
+                if (GlobalVariables.doc_pos == 1 && treeNameIndex == 0){
+                     reportMenuPrev(); //The document preview is displayed in the fragment
+                    focus = "DOC";
+                     break;
+                }
+                if (GlobalVariables.doc_pos == 1 && treeNameIndex > 0){
+                    focus = "BRANCH";
+                    BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+                    doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+                    fragment2.setArguments(bundle);
+                    break;
+                }
+                if (GlobalVariables.doc_pos == 0 && treeNameIndex == 0){
+                    focus = "FOLDER";
+                    ProjectInfoFolderFragment fragment2 = new ProjectInfoFolderFragment();
+                    doFragmentFolderInfoTransaction(fragment2, "ProjectInfoFolderFragment", false, "");
+                    fragment2.setArguments(bundle);
+                    break;
+                }
+                if (GlobalVariables.doc_pos == 0 && treeNameIndex > 0){
+                    focus = "BRANCH";
+                    BaseInfoFolderFragment fragment2 = new BaseInfoFolderFragment();
+                    doFragmentFolderInfoTransaction(fragment2, "BaseInfoFolderFragment", false, "");
+                    fragment2.setArguments(bundle);
+
+                    break;
+                }
 
             }
-            case 1: {
+           case 1: {
 
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                focus = "PAGE";
                 HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
 
                 photos[0] = list.get(MyConfig.TAG_IMAGE1);
@@ -797,131 +913,74 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 fragment2.setArguments(bundle);
 
                 break;
-
-                //      focus = "FOLDER";
-/*
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
-
-                LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
-                linearLayout.setVisibility(View.GONE);
-                LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
-                linearLayout_.setVisibility(View.VISIBLE);
-
-
-               ;
-
-                HashMap<String, String> projectItem = dbHandler.getProjectInfo(projectId);
-                //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
-                //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
+            }
 
 
 
-                bundle.putInt("projId", projId);
-                bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
-                bundle.putString("address", projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
-                bundle.putString("foldernote", projectItem.get(MyConfig.TAG_PROJECT_NOTE));
-                bundle.putString("infoA", projectItem.get(MyConfig.TAG_INFO_A));
-                bundle.putString("infoB", projectItem.get(MyConfig.TAG_INFO_B));
-                bundle.putString("infoC", projectItem.get(MyConfig.TAG_INFO_C));
-                bundle.putString("infoD", projectItem.get(MyConfig.TAG_INFO_D));
-                bundle.putString("photo", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
-                bundle.putString("infoE", projectItem.get(MyConfig.TAG_INFO_E));
-                bundle.putString("infoF", projectItem.get(MyConfig.TAG_INFO_F));
-                bundle.putString("infoG", projectItem.get(MyConfig.TAG_INFO_G));
-                bundle.putString("infoH", projectItem.get(MyConfig.TAG_INFO_H));
-                bundle.putString("folderPhoto", projectItem.get(MyConfig.TAG_PROJECT_PHOTO));
+            case 3: {
 
-                ProjectInfoFolderFragment fragment = new ProjectInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment, "ProjectInfoFolderFragment", false, "");
-                fragment.setArguments(bundle);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
+                focus = "PAGE";
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                photos[5] = list.get(MyConfig.TAG_IMAGE6);
 
+                bundle.putString("IMG1",photos[0]);
+                bundle.putString("IMG2",photos[1]);
+                bundle.putString("IMG3",photos[2]);
+                bundle.putString("IMG4",photos[3]);
+                bundle.putString("IMG5",photos[4]);
+                bundle.putString("IMG6",photos[5]);
 
+                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
 
-                TextView folder = fragment_obj.getView().findViewById(R.id.folder_name);
-                TextView InfoA = fragment_obj.getView().findViewById(R.id.text2);
-                TextView InfoB = fragment_obj.getView().findViewById(R.id.text3);
-                TextView InfoC = fragment_obj.getView().findViewById(R.id.text4);
-                TextView InfoD = fragment_obj.getView().findViewById(R.id.text5);
-                folder.setText(projectItem.get(MyConfig.TAG_PROJECT_ADDRESS));
+                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
+                bundle.putString("title", branchHead);
+                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
+                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
 
-                if(projectItem.get(MyConfig.TAG_INFO_A) == "" || projectItem.get(MyConfig.TAG_INFO_A)== null )
-                    InfoA.setText("Note A");
-                    else
-                    InfoA.setText(projectItem.get(MyConfig.TAG_INFO_A));
-
-                if(projectItem.get(MyConfig.TAG_INFO_B)== "" | projectItem.get(MyConfig.TAG_INFO_B) == null )
-                    InfoB.setText("Note B");
-                    else
-                    InfoB.setText(projectItem.get(MyConfig.TAG_INFO_B));
-
-                if(projectItem.get(MyConfig.TAG_INFO_C)== "" | projectItem.get(MyConfig.TAG_INFO_C) == null )
-                    InfoC.setText("Note C");
-                else
-                    InfoC.setText(projectItem.get(MyConfig.TAG_INFO_C));
-
-                if(projectItem.get(MyConfig.TAG_INFO_D)== "" | projectItem.get(MyConfig.TAG_INFO_D) == null )
-                    InfoD.setText("Note D");
-                else
-                    InfoD.setText(projectItem.get(MyConfig.TAG_INFO_D));
+                MultiPic6PageViewFragment fragment2 = new MultiPic6PageViewFragment();
+                doFragmentFolderInfoTransaction(fragment2, "MultiPic6PageViewFragment", false, "");
+                fragment2.setArguments(bundle);
 
                 break;
             }
 
-            case 1: {
-
-          //      DBHandler dbHandler = new DBHandler(this, null, null, 1);
-
-        //        focus = "DOC";
-
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFragment");
-                LinearLayout linearLayout_ = fragment_obj.getView().findViewById(R.id.folder_info);
-                linearLayout_.setVisibility(View.GONE);
-                LinearLayout linearLayout = fragment_obj.getView().findViewById(R.id.document_info);
-                linearLayout.setVisibility(View.VISIBLE);
-
-                DBHandler dbHandler = new DBHandler(this, null, null, 1);
-                projId = node.getprojId();
-                iId = node.getiID();
-                inspectionId = Integer.toString(iId);
-                HashMap<String, String> projectItem = dbHandler.getInspection(projId, iId);
+            case 4: {
 
 
-                bundle.putString("folderNote", projectItem.get(MyConfig.TAG_NOTE));
-                bundle.putInt("projectId", projId);
-                bundle.putInt("inspectionId", iId);
-                bundle.putString("preamble", projectItem.get(MyConfig.TAG_NOTE_2));
-                bundle.putString("inspPhoto", projectItem.get(MyConfig.TAG_IMAGE));
-                bundle.putString("doc_name", projectItem.get(MyConfig.TAG_LABEL));
-                bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
-                bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
-                bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
-                bundle.putString("inspectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
+                focus = "PAGE";
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                photos[5] = list.get(MyConfig.TAG_IMAGE6);
 
-                InspectionInfoFolderFragment fragment = new InspectionInfoFolderFragment();
-                doFragmentFolderInfoTransaction(fragment, "InspectionInfoFolderFragment", false, "");
-                fragment.setArguments(bundle);
+                bundle.putString("IMG1",photos[0]);
+                bundle.putString("IMG2",photos[1]);
+                bundle.putString("IMG3",photos[2]);
+                bundle.putString("IMG4",photos[3]);
+                bundle.putString("IMG5",photos[4]);
+                bundle.putString("IMG6",photos[5]);
 
+                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
 
+                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
+                bundle.putString("title", branchHead);
+                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
+                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
 
-                TextView inspectDate = fragment_obj.getView().findViewById(R.id.Text_2);
-                TextView Hrs = fragment_obj.getView().findViewById(R.id.Text_5);
-                TextView inspectionType = fragment_obj.getView().findViewById(R.id.Text_3);
-                TextView inspectedDate = fragment_obj.getView().findViewById(R.id.Text_4);
-                TextView doc_title = fragment_obj.getView().findViewById(R.id.doc_name);
-                doc_title.setText(projectItem.get(MyConfig.TAG_LABEL));
-                inspectDate.setText("Document created:  " + stringdate(projectItem.get(MyConfig.TAG_INSPECTION_DATE), 1));
-                inspectionType.setText("Document type:  " + projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
-                if (!projectItem.get(MyConfig.TAG_START_DATE_TIME).equals("null"))
-                    inspectedDate.setText("Initial log recorded: " + stringdate(projectItem.get(MyConfig.TAG_START_DATE_TIME), 2) + "  -  " + stringdate(projectItem.get(MyConfig.TAG_END_DATE_TIME), 2));
-                Hrs.setText("Allocation:  " + dbHandler.calcTime(Integer.toString(projId), Integer.toString(iId)));
-
+                MultiPic4PageViewFragment fragment2 = new MultiPic4PageViewFragment();
+                doFragmentFolderInfoTransaction(fragment2, "MultiPic4PageViewFragment", false, "");
+                fragment2.setArguments(bundle);
 
                 break;
-
-                */
             }
-
 
         }
 
@@ -932,7 +991,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     public void onResume() {
 
         super.onResume();
-
         GlobalVariables.doc_mode = 0;
         ConnectivityManager cManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cManager.getActiveNetworkInfo();
@@ -1002,85 +1060,24 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
 
-        GlobalVariables.modified = true;
 
         ProjectViewList.LoadInitialData();
         ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
         ProjectViewList.LoadDisplayList();
 
-        MapViewLists.LoadInitialData();
-        MapViewLists.LoadDisplayList();
+      //  MapViewLists.LoadInitialData();
+      //  MapViewLists.LoadDisplayList();
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
-
-        if (GlobalVariables.modified == true) {
-
-            /*
-            MapViewFragment newDetailFragment = new MapViewFragment();
-
-         //   ProjectViewFragment newDetailFragment = new ProjectViewFragment();
-            Bundle args = new Bundle();
-            detailFragment.mCurrentPosition = -1;
-
-            args.putInt(DetailFragment.KEY_POSITION, 0);
-            newDetailFragment.setArguments(args);
-
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.mainfragment_container_1, newDetailFragment);
-           // fragmentTransaction.replace(R.id.fragment_folder, newDetailFragment);
-
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+        FolderTreeFragment fragment = new FolderTreeFragment();
+        doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
 
 
-             */
-            FolderTreeFragment fragment = new FolderTreeFragment();
-            doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
-            GlobalVariables.modified = false;
+     //       updatePropList();
+     //       GlobalVariables.folders = 1;
 
-
-       /*     MapViewFragment newMapDetailFragment = new MapViewFragment();
-            Bundle args2 = new Bundle();
-            detailFragment.mCurrentPosition = -1;
-
-            args2.putInt(DetailFragment.KEY_POSITION, 0);
-            newDetailFragment.setArguments(args2);
-
-            androidx.fragment.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction2.replace(R.id.mainfragment_container_1, newMapDetailFragment);
-            fragmentTransaction2.addToBackStack(null);
-            fragmentTransaction2.commit();
-
-        */
-
-
-
-            //    FragmentManager fm = getSupportFragmentManager();
-
-
-            //fm.popBackStack(DF,0);
-            //     if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            //         getSupportFragmentManager().popBackStackImmediate();
-            //     }
-
-            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-           // OnTabChanged(1);
-
-            //       MapListAdapter mapListAdapter = new MapListAdapter(this);
-            //       mapListAdapter.notifyDataSetChanged();
-            //  OnSelectionChanged(0);
-
-
-        }
 
     }
 
@@ -1469,7 +1466,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                                                 if (template != null) {
                                                     if (USER_ID > 0) {
                                                         requestProject(branchText.getText().toString(), template, 2);
-                                                        loadMap(projId);
+                                                        updateProjects();
                                                         //    downloadprojects();
                                                     } else
                                                         Toast.makeText(MainActivity.this, "Log in required ", Toast.LENGTH_LONG).show();
@@ -1978,6 +1975,16 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 AlertDialog alert = passDialog.create();
                 alert.show();
             }
+            else {
+
+                updatePropList();
+
+                FolderTreeFragment fragment = new FolderTreeFragment();
+                doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
+                GlobalVariables.modified = false;
+
+
+            }
 
         }
 
@@ -2024,32 +2031,33 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     public void loadMap(int projId) {
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
-        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getFolders(USER_ID);
+        ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID);
         int position = GlobalVariables.pos;
 
-        maplistItems = new ArrayList<>();
-        MapViewData listItem;
+        listItems = new ArrayList<>();
+        ProjectData listItem;
 
-        for (int i = 0; i < (SiteMapData.size()); i++) {
+        for (int i = 0; i < (Folders.size()); i++) {
 
-            listItem = new MapViewData(
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
-                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
-                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
-                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+            listItem = new ProjectData(
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
+                    Folders.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_P_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
+                    Folders.get(i).get(MyConfig.TAG_IMAGE),
+                    Folders.get(i).get(MyConfig.TAG_NOTE)
             );
-            maplistItems.add(listItem);
+
+            listItems.add(listItem);
         }
 
 
-        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
-        GlobalVariables.modified = true;
+        GlobalVariables.projectList = (ArrayList<ProjectData>) listItems;
+        GlobalVariables.modified = false;
 
 
         OnTabChanged(GlobalVariables.pos);
@@ -2085,7 +2093,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         int success = dbHandler.updateMapLabel(node.getprojId(), node.getaID(), branchLabel);
-        if(success == 1) loadMap(projId);
+        if(success == 1) updatePropList();
         else Toast.makeText(this, "Create/select TAB", Toast.LENGTH_SHORT).show();
     }
 
@@ -2099,7 +2107,88 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         if (result == 0)
             Toast.makeText(this, "Cannot place TAB here", Toast.LENGTH_SHORT).show();
         else
-         loadMap(projId);
+         updatePropList();
+    }
+
+
+    private void reportMenuPrev() {
+
+        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("projectId", projId);
+        bundle.putInt("iId", GlobalVariables.iId);
+
+
+        ArrayList<HashMap<String, String>> listItemsmap = dbHandler.getInspectedItems_r(projId, GlobalVariables.iId);
+
+        reportlistItems = new ArrayList<>();
+        ReportItem listItem;
+
+        for (int i = 0; i <= (listItemsmap.size() - 1); i++) {
+            listItem = new ReportItem(
+                    listItemsmap.get(i).get("typeObject"),
+                    listItemsmap.get(i).get("BranchHead"),
+                    listItemsmap.get(i).get("ParentLabel"),
+                    listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
+                    listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
+                    listItemsmap.get(i).get(MyConfig.TAG_NOTES),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE1),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM1),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE2),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM2),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE3),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM3),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE4),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM4),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE5),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM5),
+                    listItemsmap.get(i).get(MyConfig.TAG_IMAGE6),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM6),
+                    listItemsmap.get(i).get(MyConfig.TAG_LABEL),
+                    listItemsmap.get(i).get(MyConfig.TAG_DATE_TIME),
+                    listItemsmap.get(i).get(MyConfig.TAG_PERMIT),
+                    listItemsmap.get(i).get(MyConfig.TAG_PROJECT_ADDRESS),
+                    listItemsmap.get(i).get(MyConfig.TAG_STAGE),
+                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_A),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM_A),
+                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_B),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM_B),
+                    listItemsmap.get(i).get(MyConfig.TAG_HEAD_C),
+                    listItemsmap.get(i).get(MyConfig.TAG_COM_C)
+
+            );
+
+            reportlistItems.add(listItem);
+
+            Log.v("report list", listItemsmap.get(i).get("typeObject") + ", ");
+        }
+
+
+        HashMap<String, String> projectItem = dbHandler.getInspection(projId, GlobalVariables.iId);
+
+        //               mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
+        propPhoto = projectItem.get(MyConfig.TAG_IMAGE);
+
+        bundle.putString("branchHead", projectItem.get(MyConfig.TAG_ADDRESS_NO));
+        bundle.putString("branchLabel", projectItem.get(MyConfig.TAG_LABEL));
+        bundle.putString("projectId", projectId);
+        bundle.putString("inspectionId", inspectionId);
+        bundle.putString("date", projectItem.get(MyConfig.TAG_INSPECTION_DATE));
+        bundle.putString("startTime", projectItem.get(MyConfig.TAG_START_DATE_TIME));
+        bundle.putString("endTime", projectItem.get(MyConfig.TAG_END_DATE_TIME));
+        bundle.putString("note", projectItem.get(MyConfig.TAG_NOTE));
+        bundle.putString("inpectType", projectItem.get(MyConfig.TAG_INSPECTION_TYPE));
+        bundle.putString("auditor", projectItem.get(MyConfig.TAG_USER_ID));
+
+        ReportFragment reportfragment = new ReportFragment();
+        reportfragment.setArguments(bundle);
+        doFragmentFolderInfoTransaction(reportfragment, "ReportFragment", false, "");
+        reportfragment.setArguments(bundle);
+
+
     }
 
 
@@ -2130,38 +2219,26 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            switch (focus){
 
-            if(focus == "FOLDER") {
-                MapViewNode mapViewNode =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
-                if(mapViewNode.getNodeLevel() == 0) {
+                case "FOLDER":
                     dbHandler.updatePropPhoto(projectId, photo.getName());
-                }
-                else{
-                    dbHandler.updateBranchPhoto(projId, mapViewNode.getaID(), photo.getName());
-                }
-            }
-            if(focus == "DOC") {
-                ProjectNode projectNode = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
-                MapViewNode mapViewNode =  GlobalVariables.displayNodes.get(GlobalVariables.pos);
-                if(projectNode.getNodeLevel() ==0) {
-                         dbHandler.updatePropPhoto(projectId, photo.getName());
-                         dbHandler.updateBranchPhoto(projId, mapViewNode.getaID(), photo.getName());
-                         }
-                    else {
-                        dbHandler.updateInspectionPhoto(projectId, inspectionId, photo.getName());
+                    break;
+                case "BRANCH":
+                    dbHandler.updateBranchPhoto(projId, GlobalVariables.aId, photo.getName());
+                    break;
+                case "DOC":
+                    dbHandler.updateInspectionPhoto(projId, GlobalVariables.iId, photo.getName());
+                    break;
 
-                    }
-                }
+            }
 
             try {
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
 
                 copy(photo_HR, photo) ;
-
-
                 rotateImage(resizePhoto());
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2261,7 +2338,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             if (FragDisplay == "InspectionInfoFolderFragment") {
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
                 String inspectionPhoto = to.getName();
-                dbHandler.updateInspectionPhoto(projectId, inspectionId, inspectionPhoto);
+                dbHandler.updateInspectionPhoto(projId, iId, inspectionPhoto);
             }
 
             if (FragDisplay == "FolderTreeFragment") {
@@ -2632,38 +2709,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         TextView projectlist_title = (TextView) findViewById(R.id.ProjectList);
          projectlist_title.setText("Folders/documents for: "+dbHandler.getUser(USER_ID));
 
-
+        GlobalVariables.folders = 1;
         ArrayList<HashMap<String, String>> Folders = dbHandler.getFolders(USER_ID);
-
-        /*
-        maplistItems = new ArrayList<>();
-
-        //   projectlistItems = new ArrayList<>();
-        MapViewData listItem;
-
-        for (int i = 0; i < (Folders.size()); i++) {
-
-            listItem = new MapViewData(
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CAT_ID)),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_CHILD)),
-                            Folders.get(i).get(MyConfig.TAG_LABEL),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_A_ID)),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                            Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
-                            Folders.get(i).get(MyConfig.TAG_IMAGE1),
-                            Folders.get(i).get(MyConfig.TAG_NOTES)
-
-            );
-            maplistItems.add(listItem);
-        }
-
-        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
-
-
-
-         */
 
         listItems = new ArrayList<>();
 
@@ -3875,7 +3922,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         String res = "initiated";
         HashMap<String, String> inspItemMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems_(USER_ID);
+        ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems_r(USER_ID);
         String tempString = "";
         String testString = "";
 

@@ -7,7 +7,9 @@ package com.forcemanage.inspect.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.OnDocChangeListener;
+import com.forcemanage.inspect.attributes.ProjectNode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,6 +92,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             holder.content = (TextView) convertView.findViewById(R.id.text);
             holder.arrow = (ImageView) convertView.findViewById(R.id.arrow);
             holder.more = (ImageView) convertView.findViewById(R.id.btn_menu);
+            holder.note = (ImageView) convertView.findViewById(R.id.btn_note);
             holder.position = position;
 
 
@@ -96,6 +100,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
             holder.more.setOnClickListener(mMenuClickListener);
         //    ((TextView) convertView.findViewById(R.id.text)).setOnClickListener(mTextClickListener);
+            holder.note.setOnClickListener(mNote);
 
             convertView.setTag(holder);
 
@@ -124,24 +129,35 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 switch (node.getNodeLevel()) {
 
                     case 0:
-                        if(GlobalVariables.doc_pos == 1)
+                        if(GlobalVariables.doc_pos == 1 || GlobalVariables.doc_mode == 1) {
                             holder.arrow.setImageResource(R.drawable.ic_book);
-                        else
-                        holder.arrow.setImageResource(R.drawable.folder2_red);
-                        holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
+                            if(GlobalVariables.doc_mode == 1)
+                                holder.note.setVisibility(View.GONE);
+                                else
+                                holder.note.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            holder.arrow.setImageResource(R.drawable.folder2_red);
+                            holder.note.setVisibility(View.GONE);
+                        }
+                            holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
+
                         break;
                     case 1:
                         holder.arrow.setImageResource(R.drawable.ic_file_tree);
                         holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                        holder.note.setVisibility(View.GONE);
                         break;
                     case 2:
                         holder.arrow.setImageResource(R.drawable.ic_filetree2);
                         holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                        holder.note.setVisibility(View.GONE);
                         break;
                    }
                 if (node.getNodeLevel() > 2) {
                     holder.arrow.setImageResource(R.drawable.ic_filetree2);
                     holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                    holder.note.setVisibility(View.GONE);
                 }
 
                  break;
@@ -154,7 +170,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_edit_outline);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                    else holder.more.setVisibility(View.VISIBLE);
-
+                holder.note.setVisibility(View.GONE);
                 break;
             }
             case 2: { // Scope Page
@@ -164,16 +180,29 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_note_text);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
-            case 3: { // Multipic Page
+            case 3: { // Multipic 6 Page
                 holder.content.setTextColor(Color.GRAY);
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.multipic);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
+                break;
+            }
+
+            case 4: { // Multipic 4 Page
+                holder.content.setTextColor(Color.GRAY);
+                //     holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                holder.arrow.setImageResource(R.drawable.multipic);
+                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+                else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -184,6 +213,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.blankpage);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -195,6 +225,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.BLUE);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
             case 10: {
@@ -205,6 +236,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.BLUE);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -216,6 +248,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.more.setImageResource(R.drawable.ic_more_vert);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -227,6 +260,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.more.setImageResource(R.drawable.ic_more_vert);
                 if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
                 else holder.more.setVisibility(View.VISIBLE);
+                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -251,7 +285,96 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
     }
 
 
+    public OnClickListener mNote;
 
+    {
+
+        mNote = new OnClickListener() {
+
+            //   @Override
+            public void onClick(View v) {
+                GlobalVariables.doc_pos = 0;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                builder.setTitle("Add, delete or edit pages in the document ");
+
+                String[] actions = {"Open document",
+                                    "Cancel "};
+
+
+                builder.setItems(actions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        switch (which) {
+
+                            case 0: {
+
+
+
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                alertDialogBuilder.setTitle("Log Session");
+                                alertDialogBuilder.setMessage("Record file session time?");
+                                alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        Intent theIntent = new Intent(getContext(), InspectionActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("PROJECT_ID", Integer.toString(GlobalVariables.folder_Id));
+                                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                        bundle.putString("DOC_NAME", GlobalVariables.name);
+                                        bundle.putBoolean("logTime", true);
+                                        theIntent.putExtras(bundle);
+                                        getContext().startActivity(theIntent);
+                                        dialog.dismiss();
+
+                                    }
+                                })
+                                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                Intent theIntent = new Intent(getContext(), InspectionActivity.class);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putString("PROJECT_ID", Integer.toString(GlobalVariables.folder_Id));
+                                                bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                                bundle.putString("DOC_NAME", GlobalVariables.name);
+                                                bundle.putBoolean("logTime", false);
+                                                theIntent.putExtras(bundle);
+                                                getContext().startActivity(theIntent);
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                // create an alert dialog
+                                AlertDialog alert = alertDialogBuilder.create();
+                                alert.show();
+                                break;
+                            }
+
+                            case 1: {
+
+
+                                break;
+
+                            }
+
+
+                        }
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+
+
+                dialog.show();
+
+
+
+
+
+            }
+        };
+    }
 
      public OnClickListener mArrowClickListener;
 
@@ -1144,8 +1267,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                                     builder.setTitle("Add Page ");
                                                     // add a list
-                                                    String[] actions = {" Commentary Page",
-                                                            "Multipic Page",
+                                                    String[] actions = {"Notes/comments (6 pics)",
+                                                            "Multi-4-pic Page",
+                                                            "Multi-6-pic Page",
                                                             "Blank Page",
                                                             "Cancel"};
 
@@ -1188,16 +1312,22 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                                 }
                                                                 case 1: { // Add a Multi Pic Page
-                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi Pic",3);
+                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic",4);
                                                                     loadMap(node.getprojId());
                                                                     break;
                                                                 }
-                                                                case 2: { // Add a Blank Page
+
+                                                                case 2: { // Add a Multi Pic Page
+                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic",3);
+                                                                    loadMap(node.getprojId());
+                                                                    break;
+                                                                }
+                                                                case 3: { // Add a Blank Page
                                                                     int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Blank Page",5);
                                                                     loadMap(node.getprojId());
                                                                     break;
                                                                 }
-                                                                case 3: {
+                                                                case 4: {
 
                                                                     break;
                                                                 }
@@ -1538,7 +1668,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
 
-                        case 3: {//if Multi Pic Page
+                        case 3: {//if Multi 6 Pic Page
 
                             String[] actions = {
 
@@ -1566,6 +1696,92 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),3,node.getcatId(),"DWN", 1);
+                                            loadMap(node.getprojId());
+                                            break;
+
+                                        }
+
+                                        case 2: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Warning - this will delete the label and ALL the associated data");//location.getText().toString());
+
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            deleteInspectionItem(node.getprojId(), node.getaID());
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+
+                                            break;
+
+                                        }
+                                        case 3: {
+
+
+                                            break;
+
+                                        }
+
+                                    }
+
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+
+
+                            dialog.show();
+
+                            break;
+
+                        } // end case branchcat = 2 - supplementary page cat
+
+
+                        case 4: {//if Multi 4 Pic Page
+
+                            String[] actions = {
+
+                                    "Move label UP",
+                                    "Move label DOWN",
+                                    "Delete label",
+                                    "Cancel "};
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
+
+                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    switch (which) {
+
+
+                                        case 0: {
+
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"UP", 1);
+                                            loadMap(node.getprojId());
+                                            break;
+
+                                        }
+                                        case 1: {
+
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"DWN", 1);
                                             loadMap(node.getprojId());
                                             break;
 
@@ -2154,8 +2370,11 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 loadMap(projId);
                 break;
             }
-            case (1):{
 
+            case (1):
+            case (3):
+            case (4):
+            case (5):    {
                 dbHandler.deleteMapBranch(projId, aID);
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
@@ -2308,8 +2527,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
 
-        //    MapListAdapter mAdapter = new MapListAdapter(this);
-        //   mAdapter.notifyDataSetChanged();
+            MapListAdapter mAdapter = new MapListAdapter(getContext());
+           mAdapter.notifyDataSetChanged();
 
 
     }

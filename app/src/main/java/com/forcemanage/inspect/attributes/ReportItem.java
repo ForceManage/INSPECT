@@ -22,6 +22,8 @@ public class ReportItem {
     private String com4;
     private String image5;
     private String com5;
+    private String image6;
+    private String com6;
     private String label;
     private String date_time;
     private String permit;
@@ -37,7 +39,7 @@ public class ReportItem {
 
 
     public ReportItem(String typeObject, String BranchHead, String ParentLabel, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
-                      String image3, String com3, String image4, String com4, String image5, String com5, String label, String date_time, String permit,
+                      String image3, String com3, String image4, String com4, String image5, String com5,  String image6, String com6, String label, String date_time, String permit,
                       String address, String stage, String title_A, String com_A, String title_B, String com_B,String title_C, String com_C) {
 
         this.typeObject = typeObject;
@@ -56,6 +58,8 @@ public class ReportItem {
         this.com4 = com4;
         this.image5 = image5;
         this.com5 = com5;
+        this.image6 = image6;
+        this.com6 = com6;
         this.label = label;
         this.date_time = date_time;
         this.permit = permit;
@@ -129,6 +133,14 @@ public class ReportItem {
 
     public String getCom5() {
         return com5;
+    }
+
+    public String getImage6() {
+        return image6;
+    }
+
+    public String getCom6() {
+        return com6;
     }
 
     public String getLabel() {

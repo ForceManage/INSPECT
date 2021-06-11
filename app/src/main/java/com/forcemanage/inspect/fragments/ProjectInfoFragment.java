@@ -242,8 +242,8 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
 
             // However if we are being restored from a previous state, then we don't
             // need to do anything and should return or we could end up with overlapping Fragments
-            ProjectViewFragment projectViewFragment = new ProjectViewFragment();
-            getChildFragmentManager().beginTransaction().add(R.id.fragment_container, projectViewFragment)
+            MapViewFragment mapViewFragment = new MapViewFragment();
+            getChildFragmentManager().beginTransaction().add(R.id.fragment_container, mapViewFragment)
                     .commit();
             // Create an Instance of Fragment
 
