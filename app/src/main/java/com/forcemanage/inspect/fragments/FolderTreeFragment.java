@@ -250,7 +250,8 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
                                     Toast.makeText(getContext(), "Invalid TAB", Toast.LENGTH_SHORT).show();
                                 else
                                     // editLocation(LocationText.getText().toString());
-                                    dbHandler.updateInspectionLabel(Integer.toString(projId), Integer.toString(GlobalVariables.iId), LocationText.getText().toString());
+
+                                    dbHandler.updateInspectionLabel(Integer.toString(GlobalVariables.folder_Id), Integer.toString(GlobalVariables.iId), LocationText.getText().toString());
                                     globalVariables.updatePropList();
 
                             }

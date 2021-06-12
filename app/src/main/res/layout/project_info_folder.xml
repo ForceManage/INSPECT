@@ -44,16 +44,16 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#0B2459"
+                    android:background="#000000"
                     >
 
                     <ImageView
                         android:id="@+id/cam1"
-                        android:layout_width="51dp"
-                        android:layout_height="47dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_gravity="bottom|left"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="2dp"
                         android:saveEnabled="false"
                         app:srcCompat="@android:drawable/ic_menu_camera" />
 
@@ -61,7 +61,7 @@
                         android:id="@+id/imageView_file"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="2dp"
                         android:layout_marginRight="100dp"
                         android:layout_gravity="right"
                         android:foreground="@android:drawable/ic_menu_gallery" />
@@ -72,7 +72,7 @@
                         android:layout_height="60dp"
                         android:layout_marginRight="10dp"
                         android:layout_gravity="bottom|right"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="2dp"
                         android:saveEnabled="false"
                         app:srcCompat="@android:drawable/ic_menu_info_details" />
                 </FrameLayout>

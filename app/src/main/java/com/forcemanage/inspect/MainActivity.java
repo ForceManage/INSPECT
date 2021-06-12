@@ -82,10 +82,13 @@ import com.forcemanage.inspect.fragments.DocInfoFragment;
 import com.forcemanage.inspect.fragments.DocPageViewFragment;
 import com.forcemanage.inspect.fragments.FolderTreeFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
+import com.forcemanage.inspect.fragments.InspectionFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
 import com.forcemanage.inspect.fragments.MultiPic4PageViewFragment;
 import com.forcemanage.inspect.fragments.MultiPic6Fragment;
 import com.forcemanage.inspect.fragments.MultiPic6PageViewFragment;
+import com.forcemanage.inspect.fragments.Page_1_Fragment;
+import com.forcemanage.inspect.fragments.PhotoEditFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
@@ -122,6 +125,7 @@ import static java.lang.Integer.parseInt;
 public class MainActivity extends AppCompatActivity implements OnProjectSelectionChangeListener, OnDocChangeListener, View.OnClickListener {
 
     public static final int REQUEST_CODE = 20;
+
 
     private EditText TextMessage;
     private String JSON_STRING;
@@ -166,8 +170,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private String mImageFileLocation;
     private static final int REQUEST_OPEN_RESULT_CODE = 0, REQUEST_GET_SINGLE_FILE = 1;
     private static final int ACTIVITY_START_CAMERA_APP = 0;
-    private static final int ACTIVITY_GET_FILE = 1;
+    public static final int ACTIVITY_GET_FILE = 1;
     private static final int PICK_CONTACT = 3;
+    private static final int ACTIVITY_DRAW_FILE = 2;
     private static final int PDF_SELECTION_CODE = 4;
     private RecyclerView recyclerView;
     //  private List<Joblistdata> jobList;
@@ -182,6 +187,40 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private FloatingActionButton fab_add;
     private  String template;
     public String[] photos = new String[7];
+    private String cameraSnap;
+    private ImageView photoA;
+    private ImageView photoB;
+    private ImageView photoC;
+    private ImageView photoD;
+    private ImageView photoE;
+    private ImageView photoF;
+    private ImageView photoG;
+    private ImageView photo_draw;
+    private ImageView photo_file;
+    private ImageView photo_file2;
+    private ImageView photo_file3;
+    public int filephoto;
+    public String photo1 = "";
+    public String photo2 = "";
+    public String photo3 = "";
+    public String photo4 = "";
+    public String photo5 = "";
+    public String photo6 = "";
+    public String photo7 = "";
+    public int photoframe;
+    public String com1 = "";
+    public String com2 = "";
+    public String com3 = "";
+    public String com4 = "";
+    public String com5 = "";
+    public String com6 = "";
+    public String com7 = "";
+    public String Overview = "";
+    public String relevantInfo = "";
+    public String Notes = "";
+    private String aProvider = "Trade";
+    public String ItemStatus = "";
+    public boolean Edited = false;
 
 
 
@@ -598,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         }
 
-        Bundle bundle = new Bundle();
+
 
 
         FolderTreeFragment fragment = new FolderTreeFragment();
@@ -672,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 //              mPhotoImageView = (ImageView) findViewById(R.id.imageView6);
               //  propPhoto = projectItem.get(MyConfig.TAG_PROJECT_PHOTO);
 
-
+                Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("iID", 0);
@@ -711,8 +750,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             else {
 
                 Integer aID = node.getaID();
-                Integer iID = node.getiID();
-                GlobalVariables.iId = iID;
+
+                GlobalVariables.iId = iId;
 
               //  if(aID == 0)  aID = 1;
               //  if(iID == 0)  iID = 1;
@@ -778,9 +817,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             // if (GlobalVariables.dataList.isEmpty() != true)
             GlobalVariables.modified = true;
 
-                inspectionId = Integer.toString(iID);
+                inspectionId = Integer.toString(iId);
 
-                   HashMap<String, String> inspectionData = dbHandler.getInspectionData(projId, iID);
+                   HashMap<String, String> inspectionData = dbHandler.getInspectionData(projId, iId);
 
                 String MapBranch;
 
@@ -795,7 +834,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 String endTime = inspectionData.get(MyConfig.TAG_END_DATE_TIME);
                 String image = inspectionData.get(MyConfig.TAG_IMAGE);
 
-
+                Bundle bundle = new Bundle();
                 bundle.putInt("projId", projId);
                 bundle.putInt("USER_ID", USER_ID);
                 bundle.putInt("Level", node.getNodeLevel());
@@ -803,7 +842,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                  bundle.putString("inspection", inspLabel);
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
-                bundle.putInt("iID", iID);
+                bundle.putInt("iID", iId);
                 bundle.putString("date", inspectionDate);
                 bundle.putString("inspectType", typeInspection);
                 bundle.putString("startTime", startTime);
@@ -815,6 +854,10 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 bundle.putBoolean("doc", true);
 
              //  bundle.putString("com2", com2);
+
+                FolderTreeFragment fragment1 = new FolderTreeFragment();
+                doFragmentTransaction(fragment1, "FolderTreeFragment", false, "");
+                fragment1.setArguments(bundle);
 
              //   ProjectInfoFragment fragment = new ProjectInfoFragment();
                 DocInfoFragment fragment2 = new DocInfoFragment();
@@ -845,13 +888,15 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         photoBranch = dbHandler.getBranchPhoto(projId, node.getaID());
         String folderPhoto = dbHandler.getFolderPhoto(projId);
-        Bundle bundle = new Bundle();
-            bundle.putString("branchPhoto", photoBranch);
-            bundle.putString("folderPhoto", folderPhoto);
-            bundle.putInt("projId", projId);
+
         switch (node.getbranchCat()) { //branchcat is the child column and classifies type of node
 
             case 0: {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("branchPhoto", photoBranch);
+                bundle.putString("folderPhoto", folderPhoto);
+                bundle.putInt("projId", projId);
 
                 if (GlobalVariables.doc_pos == 1 && treeNameIndex == 0){
                      reportMenuPrev(); //The document preview is displayed in the fragment
@@ -884,33 +929,101 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             }
            case 1: {
 
+
+
                 focus = "PAGE";
                 HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
 
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                photos[4] = list.get(MyConfig.TAG_IMAGE5);
-                photos[5] = list.get(MyConfig.TAG_IMAGE6);
 
-                bundle.putString("IMG1",photos[0]);
-                bundle.putString("IMG2",photos[1]);
-                bundle.putString("IMG3",photos[2]);
-                bundle.putString("IMG4",photos[3]);
-                bundle.putString("IMG5",photos[4]);
-                bundle.putString("IMG6",photos[5]);
+               if (list.size() > 0) {
+                   relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                   Overview = list.get(MyConfig.TAG_OVERVIEW);
+                   aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                   com1 = list.get(MyConfig.TAG_COM1);
+                   com2 = list.get(MyConfig.TAG_COM2);
+                   com3 = list.get(MyConfig.TAG_COM3);
+                   com4 = list.get(MyConfig.TAG_COM4);
+                   com5 = list.get(MyConfig.TAG_COM5);
+                   com6 = list.get(MyConfig.TAG_COM6);
+                   Notes = list.get(MyConfig.TAG_NOTES);
+                   String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                   String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
-                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
 
-                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
-                bundle.putString("title", branchHead);
-                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
-                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
+                   Bundle bundle = new Bundle();
+                   bundle.putString("projectID", projectId);
+                   bundle.putString("inspectionID", inspectionId);
+                   bundle.putInt("aID", GlobalVariables.aId);
+              //     bundle.putInt("Level", Level);
+             //      bundle.putInt("catId", catId);
+            //       bundle.putString("branchHead", branchHead);
+            //       bundle.putString("branchLabel", inspLabel);
+                   bundle.putString("aprovider", aProvider);
+                   bundle.putString("overview", Overview);
+                   bundle.putString("date", dateInspected);
+                   bundle.putString("relevantInfo", relevantInfo);
+                   bundle.putString("notes", Notes);
+                   bundle.putString("com1", com1);
+                   bundle.putString("com2", com2);
+                   bundle.putString("com3", com3);
+                   bundle.putString("com4", com4);
+                   bundle.putString("com5", com5);
+                   bundle.putString("com6", com6);
+                   bundle.putString("prnt", prntReport);
 
-                DocPageViewFragment fragment2 = new DocPageViewFragment();
-                doFragmentFolderInfoTransaction(fragment2, "DocPageViewFragment", false, "");
-                fragment2.setArguments(bundle);
+
+                   photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                   photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                   photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                   photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                   photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                   photos[5] = list.get(MyConfig.TAG_IMAGE6);
+                   //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                   String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                   photo1 = photos[0];
+                   photo2 = photos[1];
+                   photo3 = photos[2];
+                   photo4 = photos[3];
+                   photo5 = photos[4];
+                   photo6 = photos[5];
+                   photo7 = photos[6];
+
+             /*      InspectionFragment fragment = new InspectionFragment();
+                   fragment.setArguments(bundle);
+
+                   doFragmentTransaction(fragment, "InspectionFragment", false, "");
+
+              */
+
+                   //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                   HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
+                   int parent_aId = dbHandler.getParentId(projId,node.getaID());
+
+                   String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
+                   String parentTitle = dbHandler.getMapParentTitle(projId, parent_aId);
+                   bundle.putString("title",dbHandler.getMapBranchTitle(projId, node.getcatId()));
+                   bundle.putString("subTitle", parentTitle);
+                   bundle.putString("itemTitle", mapItem.get("MAP_LABEL"));
+
+                 //  DocPageViewFragment fragment2 = new DocPageViewFragment();
+                 //  doFragmentFolderInfoTransaction(fragment2, "DocPageViewFragment", false, "");
+                 //  fragment2.setArguments(bundle);
+
+                         Page_1_Fragment fragment2 = new Page_1_Fragment();
+                         doFragmentFolderInfoTransaction(fragment2, "Page_1_Fragment", false, "");
+                         fragment2.setArguments(bundle);
+
+               }
+               else
+                   Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
 
                 break;
             }
@@ -927,7 +1040,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 photos[3] = list.get(MyConfig.TAG_IMAGE4);
                 photos[4] = list.get(MyConfig.TAG_IMAGE5);
                 photos[5] = list.get(MyConfig.TAG_IMAGE6);
-
+                Bundle bundle = new Bundle();
                 bundle.putString("IMG1",photos[0]);
                 bundle.putString("IMG2",photos[1]);
                 bundle.putString("IMG3",photos[2]);
@@ -960,7 +1073,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 photos[3] = list.get(MyConfig.TAG_IMAGE4);
                 photos[4] = list.get(MyConfig.TAG_IMAGE5);
                 photos[5] = list.get(MyConfig.TAG_IMAGE6);
-
+                Bundle bundle = new Bundle();
                 bundle.putString("IMG1",photos[0]);
                 bundle.putString("IMG2",photos[1]);
                 bundle.putString("IMG3",photos[2]);
@@ -1067,13 +1180,15 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
       //  MapViewLists.LoadInitialData();
       //  MapViewLists.LoadDisplayList();
-
+/*
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.detail_text);
 
         FolderTreeFragment fragment = new FolderTreeFragment();
         doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
 
+
+ */
 
      //       updatePropList();
      //       GlobalVariables.folders = 1;
@@ -2216,6 +2331,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
 
             DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -2234,10 +2350,14 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             }
 
             try {
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
 
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
                 copy(photo_HR, photo) ;
                 rotateImage(resizePhoto());
+                cameraSnap = "1";
+                //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
+                //    imageName1.setText("UPDATED");
+                saveInspectionItem();
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
             } catch (IOException e) {
@@ -2246,9 +2366,46 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         } else if (requestCode == ACTIVITY_START_CAMERA_APP) {
             photo.delete();
+            if (cameraSnap != "1") {
+                cameraSnap = "0";
+                //    Edited = true;
+            }
 
+            switch (photoframe) {
+
+                case 0:
+                    photoBranch = photos[0];
+                    break;
+
+                case 1:
+                    photo1 = photos[0];
+                    break;
+
+                case 2:
+                    photo2 = photos[1];
+                    break;
+
+                case 3:
+                    photo3 = photos[2];
+                    break;
+
+                case 4:
+                    photo4 = photos[3];
+                    break;
+
+                case 5:
+                    photo5 = photos[4];
+                    break;
+
+                case 6:
+                    photo6 = photos[5];
+                    break;
+
+                case 7:
+                    photo7 = photos[6];
+                    break;
+            }
         }
-
 
 
 
@@ -2284,19 +2441,203 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
              }
 
 
-            if (FragDisplay == "FolderTreeFragment") {
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("ProjectInfoFolderFragment");
-                ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
-                photoA.setImageURI(selectedImage);
-            }
-
             if (FragDisplay == "BaseInfoFolderFragment") {
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseInfoFolderFragment");
                 ImageView photoA = fragment_obj.getView().findViewById(R.id.photo);
                 photoA.setImageURI(selectedImage);
             }
 
+            if (FragDisplay == "BaseFragment") {
 
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+
+            // photoA.setImageURI(selectedImage);
+            if (FragDisplay == "Page_1_Fragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+            if (FragDisplay == "MultiPic4Fragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic4Fragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+            if (FragDisplay == "MultiPic6Fragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic6Fragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+
+            if (FragDisplay == "ReferenceFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ReferenceFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                    case 3:
+                        photoC = fragment_obj.getView().findViewById(R.id.imageView3);
+                        photoC.setImageURI(selectedImage);
+                        break;
+
+                    case 4:
+                        photoD = fragment_obj.getView().findViewById(R.id.imageView4);
+                        photoD.setImageURI(selectedImage);
+                        break;
+
+                    case 5:
+                        photoE = fragment_obj.getView().findViewById(R.id.imageView5);
+                        photoE.setImageURI(selectedImage);
+                        break;
+
+                    case 6:
+                        photoF = fragment_obj.getView().findViewById(R.id.imageView6);
+                        photoF.setImageURI(selectedImage);
+                        break;
+
+                    case 7:
+                        photoG = fragment_obj.getView().findViewById(R.id.imageView7);
+                        photoG.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
+            if (FragDisplay == "ActionItemFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("ActionItemFragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+
+                }
+
+            }
+
+            if (FragDisplay == "PhotoEditFragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("PhotoEditFragment");
+                photoA = fragment_obj.getView().findViewById(R.id.photo_insert);
+                photoA.setImageURI(selectedImage);
+
+
+            }
 
 
             File from = new File(path);
@@ -2327,6 +2668,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 e.printStackTrace();
             }
 
+
+
+
             if (FragDisplay == "BaseInfoFolderFragment") {
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("BaseInfoFolderFragment");
                 DBHandler dbHandler = new DBHandler(this, null, null, 1);
@@ -2346,6 +2690,45 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 String projectPhoto = to.getName();
                 dbHandler.updatePropPhoto(projectId, projectPhoto);
             }
+
+            switch (filephoto) {
+                case 1:
+                    if (FragDisplay == "BaseFragment") photoBranch = to.getName();
+                    photo1 = to.getName();
+                    break;
+
+                case 2:
+                    //          photoB.setImageURI(selectedImage);
+                    photo2 = to.getName();
+                    break;
+
+                case 3:
+                    //          photoC.setImageURI(selectedImage);
+                    photo3 = to.getName();
+                    break;
+
+                case 4:
+                    //          photoC.setImageURI(selectedImage);
+                    photo4 = to.getName();
+                    break;
+
+                case 5:
+                    //          photoC.setImageURI(selectedImage);
+                    photo5 = to.getName();
+                    break;
+
+                case 6:
+                    //          photoC.setImageURI(selectedImage);
+                    photo6 = to.getName();
+                    break;
+
+                case 7:
+                    //          photoC.setImageURI(selectedImage);
+                    photo7 = to.getName();
+                    break;
+            }
+
+            saveInspectionItem();
 
 
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(to)));
@@ -2427,7 +2810,62 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         }
 
+
+            if (requestCode == ACTIVITY_DRAW_FILE && resultCode == 0) {
+
+                onClick(photo_file);
+
+            }
+
+
     }  //end request activity
+
+    private void saveInspectionItem() {
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+
+        // String serviceDate = inspectionDate.getText().toString();
+        // work out the next service date in three months time
+        if (FragDisplay == "BaseFragment") {
+            dbHandler.updateBranchPhoto(projId, GlobalVariables.aId, photoBranch);
+        }
+
+
+        String date = dayTime(1);
+
+        String ServiceLevel = "1";
+        ItemStatus = "p";
+
+
+        if (FragDisplay == "Page_1_Fragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3,photo4,
+                    photo5, photo6, photo7);
+
+        }
+
+        if (FragDisplay == "ReferenceFragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3,photo4,
+                    photo5, photo6, photo7);
+
+        }
+
+        if (FragDisplay == "ActionItemFragment") {
+            dbHandler.updateActionItemPhoto(projectId, inspectionId, GlobalVariables.aId,  photo1);
+
+        }
+
+        if (FragDisplay == "MultiPic6Fragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3, photo4,
+                    photo5, photo6, photo7);
+        }
+
+        if (FragDisplay == "MultiPic4Fragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3, photo4,
+                    "", "", "");
+        }
+
+        Edited = false;
+
+    }
 
 
     protected  ArrayList<String> getContactInfo(Intent data)
@@ -2491,6 +2929,33 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         File image = File.createTempFile(fname, ".jpg", storageDirectory);
 
         photo = image;
+        switch (photoframe){
+
+            case 0:
+                photoBranch = image.getName();
+                break;
+            case 1:
+                photo1 = image.getName();
+                break;
+            case 2:
+                photo2 = image.getName();
+                break;
+            case 3:
+                photo3 = image.getName();
+                break;
+            case 4:
+                photo4 = image.getName();
+                break;
+            case 5:
+                photo5 = image.getName();
+                break;
+            case 6:
+                photo6 = image.getName();
+                break;
+            case 7:
+                photo7 = image.getName();
+                break;
+        }
 
         mImageFileLocation = image.getAbsolutePath();
         return image;
@@ -2577,6 +3042,43 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         //  resizePhoto();
 
         return thePhotoFile;
+    }
+
+
+
+    public void photo_load(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("projectID", projId);
+        bundle.putInt("inspectionID", iId);
+        bundle.putInt("aID", GlobalVariables.aId);
+
+        DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
+
+        HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
+        if (list.size() > 0) {
+            photos[0] = list.get(MyConfig.TAG_IMAGE1);
+            photos[1] = list.get(MyConfig.TAG_IMAGE2);
+            photos[2] = list.get(MyConfig.TAG_IMAGE3);
+            photos[3] = list.get(MyConfig.TAG_IMAGE4);
+            photos[4] = list.get(MyConfig.TAG_IMAGE5);
+            photos[5] = list.get(MyConfig.TAG_IMAGE6);
+            photos[6] = list.get(MyConfig.TAG_IMAGE7);
+            //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+            String tag = list.get(MyConfig.TAG_IMAGE1);
+
+            photo1 = photos[0];
+            photo2 = photos[1];
+            photo3 = photos[2];
+            photo4 = photos[3];
+            photo5 = photos[4];
+            photo6 = photos[5];
+            photo7 = photos[6];
+        }
+
+        PhotoEditFragment photoEditFragment = new PhotoEditFragment();
+        doFragmentTransaction(photoEditFragment, "PhotoEditFragment",true,"");
+        photoEditFragment.setArguments(bundle);
+
     }
 
 

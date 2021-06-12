@@ -2202,6 +2202,28 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public String getMapParentTitle(int projID, int aID) {
+        // Open a database for reading and writing
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery;
+        Cursor cursor;
+        String label = "Branch Title";
+
+        selectQuery = "SELECT M." + COLUMN_LABEL + " FROM "
+                + TABLE_MAP + " M"
+                + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID + " AND M." + COLUMN_A_ID + " = " +aID;
+
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+
+            label = cursor.getString(0);
+        }
+        db.close();
+        return label;
+
+    }
+
 
     public Integer addReportBranch(int projId, int iId, int CatID, int Level, int aId, String Label, int Type) {
         // Open a database for reading and writing

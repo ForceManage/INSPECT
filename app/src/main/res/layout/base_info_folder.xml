@@ -29,12 +29,12 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#0B2459"
+                android:background="#000000"
                 >
 
                 <ImageView
                     android:id="@+id/imageView_cam"
-                    android:layout_width="50dp"
+                    android:layout_width="60dp"
                     android:layout_height="50dp"
                     android:paddingLeft="2dp"
                     android:layout_marginLeft="10dp"
@@ -44,7 +44,7 @@
 
                 <ImageView
                     android:id="@+id/imageView_file"
-                    android:layout_width="50dp"
+                    android:layout_width="60dp"
                     android:layout_height="50dp"
                     android:layout_gravity="bottom|right"
                     android:layout_marginRight="100dp"
@@ -52,7 +52,7 @@
 
                 <ImageView
                     android:id="@+id/imageView_draw"
-                    android:layout_width="50dp"
+                    android:layout_width="60dp"
                     android:layout_height="50dp"
                     android:layout_gravity="top|right"
                     android:layout_marginRight="10dp"
