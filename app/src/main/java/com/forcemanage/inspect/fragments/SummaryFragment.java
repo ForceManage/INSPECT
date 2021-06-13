@@ -80,8 +80,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projectId = bundle.getString("projectID");
-            inspectionId = bundle.getString("inspectionID");
+            projId = bundle.getInt("projectID");
+            iId = bundle.getInt("inspectionID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             headA = bundle.getString("head_A");
@@ -106,19 +106,16 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
         Log.d(TAG, "oncreateview: started");
 
-        projId = Integer.parseInt(projectId);
-        iId = Integer.parseInt(inspectionId);
 
         title = (TextView) view.findViewById(R.id.title);
-        branch = (TextView) view.findViewById(R.id.level);
-        notesE = (EditText) view.findViewById(R.id.note);
 
 
-         descriptionE = (EditText) view.findViewById(R.id.desc);
+
+      //   descriptionE = (EditText) view.findViewById(R.id.desc);
          ComA = (EditText) view.findViewById(R.id.comA);
         ComB = (EditText) view.findViewById(R.id.comB);
         ComC = (EditText) view.findViewById(R.id.comC);
-         notesE = (EditText) view.findViewById(R.id.notes);
+
          HeadA = (TextView) view.findViewById(R.id.Head_A);
         HeadB = (TextView) view.findViewById(R.id.Head_B);
         HeadC = (TextView) view.findViewById(R.id.Head_C);
@@ -161,7 +158,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
 
         title.setText(branchTitle);
-        branch.setText(branchName);
+     //   branch.setText(branchName);
         if(headA != null) HeadA.setText(headA); else HeadA.setText("TITLE");
         if(headB != null) HeadB.setText(headB); else HeadB.setText("TITLE");
         if(headC != null) HeadC.setText(headC); else HeadC.setText("TITLE");
@@ -295,9 +292,10 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comA = ComA.getText().toString();
             comB = ComB.getText().toString();
             comC = ComC.getText().toString();
-            dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
+            dbHandler.updateSummary(projId, iId , headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(projId, iId);
         }
+      //  globalVariables.photo_load_close();
     }
 
     @Override
@@ -311,10 +309,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comA = ComA.getText().toString();
             comB = ComB.getText().toString();
             comC = ComC.getText().toString();
-            dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
+            dbHandler.updateSummary(projId, iId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(projId, iId);
-            globalVariables.photo_load_close();
+
 
         }
+
     }
 }

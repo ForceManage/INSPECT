@@ -49,17 +49,7 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
 
 
 
-            <TextView
-                android:id="@+id/page"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Summary "
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
-
-            <TextView
+        <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,15 +59,7 @@ tools:context="com.forcemanage.inspect.InspectionActivity">
                 android:textSize="24sp"
                 android:textStyle="normal|bold" />
 
-            <TextView
-                android:id="@+id/level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Item Title:  "
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
+
 
         </LinearLayout>
 

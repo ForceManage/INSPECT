@@ -92,8 +92,8 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projectId = bundle.getString("projectID");
-            inspectionId = bundle.getString("inspectionID");
+            projId = bundle.getInt("projectID");
+            iId = bundle.getInt("inspectionID");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             desciption = bundle.getString("description");
@@ -114,8 +114,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.certificate_inspection, container, false);
         //       btnInspection = (Button) view.findViewById(R.id.btnInspection);
-        projId = Integer.parseInt(projectId);
-        iId = GlobalVariables.iId;
+
 
         Log.d(TAG, "oncreateview: started");
 

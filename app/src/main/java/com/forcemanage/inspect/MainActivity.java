@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     public String projectId = "null";
     private int projId = 0;
     private int iId;
+    private int aId;
     private String fname;
     private String cat;
     public String photoBranch;
@@ -882,6 +883,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
        // ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
             MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
             GlobalVariables.aId = node.getaID();
+            aId = node.getaID();
             GlobalVariables.Level = node.getNodeLevel();
          //   GlobalVariables.iId = node.getiID();
        //     GlobalVariables.catId = node.getcatId();
@@ -893,12 +895,14 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         String folderPhoto = dbHandler.getFolderPhoto(projId);
 
 
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_text);
+    //    DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+    //            .findFragmentById(R.id.detail_text);
 
 
 
         if (GlobalVariables.modified == true) {
+
+            /*
             MapViewFragment newDetailFragment = new MapViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
@@ -923,11 +927,21 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
             // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
+
+            ProjectViewFragment treeFragment = new ProjectViewFragment();
+            treeFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_folder, treeFragment)
+                    .commit();
+*/
+            FolderTreeFragment fragment = new FolderTreeFragment();
+            doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
             GlobalVariables.modified = false;
 
             //      OnTabChanged(GlobalVariables.pos);
 
         }
+
 
         switch (node.getbranchCat()) { //branchcat is the child column and classifies type of node
 
@@ -1092,8 +1106,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("projectID", projectId);
-                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putInt("projectID", projId);
+                    bundle.putInt("inspectionID", iId);
+                    bundle.putInt("aID", aId);
                     bundle.putString("aprovider", aProvider);
                     bundle.putString("overview", Overview);
                     bundle.putString("date", dateInspected);
@@ -1155,9 +1170,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("projectID", projectId);
-                    bundle.putString("inspectionID", inspectionId);
-                    bundle.putInt("aID", GlobalVariables.aId);
+                    bundle.putInt("projectID", projId);
+                    bundle.putInt("inspectionID", iId);
+                    bundle.putInt("aID", aId);
                 //    bundle.putInt("Level", Level);
                  //   bundle.putInt("catId", catId);
                  //   bundle.putString("branchHead", branchHead);
@@ -1220,8 +1235,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 com_C = list.get(MyConfig.TAG_COM_C);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("projectID", projectId);
-                bundle.putString("inspectionID", inspectionId);
+                bundle.putInt("projectID", projId);
+                bundle.putInt("inspectionID", iId);
+                bundle.putInt("aID", aId);
            //     bundle.putString("branchHead", branchHead);
            //     bundle.putString("branchLabel", inspLabel);
                 bundle.putString("head_A", head_A);
@@ -1233,7 +1249,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
                 SummaryFragment fragment = new SummaryFragment();
                 fragment.setArguments(bundle);
-
                 doFragmentTransaction(fragment, "SummaryFragment", false, "");
 
 
@@ -1267,8 +1282,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("projectID", projectId);
-                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putInt("projectID", projId);
+                    bundle.putInt("inspectionID", iId);
+                    bundle.putInt("aID", aId);
                 //    bundle.putString("branchHead", branchHead);
                //     bundle.putString("branchLabel", inspLabel);
                     bundle.putString("description", Overview);
@@ -1307,9 +1323,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("projectID", projectId);
-                        bundle.putString("inspectionID", inspectionId);
-                      //  bundle.putInt("aID", aID);
+                        bundle.putInt("projectID", projId);
+                        bundle.putInt("inspectionID", iId);
+                        bundle.putInt("aID", aId);
                         bundle.putString("com1", com1);
                         bundle.putString("com2", com2);
                         bundle.putString("com3", com3);
@@ -1436,22 +1452,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         ProjectViewList.LoadInitialData();
         ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
-        ProjectViewList.LoadDisplayList();
-
-      //  MapViewLists.LoadInitialData();
-      //  MapViewLists.LoadDisplayList();
-/*
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_text);
-
-        FolderTreeFragment fragment = new FolderTreeFragment();
-        doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
-
-
- */
-
-     //       updatePropList();
-     //       GlobalVariables.folders = 1;
+     //   ProjectViewList.LoadDisplayList();
 
 
     }
@@ -3514,7 +3515,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
       //  ProjectViewList.LoadDisplayList();
         ProjectViewList.LoadDisplayList();
-        GlobalVariables.modified = true;
+
         //    MapListAdapter mAdapter = new MapListAdapter(this);
         //   mAdapter.notifyDataSetChanged();
         //   OnSelectionChanged(0);
@@ -3524,7 +3525,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 .findFragmentById(R.id.detail_text);
 
 
-        if (GlobalVariables.modified == true) {
+
             ProjectViewFragment newDetailFragment = new ProjectViewFragment();
             Bundle args = new Bundle();
             detailFragment.mCurrentPosition = -1;
@@ -3554,7 +3555,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             //   OnSelectionChanged(0);
 
      */
-        }
+
 
 
     }

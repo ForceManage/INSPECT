@@ -1073,10 +1073,11 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateSummary(String projId, String iId, String headA, String comA, String headB, String comB,
+    public void updateSummary(int projId, int iId, String headA, String comA, String headB, String comB,
                                             String headC, String comC) {
 
-
+        String projectId = Integer.toString(projId);
+        String inspectionId = Integer.toString(iId);
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_HEAD_A, headA);
@@ -1086,7 +1087,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_COM_B, comB );
         contentValues.put(COLUMN_COM_C, comC);
         contentValues.put(COLUMN_ITEM_STATUS, "m");
-        db.update(TABLE_SUMMARY, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
+        db.update(TABLE_SUMMARY, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projectId, inspectionId});
         db.close();
 
 

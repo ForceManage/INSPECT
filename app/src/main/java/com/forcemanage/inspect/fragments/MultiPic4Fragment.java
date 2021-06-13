@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
@@ -120,8 +121,8 @@ public class MultiPic4Fragment extends Fragment implements View.OnClickListener 
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projectId = bundle.getString("projectID");
-            inspectionId = bundle.getString("inspectionID");
+            projId = bundle.getInt("projectID");
+            iId = bundle.getInt("inspectionID");
             aId = bundle.getInt("aID");
 
             inspectionDate = bundle.getString("date");
@@ -710,7 +711,7 @@ public class MultiPic4Fragment extends Fragment implements View.OnClickListener 
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, "",
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, "",
                     "MULTIPIC4", "", Prnt, "1",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
@@ -728,7 +729,7 @@ public class MultiPic4Fragment extends Fragment implements View.OnClickListener 
         super.onDestroyView();
         if(Edited){
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, "",
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, "",
                     "MULTIPIC4", "", Prnt, "1",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),

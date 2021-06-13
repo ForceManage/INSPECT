@@ -132,10 +132,9 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projectId = bundle.getString("projectID");
-            inspectionId = bundle.getString("inspectionID");
+            projId = bundle.getInt("projectID");
+            iId = bundle.getInt("inspectionID");
             aId = bundle.getInt("aID");
-
             com1 = bundle.getString("com1");
             com2 = bundle.getString("com2");
             com3 = bundle.getString("com3");
@@ -161,8 +160,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
         Log.d(TAG, "oncreateview: started");
 
-        projId = Integer.parseInt(projectId);
-        iId= Integer.parseInt(inspectionId);
+
 
 
         cam1 = (ImageView) view.findViewById(R.id.cameraClick1);
@@ -1160,7 +1158,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
                Edited = false;
 
            }
-
+      //  globalVariables.photo_load_close();
     }
 
     @Override
@@ -1170,7 +1168,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, "20200630", "",
+            dbHandler.updateInspectionItem(projId, iId, aId, "20200630", "",
                     "", "", "1", "reportImage",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
@@ -1181,6 +1179,6 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
             Edited = false;
 
         }
-       globalVariables.photo_load_close();
+     //   globalVariables.photo_load_close();
     }
 }

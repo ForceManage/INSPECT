@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
+import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
@@ -121,8 +122,8 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projectId = bundle.getString("projectID");
-            inspectionId = bundle.getString("inspectionID");
+            projId = bundle.getInt("projectID");
+            iId = bundle.getInt("inspectionID");
             aId = bundle.getInt("aID");
 
             overView = bundle.getString("overview");
@@ -189,8 +190,7 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
         play1 = (ImageView) view.findViewById(R.id.title1_voice);
         play2 = (ImageView) view.findViewById(R.id.title2_voice);
 
-        projId = Integer.parseInt(projectId);
-        iId= Integer.parseInt(inspectionId);
+
         Overview = (EditText) view.findViewById(R.id.Overview);
         RelevantInfo = (EditText) view.findViewById(R.id.RelevantInfo);
         Overview.setText(overView);
@@ -944,7 +944,7 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, Overview.getText().toString(),
                     "MULTIPIC6", RelevantInfo.getText().toString(), Prnt, "1",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
@@ -962,11 +962,10 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
         super.onDestroyView();
         if(Edited){
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, Overview.getText().toString(),
                    "MULTIPIC6", RelevantInfo.getText().toString(), Prnt, "1",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
-                    ,  com4Text.getText().toString(),
-                    com5Text.getText().toString(),  com6Text.getText().toString(), " com6", "m", "");
+                    ,  com4Text.getText().toString(), com5Text.getText().toString(),  com6Text.getText().toString(), " com6", "m", "");
 
 
             dbHandler.statusChanged(projId, iId);

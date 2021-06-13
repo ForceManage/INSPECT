@@ -208,11 +208,19 @@
                             app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
 
                         <ImageView
+                            android:id="@+id/imageView_draw"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="bottom|left"
+                            android:layout_margin="5dp"
+                            android:foreground="@android:drawable/ic_menu_edit" />
+
+                        <ImageView
                             android:id="@+id/imageView_file"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|center"
-                            android:layout_marginBottom="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@android:drawable/ic_menu_gallery" />
 
                         <ImageView
@@ -220,7 +228,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|right"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@drawable/picture_picture" />
 
                     </FrameLayout>
@@ -285,7 +293,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|center"
-                            android:layout_marginBottom="5dp"
+                            android:layout_margin="5dp"
                             android:foreground="@android:drawable/ic_menu_gallery" />
 
                         <ImageView
@@ -366,7 +374,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|right"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@drawable/picture_picture" />
 
                     </FrameLayout>
@@ -431,7 +439,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|center"
-                            android:layout_marginBottom="5dp"
+                            android:layout_margin="5dp"
                             android:foreground="@android:drawable/ic_menu_gallery" />
 
                         <ImageView
@@ -439,7 +447,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|right"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@drawable/picture_picture" />
 
                     </FrameLayout>
@@ -509,7 +517,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|right"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@drawable/picture_picture" />
 
                     </FrameLayout>
@@ -581,7 +589,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="bottom|right"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:foreground="@drawable/picture_picture" />
 
                     </FrameLayout>

@@ -253,8 +253,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
         photoF = (ImageView) view.findViewById(R.id.imageView6);
         //     photoE.setOnClickListener(this);
 
-    //    photo_draw = (ImageView) view.findViewById(R.id.imageView_draw);
-    //    photo_draw.setOnClickListener(this);
+        photo_draw = (ImageView) view.findViewById(R.id.imageView_draw);
+        photo_draw.setOnClickListener(this);
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
             photo_file.setOnClickListener(this);
@@ -467,7 +467,7 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        /*
+
         photo_draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -492,7 +492,7 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
             }
         });
 
-         */
+
 
 
         photo_file.setOnClickListener(new View.OnClickListener() {
