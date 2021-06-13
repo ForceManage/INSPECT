@@ -45,6 +45,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -78,12 +80,14 @@ import com.forcemanage.inspect.attributes.ReportItem;
 import com.forcemanage.inspect.attributes.SummaryAttributes;
 import com.forcemanage.inspect.attributes.USER_Attributes;
 import com.forcemanage.inspect.fragments.BaseInfoFolderFragment;
+import com.forcemanage.inspect.fragments.CertificateInspectionFragment;
 import com.forcemanage.inspect.fragments.DocInfoFragment;
 import com.forcemanage.inspect.fragments.DocPageViewFragment;
 import com.forcemanage.inspect.fragments.FolderTreeFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
+import com.forcemanage.inspect.fragments.MultiPic4Fragment;
 import com.forcemanage.inspect.fragments.MultiPic4PageViewFragment;
 import com.forcemanage.inspect.fragments.MultiPic6Fragment;
 import com.forcemanage.inspect.fragments.MultiPic6PageViewFragment;
@@ -91,8 +95,10 @@ import com.forcemanage.inspect.fragments.Page_1_Fragment;
 import com.forcemanage.inspect.fragments.PhotoEditFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFolderFragment;
 import com.forcemanage.inspect.fragments.ProjectInfoFragment;
+import com.forcemanage.inspect.fragments.ReferenceFragment;
 import com.forcemanage.inspect.fragments.RegisterFragment;
 import com.forcemanage.inspect.fragments.ReportFragment;
+import com.forcemanage.inspect.fragments.SummaryFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -487,7 +493,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private void doFragmentTransaction(Fragment fragment, String name, boolean addToBackStack, String message) {
         androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragDisplay = name;
-        if(FragDisplay == "RegisterFragment"){
+
+        if(FragDisplay == "RegisterFragment" || FragDisplay == "PhotoEditFragment" || FragDisplay == "SummaryFragment"  || FragDisplay == "ReferenceFragment"
+                || FragDisplay == "CertificateInspectionFragment"){
 
             LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
             main1.setVisibility(View.VISIBLE);
@@ -642,7 +650,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         FolderTreeFragment fragment = new FolderTreeFragment();
         doFragmentTransaction(fragment, "FolderTreeFragment", false, "");
-        GlobalVariables.modified = false;
+
 
 
 
@@ -650,6 +658,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
             focus = "FOLDER";
             GlobalVariables.doc_pos = 0;
+            GlobalVariables.doc_mode = 0;
 
             //  ArrayList<HashMap<String, String>> Folders = dbHandler.getFolderMap(USER_ID, projId);
             maplistItems = new ArrayList<>();
@@ -696,14 +705,13 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
             //   MapViewLists.LoadDisplayList();
 
-            GlobalVariables.modified = false;
 
 
             GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
             //     TreeViewLists.LoadDisplayList();
             MapViewLists.LoadDisplayList();
             // if (GlobalVariables.dataList.isEmpty() != true)
-            GlobalVariables.modified = true;
+
 
 
 
@@ -787,7 +795,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                             SiteMapData.get(i).get(MyConfig.TAG_NOTES)
                     );
                 else
-
+                    GlobalVariables.doc_mode = 1;
                     listItem = new MapViewData(
 
                             Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
@@ -807,17 +815,12 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
             //   MapViewLists.LoadDisplayList();
 
-            GlobalVariables.modified = false;
-
-
 
             GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
             //     TreeViewLists.LoadDisplayList();
             MapViewLists.LoadDisplayList();
             // if (GlobalVariables.dataList.isEmpty() != true)
-            GlobalVariables.modified = true;
-
-                inspectionId = Integer.toString(iId);
+                 inspectionId = Integer.toString(iId);
 
                    HashMap<String, String> inspectionData = dbHandler.getInspectionData(projId, iId);
 
@@ -879,7 +882,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
        // ProjectNode node = GlobalVariables.projectdisplayNodes.get(GlobalVariables.doc_pos);
             MapViewNode node = GlobalVariables.displayNodes.get(treeNameIndex);
             GlobalVariables.aId = node.getaID();
-          //  GlobalVariables.Level = node.getNodeLevel();
+            GlobalVariables.Level = node.getNodeLevel();
          //   GlobalVariables.iId = node.getiID();
        //     GlobalVariables.catId = node.getcatId();
         ///    GlobalVariables.name = node.getNodeName();
@@ -888,6 +891,43 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         photoBranch = dbHandler.getBranchPhoto(projId, node.getaID());
         String folderPhoto = dbHandler.getFolderPhoto(projId);
+
+
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.detail_text);
+
+
+
+        if (GlobalVariables.modified == true) {
+            MapViewFragment newDetailFragment = new MapViewFragment();
+            Bundle args = new Bundle();
+            detailFragment.mCurrentPosition = -1;
+
+
+            args.putInt(DetailFragment.KEY_POSITION, treeNameIndex);
+
+            newDetailFragment.setArguments(args);
+            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the backStack so the User can navigate back
+            fragmentTransaction.replace(R.id.mainfragment_container_1, newDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            FragmentManager fm = getSupportFragmentManager();
+
+            //fm.popBackStack(DF,0);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+            // fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            GlobalVariables.modified = false;
+
+            //      OnTabChanged(GlobalVariables.pos);
+
+        }
 
         switch (node.getbranchCat()) { //branchcat is the child column and classifies type of node
 
@@ -1032,72 +1072,292 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
             case 3: {
 
-                HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
+
                 focus = "PAGE";
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                photos[4] = list.get(MyConfig.TAG_IMAGE5);
-                photos[5] = list.get(MyConfig.TAG_IMAGE6);
-                Bundle bundle = new Bundle();
-                bundle.putString("IMG1",photos[0]);
-                bundle.putString("IMG2",photos[1]);
-                bundle.putString("IMG3",photos[2]);
-                bundle.putString("IMG4",photos[3]);
-                bundle.putString("IMG5",photos[4]);
-                bundle.putString("IMG6",photos[5]);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
 
-                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
+                if (list.size() > 0) {
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
+                    com3 = list.get(MyConfig.TAG_COM3);
+                    com4 = list.get(MyConfig.TAG_COM4);
+                    com5 = list.get(MyConfig.TAG_COM5);
+                    com6 = list.get(MyConfig.TAG_COM6);
+                    Notes = list.get(MyConfig.TAG_NOTES);
+                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                    String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
-                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
-                bundle.putString("title", branchHead);
-                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
-                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
 
-                MultiPic6PageViewFragment fragment2 = new MultiPic6PageViewFragment();
-                doFragmentFolderInfoTransaction(fragment2, "MultiPic6PageViewFragment", false, "");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putString("aprovider", aProvider);
+                    bundle.putString("overview", Overview);
+                    bundle.putString("date", dateInspected);
+                    bundle.putString("relevantInfo", relevantInfo);
+                    bundle.putString("notes", Notes);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("com3", com3);
+                    bundle.putString("com4", com4);
+                    bundle.putString("com5", com5);
+                    bundle.putString("com6", com6);
+                    bundle.putString("prnt", prntReport);
+
+
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                    photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                    photos[5] = list.get(MyConfig.TAG_IMAGE6);
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+                    photo3 = photos[2];
+                    photo4 = photos[3];
+                    photo5 = photos[4];
+                    photo6 = photos[5];
+
+
+
+
+                MultiPic6Fragment fragment2 = new MultiPic6Fragment();
+                doFragmentFolderInfoTransaction(fragment2, "MultiPic6Fragment", false, "");
                 fragment2.setArguments(bundle);
+                } else
+                    Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
 
                 break;
             }
 
             case 4: {
 
-
-                HashMap<String, String> list = dbHandler.getInspectionItem(projId, node.getiID(), node.getaID());
                 focus = "PAGE";
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                photos[3] = list.get(MyConfig.TAG_IMAGE4);
-                photos[4] = list.get(MyConfig.TAG_IMAGE5);
-                photos[5] = list.get(MyConfig.TAG_IMAGE6);
-                Bundle bundle = new Bundle();
-                bundle.putString("IMG1",photos[0]);
-                bundle.putString("IMG2",photos[1]);
-                bundle.putString("IMG3",photos[2]);
-                bundle.putString("IMG4",photos[3]);
-                bundle.putString("IMG5",photos[4]);
-                bundle.putString("IMG6",photos[5]);
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
 
-                HashMap<String, String> mapItem = dbHandler.getMapItem(projId, node.getaID(), node.getiID());
+                if (list.size() > 0) {
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
+                    com3 = list.get(MyConfig.TAG_COM3);
+                    com4 = list.get(MyConfig.TAG_COM4);
 
-                String branchHead = dbHandler.getMapBranchTitle(projId, node.getcatId());
-                bundle.putString("title", branchHead);
-                bundle.putString("subTitle", mapItem.get("MAP_LABEL"));
-                bundle.putString("itemTitle", mapItem.get(MyConfig.TAG_LABEL));
+                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                    String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
-                MultiPic4PageViewFragment fragment2 = new MultiPic4PageViewFragment();
-                doFragmentFolderInfoTransaction(fragment2, "MultiPic4PageViewFragment", false, "");
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                    bundle.putInt("aID", GlobalVariables.aId);
+                //    bundle.putInt("Level", Level);
+                 //   bundle.putInt("catId", catId);
+                 //   bundle.putString("branchHead", branchHead);
+                 //   bundle.putString("branchLabel", inspLabel);
+                    bundle.putString("aprovider", aProvider);
+                    bundle.putString("overview", Overview);
+                    bundle.putString("date", dateInspected);
+                    bundle.putString("relevantInfo", relevantInfo);
+                    bundle.putString("notes", Notes);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("com3", com3);
+                    bundle.putString("com4", com4);
+
+                    bundle.putString("prnt", prntReport);
+
+
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+                    photo3 = photos[2];
+                    photo4 = photos[3];
+
+
+                MultiPic4Fragment fragment2 = new MultiPic4Fragment();
+                doFragmentFolderInfoTransaction(fragment2, "MultiPic4Fragment", false, "");
                 fragment2.setArguments(bundle);
 
+            } else
+            Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
+
+
                 break;
+            }
+
+            case 9: {
+
+                HashMap<String, String> list = dbHandler.getSummary(projId, GlobalVariables.iId);
+
+
+                String head_A;
+                String head_B;
+                String head_C;
+                String com_A;
+                String com_B;
+                String com_C;
+
+                head_A = list.get(MyConfig.TAG_HEAD_A);
+                head_B = list.get(MyConfig.TAG_HEAD_B);
+                head_C = list.get(MyConfig.TAG_HEAD_C);
+                com_A = list.get(MyConfig.TAG_COM_A);
+                com_B = list.get(MyConfig.TAG_COM_B);
+                com_C = list.get(MyConfig.TAG_COM_C);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+           //     bundle.putString("branchHead", branchHead);
+           //     bundle.putString("branchLabel", inspLabel);
+                bundle.putString("head_A", head_A);
+                bundle.putString("head_B", head_B);
+                bundle.putString("head_C", head_C);
+                bundle.putString("com_A", com_A);
+                bundle.putString("com_B", com_B);
+                bundle.putString("com_C", com_C);
+
+                SummaryFragment fragment = new SummaryFragment();
+                fragment.setArguments(bundle);
+
+                doFragmentTransaction(fragment, "SummaryFragment", false, "");
+
+
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                break;
+
+
+            }
+
+            case 10: {
+
+                HashMap<String, String> list = dbHandler.getCert_Inspection(projId, GlobalVariables.iId);
+
+                String Date_Time;
+                String permit;
+                String address;
+                String stage;
+
+                Date_Time = list.get(MyConfig.TAG_DATE_TIME);
+                if (Date_Time == "") Date_Time = dayTime(4);
+
+                if (list.size() > 0) {
+
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    permit = list.get(MyConfig.TAG_PERMIT);
+                    address = list.get(MyConfig.TAG_PROJECT_ADDRESS);
+                    stage = list.get(MyConfig.TAG_STAGE);
+                    Notes = list.get(MyConfig.TAG_NOTES);
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("projectID", projectId);
+                    bundle.putString("inspectionID", inspectionId);
+                //    bundle.putString("branchHead", branchHead);
+               //     bundle.putString("branchLabel", inspLabel);
+                    bundle.putString("description", Overview);
+                    bundle.putString("time", Date_Time);
+                    bundle.putString("permit", permit);
+                    bundle.putString("address", address);
+                    bundle.putString("stage", stage);
+                    bundle.putString("notes", Notes);
+
+                    CertificateInspectionFragment fragment = new CertificateInspectionFragment();
+                    fragment.setArguments(bundle);
+
+                    doFragmentTransaction(fragment, "CertificateInspectionFragment", false, "");
+                } else
+                    Toast.makeText(this, "No Certificate data found", Toast.LENGTH_SHORT).show();
+
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+
+                break;
+
+
+            }
+
+            case 11: {
+
+                if (GlobalVariables.Level > 0) { //only fires if there is a content tab
+                    HashMap<String, String> list = dbHandler.getReferenceItem(projId, GlobalVariables.aId);
+                    if(list.size() > 0) {
+                        com1 = list.get(MyConfig.TAG_COM1);
+                        com2 = list.get(MyConfig.TAG_COM2);
+                        com3 = list.get(MyConfig.TAG_COM3);
+                        com4 = list.get(MyConfig.TAG_COM4);
+                        com5 = list.get(MyConfig.TAG_COM5);
+                        com6 = list.get(MyConfig.TAG_COM6);
+                        com7 = list.get(MyConfig.TAG_COM7);
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("projectID", projectId);
+                        bundle.putString("inspectionID", inspectionId);
+                      //  bundle.putInt("aID", aID);
+                        bundle.putString("com1", com1);
+                        bundle.putString("com2", com2);
+                        bundle.putString("com3", com3);
+                        bundle.putString("com4", com4);
+                        bundle.putString("com5", com5);
+                        bundle.putString("com6", com6);
+                        bundle.putString("com7", com7);
+
+                        photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                        photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                        photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                        photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                        photos[4] = list.get(MyConfig.TAG_IMAGE5);
+                        photos[5] = list.get(MyConfig.TAG_IMAGE6);
+                        photos[6] = list.get(MyConfig.TAG_IMAGE7);
+                        //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                        String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                        photo1 = photos[0];
+                        photo2 = photos[1];
+                        photo3 = photos[2];
+                        photo4 = photos[3];
+                        photo5 = photos[4];
+                        photo6 = photos[5];
+                        photo7 = photos[6];
+
+                        ReferenceFragment fragment = new ReferenceFragment();
+                        fragment.setArguments(bundle);
+
+                        doFragmentTransaction(fragment, "ReferenceFragment", false, "");
+                    }
+                    else Toast.makeText(this, "No Information data found", Toast.LENGTH_SHORT).show();
+
+                    //   int itemNos = dbHandler.getSubItemMap(projId, aID);
+                    //         }
+
+                    //         else
+                } //Level > 1
+                break;
+
+
             }
 
         }
 
         }
+
+
 
 
     @Override
@@ -2465,7 +2725,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             // photoA.setImageURI(selectedImage);
             if (FragDisplay == "Page_1_Fragment") {
 
-                fragment_obj = getSupportFragmentManager().findFragmentByTag("InspectionFragment");
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("Page_1_Fragment");
 
                 switch (filephoto) {
                     case 1:
@@ -3076,8 +3336,16 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         }
 
         PhotoEditFragment photoEditFragment = new PhotoEditFragment();
-        doFragmentTransaction(photoEditFragment, "PhotoEditFragment",true,"");
+        doFragmentTransaction(photoEditFragment, "PhotoEditFragment",false,"");
         photoEditFragment.setArguments(bundle);
+
+    }
+
+    public void photo_load_close(){
+
+        LinearLayout main1 = (LinearLayout) findViewById(R.id.mainfragment_container);
+        main1.setVisibility(View.GONE);
+
 
     }
 

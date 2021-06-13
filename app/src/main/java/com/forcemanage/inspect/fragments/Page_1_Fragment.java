@@ -257,49 +257,49 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
     //    photo_draw.setOnClickListener(this);
 
         photo_file = (ImageView) view.findViewById(R.id.imageView_file);
-        //    photo_file.setOnClickListener(this);
+            photo_file.setOnClickListener(this);
 
         photo_file2 = (ImageView) view.findViewById(R.id.imageView2_file);
-        //    photo_file2.setOnClickListener(this);
+           photo_file2.setOnClickListener(this);
 
         photo_file3 = (ImageView) view.findViewById(R.id.imageView3_file);
-        //     photo_file3.setOnClickListener(this);
+             photo_file3.setOnClickListener(this);
 
         photo_file4 = (ImageView) view.findViewById(R.id.imageView4_file);
-        //    photo_file4.setOnClickListener(this);
+            photo_file4.setOnClickListener(this);
 
         photo_file5 = (ImageView) view.findViewById(R.id.imageView5_file);
         photo_file6 = (ImageView) view.findViewById(R.id.imageView6_file);
-        //    photo_file5.setOnClickListener(this);
+            photo_file5.setOnClickListener(this);
 
         del_img2 = (ImageView) view.findViewById(R.id.imageView2_del);
-        //    del_img2.setOnClickListener(this);
+            del_img2.setOnClickListener(this);
 
         del_img3 = (ImageView) view.findViewById(R.id.imageView3_del);
-        //    del_img3.setOnClickListener(this);
+            del_img3.setOnClickListener(this);
 
         del_img4 = (ImageView) view.findViewById(R.id.imageView4_del);
-        //     del_img4.setOnClickListener(this);
+             del_img4.setOnClickListener(this);
 
         del_img5 = (ImageView) view.findViewById(R.id.imageView5_del);
         del_img6 = (ImageView) view.findViewById(R.id.imageView6_del);
-        //     del_img5.setOnClickListener(this);
+           del_img5.setOnClickListener(this);
 
         Photo_insert = (ImageView) view.findViewById(R.id.insert_file);
-        //      Photo_insert.setOnClickListener(this);
+              Photo_insert.setOnClickListener(this);
 
         Photo_insert2 = (ImageView) view.findViewById(R.id.insert_file2);
-        //      Photo_insert2.setOnClickListener(this);
+             Photo_insert2.setOnClickListener(this);
 
         Photo_insert3 = (ImageView) view.findViewById(R.id.insert_file3);
-        //    Photo_insert3.setOnClickListener(this);
+           Photo_insert3.setOnClickListener(this);
 
         Photo_insert4 = (ImageView) view.findViewById(R.id.insert_file4);
-        //    Photo_insert4.setOnClickListener(this);
+            Photo_insert4.setOnClickListener(this);
 
         Photo_insert5 = (ImageView) view.findViewById(R.id.insert_file5);
         Photo_insert6 = (ImageView) view.findViewById(R.id.insert_file6);
-        //    Photo_insert5.setOnClickListener(this);
+           Photo_insert5.setOnClickListener(this);
 /*
         if(!globalVariables.photo1.equals(""))
             cam1.setBackgroundResource(R.drawable.edit_border_solid);

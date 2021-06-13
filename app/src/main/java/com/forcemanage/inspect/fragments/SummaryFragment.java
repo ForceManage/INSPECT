@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
 import java.text.ParseException;
@@ -33,7 +33,7 @@ import java.util.Locale;
 
 public class SummaryFragment extends Fragment implements View.OnClickListener {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
     private static final String TAG = "ActionItem Fragment";
 
@@ -71,7 +71,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+        globalVariables = (MainActivity) getActivity();
     }
 
     @Override
@@ -313,6 +313,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projectId, inspectionId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(projId, iId);
+            globalVariables.photo_load_close();
 
         }
     }

@@ -27,7 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.GlobalVariables;
-import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.Date;
 
 public class CertificateInspectionFragment extends Fragment implements View.OnClickListener {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
     private static final String TAG = "ActionItem Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -83,7 +83,7 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+        globalVariables = (MainActivity) getActivity();
     }
 
     @Override
@@ -352,5 +352,6 @@ public class CertificateInspectionFragment extends Fragment implements View.OnCl
             dbHandler.statusChanged(projId, iId);
 
         }
+        globalVariables.photo_load_close();
     }
 }

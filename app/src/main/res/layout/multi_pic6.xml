@@ -236,26 +236,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView_del"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -266,12 +266,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
 
@@ -308,26 +306,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView2_del"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView2_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file2"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -338,12 +336,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
 
@@ -388,26 +384,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView3_del"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView3_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file3"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -418,12 +414,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
 
@@ -456,26 +450,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView4_del"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView4_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file4"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -487,12 +481,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
                     </LinearLayout>
@@ -534,26 +526,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView5_del"
-                                android:layout_width="66dp"
-                                android:layout_height="77dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView5_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file5"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -564,12 +556,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
 
@@ -604,26 +594,26 @@
 
                             <ImageView
                                 android:id="@+id/imageView6_del"
-                                android:layout_width="66dp"
-                                android:layout_height="77dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="5dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_delete" />
 
                             <ImageView
                                 android:id="@+id/imageView6_file"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|center"
-                                android:layout_marginBottom="10dp"
+                                android:layout_marginBottom="4dp"
                                 android:foreground="@android:drawable/ic_menu_gallery" />
 
                             <ImageView
                                 android:id="@+id/insert_file6"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_margin="10dp"
+                                android:layout_margin="4dp"
                                 android:foreground="@drawable/picture_picture" />
 
 
@@ -635,12 +625,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_border"
-                            android:paddingLeft="10dp"
+                            android:padding="5dp"
                             android:layout_margin="5dp"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp"
                             android:hint="Descriptive text for photograph"
-                            android:textSize="16sp">
+                            android:textSize="12sp">
 
                         </EditText>
 

@@ -25,7 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import java.util.Locale;
 
 public class MultiPic6Fragment extends Fragment implements View.OnClickListener {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
     private static final String TAG = "Inspection Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -112,7 +112,7 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+        globalVariables = (MainActivity) getActivity();
     }
 
     @Override
@@ -144,6 +144,7 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
 
         inspectionDate = dayTime(1);
         startTime = dayTime(2);
+        Prnt = "1";
 
 
     }

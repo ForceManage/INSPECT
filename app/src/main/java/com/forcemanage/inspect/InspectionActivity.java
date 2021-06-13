@@ -62,7 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InspectionActivity extends AppCompatActivity implements OnDocChangeListener {
+public class InspectionActivity extends AppCompatActivity implements OnDocChangeListener  {
 
     private String projectId;
     private String inspectionId;
@@ -529,6 +529,8 @@ public class InspectionActivity extends AppCompatActivity implements OnDocChange
 
 
     }
+
+
 
 
     private void getORArray(String Cat_Table, String subCat) {

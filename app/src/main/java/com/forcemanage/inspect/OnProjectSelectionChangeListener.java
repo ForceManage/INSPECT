@@ -6,6 +6,6 @@ package com.forcemanage.inspect;
 public interface OnProjectSelectionChangeListener {
 
     void OnProjectChanged(int treeNameIndex);
-
+    void OnTabChanged(int treeNameIndex);
 }
 

@@ -32,6 +32,7 @@ import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.MapListViewHolder;
 import com.forcemanage.inspect.MapViewLists;
 import com.forcemanage.inspect.MyConfig;
+import com.forcemanage.inspect.OnProjectSelectionChangeListener;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.R;
@@ -168,8 +169,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_edit_outline);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                   else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -178,8 +177,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
            //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_note_text);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -189,8 +186,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.multipic);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -200,8 +195,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.multipic);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+            //    if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+            //    else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -211,8 +206,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.blankpage);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+           //     if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+          //      else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -223,8 +218,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_comment);
                 holder.more.setImageResource(R.drawable.ic_more_vert);
                 holder.content.setTextColor(Color.BLUE);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+       //         if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+       //         else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -234,8 +229,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_certificate);
                 holder.more.setImageResource(R.drawable.ic_more_vert);
                 holder.content.setTextColor(Color.BLUE);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+       //         if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+       //         else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -246,8 +241,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_action_name);
                 holder.content.setTextColor(Color.BLUE);
                 holder.more.setImageResource(R.drawable.ic_more_vert);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+      //          if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+      //          else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -258,8 +253,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.ic_action_name);
                 holder.content.setTextColor(Color.BLUE);
                 holder.more.setImageResource(R.drawable.ic_more_vert);
-                if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
-                else holder.more.setVisibility(View.VISIBLE);
+         //       if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+         //       else holder.more.setVisibility(View.VISIBLE);
                 holder.note.setVisibility(View.GONE);
                 break;
             }
@@ -2522,13 +2517,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         MapViewLists.LoadInitialData();
         MapViewLists.LoadDisplayList();
 
-        OnDocChangeListener listener = (OnDocChangeListener) getContext();
+        MapListAdapter mAdapter = new MapListAdapter(getContext());
+        mAdapter.notifyDataSetChanged();
+
+        OnProjectSelectionChangeListener listener = (OnProjectSelectionChangeListener) getContext();
         listener.OnTabChanged(0);
 
 
-
-            MapListAdapter mAdapter = new MapListAdapter(getContext());
-           mAdapter.notifyDataSetChanged();
 
 
     }

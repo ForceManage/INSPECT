@@ -23,6 +23,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +49,7 @@ import static java.lang.Math.sqrt;
 
 public class PhotoEditFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener{
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
     private static final String TAG = "PhotoEdit Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -70,6 +71,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     private String name;
     private ImageView photo_file;
     private ImageView mPhotoImageView;
+    private LinearLayout layout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+        globalVariables = (MainActivity) getActivity();
     }
 
 
@@ -107,6 +109,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
         camera = (ImageView) view.findViewById(R.id.cameraClick);
         close = (ImageView) view.findViewById(R.id.Close);
         save = (ImageView) view.findViewById(R.id.Save);
+
 
         photo_insert.setOnTouchListener(this);
 
@@ -149,8 +152,8 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onClick(View v) {
 
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                globalVariables.photo_load_close();
+
 
             }
         });
@@ -177,7 +180,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
                 DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
                 dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name, globalVariables.filephoto);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                globalVariables.photo_load_close();
 
                 Edited=true;
 
