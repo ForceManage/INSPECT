@@ -39,7 +39,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     private TextView title;
     private TextView Label;
     private EditText bNote;
-    private EditText Note2;
+    private EditText preamble;
     private EditText DumbV;
     private ImageView mPhotoImageView;
     private ImageView photo_cam;
@@ -52,7 +52,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     private String typeInspection;
     private String auditor;
     private String note;
-    private String note_2;
+    private String Preamble;
     private Boolean Edited = false;
     private Integer projId;
     private Integer iId;
@@ -77,7 +77,9 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
 
 
             inspPhoto = bundle.getString("inspPhoto");
-
+            Preamble =  bundle.getString("preamble");
+            projId = bundle.getInt("projId");
+            iId = bundle.getInt("iId");
 
         }
 
@@ -87,6 +89,8 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context context) {
         super.onAttach(context);
         globalVariables = (MainActivity) getActivity();
+
+
     }
 
 
@@ -110,6 +114,18 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
 
             }
         });
+
+        preamble = (EditText) view.findViewById(R.id.preamble);
+        preamble.setText(Preamble);
+
+        preamble.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) Edited = true;
+
+            }
+        });
+
 
         info_file = (ImageView) view.findViewById(R.id.imageView_info);
         info_file.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +209,25 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
 
     }
+    public void saveData(){
 
+        DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+        dbHandler.updateInspectionNotes(Integer.toString(projId), Integer.toString(iId), "", preamble.getText().toString());
+        dbHandler.statusChanged(projId, iId);
+        Edited = false;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (Edited) saveData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (Edited) saveData();
+    }
 
 }

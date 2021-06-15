@@ -284,15 +284,15 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     public static Bitmap mergeBitmaps(Bitmap bitmapBg, Bitmap bitmapFg, float fgLeftPos, float fgTopPos) {
 
         // Calculate the size of the merged Bitmap
-        int mergedImageWidth = bitmapBg.getWidth();
-        int mergedImageHeight = bitmapBg.getHeight();
+        int mergedImageWidth = bitmapBg.getWidth()-20;
+        int mergedImageHeight = bitmapBg.getHeight()-20;
 
         // Create the return Bitmap (and Canvas to draw on)
         Bitmap mergedBitmap = Bitmap.createBitmap(mergedImageWidth, mergedImageHeight, bitmapBg.getConfig());
         Canvas mergedBitmapCanvas = new Canvas(mergedBitmap);
 
         // Draw the background image
-        mergedBitmapCanvas.drawBitmap(bitmapBg, 0f, 0f, null);
+        mergedBitmapCanvas.drawBitmap(bitmapBg, 0f-10, 0f-10, null);
 
         //Draw the foreground image
         mergedBitmapCanvas.drawBitmap(bitmapFg, fgLeftPos, fgTopPos, null);

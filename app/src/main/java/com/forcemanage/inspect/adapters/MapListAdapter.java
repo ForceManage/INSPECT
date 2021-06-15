@@ -288,7 +288,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
             //   @Override
             public void onClick(View v) {
-                GlobalVariables.doc_pos = 0;
+                GlobalVariables.doc_mode = 0;
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                 builder.setTitle("Add, delete or edit pages in the document ");
@@ -677,7 +677,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         dialog.show();
                     } // else if not folder
 
-                }  else //if not in folder mode then must be In doc fragment in the inspection activity
+                }  else //if not in folder mode then must be In doc mode
 
                     {
 
@@ -715,7 +715,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                 final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
                                                 itemTitle.setText("Folder: " + "branchTitle");//Integer.parseInt(locationId)
                                                 final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                locationText.setText("Add a Title Heading Tab Label to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
+                                                locationText.setText("Add a Heading Tab to " + node.getNodeName() + " Folder");//Integer.parseInt(locationId)
                                                 final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
                                                 // setup a dialog window
                                                 alertDialogBuilder.setCancelable(false)

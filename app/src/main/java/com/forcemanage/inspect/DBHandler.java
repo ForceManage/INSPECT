@@ -827,18 +827,16 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateInspectionNotes(String projId, String iId, String Note, String Note_2) {
+    public void updateInspectionNotes(String projId, String iId, String Note, String preamble) {
 
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         if(!Note.equals(""))
             contentValues.put(COLUMN_NOTE, Note);
-        if(!Note_2.equals(""))
-            contentValues.put(COLUMN_NOTE_2, Note_2);
+        if(!preamble.equals(""))
+            contentValues.put(COLUMN_NOTE_2, preamble);
           contentValues.put(COLUMN_INSPECTION_STATUS, "m");
-
-
 
         db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
         db.close();

@@ -52,7 +52,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
     private Boolean Edited = false;
     private String branchHead = "";
     private String branchLabel = "";
-    private String branchNote = "";
+    private String Note = "";
     private String inspection;
     private String projectId;
     private String inspectionId;
@@ -68,16 +68,20 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            branchHead = bundle.getString("branchHead");
-            branchLabel = bundle.getString("MAP_LABEL");
+            branchHead = bundle.getString("Heading");
+            branchLabel = bundle.getString("subHeading");
             inspection = bundle.getString("inspection");
-            branchNote = bundle.getString("notes");
+            Note = bundle.getString("Note");
             projectId = bundle.getString("projectID");
             projId = bundle.getInt("projId");
             inspectionId = bundle.getString("inspectionID");
-            aId = bundle.getInt("aID");
+            aId = bundle.getInt("aId");
+            iId = bundle.getInt("iId");
             image = bundle.getString("branchPhoto");
          }
+
+        if(branchHead.equals(branchLabel))
+            branchLabel = "";
 
         Edited = false;
 
@@ -98,10 +102,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
 
         Log.d(TAG, "oncreateview: started");
-        if(projectId != null) {
-            projId = Integer.parseInt(projectId);
-            iId = Integer.parseInt(inspectionId);
-        }
+
         mPhotoImageView = (ImageView) view.findViewById(R.id.photo);
         photo_cam = (ImageView) view.findViewById(R.id.imageView_cam);
         photo_cam.setOnClickListener(this);
@@ -114,17 +115,14 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
 
         bNote = (EditText) view.findViewById(R.id.note);
-        bNote.setText(branchNote);
-        title = (TextView) view.findViewById(R.id.title);
+        bNote.setText(Note);
+        title = (TextView) view.findViewById(R.id.Heading);
         //  activity = (TextView) view.findViewById(R.id.level);
-        branch = (TextView) view.findViewById(R.id.Text1);
+        branch = (TextView) view.findViewById(R.id.Subheading);
         TabId = (TextView) view.findViewById(R.id.aId);
 
-
-
-
+        title.setText(branchHead);
         branch.setText(branchLabel);
-
 
 
         bNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -232,7 +230,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
 
         if (Edited) {
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            dbHandler.updateMap(projId, GlobalVariables.aId, bNote.getText().toString());
+            dbHandler.updateMap(projId, aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
 
         }
@@ -243,7 +241,7 @@ public class BaseInfoFolderFragment extends Fragment implements View.OnClickList
         super.onDestroyView();
         if (Edited) {
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            dbHandler.updateMap(projId, GlobalVariables.aId, bNote.getText().toString());
+            dbHandler.updateMap(projId, aId, bNote.getText().toString());
             dbHandler.statusChanged(projId,iId);
 
         }

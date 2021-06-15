@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.DBHandler;
@@ -88,6 +90,7 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
     private int aId;
     private int Level;
     private int catId;
+    private ImageView timer;
 
 
     @Override
@@ -129,8 +132,8 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
 
             Level = bundle.getInt("Level");
             catId = bundle.getInt("catId");
-            aId = bundle.getInt("aID");
-            iId = bundle.getInt("iID");
+            aId = bundle.getInt("aId");
+            iId = bundle.getInt("iId");
 
 
         }
@@ -179,17 +182,25 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
             }
         });
 
+        timer = (ImageView) view.findViewById(R.id.timer);
+        timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Record time", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-        if (GlobalVariables.doc_pos == 0) {   //if the tab selected  is the project tab
+        if (GlobalVariables.doc_mode == 0) {   //if the tab selected  is the project tab
             view.findViewById(R.id.folder_info).setVisibility(View.VISIBLE);
 
         }
         else view.findViewById(R.id.document_info).setVisibility(View.VISIBLE);
 
 
-        if (GlobalVariables.doc_pos == 1) { //if the tab selected is a document tab
+        if (GlobalVariables.doc_mode == 1) { //if the tab selected is a document tab
 
             HashMap<String, String> inspectionData = dbHandler.getInspectionData(GlobalVariables.folder_Id, GlobalVariables.iId);
 

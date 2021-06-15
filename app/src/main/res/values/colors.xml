@@ -7,6 +7,11 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="light">#ebeced</color>
+    <color name="heading">#cacccf</color>
+    <color name="folder_background">#93a88a</color>
+    <color name="grey_green_light">#d7e6d1</color>
+    <drawable name="grey_green">#93a88a</drawable>
+    <drawable name="grey_green_light">#d7e6d1</drawable>
+    <drawable name="grey_blue">#9dafbf</drawable>
 
-    <drawable name="grey_blue">#d0d3d6</drawable>
 </resources>
