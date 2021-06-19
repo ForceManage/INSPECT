@@ -148,7 +148,9 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
         if(bundle != null){
             projectId = bundle.getString("projectID");
             inspectionId = bundle.getString("inspectionID");
-            aId = bundle.getInt("aID");
+            projId = bundle.getInt("projId");
+            aId = bundle.getInt("aId");
+            iId = bundle.getInt("iId");
             catId = bundle.getInt("catId");
             Level = bundle.getInt("Level");
             Title = bundle.getString("title");
@@ -216,8 +218,6 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
      //   play1 = (ImageView) view.findViewById(R.id.title1_voice);
      //   play2 = (ImageView) view.findViewById(R.id.title2_voice);
 
-        projId = GlobalVariables.folder_Id;
-        iId= GlobalVariables.iId;
 
         title = (TextView) view.findViewById(R.id.branchTitle);
         title.setText(Title);
@@ -1165,7 +1165,7 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-            dbHandler.updateInspectionItem(Integer.parseInt(projectId), Integer.parseInt(inspectionId), aId, inspectionDate, Overview.getText().toString(),
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, Overview.getText().toString(),
                     aProvider, RelevantInfo.getText().toString(), Prnt, "1",
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),
@@ -1176,6 +1176,7 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
 
         }
+        t1.shutdown();
 
     }
 
@@ -1185,7 +1186,7 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
         if(Edited){
 
             DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-            dbHandler.updateInspectionItem(GlobalVariables.folder_Id, GlobalVariables.iId, GlobalVariables.aId, inspectionDate, Overview.getText().toString(),
+            dbHandler.updateInspectionItem(projId, iId, aId, inspectionDate, Overview.getText().toString(),
                     "", aProvider,Prnt ,"1" ,
                     com1Text.getText().toString(), com2Text.getText().toString(), com3Text.getText().toString()
                     ,  com4Text.getText().toString(),

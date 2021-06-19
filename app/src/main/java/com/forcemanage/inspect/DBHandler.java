@@ -2280,7 +2280,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                             switch (Type) {
                                 case 1:
-                                    values.put(COLUMN_SERVICED_BY, "COMMENTARY");
+                                    values.put(COLUMN_SERVICED_BY, "STANDARD");
                                     break;
                                 case 2:
                                     values.put(COLUMN_SERVICED_BY, "SCOPE");
@@ -2295,6 +2295,7 @@ public class DBHandler extends SQLiteOpenHelper {
                                 case 5:
                                     values.put(COLUMN_SERVICED_BY, "BLANK");
                                     break;
+
                             }
                             values.put(COLUMN_PROJECT_ID, projId);
                             values.put(COLUMN_INSPECTION_ID, iId);
@@ -2802,7 +2803,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-    public Integer addReference(int projId, int iId, int CatID, int Level, int aId, String Label) {
+    public Integer addReference(int projId, int CatID, int Level, int aId, String Label) {
         // Open a database for reading and writing
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -2817,7 +2818,7 @@ public class DBHandler extends SQLiteOpenHelper {
         //First check if current branch is a location branch
         selectQuery = "SELECT  " + COLUMN_PROJECT_ID + " FROM "
                 + TABLE_MAP + " WHERE " + COLUMN_CAT_ID + " = 510 "
-                +" AND "+COLUMN_PROJECT_ID+" = "+projId;
+                +" AND "+COLUMN_PROJECT_ID+" = "+projId ;
 
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())   //if Reference tab exists
@@ -2874,7 +2875,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 SQLiteDatabase db_2 = this.getWritableDatabase();
 
                 values1.put(COLUMN_PROJECT_ID, projId);
-                values1.put(COLUMN_INSPECTION_ID, iId);
                 values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
                 values1.put(COLUMN_A_ID, maxAId);
                 values1.put(COLUMN_OVERVIEW, "");
@@ -2940,7 +2940,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-
+/*
             ContentValues values2 = new ContentValues();
             values2.put(COLUMN_CAT_ID, CatID);
             values2.put(COLUMN_PARENT, maxAId);
@@ -2955,13 +2955,14 @@ public class DBHandler extends SQLiteOpenHelper {
             values2.put(COLUMN_ITEM_STATUS, "m");
             db.insert(TABLE_MAP, null, values2);
 
+ */
+
             ContentValues values1 = new ContentValues();
             SQLiteDatabase db_2 = this.getWritableDatabase();
 
             values1.put(COLUMN_PROJECT_ID, projId);
-            values1.put(COLUMN_INSPECTION_ID, iId);
             values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
-            values1.put(COLUMN_A_ID, maxAId+1);
+            values1.put(COLUMN_A_ID, maxAId);
             values1.put(COLUMN_OVERVIEW, "");
             values1.put(COLUMN_RELEVANT_INFO, "");
             values1.put(COLUMN_SERVICE_LEVEL, "1");
@@ -4268,6 +4269,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+
     public ArrayList<HashMap<String, String>> getFolder(int user_id, int folderId) {
 
 
@@ -4306,6 +4308,55 @@ public class DBHandler extends SQLiteOpenHelper {
                 ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
                 ProjectMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
                 ProjectMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
+
+                ProjectMapArrayList.add(ProjectMap);
+            } while (cursor.moveToNext());
+        }
+
+        dtabase.close();
+
+        return ProjectMapArrayList;
+
+
+
+    }
+
+
+    public ArrayList<HashMap<String, String>> getdocs(int user_id, int folderId) {
+
+
+        HashMap<String, String> ProjectMap;
+        ArrayList<HashMap<String, String>> ProjectMapArrayList;
+
+        ProjectMapArrayList = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase dtabase = this.getReadableDatabase();
+
+
+        String selectQuery = "SELECT  I." + COLUMN_PROJECT_ID + ", I." + COLUMN_LEVEL + ", I." + COLUMN_PARENT
+                + ", I." + COLUMN_LABEL + ", I." +COLUMN_P_ID +", I."+ COLUMN_INSPECTION_ID+ " ,I."+COLUMN_IMAGE+ ", I." + COLUMN_NOTE
+
+                + " FROM " + TABLE_INSPECTION + " I"
+
+                + " WHERE I."+COLUMN_INSPECTOR+" = "+user_id + " AND I." + COLUMN_PROJECT_ID + " = "+ folderId + " ORDER BY I." + COLUMN_INSPECTION_ID ;
+
+
+        //add additional fields: status,  notes, print flag
+        Cursor cursor = dtabase.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProjectMap = new HashMap<String, String>();
+
+                ProjectMap.put(MyConfig.TAG_PROJECT_ID, (String.valueOf(cursor.getInt(0))));
+                ProjectMap.put(MyConfig.TAG_LEVEL, (String.valueOf(cursor.getInt(1))));
+                ProjectMap.put(MyConfig.TAG_PARENT, (String.valueOf(cursor.getInt(2))));
+                ProjectMap.put(MyConfig.TAG_LABEL, cursor.getString(3));
+                ProjectMap.put(MyConfig.TAG_P_ID, (String.valueOf(cursor.getInt(4))));
+                ProjectMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(5))));
+                ProjectMap.put(MyConfig.TAG_IMAGE1, cursor.getString(6));
+                ProjectMap.put(MyConfig.TAG_NOTES, cursor.getString(7));
 
                 ProjectMapArrayList.add(ProjectMap);
             } while (cursor.moveToNext());

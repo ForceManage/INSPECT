@@ -101,7 +101,6 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
         if (bundle != null) {
             projId = bundle.getInt("projId");
             USER_ID = bundle.getInt("USER_ID");
-            iId = bundle.getInt("iID");
             doc = bundle.getBoolean("doc");
             projId = bundle.getInt("projId");
             USER_ID = bundle.getInt("USER_ID");

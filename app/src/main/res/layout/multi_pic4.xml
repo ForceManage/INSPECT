@@ -142,6 +142,14 @@
                                         app:srcCompat="@drawable/ic_camera" />
 
                                     <ImageView
+                                        android:id="@+id/cameraClick1"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="top|left"
+                                        android:layout_margin="5dp"
+                                        app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                                    <ImageView
                                         android:id="@+id/imageView_del"
                                         android:layout_width="45dp"
                                         android:layout_height="45dp"
@@ -210,6 +218,14 @@
                                         app:srcCompat="@drawable/ic_camera">
 
                                     </ImageView>
+
+                                    <ImageView
+                                        android:id="@+id/cameraClick2"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="top|left"
+                                        android:layout_margin="5dp"
+                                        app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
 
                                     <ImageView
                                         android:id="@+id/imageView2_del"
@@ -290,6 +306,14 @@
                                         app:srcCompat="@drawable/ic_camera"></ImageView>
 
                                     <ImageView
+                                        android:id="@+id/cameraClick3"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="top|left"
+                                        android:layout_margin="5dp"
+                                        app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
+
+                                    <ImageView
                                         android:id="@+id/imageView3_del"
                                         android:layout_width="45dp"
                                         android:layout_height="45dp"
@@ -354,6 +378,14 @@
                                         android:cropToPadding="false"
                                         android:padding="5dp"
                                         app:srcCompat="@drawable/ic_camera"></ImageView>
+
+                                    <ImageView
+                                        android:id="@+id/cameraClick4"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="top|left"
+                                        android:layout_margin="5dp"
+                                        app:srcCompat="@drawable/ic_add_a_photo_24px_outline" />
 
                                     <ImageView
                                         android:id="@+id/imageView4_del"

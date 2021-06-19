@@ -123,7 +123,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         play2 = (ImageView) view.findViewById(R.id.title2_voice);
         play3 = (ImageView) view.findViewById(R.id.title3_voice);
 
-        t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+       t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
@@ -155,6 +155,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
                 t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
+
+
 
 
         title.setText(branchTitle);
@@ -296,6 +298,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             dbHandler.statusChanged(projId, iId);
         }
       //  globalVariables.photo_load_close();
+        t1.shutdown();
     }
 
     @Override

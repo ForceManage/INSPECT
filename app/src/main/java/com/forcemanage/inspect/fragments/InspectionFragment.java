@@ -1165,6 +1165,7 @@ public class InspectionFragment extends Fragment implements View.OnClickListener
                dbHandler.statusChanged(projId,iId);
 
             }
+       t1.shutdown();
 
     }
 

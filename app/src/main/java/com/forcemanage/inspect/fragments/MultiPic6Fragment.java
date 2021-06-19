@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +24,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.GlobalVariables;
 import com.forcemanage.inspect.MainActivity;
@@ -211,6 +215,18 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
             }
         });
 
+        cam1 = (ImageView) view.findViewById(R.id.cameraClick1);
+        // cam1.setOnClickListener(this);
+        cam2 = (ImageView) view.findViewById(R.id.cameraClick2);
+        //  cam2.setOnClickListener(this);
+        cam3 = (ImageView) view.findViewById(R.id.cameraClick3);
+        //   cam3.setOnClickListener(this);
+        cam4 = (ImageView) view.findViewById(R.id.cameraClick4);
+        //   cam4.setOnClickListener(this);
+        cam5 = (ImageView) view.findViewById(R.id.cameraClick5);
+        //   cam5.setOnClickListener(this);
+        cam6 = (ImageView) view.findViewById(R.id.cameraClick6);
+
         photoA = (ImageView) view.findViewById(R.id.imageView);
         //photoA.setOnClickListener(this);
         photoB = (ImageView) view.findViewById(R.id.imageView2);
@@ -330,63 +346,218 @@ public class MultiPic6Fragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        photoA.setOnClickListener(new View.OnClickListener() {
+        cam1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 globalVariables.photoframe = 1;
                 globalVariables.mPhotoImageView = photoA;
                 globalVariables.takeImageFromCamera(null);
-                Edited = true;
+                cam1.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+        cam2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 2;
+                globalVariables.mPhotoImageView = photoB;
+                globalVariables.takeImageFromCamera(null);
+                cam2.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+        cam3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 3;
+                globalVariables.mPhotoImageView = photoC;
+                globalVariables.takeImageFromCamera(null);
+                cam3.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+        cam4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 4;
+                globalVariables.mPhotoImageView = photoD;
+                globalVariables.takeImageFromCamera(null);
+                cam4.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+        cam5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 5;
+                globalVariables.mPhotoImageView = photoE;
+                globalVariables.takeImageFromCamera(null);
+                cam5.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+        cam6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.photoframe = 6;
+                globalVariables.mPhotoImageView = photoF;
+                globalVariables.takeImageFromCamera(null);
+                cam6.setBackgroundResource(R.drawable.edit_border_solid);
+                Edited=true;
+
+            }
+        });
+
+
+        photoA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_VIEW, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                // galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo1.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo1 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                    //   startActivity(galleryIntent.createChooser(galleryIntent, "Select Picture"), ACTIVITY_DRAW_FILE);
+
+                }
+                catch(Exception e){};
+
             }
         });
 
         photoB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 2;
-                globalVariables.mPhotoImageView = photoB;
-                globalVariables.takeImageFromCamera(null);
-                Edited = true;
+
+
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo2.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/" + globalVariables.photo2);//+ photos[0]
+
+
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
+
+
             }
         });
 
         photoC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 3;
-                globalVariables.mPhotoImageView = photoC;
-                globalVariables.takeImageFromCamera(null);
-                Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo3.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo3 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
+
             }
         });
 
         photoD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 4;
-                globalVariables.mPhotoImageView = photoD;
-                globalVariables.takeImageFromCamera(null);
-                Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo4.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo4 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
             }
         });
 
         photoE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 5;
-                globalVariables.mPhotoImageView = photoE;
-                globalVariables.takeImageFromCamera(null);
-                Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo5.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo5 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
             }
         });
+
 
         photoF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                globalVariables.photoframe = 6;
-                globalVariables.mPhotoImageView = photoF;
-                globalVariables.takeImageFromCamera(null);
-                Edited = true;
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_VIEW);
+                try {
+                    String dirName = globalVariables.photo6.substring(6, 14);
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File Image = new File(root + "/A2D_" + dirName + "/"+ globalVariables.photo6 );//+ photos[0]
+                    galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    galleryIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+                    Uri data = FileProvider.getUriForFile(getContext(),BuildConfig.APPLICATION_ID+".provider",Image);
+                    galleryIntent.setDataAndType(data,"image/*");
+
+                    startActivity(galleryIntent);
+                }
+                catch(Exception e){};
             }
         });
 

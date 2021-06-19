@@ -766,7 +766,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                             case 3: {
 
-                                                int result = dbHandler.addReference(node.getprojId(), iId, 510, 0, node.getaID(), "Reference Items");  //this is the ESM category
+                                                int result = dbHandler.addReference(node.getprojId(), 510, 0, node.getaID(), "Reference Items");  //this is the ESM category
                                                 loadMap(node.getprojId());
 
                                                 break;
@@ -1262,7 +1262,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                                     builder.setTitle("Add Page ");
                                                     // add a list
-                                                    String[] actions = {"Notes/comments (6 pics)",
+                                                    String[] actions = {"Standard Note Page (6 pics)",
                                                             "Multi-4-pic Page",
                                                             "Multi-6-pic Page",
                                                             "Blank Page",
@@ -2052,7 +2052,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             //        InspectionVariables.photoBranch = "";
-                                                            int result = dbHandler.addReference(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
+                                                            int result = dbHandler.addReference(node.getprojId(), node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
                                                             loadMap(node.getprojId());
                                                         }
                                                     })

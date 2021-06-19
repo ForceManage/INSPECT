@@ -41,7 +41,7 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
     private MainActivity globalVariables;
 
-    private static final String TAG = "Inspection Fragment";
+    private static final String TAG = "Reference Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
     private static final int ACTIVITY_GET_FILE = 1;
     private static final int ACTIVITY_DRAW_FILE = 2;

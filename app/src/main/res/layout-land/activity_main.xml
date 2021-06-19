@@ -132,6 +132,23 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/folder"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@drawable/my_selector"
+                android:textStyle="normal"
+                android:text="test case"
+                android:textSize="14dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:visibility="visible"/>
+
+
+
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
@@ -140,7 +157,7 @@
                 <LinearLayout
                 android:id="@+id/fragment_folder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="top"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
@@ -157,7 +174,7 @@
                     android:id="@+id/tree_fragment"
                     android:name="com.forcemanage.inspect.ProjectViewFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:backgroundTint="@color/grey_green_light"
                     android:layout_weight="1"/>
 

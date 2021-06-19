@@ -123,6 +123,7 @@ public class MapViewFragment extends ListFragment {
                         node.setIsExpanded(GlobalVariables.TRUE);
 
                 }
+                node.setIsExpanded(GlobalVariables.TRUE);
             }
 
 
