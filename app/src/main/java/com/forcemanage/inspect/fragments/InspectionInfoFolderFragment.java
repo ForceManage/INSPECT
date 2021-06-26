@@ -64,7 +64,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
     private String dateInspected;
     private String startTime;
     private String endTime;
-    private String inspPhoto;
+    private String image;
     private ImageView printer;
     TextToSpeech t1;
 
@@ -78,10 +78,10 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projId = bundle.getInt("projectId");
-            iId = bundle.getInt("inspectionId");
+            projId = bundle.getInt("projId");
+            iId = bundle.getInt("iId");
             preamble = bundle.getString("preamble");
-            inspPhoto = bundle.getString("inspPhoto");
+            image = bundle.getString("inspPhoto");
             branchLabel = bundle.getString("branchLabel");
 
             Edited = false;
@@ -213,13 +213,13 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
         });
 
 
-        if (inspPhoto == null)
-            inspPhoto = "";
+        if (image == null)
+            image = "";
 
-        if (inspPhoto.length() > 12) {
-            String dirName = inspPhoto.substring(6, 14);
+        if (image.length() > 12) {
+            String dirName = image.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/A2D_" + dirName + "/" + inspPhoto);
+            File Image = new File(root + "/A2D_" + dirName + "/" + image);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             mPhotoImageView.setImageBitmap(myBitmap);
         }
@@ -268,7 +268,7 @@ public class InspectionInfoFolderFragment extends Fragment implements View.OnCli
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         preamble = Note2.getText().toString();
 
-        dbHandler.updateInspectionNotes(Integer.toString(projId), Integer.toString(iId), "", preamble);
+        dbHandler.updateInspectionNotes(projId, iId, "", preamble);
         dbHandler.statusChanged(projId, iId);
 
     }

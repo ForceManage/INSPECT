@@ -59,7 +59,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     private String dateInspected;
     private String startTime;
     private String endTime;
-    private String inspPhoto;
+    private String image;
     private ImageView printer;
 
 
@@ -76,7 +76,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
         if(bundle != null){
 
 
-            inspPhoto = bundle.getString("inspPhoto");
+            image = bundle.getString("image");
             Preamble =  bundle.getString("preamble");
             projId = bundle.getInt("projId");
             iId = bundle.getInt("iId");
@@ -187,13 +187,13 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
         });
 
 
-        if (inspPhoto == null)
-            inspPhoto = "";
+        if (image == null)
+            image = "";
 
-        if (inspPhoto.length() > 12) {
-            String dirName = inspPhoto.substring(6, 14);
+        if (image.length() > 12) {
+            String dirName = image.substring(6, 14);
             String root = Environment.getExternalStorageDirectory().toString();
-            File Image = new File(root + "/A2D_" + dirName + "/" + inspPhoto);
+            File Image = new File(root + "/A2D_" + dirName + "/" + image);
             Bitmap myBitmap = BitmapFactory.decodeFile(Image.getAbsolutePath());
             mPhotoImageView.setImageBitmap(myBitmap);
         }
@@ -212,7 +212,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
     public void saveData(){
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-        dbHandler.updateInspectionNotes(Integer.toString(projId), Integer.toString(iId), "", preamble.getText().toString());
+        dbHandler.updateInspectionNotes(projId, iId, "", preamble.getText().toString());
         dbHandler.statusChanged(projId, iId);
         Edited = false;
 

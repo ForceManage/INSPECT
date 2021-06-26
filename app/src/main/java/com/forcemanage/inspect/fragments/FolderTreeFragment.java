@@ -50,6 +50,7 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
     private int iId = 0;
     private Boolean doc = false;
     private Boolean Edited = false;
+    private String item;
     private TextView branchTitle;
     private TextView branch;
     private String docName = "";
@@ -102,12 +103,10 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
             projId = bundle.getInt("projId");
             USER_ID = bundle.getInt("USER_ID");
             doc = bundle.getBoolean("doc");
-            projId = bundle.getInt("projId");
-            USER_ID = bundle.getInt("USER_ID");
             FolderID = bundle.getString("Folder_ID");
             Folder = bundle.getString("Folder");
             folderNote = bundle.getString("foldernote");
-            siteNotes = bundle.getString("siteNotes");
+            siteNotes = bundle.getString("note");
             auditor = bundle.getString("auditor");
             inspectionDate = bundle.getString("date");
             dateInspected = bundle.getString("date");
@@ -166,7 +165,10 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
         SiteNotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) Edited = true;
+                if (hasFocus){
+                    Edited = true;
+                    item = "docs";
+                }
 
             }
         });
@@ -176,7 +178,10 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
         FolderNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) Edited = true;
+                if (hasFocus){
+                    Edited = true;
+                    item = "folder";
+                }
 
             }
         });
@@ -192,16 +197,16 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
 
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
 
-        if (GlobalVariables.doc_mode == 0) {   //if the tab selected  is the project tab
+        if (doc == false) {   //if the tab selected  is the project tab
             view.findViewById(R.id.folder_info).setVisibility(View.VISIBLE);
 
         }
         else view.findViewById(R.id.document_info).setVisibility(View.VISIBLE);
 
 
-        if (GlobalVariables.doc_mode == 1) { //if the tab selected is a document tab
+        if (doc == true) { //if the tab selected is a document tab
 
-            HashMap<String, String> inspectionData = dbHandler.getInspectionData(GlobalVariables.folder_Id, GlobalVariables.iId);
+            HashMap<String, String> inspectionData = dbHandler.getInspectionData(projId, iId);
 
             String MapBranch;
 
@@ -261,7 +266,7 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
                                 else
                                     // editLocation(LocationText.getText().toString());
 
-                                    dbHandler.updateInspectionLabel(Integer.toString(GlobalVariables.folder_Id), Integer.toString(GlobalVariables.iId), LocationText.getText().toString());
+                                    dbHandler.updateInspectionLabel(Integer.toString(projId), Integer.toString(iId), LocationText.getText().toString());
                                     globalVariables.updatePropList();
 
                             }
@@ -523,6 +528,41 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
         }
 
         return date;
+    }
+
+    public void saveData(){
+
+        DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
+        switch (item){
+
+            case "docs":{
+                dbHandler.updateInspectionNotes(projId, iId, SiteNotes.getText().toString(), "");
+
+                break;
+            }
+            case "folder":{
+                dbHandler.updateProject(Integer.toString(projId), "FolderNote", FolderNote.getText().toString(),0);
+                break;
+            }
+          }
+
+        dbHandler.statusChanged(projId, iId);
+        Edited = false;
+
+    }
+
+ /*   @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (Edited) saveData();
+    }
+
+  */
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (Edited) saveData();
     }
 
 }

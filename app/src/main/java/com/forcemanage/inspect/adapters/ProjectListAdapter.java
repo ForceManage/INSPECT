@@ -188,11 +188,11 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                         alertDialogBuilder.setView(promptView);
                         final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                        itemTitle.setText("Create new File ");//Integer.parseInt(locationId)
+                        itemTitle.setText("Create new Document File in the Folder");//Integer.parseInt(locationId)
                         final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                        locationText.setText("File Name : ");//Integer.parseInt(locationId)
+                        locationText.setText("Document Name : ");//Integer.parseInt(locationId)
                         final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                        branchText.setHint("Title of File");
+                        branchText.setHint("Title of Document");
                         alertDialogBuilder.setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -226,7 +226,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
                         builder.setTitle("File Menu");
 
-                            String[] actions = {"Open/Edit File",
+                            String[] actions = {
                                     "Print File ",
                                     "Cancel "};
 
@@ -237,7 +237,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
                                 switch (which) {
 
-                                    case 0: {
+                              /*      case 0: {
 
                                         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
 
@@ -283,8 +283,10 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
                                         break;
                                     }
 
+                               */
 
-                                    case 1: {
+
+                                    case 0: {
 
 
                                         ((MainActivity) getContext()).reportMenu();
@@ -294,7 +296,7 @@ public class ProjectListAdapter extends ArrayAdapter<ProjectNode>
 
                                     }
 
-                                    case 2: {
+                                    case 1: {
 
 
                                         break;

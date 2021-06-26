@@ -151,10 +151,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 globalVariables.photo_load_close();
-
-
             }
         });
 

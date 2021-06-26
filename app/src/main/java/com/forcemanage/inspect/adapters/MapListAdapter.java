@@ -43,17 +43,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.forcemanage.inspect.GlobalVariables.iId;
+
 
 
 public class MapListAdapter extends ArrayAdapter<MapViewNode>
 {
-    private InspectionActivity InspectionVariables;
+
     private MainActivity MainActivityVariables;
     private final LayoutInflater mInflater;
     private Context context;
     private String[] pdf_files;
     private String pdf_name;
+    private int iId;
 
 
     public MapListAdapter(Context context) {    //,int resource, List<TreeViewNode> items
@@ -114,7 +115,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         MapViewNode node = GlobalVariables.displayNodes.get(position);
         holder.content.setText(node.getNodeName());
 
-
+        iId = GlobalVariables.iId;
 
         int base_node = node.getNodeLevel();
 
@@ -131,7 +132,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                     case 0:
                         if(GlobalVariables.doc_pos == 1 || GlobalVariables.doc_mode == 1) {
-                            holder.arrow.setImageResource(R.drawable.ic_book);
+                            if (position == 0)
+                              holder.arrow.setImageResource(R.drawable.folder2_red); // holder.arrow.setImageResource(R.drawable.ic_book);
+                            if(position == 1 )
+                              holder.arrow.setImageResource(R.drawable.ic_book);
                             if(GlobalVariables.doc_mode == 1)
                                 holder.note.setVisibility(View.GONE);
                                 else
@@ -316,7 +320,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         Intent theIntent = new Intent(getContext(), InspectionActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("PROJECT_ID", Integer.toString(GlobalVariables.folder_Id));
-                                        bundle.putString("INSPECTION_ID", Integer.toString(iId));
+                                        bundle.putString("INSPECTION_ID", Integer.toString(GlobalVariables.iId));
                                         bundle.putString("DOC_NAME", GlobalVariables.name);
                                         bundle.putBoolean("logTime", true);
                                         theIntent.putExtras(bundle);
@@ -404,6 +408,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 // showMessage("Adapter listener "+node.getNodeChildren().toString());
             }
         };
+
+
     }
 
 
@@ -1258,85 +1264,86 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                 case 2: { //add page to label
 
+                                                    if(GlobalVariables.doc_mode == 1) {
+                                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                        builder.setTitle("Add Page ");
+                                                        // add a list
+                                                        String[] actions = {"Standard Note Page (6 pics)",
+                                                                "Multi-4-pic Page",
+                                                                "Multi-6-pic Page",
+                                                                "Blank Page",
+                                                                "Cancel"};
 
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Add Page ");
-                                                    // add a list
-                                                    String[] actions = {"Standard Note Page (6 pics)",
-                                                            "Multi-4-pic Page",
-                                                            "Multi-6-pic Page",
-                                                            "Blank Page",
-                                                            "Cancel"};
+                                                        builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog_sub, int which) {
+                                                                switch (which) {
+                                                                    case 0: { // Add a commentary Page
 
-                                                    builder.setItems(actions, new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog_sub, int which) {
-                                                            switch (which) {
-                                                                case 0: { // Add a commentary Page
+                                                                        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                                                        View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                                                        alertDialogBuilder.setView(promptView);
+                                                                        final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                                                        itemTitle.setText("Title: " + branchTitle);//Integer.parseInt(locationId)
+                                                                        final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                                                        locationText.setText("File page in the [ " + node.getNodeName() + " ] Folder Label Tab");//Integer.parseInt(locationId)
+                                                                        final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
+                                                                        // setup a dialog window
 
-                                                                    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                                                                    View promptView = layoutInflater.inflate(R.layout.add_location, null);
-                                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                                                                    alertDialogBuilder.setView(promptView);
-                                                                    final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                                                    itemTitle.setText("Title: " + branchTitle);//Integer.parseInt(locationId)
-                                                                    final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
-                                                                    locationText.setText("File page in the [ " + node.getNodeName() + " ] label");//Integer.parseInt(locationId)
-                                                                    final EditText branchText = (EditText) promptView.findViewById(R.id.locationtext);
-                                                                    // setup a dialog window
+                                                                        alertDialogBuilder.setCancelable(false)
+                                                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                                        //        InspectionVariables.photoBranch = "";
+                                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), 1);
+                                                                                        loadMap(node.getprojId());
+                                                                                    }
+                                                                                })
+                                                                                .setNegativeButton("Cancel",
+                                                                                        new DialogInterface.OnClickListener() {
+                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                dialog.cancel();
+                                                                                            }
+                                                                                        });
 
-                                                                    alertDialogBuilder.setCancelable(false)
-                                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                                public void onClick(DialogInterface dialog, int id) {
-                                                                                    //        InspectionVariables.photoBranch = "";
-                                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(),1);
-                                                                                    loadMap(node.getprojId());
-                                                                                }
-                                                                            })
-                                                                            .setNegativeButton("Cancel",
-                                                                                    new DialogInterface.OnClickListener() {
-                                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                                            dialog.cancel();
-                                                                                        }
-                                                                                    });
+                                                                        // create an alert dialog
+                                                                        AlertDialog alert = alertDialogBuilder.create();
+                                                                        alert.show();
 
-                                                                    // create an alert dialog
-                                                                    AlertDialog alert = alertDialogBuilder.create();
-                                                                    alert.show();
+                                                                        break;
 
-                                                                    break;
+                                                                    }
+                                                                    case 1: { // Add a Multi Pic Page
+                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic", 4);
+                                                                        loadMap(node.getprojId());
+                                                                        break;
+                                                                    }
+
+                                                                    case 2: { // Add a Multi Pic Page
+                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic", 3);
+                                                                        loadMap(node.getprojId());
+                                                                        break;
+                                                                    }
+                                                                    case 3: { // Add a Blank Page
+                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Blank Page", 5);
+                                                                        loadMap(node.getprojId());
+                                                                        break;
+                                                                    }
+                                                                    case 4: {
+
+                                                                        break;
+                                                                    }
 
                                                                 }
-                                                                case 1: { // Add a Multi Pic Page
-                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic",4);
-                                                                    loadMap(node.getprojId());
-                                                                    break;
-                                                                }
-
-                                                                case 2: { // Add a Multi Pic Page
-                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic",3);
-                                                                    loadMap(node.getprojId());
-                                                                    break;
-                                                                }
-                                                                case 3: { // Add a Blank Page
-                                                                    int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Blank Page",5);
-                                                                    loadMap(node.getprojId());
-                                                                    break;
-                                                                }
-                                                                case 4: {
-
-                                                                    break;
-                                                                }
-
                                                             }
-                                                          }
                                                         });
 
                                                         AlertDialog dialog_sub = builder.create();
 
 
-                                                    dialog_sub.show();
-
-                                                    break;
+                                                        dialog_sub.show();
+                                                    }
+                                                    else Toast.makeText(getContext(), "Select a document", Toast.LENGTH_SHORT).show();
+                                                break;
                                                     }
 
                                                 case 3: { //delete
@@ -2517,8 +2524,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         MapViewLists.LoadInitialData();
         MapViewLists.LoadDisplayList();
 
-        MapListAdapter mAdapter = new MapListAdapter(getContext());
-        mAdapter.notifyDataSetChanged();
+      //  MapListAdapter mAdapter = new MapListAdapter(getContext());
+     //   mAdapter.notifyDataSetChanged();
 
         OnProjectSelectionChangeListener listener = (OnProjectSelectionChangeListener) getContext();
         listener.OnTabChanged(0);

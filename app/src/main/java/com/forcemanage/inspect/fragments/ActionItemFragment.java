@@ -27,7 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.forcemanage.inspect.BuildConfig;
 import com.forcemanage.inspect.DBHandler;
-import com.forcemanage.inspect.InspectionActivity;
+import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.R;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.Date;
 
 public class ActionItemFragment extends Fragment implements View.OnClickListener {
 
-    private InspectionActivity globalVariables;
+    private MainActivity globalVariables;
 
     private static final String TAG = "ActionItem Fragment";
     private static final int ACTIVITY_START_CAMERA_APP = 0;
@@ -79,7 +79,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        globalVariables = (InspectionActivity) getActivity();
+        globalVariables = (MainActivity) getActivity();
     }
 
     @Override
@@ -89,10 +89,12 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
         Bundle bundle = this.getArguments();
         if(bundle != null){
             projectId = bundle.getString("projectID");
+            projId = bundle.getInt("projId");
             inspectionId = bundle.getString("inspectionID");
-            aId = bundle.getInt("aID");
-            branchTitle = bundle.getString("branchHead");
-            branchName = bundle.getString("branchLabel");
+            aId = bundle.getInt("aId");
+            iId = bundle.getInt("iId");
+        //    branchTitle = bundle.getString("branchHead");
+        //    branchName = bundle.getString("branchLabel");
             desciption = bundle.getString("description");
             scope = bundle.getString("scope");
             perform = bundle.getString("perform");
@@ -112,8 +114,7 @@ public class ActionItemFragment extends Fragment implements View.OnClickListener
 
 
         Log.d(TAG, "oncreateview: started");
-        projId = Integer.parseInt(projectId);
-        iId = Integer.parseInt(inspectionId);
+
         title = (TextView) view.findViewById(R.id.title);
         branch = (TextView) view.findViewById(R.id.level);
         notesE = (EditText) view.findViewById(R.id.note);

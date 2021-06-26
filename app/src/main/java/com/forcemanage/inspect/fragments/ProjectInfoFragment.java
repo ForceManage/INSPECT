@@ -838,7 +838,7 @@ public class ProjectInfoFragment extends Fragment implements OnDocChangeListener
         DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
         folderNote = FolderNote.getText().toString();
         dbHandler.updateProject(Integer.toString(projId), "Folder Note" , folderNote, 0);
-        dbHandler.updateInspectionNotes(Integer.toString(projId),Integer.toString(iId),SiteNotes.getText().toString(),FolderNote.getText().toString());
+        dbHandler.updateInspectionNotes(projId,iId,SiteNotes.getText().toString(),FolderNote.getText().toString());
         dbHandler.statusChanged(projId,0);
         Edited = false;
     }

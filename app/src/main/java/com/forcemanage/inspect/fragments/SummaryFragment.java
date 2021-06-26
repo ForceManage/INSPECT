@@ -80,8 +80,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projId = bundle.getInt("projectID");
-            iId = bundle.getInt("inspectionID");
+            projId = bundle.getInt("projId");
+            iId = bundle.getInt("iId");
             branchTitle = bundle.getString("branchHead");
             branchName = bundle.getString("branchLabel");
             headA = bundle.getString("head_A");
@@ -296,6 +296,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projId, iId , headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(projId, iId);
+            Edited = false;
         }
       //  globalVariables.photo_load_close();
         t1.shutdown();
@@ -314,6 +315,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             comC = ComC.getText().toString();
             dbHandler.updateSummary(projId, iId, headA, comA, headB, comB , headC, comC);
             dbHandler.statusChanged(projId, iId);
+            Edited = false;
 
 
         }

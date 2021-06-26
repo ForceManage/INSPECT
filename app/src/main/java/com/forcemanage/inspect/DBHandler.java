@@ -738,12 +738,12 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues contentValues1 = new ContentValues();
         ContentValues contentValues2 = new ContentValues();
         switch (item){
-            case "Folder ID":{
+            case "FolderID":{
                 contentValues.put(COLUMN_ADDRESS_NUMBER, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "Folder Title":{
+            case "FolderTitle":{
                 contentValues.put(COLUMN_PROJECT_ADDRESS, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 contentValues1.put(COLUMN_LABEL, txt);
@@ -795,7 +795,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 break;
             }
 
-            case "Folder Note":{
+            case "FolderNote":{
                 contentValues.put(COLUMN_PROJECT_NOTE, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
@@ -827,8 +827,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public void updateInspectionNotes(String projId, String iId, String Note, String preamble) {
+    public void updateInspectionNotes(int projId, int iId, String Note, String preamble) {
 
+          String ProjId = Integer.toString(projId);
+          String IId = Integer.toString(iId);
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -838,7 +840,7 @@ public class DBHandler extends SQLiteOpenHelper {
             contentValues.put(COLUMN_NOTE_2, preamble);
           contentValues.put(COLUMN_INSPECTION_STATUS, "m");
 
-        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{projId, iId});
+        db.update(TABLE_INSPECTION, contentValues, COLUMN_PROJECT_ID + " = ? AND " + COLUMN_INSPECTION_ID + " = ? " , new String[]{ProjId, IId});
         db.close();
 
 
@@ -4547,8 +4549,10 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase dtabase = this.getReadableDatabase();
 
         String selectQuery = "SELECT M."+ COLUMN_PROJECT_ID+ ", M." + COLUMN_CAT_ID + ", M." + COLUMN_LEVEL + ", M." + COLUMN_PARENT + ", M." + COLUMN_LABEL
-                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES//CASE WHEN A."+COLUMN_SUB_LOCATION_ID+" = 0 THEN 0 ELSE 1 END AS 'LEVEL'"
+                + ", M." + COLUMN_CHILD + ", M." + COLUMN_A_ID + ", M."+ COLUMN_INSPECTION_ID + ", M." + COLUMN_IMG1 + ", M." + COLUMN_NOTES+ ", I." + COLUMN_LABEL+ ", I." + COLUMN_P_ID
                 + " FROM " + TABLE_MAP + " M"
+                + " JOIN " + TABLE_INSPECTION + " I"
+                + " ON M."  + COLUMN_PROJECT_ID + " = I."+COLUMN_PROJECT_ID+ " AND I."+COLUMN_INSPECTION_ID+ " = "+iID
                 + " WHERE M." + COLUMN_PROJECT_ID + " = " + projID+" AND (M."+COLUMN_INSPECTION_ID+" = "+ iID+" OR M."+COLUMN_INSPECTION_ID+" = "+ 0+" )"
                 + " AND "+ COLUMN_CHILD + " < " + Child + " ORDER BY M." + COLUMN_CAT_ID+", M." + COLUMN_A_ID+", M." + COLUMN_PARENT+ ", M."+ COLUMN_CHILD+ " DESC" ;
         //add additional fields: status,  notes, print flag
@@ -4569,7 +4573,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 SiteMap.put(MyConfig.TAG_INSPECTION_ID, (String.valueOf(cursor.getInt(7))));
                 SiteMap.put(MyConfig.TAG_IMAGE1, cursor.getString(8));
                 SiteMap.put(MyConfig.TAG_NOTES, cursor.getString(9));
-
+                SiteMap.put("INSPECTION_LABEL", cursor.getString(10));
+                SiteMap.put(MyConfig.TAG_P_ID, cursor.getString(11));
 
                 SiteMapArrayList.add(SiteMap);
 

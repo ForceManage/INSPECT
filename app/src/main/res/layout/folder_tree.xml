@@ -104,39 +104,6 @@
 
 
 
-
-                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/fragment_folder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/image_border"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginBottom="7dp"
-                        android:backgroundTint="@color/grey_green_light"
-                        android:orientation="horizontal"
-
-                        >
-
-                        <fragment
-                            android:id="@+id/tree1_fragment"
-                            android:name="com.forcemanage.inspect.MapViewFragment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="5dp"
-                            />
-
-                        <fragment
-                            android:id="@+id/detail1_text"
-                            android:name="com.forcemanage.inspect.DetailFragment"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp" />
-
-
-                    </LinearLayout>
-
             <ScrollView
 
                 android:id="@+id/scroll_view"
@@ -154,7 +121,7 @@
                 <LinearLayout
                     android:id="@+id/document_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:orientation="vertical"
@@ -281,7 +248,7 @@
                 <LinearLayout
                     android:id="@+id/folder_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:orientation="vertical"

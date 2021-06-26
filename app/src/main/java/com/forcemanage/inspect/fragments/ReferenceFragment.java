@@ -132,9 +132,9 @@ public class ReferenceFragment extends Fragment implements View.OnClickListener 
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            projId = bundle.getInt("projectID");
-            iId = bundle.getInt("inspectionID");
-            aId = bundle.getInt("aID");
+            projId = bundle.getInt("projID");
+            iId = bundle.getInt("iId");
+            aId = bundle.getInt("aId");
             com1 = bundle.getString("com1");
             com2 = bundle.getString("com2");
             com3 = bundle.getString("com3");
