@@ -608,7 +608,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         GlobalVariables.name = node.getNodeName();
         GlobalVariables.aId = node.getaID();
         projId = node.getprojId();
-        iId = node.getiID();
         if(node.getNodeLevel() == 0) GlobalVariables.folderIndex = labelIndex;
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
@@ -825,7 +824,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             else {
 
                 Integer aID = node.getaID();
-
+                iId = node.getiID();
                 GlobalVariables.iId = iId;
         //        List.setBackgroundColor(111111);
 
@@ -1003,10 +1002,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             GlobalVariables.aId = node.getaID();
             aId = node.getaID();
             GlobalVariables.Level = node.getNodeLevel();
-         //   GlobalVariables.iId = node.getiID();
-       //     GlobalVariables.catId = node.getcatId();
-        ///    GlobalVariables.name = node.getNodeName();
-     //   GlobalVariables.modified = true;
 
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         photoBranch = dbHandler.getBranchPhoto(projId, node.getaID());
@@ -1031,6 +1026,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             GlobalVariables.modified = false;
 
          }
+
+
 
 
         switch (node.getbranchCat()) { //branchcat is the child column and classifies type of node
@@ -1305,7 +1302,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 Bundle bundle = new Bundle();
                 bundle.putString("projectID", projectId);
                 bundle.putString("inspectionID", inspectionId);
-                bundle.putInt("aID", aId);
+                bundle.putInt("aId", aId);
                 bundle.putInt("projId", projId);
                 bundle.putInt("iId", iId);
              //   bundle.putString("branchHead", branchHead);
@@ -2903,7 +2900,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     }
 
 
-    private void reportMenuPrev() {
+    public void reportMenuPrev() {
 
         DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
 
@@ -2924,6 +2921,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     listItemsmap.get(i).get("typeObject"),
                     listItemsmap.get(i).get("BranchHead"),
                     listItemsmap.get(i).get("ParentLabel"),
+                    listItemsmap.get(i).get(MyConfig.TAG_SERVICED_BY),
                     listItemsmap.get(i).get(MyConfig.TAG_OVERVIEW),
                     listItemsmap.get(i).get(MyConfig.TAG_RELEVANT_INFO),
                     listItemsmap.get(i).get(MyConfig.TAG_NOTES),
@@ -3000,7 +2998,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             e.printStackTrace();
         }
 
-        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo_HR));
+        camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo));
         startActivityForResult(camera_intent, ACTIVITY_START_CAMERA_APP);
 
     }
@@ -3024,18 +3022,22 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     dbHandler.updateInspectionPhoto(projId, GlobalVariables.iId, photo.getName());
                     break;
 
-            }
+                }
 
             try {
 
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo_HR)));
-                copy(photo_HR, photo) ;
+                copy(photo, photo_HR) ;
                 rotateImage(resizePhoto());
                 cameraSnap = "1";
-                //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
-                //    imageName1.setText("UPDATED");
                 saveInspectionItem();
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
+
+
+
+                //    TextView imageName1 = (TextView) findViewById(R.id.textView16);
+                //    imageName1.setText("UPDATED");
+
+          //      sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photo)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -3082,6 +3084,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     photo7 = photos[6];
                     break;
             }
+
+
         }
 
 
@@ -3525,6 +3529,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         }
 
+
         if (FragDisplay == "ReferenceFragment") {
             dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3,photo4,
                     photo5, photo6, photo7);
@@ -3545,6 +3550,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, photo3, photo4,
                     "", "", "");
         }
+
+
 
         Edited = false;
 
@@ -3734,9 +3741,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
     public void photo_load(){
         Bundle bundle = new Bundle();
-        bundle.putInt("projectID", projId);
-        bundle.putInt("inspectionID", iId);
-        bundle.putInt("aID", GlobalVariables.aId);
+        bundle.putInt("projId", projId);
+        bundle.putInt("iId", iId);
+        bundle.putInt("aId", aId);
 
         DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
 
@@ -3792,7 +3799,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inJustDecodeBounds = false;
         Bitmap photoResize = BitmapFactory.decodeFile(mImageFileLocation, bmOptions);
-      //  mPhotoImageView.setImageBitmap(photoResize);
+        mPhotoImageView.setImageBitmap(photoResize);
 
         Bitmap thePhotoFile = BitmapFactory.decodeFile(photo.getAbsolutePath(), bmOptions);
 

@@ -28,7 +28,8 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
     private  final static int  sublocat = 1, location = 0;
     private int locat;
     private Context context;
-    private ImageView imageView, imageView1, imageView2;
+    private ImageView imageView, imageView1, imageView2, imageView3, imageView4, imageView5, imageView6;
+
 
 
 
@@ -54,20 +55,47 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
     LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     ReportItem listItem = (ReportItem) reportlistItems.get(position);
     View row = convertView;
+    int inflated = 0;
 
-            if(listItem.getTypeObject().equals("inspectionObject")) {
-            row = inflater.inflate(R.layout.report_body_fragment, null, true);
-            TextView title = (TextView) row.findViewById(R.id.branchTitle);
-            TextView parentLabel = (TextView) row.findViewById(R.id.parentLabel);
-            TextView overview = (TextView) row.findViewById(R.id.Overview);
-            TextView com1 = (TextView) row.findViewById(R.id.Observation1);
-            TextView com2 = (TextView) row.findViewById(R.id.Observation2);
-            TextView com3 = (TextView) row.findViewById(R.id.Observation3);
-            TextView com4 = (TextView) row.findViewById(R.id.Observation4);
-            TextView com5 = (TextView) row.findViewById(R.id.Observation5);
-            TextView com6 = (TextView) row.findViewById(R.id.Observation6);
-            TextView label = (TextView) row.findViewById(R.id.branchName);
-            TextView relInfo = (TextView) row.findViewById(R.id.RelevantInfo);
+
+
+    if(listItem.getTypeObject().equals("inspectionObject")) {
+                switch (listItem.getServicedBy()){
+                    case "MULTIPIC4":
+                        row = inflater.inflate(R.layout.multi_pic4view, null, true);
+                        imageView1 = (ImageView) row.findViewById(R.id.imageView1);
+                        imageView2 = (ImageView) row.findViewById(R.id.imageView2);
+                        imageView3 = (ImageView) row.findViewById(R.id.imageView3);
+                        imageView4 = (ImageView) row.findViewById(R.id.imageView4);
+                        inflated = 1;
+                        break;
+                    case "MULTIPIC6":
+                        row = inflater.inflate(R.layout.multi_pic6view, null, true);
+                        imageView1 = (ImageView) row.findViewById(R.id.imageView1);
+                        imageView2 = (ImageView) row.findViewById(R.id.imageView2);
+                        imageView3 = (ImageView) row.findViewById(R.id.imageView3);
+                        imageView4 = (ImageView) row.findViewById(R.id.imageView4);
+                        imageView5 = (ImageView) row.findViewById(R.id.imageView5);
+                        imageView6 = (ImageView) row.findViewById(R.id.imageView6);
+                        inflated = 1;
+                        break;
+                }
+
+             if(inflated == 0) {
+                 row = inflater.inflate(R.layout.report_body_fragment, null, true);
+
+
+                 TextView title = (TextView) row.findViewById(R.id.branchTitle);
+                 TextView parentLabel = (TextView) row.findViewById(R.id.parentLabel);
+                 TextView overview = (TextView) row.findViewById(R.id.Overview);
+                 TextView com1 = (TextView) row.findViewById(R.id.Observation1);
+                 TextView com2 = (TextView) row.findViewById(R.id.Observation2);
+                 TextView com3 = (TextView) row.findViewById(R.id.Observation3);
+                 TextView com4 = (TextView) row.findViewById(R.id.Observation4);
+                 TextView com5 = (TextView) row.findViewById(R.id.Observation5);
+                 TextView com6 = (TextView) row.findViewById(R.id.Observation6);
+                 TextView label = (TextView) row.findViewById(R.id.branchName);
+                 TextView relInfo = (TextView) row.findViewById(R.id.RelevantInfo);
 /*
             TextView fig0 = (TextView) row.findViewById(R.id.fig0);
             TextView fig1 = (TextView) row.findViewById(R.id.fig1);
@@ -78,33 +106,36 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
  */
 
 
-            title.setText(listItem.getBranchHead());
-            parentLabel.setText(listItem.getParentLabel());
-            label.setText(listItem.getLabel());
-            overview.setText(listItem.getOverview());
-            String itemNo = Integer.toString(position + 1);
-            if (!listItem.getImage1().equals(""))
-                com1.setText(listItem.getCom1() + " (Fig " + itemNo + ".0)");
-            if (!listItem.getImage2().equals(""))
-                com2.setText(listItem.getCom2() + " (Fig " + itemNo + ".1)");
-            if (!listItem.getImage3().equals(""))
-                com3.setText(listItem.getCom3() + " (Fig " + itemNo + ".2)");
-            if (!listItem.getImage4().equals(""))
-                com4.setText(listItem.getCom4() + " (Fig " + itemNo + ".3)");
-            if (!listItem.getImage5().equals(""))
-                com5.setText(listItem.getCom5() + " (Fig " + itemNo + ".4)");
-                if (!listItem.getImage6().equals(""))
-                    com6.setText(listItem.getCom6() + " (Fig " + itemNo + ".5)");
+                 title.setText(listItem.getBranchHead());
+                 parentLabel.setText(listItem.getParentLabel());
+                 label.setText(listItem.getLabel());
+                 overview.setText(listItem.getOverview());
+                 String itemNo = Integer.toString(position + 1);
+                 if (!listItem.getImage1().equals(""))
+                     com1.setText(listItem.getCom1() + " (Fig " + itemNo + ".0)");
+                 if (!listItem.getImage2().equals(""))
+                     com2.setText(listItem.getCom2() + " (Fig " + itemNo + ".1)");
+                 if (!listItem.getImage3().equals(""))
+                     com3.setText(listItem.getCom3() + " (Fig " + itemNo + ".2)");
+                 if (!listItem.getImage4().equals(""))
+                     com4.setText(listItem.getCom4() + " (Fig " + itemNo + ".3)");
+                 if (!listItem.getImage5().equals(""))
+                     com5.setText(listItem.getCom5() + " (Fig " + itemNo + ".4)");
+                 if (!listItem.getImage6().equals(""))
+                     com6.setText(listItem.getCom6() + " (Fig " + itemNo + ".5)");
 
-            relInfo.setText(listItem.getRelevantInfo());
+                 relInfo.setText(listItem.getRelevantInfo());
+
+                 imageView1 = (ImageView) row.findViewById(R.id.imageView1);
+                 imageView2 = (ImageView) row.findViewById(R.id.imageView2);
+                 imageView3 = (ImageView) row.findViewById(R.id.imageView3);
+                 imageView4 = (ImageView) row.findViewById(R.id.imageView4);
+                 imageView5 = (ImageView) row.findViewById(R.id.imageView5);
+                 imageView6 = (ImageView) row.findViewById(R.id.imageView6);
+             }
 
             String[] photos = {listItem.getImage1(), listItem.getImage2(), listItem.getImage3(), listItem.getImage4(), listItem.getImage5(), listItem.getImage6()};
-            ImageView image1 = (ImageView) row.findViewById(R.id.imageView1);
-            ImageView image2 = (ImageView) row.findViewById(R.id.imageView2);
-            ImageView image3 = (ImageView) row.findViewById(R.id.imageView3);
-            ImageView image4 = (ImageView) row.findViewById(R.id.imageView4);
-            ImageView image5 = (ImageView) row.findViewById(R.id.imageView5);
-            ImageView image6 = (ImageView) row.findViewById(R.id.imageView6);
+
 
             for (int i = 0; i < 6; i++) {
 
@@ -119,38 +150,38 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                         Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
                         switch (i) {
                             case 0: {
-                                image1.setVisibility(View.VISIBLE);
-                                image1.setImageBitmap(myBitmap);
+                                imageView1.setVisibility(View.VISIBLE);
+                                imageView1.setImageBitmap(myBitmap);
                              //   fig0.setText("Fig " + itemNo + ".0");
                                 break;
                             }
                             case 1: {
-                                image2.setImageBitmap(myBitmap);
-                                image2.setVisibility(View.VISIBLE);
+                                imageView2.setImageBitmap(myBitmap);
+                                imageView2.setVisibility(View.VISIBLE);
                          //       fig1.setText("Fig " + itemNo + ".1");
                                 break;
                             }
                             case 2: {
-                                image3.setImageBitmap(myBitmap);
-                                image3.setVisibility(View.VISIBLE);
+                                imageView3.setImageBitmap(myBitmap);
+                                imageView3.setVisibility(View.VISIBLE);
                        //         fig2.setText("Fig " + itemNo + ".2");
                                 break;
                             }
                             case 3: {
-                                image4.setImageBitmap(myBitmap);
-                                image4.setVisibility(View.VISIBLE);
+                                imageView4.setImageBitmap(myBitmap);
+                                imageView4.setVisibility(View.VISIBLE);
                         //        fig3.setText("Fig " + itemNo + ".3");
                                 break;
                             }
                             case 4: {
-                                image5.setImageBitmap(myBitmap);
-                                image5.setVisibility(View.VISIBLE);
+                                imageView5.setImageBitmap(myBitmap);
+                                imageView5.setVisibility(View.VISIBLE);
                         //        fig4.setText("Fig " + itemNo + ".4");
                                 break;
                             }
                             case 5: {
-                                image6.setImageBitmap(myBitmap);
-                                image6.setVisibility(View.VISIBLE);
+                                imageView6.setImageBitmap(myBitmap);
+                                imageView6.setVisibility(View.VISIBLE);
                                 //        fig4.setText("Fig " + itemNo + ".4");
                                 break;
                             }
@@ -160,27 +191,27 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                         switch (i) {
 
                             case 0: {
-                                image1.setVisibility(View.GONE);
+                                imageView1.setVisibility(View.GONE);
                                 break;
                             }
                             case 1: {
-                                image2.setVisibility(View.GONE);
+                                imageView2.setVisibility(View.GONE);
                                 break;
                             }
                             case 2: {
-                                image3.setVisibility(View.GONE);
+                                imageView3.setVisibility(View.GONE);
                                 break;
                             }
                             case 3: {
-                                image4.setVisibility(View.GONE);
+                                imageView4.setVisibility(View.GONE);
                                 break;
                             }
                             case 4: {
-                                image5.setVisibility(View.GONE);
+                                imageView5.setVisibility(View.GONE);
                                 break;
                             }
                             case 5: {
-                                image6.setVisibility(View.GONE);
+                                imageView6.setVisibility(View.GONE);
                                 break;
                             }
                         }
@@ -191,27 +222,27 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
                     switch (i) {
 
                         case 0: {
-                            image1.setVisibility(View.GONE);
+                            imageView1.setVisibility(View.GONE);
                             break;
                         }
                         case 1: {
-                            image2.setVisibility(View.GONE);
+                            imageView2.setVisibility(View.GONE);
                             break;
                         }
                         case 2: {
-                            image3.setVisibility(View.GONE);
+                            imageView3.setVisibility(View.GONE);
                             break;
                         }
                         case 3: {
-                            image4.setVisibility(View.GONE);
+                            imageView4.setVisibility(View.GONE);
                             break;
                         }
                         case 4: {
-                            image5.setVisibility(View.GONE);
+                            imageView5.setVisibility(View.GONE);
                             break;
                         }
                         case 5: {
-                            image6.setVisibility(View.GONE);
+                            imageView6.setVisibility(View.GONE);
                             break;
                         }
                     }
@@ -241,7 +272,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
 
                 String[] photos = {listItem.getImage1()};
-                ImageView image1 = (ImageView) row.findViewById(R.id.imageView1);
+                 imageView1 = (ImageView) row.findViewById(R.id.imageView1);
 
 
                 for (int i = 0; i < 1; i++) {
@@ -256,7 +287,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
                             Bitmap myBitmap = BitmapFactory.decodeFile(propImage.getAbsolutePath());
                             if (i == 0) {
-                                image1.setImageBitmap(myBitmap);
+                                imageView1.setImageBitmap(myBitmap);
                             }
                         }
                     }

@@ -743,7 +743,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 break;
             }
-            case "FolderTitle":{
+            case "Folder Title":{
                 contentValues.put(COLUMN_PROJECT_ADDRESS, txt);
                 db.update(TABLE_PROJECT_INFO, contentValues, COLUMN_PROJECT_ID + " = ?" , new String[]{projId});
                 contentValues1.put(COLUMN_LABEL, txt);
@@ -751,7 +751,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 db.update(TABLE_INSPECTION, contentValues1, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_INSPECTION_ID + " = ?", new String[]{projId, Integer.toString(0)});
                 contentValues2.put(COLUMN_LABEL, txt);
                 contentValues2.put(COLUMN_ITEM_STATUS, "m");
-                db.update(TABLE_MAP, contentValues2, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_LEVEL +" = 0 ", new String[]{projId});
+                db.update(TABLE_MAP, contentValues2, COLUMN_PROJECT_ID + " = ? AND "+ COLUMN_LEVEL +" = 0  AND "+ COLUMN_CAT_ID + " = 0 ", new String[]{projId});
                 break;
             }
             case "infoA":{
@@ -5004,7 +5004,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 int catId = cursor.getInt(0);
                 String BranchHead = cursor.getString(1);
 
-                String selectQueryB = "SELECT  I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_NOTES +
+                String selectQueryB = "SELECT  I." + COLUMN_SERVICED_BY + ", I." + COLUMN_OVERVIEW + ", I." + COLUMN_RELEVANT_INFO + ", I." + COLUMN_NOTES +
                         ", I." + COLUMN_IMG1 + ", I." + COLUMN_COM1 + ", I." + COLUMN_IMG2 + ", I." + COLUMN_COM2 + ", I." + COLUMN_IMG3 + ", I." + COLUMN_COM3
                         + ", I." + COLUMN_IMG4 + ", I." + COLUMN_COM4 + ", I." + COLUMN_IMG5 + ", I." + COLUMN_COM5 +", I." + COLUMN_IMG6 + ", I." + COLUMN_COM6 + ", M." + COLUMN_LABEL+ ", M."+ COLUMN_PARENT
                         + ", M."+ COLUMN_A_ID
@@ -5044,22 +5044,23 @@ public class DBHandler extends SQLiteOpenHelper {
                         inspectionItemMap.put("typeObject", "inspectionObject");
                         inspectionItemMap.put("BranchHead", BranchHead);
                         inspectionItemMap.put("ParentLabel",cursorB1.getString(0));
-                        inspectionItemMap.put(MyConfig.TAG_OVERVIEW, cursorB.getString(0));
-                        inspectionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursorB.getString(1));
-                        inspectionItemMap.put(MyConfig.TAG_NOTES, cursorB.getString(2));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE1, cursorB.getString(3));
-                        inspectionItemMap.put(MyConfig.TAG_COM1, cursorB.getString(4));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE2, cursorB.getString(5));
-                        inspectionItemMap.put(MyConfig.TAG_COM2, cursorB.getString(6));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE3, cursorB.getString(7));
-                        inspectionItemMap.put(MyConfig.TAG_COM3, cursorB.getString(8));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE4, cursorB.getString(9));
-                        inspectionItemMap.put(MyConfig.TAG_COM4, cursorB.getString(10));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE5, cursorB.getString(11));
-                        inspectionItemMap.put(MyConfig.TAG_COM5, cursorB.getString(12));
-                        inspectionItemMap.put(MyConfig.TAG_IMAGE6, cursorB.getString(13));
-                        inspectionItemMap.put(MyConfig.TAG_COM6, cursorB.getString(14));
-                        inspectionItemMap.put(MyConfig.TAG_LABEL, cursorB.getString(15));
+                        inspectionItemMap.put(MyConfig.TAG_SERVICED_BY, cursorB.getString(0));
+                        inspectionItemMap.put(MyConfig.TAG_OVERVIEW, cursorB.getString(1));
+                        inspectionItemMap.put(MyConfig.TAG_RELEVANT_INFO, cursorB.getString(2));
+                        inspectionItemMap.put(MyConfig.TAG_NOTES, cursorB.getString(3));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE1, cursorB.getString(4));
+                        inspectionItemMap.put(MyConfig.TAG_COM1, cursorB.getString(5));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE2, cursorB.getString(6));
+                        inspectionItemMap.put(MyConfig.TAG_COM2, cursorB.getString(7));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE3, cursorB.getString(8));
+                        inspectionItemMap.put(MyConfig.TAG_COM3, cursorB.getString(9));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE4, cursorB.getString(10));
+                        inspectionItemMap.put(MyConfig.TAG_COM4, cursorB.getString(11));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE5, cursorB.getString(12));
+                        inspectionItemMap.put(MyConfig.TAG_COM5, cursorB.getString(13));
+                        inspectionItemMap.put(MyConfig.TAG_IMAGE6, cursorB.getString(14));
+                        inspectionItemMap.put(MyConfig.TAG_COM6, cursorB.getString(15));
+                        inspectionItemMap.put(MyConfig.TAG_LABEL, cursorB.getString(16));
 
                         inspectedItemsList.add(inspectionItemMap);
 

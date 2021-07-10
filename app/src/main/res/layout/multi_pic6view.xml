@@ -32,47 +32,7 @@
                 android:layout_weight="0.2">
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/head_frame"
-                    android:paddingBottom="5dp">
 
-                    <TextView
-                        android:id="@+id/page"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="Page Content  "
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="normal|bold" />
-
-                    <TextView
-                        android:id="@+id/branchTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:paddingTop="3dp"
-                        android:paddingLeft="10dp"
-                        android:text="Title:  "
-                        android:textSize="16sp"
-                        android:textColor="@android:color/white"
-                        android:textStyle="normal|bold" />
-
-                    <TextView
-                        android:id="@+id/branchName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:paddingTop="3dp"
-                        android:paddingLeft="10dp"
-                        android:text="Branch  "
-                        android:textColor="@android:color/white"
-                        android:textStyle="normal" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,18 +56,11 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Comments :  "
+                                android:text="Overview :  "
                                 android:textColor="@android:color/black"
                                 android:textStyle="normal|bold" />
 
-                            <ImageView
-                                android:id="@+id/title1_voice"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_gravity="right"
-                                android:layout_marginRight="20dp"
-                                app:srcCompat="@android:drawable/ic_media_play" />
+
                         </FrameLayout>
 
                         <EditText
@@ -138,19 +91,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:paddingLeft="10dp"
-                                android:text="Additional comments  "
+                                android:text="Comments  "
                                 android:textColor="@android:color/black"
                                 android:textStyle="normal|bold" />
 
 
-                            <ImageView
-                                android:id="@+id/title2_voice"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="right"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginRight="20dp"
-                                app:srcCompat="@android:drawable/ic_media_play" />
+
 
                         </FrameLayout>
 
@@ -195,7 +141,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/image_border"
                         >
 
                         <LinearLayout
@@ -204,7 +149,7 @@
                             android:orientation="horizontal"
                             android:weightSum="1.0"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/image_border">
+                            >
 
 
                             <LinearLayout
@@ -223,7 +168,7 @@
 
 
                                     <ImageView
-                                        android:id="@+id/imageView"
+                                        android:id="@+id/imageView1"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:adjustViewBounds="true"
@@ -238,19 +183,7 @@
 
                                 </FrameLayout>
 
-                                <EditText
-                                    android:id="@+id/com1"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
 
 
 
@@ -276,7 +209,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:adjustViewBounds="true"
-                                        android:baselineAlignBottom="false"
+                                        android:baselineAlignBottom="true"
                                         android:cropToPadding="false"
                                         android:padding="5dp"
                                         app:srcCompat="@drawable/ic_camera">
@@ -287,19 +220,7 @@
 
                                 </FrameLayout>
 
-                                <EditText
-                                    android:id="@+id/com2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
 
                             </LinearLayout>
 
@@ -311,7 +232,7 @@
                             android:weightSum="1.0"
                             android:orientation="horizontal"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/image_border">
+                            >
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -337,26 +258,14 @@
                                         android:adjustViewBounds="true"
                                         android:baselineAlignBottom="true"
                                         android:cropToPadding="false"
-                                        android:padding="2dp"
+                                        android:padding="5dp"
                                         app:srcCompat="@drawable/ic_camera"></ImageView>
 
 
 
                                 </FrameLayout>
 
-                                <EditText
-                                    android:id="@+id/com3"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
 
                             </LinearLayout>
 
@@ -389,19 +298,7 @@
 
                                 </FrameLayout>
 
-                                <EditText
-                                    android:id="@+id/com4"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
                             </LinearLayout>
 
                         </LinearLayout>
@@ -413,7 +310,7 @@
                             android:orientation="horizontal"
                             android:weightSum="1.0"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/image_border">
+                            >
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -442,19 +339,7 @@
 
                                 </FrameLayout>
 
-                                <EditText
-                                    android:id="@+id/com5"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
 
 
                             </LinearLayout>
@@ -489,19 +374,7 @@
                                 </FrameLayout>
 
 
-                                <EditText
-                                    android:id="@+id/com6"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_border"
-                                    android:paddingLeft="10dp"
-                                    android:layout_margin="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:hint="Descriptive text for photograph"
-                                    android:textSize="16sp">
 
-                                </EditText>
 
                             </LinearLayout>
                         </LinearLayout>

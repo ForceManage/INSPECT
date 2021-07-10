@@ -27,23 +27,25 @@ import android.widget.Toast;
 
 import com.forcemanage.inspect.DBHandler;
 import com.forcemanage.inspect.GlobalVariables;
-import com.forcemanage.inspect.InspectionActivity;
 import com.forcemanage.inspect.MainActivity;
 import com.forcemanage.inspect.MapListViewHolder;
+import com.forcemanage.inspect.MapViewFragment;
 import com.forcemanage.inspect.MapViewLists;
 import com.forcemanage.inspect.MyConfig;
 import com.forcemanage.inspect.OnProjectSelectionChangeListener;
+import com.forcemanage.inspect.ProjectViewList;
 import com.forcemanage.inspect.attributes.MapViewData;
 import com.forcemanage.inspect.attributes.MapViewNode;
 import com.forcemanage.inspect.R;
 import com.forcemanage.inspect.OnDocChangeListener;
+import com.forcemanage.inspect.attributes.ProjectData;
 import com.forcemanage.inspect.attributes.ProjectNode;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-
+import java.util.List;
 
 
 public class MapListAdapter extends ArrayAdapter<MapViewNode>
@@ -84,6 +86,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+
         MapListViewHolder holder = null;
 
         if (convertView == null)
@@ -94,7 +97,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             holder.content = (TextView) convertView.findViewById(R.id.text);
             holder.arrow = (ImageView) convertView.findViewById(R.id.arrow);
             holder.more = (ImageView) convertView.findViewById(R.id.btn_menu);
-            holder.note = (ImageView) convertView.findViewById(R.id.btn_note);
+       //     holder.note = (ImageView) convertView.findViewById(R.id.btn_prnt);
             holder.position = position;
 
 
@@ -102,7 +105,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
             holder.more.setOnClickListener(mMenuClickListener);
         //    ((TextView) convertView.findViewById(R.id.text)).setOnClickListener(mTextClickListener);
-            holder.note.setOnClickListener(mNote);
+       //     holder.note.setOnClickListener(mNote);
 
             convertView.setTag(holder);
 
@@ -119,11 +122,12 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
         int base_node = node.getNodeLevel();
 
+
         switch (node.getbranchCat()){
 
             case 0:{
             //    holder.more.setImageResource(R.drawable.ic_more_vert);
-                holder.more.setVisibility(View.VISIBLE);
+
                 holder.content.setTextColor(Color.DKGRAY);
               //  holder.content.setTextSize(17);
 
@@ -132,18 +136,15 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                     case 0:
                         if(GlobalVariables.doc_pos == 1 || GlobalVariables.doc_mode == 1) {
-                            if (position == 0)
-                              holder.arrow.setImageResource(R.drawable.folder2_red); // holder.arrow.setImageResource(R.drawable.ic_book);
+                            if (position == 0) {
+                                holder.arrow.setImageResource(R.drawable.folder2_red); // holder.arrow.setImageResource(R.drawable.ic_book);
+                                holder.more.setVisibility(View.GONE);
+                            }
                             if(position == 1 )
-                              holder.arrow.setImageResource(R.drawable.ic_book);
-                            if(GlobalVariables.doc_mode == 1)
-                                holder.note.setVisibility(View.GONE);
-                                else
-                                holder.note.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                                holder.arrow.setImageResource(R.drawable.ic_book);
+                             else
                             holder.arrow.setImageResource(R.drawable.folder2_red);
-                            holder.note.setVisibility(View.GONE);
+
                         }
                             holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Title);
 
@@ -151,19 +152,16 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                     case 1:
                         holder.arrow.setImageResource(R.drawable.ic_file_tree);
                         holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                        holder.note.setVisibility(View.GONE);
                         break;
                     case 2:
                         holder.arrow.setImageResource(R.drawable.ic_filetree2);
                         holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                        holder.note.setVisibility(View.GONE);
                         break;
                    }
                 if (node.getNodeLevel() > 2) {
                     holder.arrow.setImageResource(R.drawable.ic_filetree2);
                     holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-                    holder.note.setVisibility(View.GONE);
-                }
+                  }
 
                  break;
            }
@@ -173,7 +171,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             //    holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_edit_outline);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
             case 2: { // Scope Page
@@ -181,7 +178,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
            //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.ic_note_text);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -190,7 +186,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 //     holder.content.setTextSize(17);
                 holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
                 holder.arrow.setImageResource(R.drawable.multipic);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -201,7 +196,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.multipic);
             //    if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
             //    else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
+
                 break;
             }
 
@@ -212,7 +207,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.arrow.setImageResource(R.drawable.blankpage);
            //     if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
           //      else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -224,7 +218,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.BLUE);
        //         if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
        //         else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
             case 10: {
@@ -235,7 +228,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.content.setTextColor(Color.BLUE);
        //         if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
        //         else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -247,7 +239,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.more.setImageResource(R.drawable.ic_more_vert);
       //          if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
       //          else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -259,7 +250,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 holder.more.setImageResource(R.drawable.ic_more_vert);
          //       if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
          //       else holder.more.setVisibility(View.VISIBLE);
-                holder.note.setVisibility(View.GONE);
                 break;
             }
 
@@ -278,12 +268,12 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         ((TextView) convertView.findViewById(R.id.spacer)).getLayoutParams().width = newWidth;
         ((TextView) convertView.findViewById(R.id.spacer)).requestLayout();
 
-        showMessage("MapView Adapter pos:  "+position);
+     //   showMessage("MapView Adapter pos:  "+position);
 
         return convertView;
     }
 
-
+ /*
     public OnClickListener mNote;
 
     {
@@ -292,6 +282,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
             //   @Override
             public void onClick(View v) {
+
+
+
                 GlobalVariables.doc_mode = 0;
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -369,12 +362,16 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
 
 
-
-
             }
-        };
-    }
 
+
+
+        };
+
+
+
+    }
+                */
      public OnClickListener mArrowClickListener;
 
 {
@@ -521,7 +518,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                                                         int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                        loadFolderMap(GlobalVariables.User_id, node.getprojId());
+                                                        loadProjectMap(node.getprojId());
                                                     }
                                                 })
                                                 .setNegativeButton("Cancel",
@@ -595,7 +592,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
 
                                                                dbHandler.updateMapLabel((node.getprojId()), node.getaID(), branchText.getText().toString());
-                                                                loadFolderMap(GlobalVariables.User_id, node.getprojId());;
+                                                                loadProjectMap(node.getprojId());;
                                                       }
                                                 })
                                                 .setNegativeButton("Cancel",
@@ -639,7 +636,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                                                         int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                        loadFolderMap(GlobalVariables.User_id, node.getprojId());;
+                                                        loadProjectMap( node.getprojId());;
                                                     }
                                                 })
                                                 .setNegativeButton("Cancel",
@@ -695,7 +692,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                         case 0: { //first order tabs id doc. The location tabs, not the discusssion, reference tabs, etc
 
-                            if (node.getNodeLevel() == 0) { // if focus is the folder tab fragment
+                            if (node.getNodeLevel() == 0 && position > 0) { // if focus is the folder tab fragment
 
 
                                 String[] actions = {
@@ -736,7 +733,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                                 DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
                                                                 int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                                loadMap(node.getprojId());
+                                                                loadProjectMap(node.getprojId());
                                                             }
                                                         })
                                                         .setNegativeButton("Cancel",
@@ -756,7 +753,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             case 1: {
 
                                                 int result = dbHandler.addSummary(node.getprojId(), iId, 500, 0, node.getaID(), "Discussion");  //this is the ESM category
-                                                loadMap(node.getprojId());
+                                                loadProjectMap(node.getprojId());
                                                 break;
 
                                             }
@@ -764,7 +761,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             case 2: {
 
                                                 int result = dbHandler.addCertificate(node.getprojId(), iId, 501, 0, node.getaID(), "Certificates");  //this is the ESM category
-                                                loadMap(node.getprojId());
+                                                loadProjectMap(node.getprojId());
 
                                                 break;
 
@@ -773,7 +770,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             case 3: {
 
                                                 int result = dbHandler.addReference(node.getprojId(), 510, 0, node.getaID(), "Reference Items");  //this is the ESM category
-                                                loadMap(node.getprojId());
+                                                loadProjectMap(node.getprojId());
 
                                                 break;
 
@@ -782,7 +779,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             case 4: {
 
                                                 int result = dbHandler.addPdf_Doc(node.getprojId(), iId, 505, 0, node.getaID(), "PDF Files");  //this is the ESM category
-                                                loadMap(node.getprojId());
+                                                loadProjectMap(node.getprojId());
                                                 break;
                                             }
                                             case 5: {
@@ -894,7 +891,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                                   public void onClick(DialogInterface dialog, int id) {
                                                                                       dbHandler.moveTAB(node.getprojId(), node.getaID(), Integer.parseInt(LocationText.getText().toString()));
 
-                                                                                      loadMap(node.getprojId());
+                                                                                      loadProjectMap(node.getprojId());
 
                                                                                   }
                                                                               })
@@ -950,7 +947,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                       //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
                                                                       int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                                      loadMap(node.getprojId());
+                                                                      loadProjectMap(node.getprojId());
                                                                   }
                                                               })
                                                               .setNegativeButton("Cancel",
@@ -1026,7 +1023,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                   public void onClick(DialogInterface dialog, int id) {
 
                                                                             int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
-                                                                            loadMap(node.getprojId());
+                                                                            loadProjectMap(node.getprojId());
 
 
                                                                   }
@@ -1153,7 +1150,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                                 public void onClick(DialogInterface dialog, int id) {
                                                                                     dbHandler.moveTAB(node.getprojId(), node.getaID(), Integer.parseInt(LocationText.getText().toString()));
 
-                                                                                    loadMap(node.getprojId());
+                                                                                    loadProjectMap(node.getprojId());
 
                                                                                 }
                                                                             })
@@ -1243,7 +1240,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                     //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
                                                                     int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                                    loadMap(node.getprojId());
+                                                                    loadProjectMap(node.getprojId());
                                                                 }
                                                             })
                                                             .setNegativeButton("Cancel",
@@ -1295,7 +1292,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                                     public void onClick(DialogInterface dialog, int id) {
                                                                                         //        InspectionVariables.photoBranch = "";
                                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), 1);
-                                                                                        loadMap(node.getprojId());
+                                                                                        loadProjectMap(node.getprojId());
                                                                                     }
                                                                                 })
                                                                                 .setNegativeButton("Cancel",
@@ -1314,18 +1311,18 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                     }
                                                                     case 1: { // Add a Multi Pic Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic", 4);
-                                                                        loadMap(node.getprojId());
+                                                                        loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
 
                                                                     case 2: { // Add a Multi Pic Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic", 3);
-                                                                        loadMap(node.getprojId());
+                                                                        loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
                                                                     case 3: { // Add a Blank Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Blank Page", 5);
-                                                                        loadMap(node.getprojId());
+                                                                        loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
                                                                     case 4: {
@@ -1470,7 +1467,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                     //     globalVariables.photoBranch = "";
 
                                                                     int result = dbHandler.addActionBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
-                                                                    loadMap(node.getprojId());
+                                                                    loadProjectMap(node.getprojId());
                                                                 }
                                                             })
                                                             .setNegativeButton("Cancel",
@@ -1521,13 +1518,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                 case 3:{
                                                     dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),1,node.getcatId(),"UP", 1);
-                                                    loadMap(node.getprojId());
+                                                    loadProjectMap(node.getprojId());
                                                     break;
 
                                                 }
                                                 case 4:{
                                                     dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),1,node.getcatId(),"DWN", 1);
-                                                    loadMap(node.getprojId());
+                                                    loadProjectMap(node.getprojId());
                                                     break;
                                                 }
                                                 case 5:{
@@ -1636,14 +1633,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         case 2: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),2,node.getcatId(),"UP", 2);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
                                         case 3: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),2,node.getcatId(),"DWN", 2);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
@@ -1673,7 +1670,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         case 3: {//if Multi 6 Pic Page
 
                             String[] actions = {
-
                                     "Move label UP",
                                     "Move label DOWN",
                                     "Delete label",
@@ -1691,14 +1687,15 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         case 0: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),3,node.getcatId(),"UP", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
+
                                         case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),3,node.getcatId(),"DWN", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
@@ -1759,7 +1756,6 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         case 4: {//if Multi 4 Pic Page
 
                             String[] actions = {
-
                                     "Move label UP",
                                     "Move label DOWN",
                                     "Delete label",
@@ -1777,14 +1773,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         case 0: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"UP", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
                                         case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"DWN", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
@@ -1863,14 +1859,14 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         case 0: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),5,node.getcatId(),"UP", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
                                         case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),5,node.getcatId(),"DWN", 1);
-                                            loadMap(node.getprojId());
+                                            loadProjectMap(node.getprojId());
                                             break;
 
                                         }
@@ -2060,7 +2056,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             //        InspectionVariables.photoBranch = "";
                                                             int result = dbHandler.addReference(node.getprojId(), node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString());
-                                                            loadMap(node.getprojId());
+                                                            loadProjectMap(node.getprojId());
                                                         }
                                                     })
                                                     .setNegativeButton("Cancel",
@@ -2199,7 +2195,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                             //           Toast.makeText(getContext(), "Create or Select a Folder", Toast.LENGTH_SHORT).show();
 
                                                             int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), "", 0);  //this is the ESM category
-                                                            loadMap(node.getprojId());
+                                                            loadProjectMap(node.getprojId());
                                                         }
                                                     })
                                                     .setNegativeButton("Cancel",
@@ -2271,7 +2267,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             if(pdf_name != null) {
                                                                 int result = dbHandler.addLevel(node.getprojId(), node.getaID(), 0, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), branchText.getText().toString(), pdf_name, 12);  //this is the ESM category
-                                                                loadMap(node.getprojId());
+                                                                loadProjectMap(node.getprojId());
                                                             }
                                                             else Toast.makeText(getContext(), "Select a PDF file", Toast.LENGTH_SHORT).show();
 
@@ -2367,9 +2363,41 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);
                 dbHandler.deleteRec("InspectionItem",projId, iId,aID);
+
+             /*     GlobalVariables.dataList.remove(GlobalVariables.pos);
+
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                GlobalVariables.modified = true;
+
+                GlobalVariables.dataList = MapViewLists.LoadInitialData();
+
+               // GlobalVariables.nodes = MapViewLists.LoadInitialNodes(GlobalVariables.dataList);
+                MapViewNode node = GlobalVariables.displayNodes.get(GlobalVariables.pos);
+                          if (GlobalVariables.pos != ListView.INVALID_POSITION) {
+
+                              if (node.getIsExpanded() == GlobalVariables.TRUE) {
+                                  node.setIsExpanded(GlobalVariables.FALSE);
+
+                              } else {
+                                  if (node.getNodeChildren() != null)
+                                      node.setIsExpanded(GlobalVariables.TRUE);
+
+                              }
+                              node.setIsExpanded(GlobalVariables.TRUE);
+                          }
+
+
+                MapViewLists.LoadDisplayList();
+                OnProjectSelectionChangeListener listener = (OnProjectSelectionChangeListener) getContext();
+
+                listener.OnTabChanged(GlobalVariables.pos);
+
+              */
+
+
+
+               loadProjectMap(projId);
                 break;
             }
 
@@ -2383,7 +2411,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("InspectionItem",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
             case (2):{
@@ -2396,7 +2424,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("ActionItem",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
 
@@ -2408,7 +2436,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
 
@@ -2420,7 +2448,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
 
@@ -2432,7 +2460,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("InspectionItem",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
 
@@ -2442,7 +2470,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 GlobalVariables.pos = GlobalVariables.pos - 1;
                 Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                loadMap(projId);
+                loadProjectMap(projId);
                 break;
             }
 
@@ -2465,7 +2493,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
         int success = dbHandler.updateMapLabel(projId, aID, branchLabel);
-        if(success == 1) loadMap(projId);
+        if(success == 1) loadProjectMap(projId);
 
     }
 
@@ -2488,7 +2516,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
         return files;
     }
 
-
+/*
     public void loadMap(int projId) {
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
@@ -2535,6 +2563,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
     }
 
+
+ */
+
     public void loadFolderMap(int USER_ID, int projId) {
 
         DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
@@ -2564,7 +2595,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             maplistItems.add(listItem);
         }
 
-
+        GlobalVariables.modified = true;
         GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
         GlobalVariables.modified = true;
 
@@ -2585,6 +2616,86 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
     }
 
+    public void loadProjectMap(int projId) {
+
+        DBHandler dbHandler = new DBHandler(getContext(), null, null, 1);
+
+        List<MapViewData> maplistItems = new ArrayList<>();
+
+        ArrayList<HashMap<String, String>> SiteMapData = dbHandler.getMap(projId, iId, 15); //child < 15 includes all types
+
+        List<ProjectData> listItems = new ArrayList<>();
+        MapViewData listItem = null;
+
+
+
+
+
+        listItem = new MapViewData(
+
+                Integer.parseInt(SiteMapData.get(0).get(MyConfig.TAG_PROJECT_ID)),
+                0,
+                0,
+                0,
+                SiteMapData.get(0).get(MyConfig.TAG_LABEL),
+                -1,
+                0,
+                -1,
+                SiteMapData.get(0).get(MyConfig.TAG_IMAGE1),
+                SiteMapData.get(0).get(MyConfig.TAG_NOTES)
+        );
+        maplistItems.add(listItem);
+
+
+        listItem = new MapViewData(
+
+                Integer.parseInt(SiteMapData.get(0).get(MyConfig.TAG_PROJECT_ID)),
+                0,
+                0,
+                0,
+                SiteMapData.get(0).get("INSPECTION_LABEL"),
+                0,
+                0,
+                0,
+                SiteMapData.get(0).get(MyConfig.TAG_IMAGE1),
+                SiteMapData.get(0).get(MyConfig.TAG_NOTES)
+        );
+        maplistItems.add(listItem);
+        for (int i = 1; i < (SiteMapData.size()); i++) {
+
+
+            listItem = new MapViewData(
+
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PROJECT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_LEVEL)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CAT_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_CHILD)),
+                    SiteMapData.get(i).get(MyConfig.TAG_LABEL),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_A_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_INSPECTION_ID)),
+                    Integer.parseInt(SiteMapData.get(i).get(MyConfig.TAG_PARENT)),
+                    SiteMapData.get(i).get(MyConfig.TAG_IMAGE1),
+                    SiteMapData.get(i).get(MyConfig.TAG_NOTES)
+
+
+            );
+
+
+            maplistItems.add(listItem);
+
+        }
+
+        GlobalVariables.modified = true;
+        GlobalVariables.dataList = (ArrayList<MapViewData>) maplistItems;
+        MapViewLists.LoadInitialData();
+        MapViewLists.LoadDisplayList();
+
+        OnProjectSelectionChangeListener listener = (OnProjectSelectionChangeListener) getContext();
+        listener.OnTabChanged(GlobalVariables.pos);
+
+
+
+    }
 
     private void showMessage(String message) {
         //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();

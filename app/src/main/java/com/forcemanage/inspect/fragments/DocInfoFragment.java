@@ -34,7 +34,7 @@ public class DocInfoFragment extends Fragment implements View.OnClickListener{
 
     private MainActivity globalVariables;
 
-    private static final String TAG = "Project Info Fragment";
+    private static final String TAG = "Doc Info Fragment";
 
     private TextView title;
     private TextView Label;

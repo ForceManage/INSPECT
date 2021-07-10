@@ -64,7 +64,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
     private GestureDetector mGestureDetector;
     private float mScaleFactor = 0.5f;
     private int projectId;
-    private int inspectionId;
+    private int iId;
     private int aId;
     private String fname;
     private String dirName;
@@ -80,9 +80,9 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
         Bundle bundle = this.getArguments();
         if (bundle != null) {
 
-                projectId = bundle.getInt("projectID");
-                inspectionId = bundle.getInt("inspectionID");
-                aId = bundle.getInt("aID");
+                projectId = bundle.getInt("projId");
+                iId = bundle.getInt("iId");
+                aId = bundle.getInt("aId");
 
         }
 
@@ -175,7 +175,7 @@ public class PhotoEditFragment extends Fragment implements View.OnClickListener,
                 }
 
                 DBHandler dbHandler = new DBHandler(getActivity(), null, null, 1);
-                dbHandler.updateInspectionItemPhoto_insert(projectId,inspectionId,aId, name, globalVariables.filephoto);
+                dbHandler.updateInspectionItemPhoto_insert(projectId,iId,aId, name, globalVariables.filephoto);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 globalVariables.photo_load_close();
 

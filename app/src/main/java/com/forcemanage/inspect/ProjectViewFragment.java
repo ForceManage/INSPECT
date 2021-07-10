@@ -51,7 +51,7 @@ public class ProjectViewFragment extends ListFragment {
       //  GlobalVariables.pos = position;
 
         ProjectNode node = GlobalVariables.projectdisplayNodes.get(position);
-        GlobalVariables.iId = node.getiID();
+     //   GlobalVariables.iId = node.getiID();
         if(position == 0) node.setIsExpanded(GlobalVariables.FALSE);
         int proj = node.getprojId();
 

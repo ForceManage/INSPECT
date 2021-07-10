@@ -50,6 +50,7 @@ public class MapViewFragment extends ListFragment {
 
         Boolean vary = false;
 
+
         MapViewNode node = GlobalVariables.displayNodes.get(position);
 
         if(position == 0) node.setIsExpanded(GlobalVariables.FALSE);

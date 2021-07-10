@@ -53,6 +53,7 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
     private String item;
     private TextView branchTitle;
     private TextView branch;
+    private TextView folderName;
     private String docName = "";
     private String branchNote = "";
     private String Folder = "";
@@ -154,8 +155,8 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
 
         View view = inflater.inflate(R.layout.folder_tree, container, false);
 
-        TextView folder = (TextView) view.findViewById((R.id.folder_name));
-        folder.setText(Folder);
+        folderName = (TextView) view.findViewById((R.id.folder_name));
+        folderName.setText(Folder);
         branchTitle = (TextView) view.findViewById((R.id.branchTitle));
         branchTitle.setText(Folder);
         branch = (TextView) view.findViewById((R.id.branchName));
@@ -191,6 +192,22 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Record time", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView preview = (ImageView) view.findViewById(R.id.btn_prev);
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.reportMenuPrev();
+            }
+        });
+
+        ImageView print = (ImageView) view.findViewById(R.id.btn_prnt);
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalVariables.reportMenu();
             }
         });
 
@@ -284,11 +301,11 @@ public class FolderTreeFragment extends Fragment implements OnDocChangeListener,
             }
         });
 
-        final TextView projAddress = (TextView) view.findViewById(R.id.folder_name);
-         projAddress.setOnClickListener(new View.OnClickListener() {
+
+         folderName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProject("Folder Title", projAddress.getText().toString());
+                editProject("Folder Title", folderName.getText().toString());
             }
         });
 

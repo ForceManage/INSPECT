@@ -9,6 +9,7 @@ public class ReportItem {
     private String typeObject;
     private String BranchHead;
     private String ParentLabel;
+    private String servicedBy;
     private String overview;
     private String relevantInfo;
     private String notes;
@@ -38,13 +39,14 @@ public class ReportItem {
 
 
 
-    public ReportItem(String typeObject, String BranchHead, String ParentLabel, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
+    public ReportItem(String typeObject, String BranchHead, String ParentLabel, String servicedBy, String overview, String relevantInfo, String notes, String image1, String com1, String image2, String com2,
                       String image3, String com3, String image4, String com4, String image5, String com5,  String image6, String com6, String label, String date_time, String permit,
                       String address, String stage, String title_A, String com_A, String title_B, String com_B,String title_C, String com_C) {
 
         this.typeObject = typeObject;
         this.BranchHead = BranchHead;
         this.ParentLabel = ParentLabel;
+        this.servicedBy = servicedBy;
         this.overview = overview;
         this.relevantInfo = relevantInfo;
         this.notes = notes;
@@ -82,6 +84,8 @@ public class ReportItem {
     public String getParentLabel() {
         return ParentLabel;
     }
+
+    public String getServicedBy()  {return  servicedBy; }
 
     public String getImage1() {
         return image1;
