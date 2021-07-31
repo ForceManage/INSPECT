@@ -5,8 +5,18 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AlignmentSpan;
+import android.text.style.BulletSpan;
+import android.text.style.LeadingMarginSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,12 +69,16 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     private String comB = "Comments";
     private String headC = "Title C";
     private String comC = "Comments";
+    private String focus = "null";
     private TextView HeadA;
     private TextView HeadB;
     private TextView HeadC;
     private ImageView play1;
     private ImageView play2;
     private ImageView play3;
+    private ImageView bullet;
+    private ImageView indent;
+    private ImageView lindent;
     TextToSpeech t1;
 
 
@@ -112,18 +126,123 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
 
       //   descriptionE = (EditText) view.findViewById(R.id.desc);
-         ComA = (EditText) view.findViewById(R.id.comA);
+        ComA = (EditText) view.findViewById(R.id.comA);
         ComB = (EditText) view.findViewById(R.id.comB);
         ComC = (EditText) view.findViewById(R.id.comC);
 
-         HeadA = (TextView) view.findViewById(R.id.Head_A);
+        HeadA = (TextView) view.findViewById(R.id.Head_A);
         HeadB = (TextView) view.findViewById(R.id.Head_B);
         HeadC = (TextView) view.findViewById(R.id.Head_C);
         play1 = (ImageView) view.findViewById(R.id.title1_voice);
         play2 = (ImageView) view.findViewById(R.id.title2_voice);
         play3 = (ImageView) view.findViewById(R.id.title3_voice);
+        bullet = (ImageView) view.findViewById(R.id.bullet);
+        indent = (ImageView) view.findViewById(R.id.indent);
+        lindent = (ImageView) view.findViewById(R.id.lessIndent);
 
-       t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+        bullet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch (focus) {
+                    case "ComA":
+                        ComA.getText().setSpan(new BulletSpan(10), ComA.getSelectionStart(), 380, 0);
+                       // ComA.getText().insert(ComA.getSelectionStart(), "   •       ");
+                        break;
+                    case "ComB":
+                        ComB.getText().insert(ComB.getSelectionStart(), "   •       ");
+                        break;
+                    case "ComC":
+                        ComC.getText().insert(ComC.getSelectionStart(), "   •       ");
+                        break;
+                }
+
+
+
+            }
+        });
+
+        indent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int start = 0;
+                int end = 0;
+                switch (focus) {
+
+                    case "ComA":
+                         start = ComA.getSelectionStart();
+                         end = ComA.getSelectionEnd();
+                         ComA.getText().insert(start,"      "); //6 spaces
+
+       /*                 ComA.getText().setSpan(new LeadingMarginSpan() {
+                                                   @Override
+                                                   public int getLeadingMargin(boolean first) {
+                                                       return 10;
+                                                   }
+
+                                                   @Override
+                                                   public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
+
+                                                   }
+                                               }
+                                , start, end, 0);
+
+        */
+
+                        break;
+
+                    case "ComB":
+                         start = ComB.getSelectionStart();
+                         end = ComB.getSelectionEnd();
+                         ComB.getText().insert(start,"      "); //6 spaces
+/*
+                        Spannable spannable = new SpannableStringBuilder(ComB.getText());
+                      //  spannable.setSpan(new StyleSpan(Typeface.BOLD),start,end,0);
+                        spannable.setSpan(new LeadingMarginSpan.Standard(10,10)
+
+                        , start,end, 0);
+
+
+
+                        ComB.setText(spannable);
+
+ */
+
+
+                        break;
+
+                    case "ComC":
+                        start = ComC.getSelectionStart();
+                        end = ComC.getSelectionEnd();
+                        ComC.getText().insert(start,"      "); //6 spaces
+/*
+                        Spannable spannable = new SpannableStringBuilder(ComB.getText());
+                      //  spannable.setSpan(new StyleSpan(Typeface.BOLD),start,end,0);
+                        spannable.setSpan(new LeadingMarginSpan.Standard(10,10)
+
+                        , start,end, 0);
+
+
+
+                        ComB.setText(spannable);
+
+ */
+
+
+                        break;
+                }
+
+
+
+            }
+        });
+
+
+
+
+
+
+        t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
@@ -174,7 +293,7 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                editLabel("head_A", "Set Title");
-                Edited = true;
+               Edited = true;
             }
         });
 
@@ -182,7 +301,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
          ComA.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus) Edited = true;
+                    if(hasFocus) {
+                        Edited = true;
+                        focus = "ComA";
+
+                    }
 
                 }
             });
@@ -198,8 +321,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         ComB.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
+                if(hasFocus) {
+                    Edited = true;
+                    focus = "ComB";
 
+                }
             }
         });
 
@@ -214,7 +340,11 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         ComC.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) Edited = true;
+                if(hasFocus) {
+                    Edited = true;
+                    focus = "ComC";
+
+                }
 
             }
         });
@@ -301,6 +431,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
       //  globalVariables.photo_load_close();
         t1.shutdown();
     }
+
+
 
     @Override
     public void onDestroyView() {

@@ -200,6 +200,17 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                 break;
             }
 
+            case 6: { // Multipic 2 Page
+                holder.content.setTextColor(Color.GRAY);
+                //     holder.content.setTextSize(17);
+                holder.content.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+                holder.arrow.setImageResource(R.drawable.multipic);
+                //    if(GlobalVariables.doc_mode == 0) holder.more.setVisibility(View.GONE);
+                //    else holder.more.setVisibility(View.VISIBLE);
+
+                break;
+            }
+
             case 5: {  // Blank Page
                 holder.content.setTextColor(Color.GRAY);
                 //     holder.content.setTextSize(17);
@@ -561,8 +572,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                     else { // Still in project mode but the subfolder is selected
 
-                        String[] actions = {"Edit Label",
-                                "Add Sub-Title Label ",
+                        String[] actions = {"Edit Tab Label",
+                                "Add Sub-Title Tab ",
                                 "Cancel "};
 
 
@@ -810,8 +821,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                   if(node.getcatId() == 505) { //if label is pdf
 
                                       String[] actions = {"Edit Label",
-                                              "Add sub-Title label",
-                                              "Add Pdf file under [" + node.getNodeName() + "] label",
+                                              "Add sub-Title Tab",
+                                              "Add Pdf file under [" + node.getNodeName() + "] Tab",
                                               "Cancel "};
 
                                       final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1071,9 +1082,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                   else {
 
                                     String[] actions = {"Edit Topic Label",
-                                            "Add sub-Title Label",
+                                            "Add sub-Title Tab",
                                             "Place page in [ " + node.getNodeName() + " ] topic",
-                                            "Delete label",
+                                            "Delete Tab",
                                             "Cancel "};
 
                                     final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1266,6 +1277,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                         builder.setTitle("Add Page ");
                                                         // add a list
                                                         String[] actions = {"Standard Note Page (6 pics)",
+                                                                "Multi-2-pic Page",
                                                                 "Multi-4-pic Page",
                                                                 "Multi-6-pic Page",
                                                                 "Blank Page",
@@ -1310,22 +1322,28 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                                                     }
                                                                     case 1: { // Add a Multi Pic Page
-                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic", 4);
+                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-2-Pic", 6);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
 
                                                                     case 2: { // Add a Multi Pic Page
+                                                                        int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic", 4);
+                                                                        loadProjectMap(node.getprojId());
+                                                                        break;
+                                                                    }
+
+                                                                    case 3: { // Add a Multi Pic Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic", 3);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
-                                                                    case 3: { // Add a Blank Page
+                                                                    case 4: { // Add a Blank Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Blank Page", 5);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
-                                                                    case 4: {
+                                                                    case 5: {
 
                                                                         break;
                                                                     }
@@ -1400,9 +1418,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                             String[] actions = {"Edit Label",
                                     "Add Suplementary Page ",
-                                    "Delete label",
-                                    "Move label Up",
-                                    "Move label Down",
+                                    "Delete Tab",
+                                    "Move Tab Up",
+                                    "Move Tab Down",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1550,9 +1568,9 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         case 2: {//if supplementary page label
 
                             String[] actions = {"Edit Label",
-                                    "Delete label",
-                                    "Move label UP",
-                                    "Move label DOWN",
+                                    "Delete Tab",
+                                    "Move Tab UP",
+                                    "Move Tab DOWN",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1570,7 +1588,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                                             alertDialogBuilder.setView(promptView);
                                             final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
-                                            itemTitle.setText("Title label: " + branchTitle);//Integer.parseInt(locationId)
+                                            itemTitle.setText("Tab label: " + branchTitle);//Integer.parseInt(locationId)
                                             final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
                                             locationText.setText("Label : " + node.getNodeName());//Integer.parseInt(locationId)
                                             final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
@@ -1669,10 +1687,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                         case 3: {//if Multi 6 Pic Page
 
-                            String[] actions = {
-                                    "Move label UP",
-                                    "Move label DOWN",
-                                    "Delete label",
+                            String[] actions = {"Edit Label",
+                                    "Move Tab UP",
+                                    "Move Tab DOWN",
+                                    "Delete Tab",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1683,8 +1701,42 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                     switch (which) {
 
-
                                         case 0: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Tab label: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            LocationText.setText(node.getNodeName());
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+                                            break;
+
+                                        }
+
+                                        case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),3,node.getcatId(),"UP", 1);
                                             loadProjectMap(node.getprojId());
@@ -1692,7 +1744,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                         }
 
-                                        case 1: {
+                                        case 2: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),3,node.getcatId(),"DWN", 1);
                                             loadProjectMap(node.getprojId());
@@ -1700,7 +1752,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                         }
 
-                                        case 2: {
+                                        case 3: {
 
                                             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
@@ -1731,7 +1783,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             break;
 
                                         }
-                                        case 3: {
+                                        case 4: {
 
 
                                             break;
@@ -1755,10 +1807,10 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                         case 4: {//if Multi 4 Pic Page
 
-                            String[] actions = {
-                                    "Move label UP",
-                                    "Move label DOWN",
-                                    "Delete label",
+                            String[] actions = {" Edit Tab Label",
+                                    "Move Tab UP",
+                                    "Move Tab DOWN",
+                                    "Delete Tab",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1769,15 +1821,49 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                     switch (which) {
 
-
                                         case 0: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Tab label: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            LocationText.setText(node.getNodeName());
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+                                            break;
+
+                                        }
+
+                                        case 1: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"UP", 1);
                                             loadProjectMap(node.getprojId());
                                             break;
 
                                         }
-                                        case 1: {
+                                        case 2: {
 
                                             dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"DWN", 1);
                                             loadProjectMap(node.getprojId());
@@ -1785,7 +1871,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                                         }
 
-                                        case 2: {
+                                        case 3: {
 
                                             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                                             View promptView = layoutInflater.inflate(R.layout.delete_location, null);
@@ -1816,7 +1902,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             break;
 
                                         }
-                                        case 3: {
+                                        case 4: {
 
 
                                             break;
@@ -1838,13 +1924,13 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                         } // end case branchcat = 2 - supplementary page cat
 
 
-                        case 5: {//if Multi Pic Page
+                        case 5: {//if Blank Page
 
                             String[] actions = {
 
-                                    "Move label UP",
-                                    "Move label DOWN",
-                                    "Delete label",
+                                    "Move Tab UP",
+                                    "Move Tab DOWN",
+                                    "Delete Tab",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1923,14 +2009,133 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
 
                         } // end case branchcat = 5 - Blank page cat
 
+                        case 6: {//if Multi 2 Pic Page
+
+                            String[] actions = {"Edit Tab Label",
+                                    "Move Tab UP",
+                                    "Move Tab DOWN",
+                                    "Delete Tab",
+                                    "Cancel "};
+
+                            final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
+
+                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    switch (which) {
+
+                                        case 0: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.add_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView itemTitle = (TextView) promptView.findViewById(R.id.textItem);
+                                            itemTitle.setText("Tab label: " + branchTitle);//Integer.parseInt(locationId)
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Label : " + node.getNodeName());//Integer.parseInt(locationId)
+                                            final EditText LocationText = (EditText) promptView.findViewById(R.id.locationtext);
+                                            LocationText.setText(node.getNodeName());
+                                            // setup a dialog window
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            editLocation(node.getprojId(), node.getaID(), LocationText.getText().toString());
+
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+                                            break;
+
+                                        }
+
+                                        case 1: {
+
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"UP", 1);
+                                            loadProjectMap(node.getprojId());
+                                            break;
+
+                                        }
+                                        case 2: {
+
+                                            dbHandler.changePos(node.getprojId(),node.getaID(),node.getiID(),4,node.getcatId(),"DWN", 1);
+                                            loadProjectMap(node.getprojId());
+                                            break;
+
+                                        }
+
+                                        case 3: {
+
+                                            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+                                            View promptView = layoutInflater.inflate(R.layout.delete_location, null);
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                                            alertDialogBuilder.setView(promptView);
+                                            final TextView locationText = (TextView) promptView.findViewById(R.id.textView);
+                                            locationText.setText("Warning - this will delete the label and ALL the associated data");//location.getText().toString());
+
+                                            alertDialogBuilder.setCancelable(false)
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            deleteInspectionItem(node.getprojId(), node.getaID());
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+
+                                            // create an alert dialog
+                                            AlertDialog alert = alertDialogBuilder.create();
+                                            alert.show();
+
+
+                                            break;
+
+                                        }
+
+                                        case 4: {
+
+
+                                            break;
+
+                                        }
+
+                                    }
+
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+
+
+                            dialog.show();
+
+                            break;
+
+                        } // end case branchcat = 2 - supplementary page cat
+
 
 
                         case 11:{ //if focus is the reference tab
 
 
                             String[] actions = {"Edit Label",
-                                    "Add Information subLabel under the [ " + node.getNodeName() + " ] tab",
-                                    "Delete label",
+                                    "Add Information subTab under the [ " + node.getNodeName() + " ] Tab",
+                                    "Delete Tab",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1947,7 +2152,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                             builder.setTitle("Edit Document Outline ");
                                             // add a list
                                             String[] actions = {"Change Label Text",
-                                                    "Delete tab",
+                                                    "Delete Tab",
                                                     "Cancel"};
 
                                             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -2130,7 +2335,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                             String[] actions = {"Edit Label",
                                     "Add PDF sublabel ",
                                     "Place PDF file in ["+node.getNodeName()+"] label",
-                                    "Delete label",
+                                    "Delete Tab",
                                     "Cancel "};
 
                             builder.setItems(actions, new DialogInterface.OnClickListener() {
@@ -2404,7 +2609,8 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
             case (1):
             case (3):
             case (4):
-            case (5):    {
+            case (5):
+            case (6):    {
                 dbHandler.deleteMapBranch(projId, aID);
                 dbHandler.deleteRec("MAP",projId, iId,aID);
                 dbHandler.deleteInspectionItem(projId, aID);

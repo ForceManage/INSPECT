@@ -240,7 +240,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>
@@ -313,7 +313,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>
@@ -386,7 +386,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>
@@ -459,7 +459,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>
@@ -529,7 +529,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>
@@ -601,7 +601,7 @@
                         android:background="@drawable/edit_border"
                         android:padding="5dp"
                         android:layout_margin="4dp"
-                        android:hint="Descriptive text for photograph"
+                        android:text="View "
                         android:textSize="14sp">
 
                     </EditText>

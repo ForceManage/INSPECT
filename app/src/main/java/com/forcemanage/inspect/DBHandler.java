@@ -2151,6 +2151,26 @@ public class DBHandler extends SQLiteOpenHelper {
                         break;
                     }
 
+                    case (6): {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(COLUMN_CAT_ID, CatID);
+                        values.put(COLUMN_PARENT, parent);
+                        values.put(COLUMN_PROJECT_ID, projID);
+                        values.put(COLUMN_LABEL, Label);
+                        values.put(COLUMN_LEVEL, Level);
+                        values.put(COLUMN_A_ID, maxAId);
+                        values.put(COLUMN_INSPECTION_ID, iId);
+                        values.put(COLUMN_CHILD, type);
+                        values.put(COLUMN_IMG1, "");
+                        values.put(COLUMN_NOTES, "");
+                        values.put(COLUMN_ITEM_STATUS, "m");
+                        db.insert(TABLE_MAP, null, values);
+
+                        break;
+                    }
+
                     case (12): {
 
                         ContentValues values = new ContentValues();
@@ -2284,18 +2304,22 @@ public class DBHandler extends SQLiteOpenHelper {
                                 case 1:
                                     values.put(COLUMN_SERVICED_BY, "STANDARD");
                                     break;
-                                case 2:
-                                    values.put(COLUMN_SERVICED_BY, "SCOPE");
-                                    break;
-                                case 3:
-                                    values.put(COLUMN_SERVICED_BY, "MULTIPIC6");
+                                case 6:
+                                    values.put(COLUMN_SERVICED_BY, "MULTIPIC2");
                                     break;
                                 case 4:
                                     values.put(COLUMN_SERVICED_BY, "MULTIPIC4");
                                     break;
+                                case 3:
+                                    values.put(COLUMN_SERVICED_BY, "MULTIPIC6");
+                                    break;
 
                                 case 5:
                                     values.put(COLUMN_SERVICED_BY, "BLANK");
+                                    break;
+
+                                case 2:
+                                    values.put(COLUMN_SERVICED_BY, "SCOPE");
                                     break;
 
                             }
@@ -2879,6 +2903,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values1.put(COLUMN_PROJECT_ID, projId);
                 values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
                 values1.put(COLUMN_A_ID, maxAId);
+                values1.put(COLUMN_INSPECTION_ID, "1");
                 values1.put(COLUMN_OVERVIEW, "");
                 values1.put(COLUMN_RELEVANT_INFO, "");
                 values1.put(COLUMN_SERVICE_LEVEL, "1");
@@ -2965,6 +2990,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values1.put(COLUMN_PROJECT_ID, projId);
             values1.put(COLUMN_DATE_INSPECTED, dayTime(1));
             values1.put(COLUMN_A_ID, maxAId);
+            values1.put(COLUMN_INSPECTION_ID, "1");
             values1.put(COLUMN_OVERVIEW, "");
             values1.put(COLUMN_RELEVANT_INFO, "");
             values1.put(COLUMN_SERVICE_LEVEL, "1");

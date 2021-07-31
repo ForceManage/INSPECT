@@ -91,6 +91,7 @@ import com.forcemanage.inspect.fragments.FolderTreeFragment;
 import com.forcemanage.inspect.fragments.InspectInfoFragment;
 import com.forcemanage.inspect.fragments.InspectionFragment;
 import com.forcemanage.inspect.fragments.InspectionInfoFolderFragment;
+import com.forcemanage.inspect.fragments.MultiPic2Fragment;
 import com.forcemanage.inspect.fragments.MultiPic4Fragment;
 import com.forcemanage.inspect.fragments.MultiPic4PageViewFragment;
 import com.forcemanage.inspect.fragments.MultiPic6Fragment;
@@ -234,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     private String aProvider = "Trade";
     public String ItemStatus = "";
     public boolean Edited = false;
-    private TextView Folder;
     private LinearLayout FolderTitle;
     private LinearLayout docInfo;
     private FloatingActionButton pAdd;
@@ -260,10 +260,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         setContentView(R.layout.activity_main);
       //  ESMdb = new DBHandler(this, null, null, 1);
 
-        Folder = (TextView) findViewById(R.id.Folder);
-        Folder.setOnClickListener(this);
-        eyeView = (ImageView) findViewById(R.id.eye_view);
-        eyeView.setOnClickListener(this);
         pAdd = (FloatingActionButton) findViewById((R.id.fab_add));
         FolderTitle = (LinearLayout) findViewById((R.id.folder_title));
         FolderTitle.setVisibility(View.GONE);
@@ -672,7 +668,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
      */
 
 
-            Folder.setText(Folders.get(0).get(MyConfig.TAG_LABEL));
 
             projectId = Integer.toString(node.getprojId()); //This is setup in MainActivity as BranchCat to work with MapList
             // inspectionId = Integer.toString(node.getiID());
@@ -1285,48 +1280,129 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 break;
             }
 
-            case 2: {
+            case 6: {
 
                 docInfo.setVisibility(View.GONE);
                 focus = "PAGE";
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
 
-                HashMap<String, String> list = dbHandler.getActionItem(projId, aId, iId);
+                if (list.size() > 0) {
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
 
-                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                Overview = list.get(MyConfig.TAG_OVERVIEW);
-                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                com1 = list.get(MyConfig.TAG_COM1);
-                Notes = list.get(MyConfig.TAG_NOTES);
+                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                    String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
 
 
-                Bundle bundle = new Bundle();
-                bundle.putString("projectID", projectId);
-                bundle.putString("inspectionID", inspectionId);
-                bundle.putInt("aId", aId);
-                bundle.putInt("projId", projId);
-                bundle.putInt("iId", iId);
-             //   bundle.putString("branchHead", branchHead);
-             //   bundle.putString("branchLabel", inspLabel);
-                bundle.putString("description", Overview);
-                bundle.putString("scope", com1);
-                bundle.putString("perform", relevantInfo);
-                bundle.putString("notes", Notes);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("projectID", projId);
+                    bundle.putInt("inspectionID", iId);
+                    bundle.putInt("aID", aId);
+                    //    bundle.putInt("Level", Level);
+                    //   bundle.putInt("catId", catId);
+                    //   bundle.putString("branchHead", branchHead);
+                    //   bundle.putString("branchLabel", inspLabel);
+                    bundle.putString("aprovider", aProvider);
+                    bundle.putString("overview", Overview);
+                    bundle.putString("date", dateInspected);
+                    bundle.putString("relevantInfo", relevantInfo);
+                    bundle.putString("notes", Notes);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("prnt", prntReport);
 
-                ActionItemFragment fragment = new ActionItemFragment();
-                fragment.setArguments(bundle);
 
-                doFragmentFolderInfoTransaction(fragment, "ActionItemFragment", false, "");
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
 
-                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
-                photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                photo1 = photos[0];
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
 
-                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                String tag = list.get(MyConfig.TAG_IMAGE1);
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+
+
+
+                    MultiPic2Fragment fragment2 = new MultiPic2Fragment();
+                    doFragmentFolderInfoTransaction(fragment2, "MultiPic2Fragment", false, "");
+                    fragment2.setArguments(bundle);
+
+                } else
+                    Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
+
+
                 break;
 
             }
+
+            case 4: {
+                docInfo.setVisibility(View.GONE);
+                focus = "PAGE";
+                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
+
+                if (list.size() > 0) {
+                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                    Overview = list.get(MyConfig.TAG_OVERVIEW);
+                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                    com1 = list.get(MyConfig.TAG_COM1);
+                    com2 = list.get(MyConfig.TAG_COM2);
+                    com3 = list.get(MyConfig.TAG_COM3);
+                    com4 = list.get(MyConfig.TAG_COM4);
+
+                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
+                    String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("projectID", projId);
+                    bundle.putInt("inspectionID", iId);
+                    bundle.putInt("aID", aId);
+                    //    bundle.putInt("Level", Level);
+                    //   bundle.putInt("catId", catId);
+                    //   bundle.putString("branchHead", branchHead);
+                    //   bundle.putString("branchLabel", inspLabel);
+                    bundle.putString("aprovider", aProvider);
+                    bundle.putString("overview", Overview);
+                    bundle.putString("date", dateInspected);
+                    bundle.putString("relevantInfo", relevantInfo);
+                    bundle.putString("notes", Notes);
+                    bundle.putString("com1", com1);
+                    bundle.putString("com2", com2);
+                    bundle.putString("com3", com3);
+                    bundle.putString("com4", com4);
+
+                    bundle.putString("prnt", prntReport);
+
+
+                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
+                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
+                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+
+                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                    String tag = list.get(MyConfig.TAG_IMAGE1);
+
+                    photo1 = photos[0];
+                    photo2 = photos[1];
+                    photo3 = photos[2];
+                    photo4 = photos[3];
+
+
+                    MultiPic4Fragment fragment2 = new MultiPic4Fragment();
+                    doFragmentFolderInfoTransaction(fragment2, "MultiPic4Fragment", false, "");
+                    fragment2.setArguments(bundle);
+
+                } else
+                    Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
+
+
+                break;
+            }
+
 
             case 3: {
                 docInfo.setVisibility(View.GONE);
@@ -1395,69 +1471,51 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 break;
             }
 
-            case 4: {
+
+
+            case 2: {
+
                 docInfo.setVisibility(View.GONE);
                 focus = "PAGE";
-                HashMap<String, String> list = dbHandler.getInspectionItem(projId, GlobalVariables.iId, GlobalVariables.aId);
 
-                if (list.size() > 0) {
-                    relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
-                    Overview = list.get(MyConfig.TAG_OVERVIEW);
-                    aProvider = list.get(MyConfig.TAG_SERVICED_BY);
-                    com1 = list.get(MyConfig.TAG_COM1);
-                    com2 = list.get(MyConfig.TAG_COM2);
-                    com3 = list.get(MyConfig.TAG_COM3);
-                    com4 = list.get(MyConfig.TAG_COM4);
+                HashMap<String, String> list = dbHandler.getActionItem(projId, aId, iId);
 
-                    String dateInspected = list.get(MyConfig.TAG_DATE_INSPECTED);
-                    String prntReport = list.get(MyConfig.TAG_SERVICE_LEVEL);
+                relevantInfo = list.get(MyConfig.TAG_RELEVANT_INFO);
+                Overview = list.get(MyConfig.TAG_OVERVIEW);
+                aProvider = list.get(MyConfig.TAG_SERVICED_BY);
+                com1 = list.get(MyConfig.TAG_COM1);
+                Notes = list.get(MyConfig.TAG_NOTES);
 
 
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("projectID", projId);
-                    bundle.putInt("inspectionID", iId);
-                    bundle.putInt("aID", aId);
-                //    bundle.putInt("Level", Level);
-                 //   bundle.putInt("catId", catId);
-                 //   bundle.putString("branchHead", branchHead);
-                 //   bundle.putString("branchLabel", inspLabel);
-                    bundle.putString("aprovider", aProvider);
-                    bundle.putString("overview", Overview);
-                    bundle.putString("date", dateInspected);
-                    bundle.putString("relevantInfo", relevantInfo);
-                    bundle.putString("notes", Notes);
-                    bundle.putString("com1", com1);
-                    bundle.putString("com2", com2);
-                    bundle.putString("com3", com3);
-                    bundle.putString("com4", com4);
+                Bundle bundle = new Bundle();
+                bundle.putString("projectID", projectId);
+                bundle.putString("inspectionID", inspectionId);
+                bundle.putInt("aId", aId);
+                bundle.putInt("projId", projId);
+                bundle.putInt("iId", iId);
+                //   bundle.putString("branchHead", branchHead);
+                //   bundle.putString("branchLabel", inspLabel);
+                bundle.putString("description", Overview);
+                bundle.putString("scope", com1);
+                bundle.putString("perform", relevantInfo);
+                bundle.putString("notes", Notes);
 
-                    bundle.putString("prnt", prntReport);
+                ActionItemFragment fragment = new ActionItemFragment();
+                fragment.setArguments(bundle);
 
+                doFragmentFolderInfoTransaction(fragment, "ActionItemFragment", false, "");
 
-                    photos[0] = list.get(MyConfig.TAG_IMAGE1);
-                    photos[1] = list.get(MyConfig.TAG_IMAGE2);
-                    photos[2] = list.get(MyConfig.TAG_IMAGE3);
-                    photos[3] = list.get(MyConfig.TAG_IMAGE4);
+                //   int itemNos = dbHandler.getSubItemMap(projId, aID);
 
-                    //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
-                    String tag = list.get(MyConfig.TAG_IMAGE1);
+                photos[0] = list.get(MyConfig.TAG_IMAGE1);
+                photo1 = photos[0];
 
-                    photo1 = photos[0];
-                    photo2 = photos[1];
-                    photo3 = photos[2];
-                    photo4 = photos[3];
-
-
-                MultiPic4Fragment fragment2 = new MultiPic4Fragment();
-                doFragmentFolderInfoTransaction(fragment2, "MultiPic4Fragment", false, "");
-                fragment2.setArguments(bundle);
-
-            } else
-            Toast.makeText(this, "No associated data found", Toast.LENGTH_SHORT).show();
-
-
+                //      locationId = list.get(MyConfig.TAG_LOCATION_ID);
+                String tag = list.get(MyConfig.TAG_IMAGE1);
                 break;
+
             }
+
 
             case 9: { //Summary fragment
                 docInfo.setVisibility(View.GONE);
@@ -1957,74 +2015,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
 
 
-        if(v == Folder){
-
-            FolderTitle.setVisibility(View.GONE);
-            DBHandler dbHandler = new DBHandler(getApplicationContext(), null, null, 1);
-
-            ArrayList<HashMap<String, String>> Folders = dbHandler.getdocs(USER_ID, projId);
-            listItems = new ArrayList<>();
-
-            //   projectlistItems = new ArrayList<>();
-            ProjectData listItem;
-
-            for (int i = 0; i < (Folders.size()); i++) {
-
-                listItem = new ProjectData(
-
-
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PROJECT_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_LEVEL)),
-                        Folders.get(i).get(MyConfig.TAG_LABEL),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_P_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_INSPECTION_ID)),
-                        Integer.parseInt(Folders.get(i).get(MyConfig.TAG_PARENT)),
-                        Folders.get(i).get(MyConfig.TAG_IMAGE),
-                        Folders.get(i).get(MyConfig.TAG_NOTE)
-
-                );
-                listItems.add(listItem);
-            }
-
-
-            Folder.setText(Folders.get(0).get(MyConfig.TAG_LABEL));
-
-
-            GlobalVariables.projectList = (ArrayList<ProjectData>) listItems;
-            ProjectViewList.LoadInitialData();
-            ProjectViewList.LoadInitialNodes(GlobalVariables.projectList);
-            ProjectViewList.LoadDisplayList();
-
-            getSupportFragmentManager().popBackStack();
-            Bundle bundle = new Bundle();
-            GlobalVariables.folders = 0;  //if the specific project folder is only displayed
-
-
-
-            //   iId = node.getiID();
-  /*
-            androidx.fragment.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            ProjectViewFragment treeFragment = new ProjectViewFragment();
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_folder, treeFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
- */
-            ProjectViewFragment treeFragment = new ProjectViewFragment();
-            treeFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_folder, treeFragment)
-                    .commit();
-
-
-
-
-
-        }
 
         if(v==settings){
 
@@ -2453,10 +2443,28 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                                         GlobalVariables.User_id = USER_ID;
                                     if (USER_ID > 0) {
                                         CLIENT = dbHandler.getClient(USER_ID);
-                                        if (dbHandler.checkstatus("all", USER_ID) == 0)
-                                            downloadprojects();
+                                        if (dbHandler.checkstatus("all", USER_ID) > 0){
+
+                                            new AlertDialog.Builder(MainActivity.this)
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .setTitle("Stored Data on this Device .....")
+                                                    .setMessage("Force Download will overwrite ALL device data with cloud data! \nor press cancel, Upload device data before downloading")
+                                                    .setPositiveButton("Force download", new DialogInterface.OnClickListener()
+                                                    {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            downloadprojects();
+                                                        }
+
+                                                    })
+                                                    .setNegativeButton("Cancel", null)
+                                                    .show();
+
+                                        }
+
                                         else
-                                            Toast.makeText(MainActivity.this, "Upload current file data prior to downloading", Toast.LENGTH_SHORT).show();
+                                            downloadprojects();
+                                       //     Toast.makeText(MainActivity.this, "Upload current file data prior to downloading", Toast.LENGTH_SHORT).show();
 
 
                                     } else
@@ -3185,6 +3193,25 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
             }
 
+            if (FragDisplay == "MultiPic2Fragment") {
+
+                fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic2Fragment");
+
+                switch (filephoto) {
+                    case 1:
+                        photoA = fragment_obj.getView().findViewById(R.id.imageView);
+                        photoA.setImageURI(selectedImage);
+                        break;
+
+                    case 2:
+                        photoB = fragment_obj.getView().findViewById(R.id.imageView2);
+                        photoB.setImageURI(selectedImage);
+                        break;
+
+                }
+
+            }
+
             if (FragDisplay == "MultiPic4Fragment") {
 
                 fragment_obj = getSupportFragmentManager().findFragmentByTag("MultiPic4Fragment");
@@ -3551,7 +3578,10 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     "", "", "");
         }
 
-
+        if (FragDisplay == "MultiPic2Fragment") {
+            dbHandler.updateInspectionItemPhoto(projId, GlobalVariables.iId, GlobalVariables.aId, photo1, photo2, "", "",
+                    "", "", "");
+        }
 
         Edited = false;
 
@@ -5053,33 +5083,21 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
 
         String res = "initiated";
 
-        HashMap<String, String> inspMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
 
         ArrayList<HashMap<String, String>> inspList = dbHandler.getInspections(USER_ID);
-        String testString = "";
-        String tempString = "";
-
-        //  EditText propertyPhoto;
-
-        //  propertyPhoto.setText(inspList);
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (inspList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < inspList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_INSPECTION_ID + ", " + inspList.get(i).get(MyConfig.TAG_INSPECTION_ID) + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_INSPECTION_ID, inspList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     if(inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE)==null){json.put(MyConfig.TAG_INSPECTION_DATE, "20190601");}
                     else {json.put(MyConfig.TAG_INSPECTION_DATE, inspList.get(i).get(MyConfig.TAG_INSPECTION_DATE));}
@@ -5102,8 +5120,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_NOTE_2, inspList.get(i).get(MyConfig.TAG_NOTE_2));
 
                     jsonArray.put(json);
-
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5133,11 +5149,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //Upload tablet inspection data to the server
     private String inspItemsToServer() throws IOError {
         String res = "initiated";
-        HashMap<String, String> inspItemMap = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         ArrayList<HashMap<String, String>> inspItemList = dbHandler.getInspectedItems_r(USER_ID);
-        String tempString = "";
-        String testString = "";
 
         JSONObject jsonItem;
         JSONArray jsonArray = new JSONArray();
@@ -5147,8 +5160,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             res = "no_records";
         } else {
             for (int i = 0; i < inspItemList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_INSPECTION_ID + ", " + inspItemList.get(i).get(MyConfig.TAG_PROJECT_ID) + " | " + MyConfig.TAG_A_ID + ", " + inspItemList.get(i).get(MyConfig.TAG_A_ID) + " ^-^ ";
-                testString = testString + tempString;
 
                 try {
                     jsonItem = new JSONObject();
@@ -5204,29 +5215,22 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //Upload tablet inspection data to the server
     private String MapToServer() throws IOError {
         String res = "initiated";
-        HashMap<String, String> AssetMap = new HashMap<String, String>();
+
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> MapList = dbHandler.getSiteMap();
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (MapList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < MapList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_A_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_PROJECT_ID, MapList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_CAT_ID, MapList.get(i).get(MyConfig.TAG_CAT_ID));
                     json.put(MyConfig.TAG_LEVEL, MapList.get(i).get(MyConfig.TAG_LEVEL));
@@ -5238,7 +5242,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_IMAGE1, MapList.get(i).get(MyConfig.TAG_IMAGE1));
                     json.put(MyConfig.TAG_NOTES, MapList.get(i).get(MyConfig.TAG_NOTES));
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5260,29 +5263,22 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //Upload tablet inspection data to the server
     private String projToServer() throws IOError {
         String res = "initiated";
-        HashMap<String, String> propMap = new HashMap<String, String>();
+
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> propList = dbHandler.getAllProjects(USER_ID, "m");
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (propList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < propList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_PHOTO + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_PROJECT_ID, propList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_ADDRESS_NO, propList.get(i).get(MyConfig.TAG_ADDRESS_NO));
                     json.put(MyConfig.TAG_PROJECT_ADDRESS, propList.get(i).get(MyConfig.TAG_PROJECT_ADDRESS));
@@ -5300,9 +5296,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_PROJECT_NOTE, propList.get(i).get(MyConfig.TAG_PROJECT_NOTE));
                     json.put(MyConfig.TAG_PROJECT_PHOTO, propList.get(i).get(MyConfig.TAG_PROJECT_PHOTO));
 
-
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5327,29 +5321,21 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //Upload tablet inspection data to the server
     private String actionsToServer() throws IOError {
         String res = "initiated";
-        HashMap<String, String> actionItemList = new HashMap<String, String>();
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> ActionList = dbHandler.getActions(USER_ID);
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (ActionList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < ActionList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_INSPECTION_ID, ActionList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     json.put(MyConfig.TAG_PROJECT_ID, ActionList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_A_ID, ActionList.get(i).get(MyConfig.TAG_A_ID));
@@ -5364,7 +5350,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_ITEM_STATUS, "p");
                     json.put(MyConfig.TAG_NOTES, ActionList.get(i).get(MyConfig.TAG_NOTES));
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5387,9 +5372,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
     //Upload tablet inspection data to the server
     private String certInspToServer() throws IOError {
         String res = "initiated";
-        HashMap<String, String> CertificateInspectionList = new HashMap<String, String>();
+
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
-        //           dbHandler.puTestData();
+
         ArrayList<HashMap<String, String>> CertInspectionList = dbHandler.getCertInspections(USER_ID);
         String testString = "";
         String tempString = "";
@@ -5403,9 +5388,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             res = "no_records";
         } else {
             for (int i = 0; i < CertInspectionList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
@@ -5445,25 +5427,18 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> SummaryList = dbHandler.getAllSummary(USER_ID);
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (SummaryList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < SummaryList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_INSPECTION_ID, SummaryList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     json.put(MyConfig.TAG_PROJECT_ID, SummaryList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_HEAD_A, SummaryList.get(i).get(MyConfig.TAG_HEAD_A));
@@ -5473,7 +5448,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_HEAD_C, SummaryList.get(i).get(MyConfig.TAG_HEAD_C));
                     json.put(MyConfig.TAG_COM_C, SummaryList.get(i).get(MyConfig.TAG_COM_C));
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5499,25 +5473,18 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> LOGList = dbHandler.getLOG(USER_ID);
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
 
         if (LOGList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < LOGList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_A_ID, LOGList.get(i).get(MyConfig.TAG_A_ID));
                     json.put(MyConfig.TAG_PROJECT_ID, LOGList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTION_ID, LOGList.get(i).get(MyConfig.TAG_INSPECTION_ID));
@@ -5525,7 +5492,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                     json.put(MyConfig.TAG_END_DATE_TIME, LOGList.get(i).get(MyConfig.TAG_END_DATE_TIME));
 
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5550,32 +5516,24 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         DBHandler dbHandler = new DBHandler(MainActivity.this, null, null, 1);
         //           dbHandler.puTestData();
         ArrayList<HashMap<String, String>> DeleteList = dbHandler.getDeleted();
-        String testString = "";
-        String tempString = "";
 
         JSONObject json;
         JSONArray jsonArray = new JSONArray();
-        int j = 0;
+
 
         if (DeleteList.size() == 0) {
             //no items toupdatelist
             res = "no_records";
         } else {
             for (int i = 0; i < DeleteList.size(); i++) {
-                tempString = "Iteration, " + Integer.toString(i) + "| " + MyConfig.TAG_PROJECT_ID + " ^-^ ";
-                testString = testString + tempString;
-
 
                 try {
                     json = new JSONObject();
-                    json.put("Iteration", Integer.toString(j));
                     json.put(MyConfig.TAG_TABLE_NAME, DeleteList.get(i).get(MyConfig.TAG_TABLE_NAME));
                     json.put(MyConfig.TAG_PROJECT_ID, DeleteList.get(i).get(MyConfig.TAG_PROJECT_ID));
                     json.put(MyConfig.TAG_INSPECTION_ID, DeleteList.get(i).get(MyConfig.TAG_INSPECTION_ID));
                     json.put(MyConfig.TAG_A_ID, DeleteList.get(i).get(MyConfig.TAG_A_ID));
-
                     jsonArray.put(json);
-                    j = j + 1;
 
                 } catch (Throwable t) {
                     res = "Request failed: " + t.toString();
@@ -5634,6 +5592,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
             protected String doInBackground(Void... v) {
 
                 // Call functions to get data from local database and post to the server
+                String Deleted;
                 String inspSaved;
                 String itemSaved;
                 String MapSaved;
@@ -5642,13 +5601,13 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 String CertInspSaved;
                 String SummarySaved;
                 String LogSaved;
-                String Deleted;
+
 
 
        //         String yes = "y";
                 String message = "initiated";
 
-
+                Deleted = DELETEToServer();
                 inspSaved = inspToServer();
                 itemSaved = inspItemsToServer();
                 MapSaved = MapToServer();
@@ -5657,7 +5616,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
                 CertInspSaved = certInspToServer();
                 SummarySaved = summaryToServer();
                 LogSaved = LOGToServer();
-                Deleted = DELETEToServer();
+
 
 
                 //    message = inspToServer();

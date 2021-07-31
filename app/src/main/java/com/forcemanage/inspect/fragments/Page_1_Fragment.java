@@ -518,6 +518,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 globalVariables.filephoto = 1;
                 globalVariables.photo_load();
+                com1 = com1Text.getText().toString();
+                com1Text.setText(com1+"\nInset image:  ");
 
             }
         });
@@ -597,6 +599,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
                 globalVariables.filephoto = 2;
                 globalVariables.photo_load();
+                com2 = com2Text.getText().toString();
+                com2Text.setText(com2+"\nInset image:  ");
 
             }
         });
@@ -676,6 +680,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
                 globalVariables.filephoto = 3;
                 globalVariables.photo_load();
+                com3 = com3Text.getText().toString();
+                com3Text.setText(com3+"\nInset image:  ");
 
             }
         });
@@ -754,6 +760,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
                 globalVariables.filephoto = 4;
                 globalVariables.photo_load();
+                com4 = com4Text.getText().toString();
+                com4Text.setText(com4+"\nInset image:  ");
 
             }
         });
@@ -832,6 +840,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
                 globalVariables.filephoto = 5;
                 globalVariables.photo_load();
+                com5 = com5Text.getText().toString();
+                com5Text.setText(com5+"\nInset image:  ");
 
             }
         });
@@ -911,6 +921,8 @@ public class Page_1_Fragment extends Fragment implements View.OnClickListener {
 
                 globalVariables.filephoto = 6;
                 globalVariables.photo_load();
+                com6 = com6Text.getText().toString();
+                com6Text.setText(com6+"\nInset image:  ");
 
             }
         });

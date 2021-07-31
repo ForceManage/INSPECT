@@ -152,45 +152,6 @@
                     android:background="@drawable/my_selector"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <ImageView
-                    android:id="@+id/arrow"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="2dp"
-                    android:clickable="true"
-                    android:src="@drawable/folder2_red" />
-
-                <TextView
-                    android:id="@+id/Folder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="4dp"
-                    android:textColor="@color/colorDark"
-                    android:background="@drawable/my_selector"
-                    android:textStyle="bold"
-                    android:text="test case"
-                    android:choiceMode="singleChoice"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-
-                <ImageView
-                    android:id="@+id/eye_view"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="7dp"
-                    android:layout_marginTop="2dp"
-                    android:clickable="true"
-                    android:src="@drawable/eye_view" />
-
 
             </LinearLayout>
 
