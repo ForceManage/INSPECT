@@ -68,7 +68,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         appsite = (WebView) view.findViewById(R.id.webapp);
 
 
-        appsite.loadUrl("http://dev.force-management.com");
+        appsite.loadUrl("http://dev.force-management.com"); //
 
         appsite.setWebViewClient(new WebViewClient());
 

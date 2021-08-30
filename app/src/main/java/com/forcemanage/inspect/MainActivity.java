@@ -501,6 +501,8 @@ public class MainActivity extends AppCompatActivity implements OnProjectSelectio
         String[] idate = date.split("-");
         datestring = idate[0] + idate[1] + idate[2];
 
+
+
         return datestring;
     }
 

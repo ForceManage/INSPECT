@@ -1321,19 +1321,19 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                                         break;
 
                                                                     }
-                                                                    case 1: { // Add a Multi Pic Page
+                                                                    case 1: { // Add a Multipic2 Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-2-Pic", 6);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
 
-                                                                    case 2: { // Add a Multi Pic Page
+                                                                    case 2: { // Add a Multi Pic4 Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-4-Pic", 4);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
                                                                     }
 
-                                                                    case 3: { // Add a Multi Pic Page
+                                                                    case 3: { // Add a Multi Pic6 Page
                                                                         int result = dbHandler.addReportBranch(node.getprojId(), iId, node.getcatId(), node.getNodeLevel() + 1, node.getaID(), "Multi-6-Pic", 3);
                                                                         loadProjectMap(node.getprojId());
                                                                         break;
@@ -1421,6 +1421,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                     "Delete Tab",
                                     "Move Tab Up",
                                     "Move Tab Down",
+                                    "Change page type",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1547,7 +1548,70 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                                 }
                                                 case 5:{
 
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle("Change page type to: ");
+                                                    String[] actions = {
+                                                            "MultiPic 2",
+                                                            "MultiPic 4",
+                                                            "MultiPic 6",
+                                                            "Cancel "};
+
+
+                                                     builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                            switch (which) {
+                                                                case 0:{
+
+                                                                    dbHandler.changePage(node.getprojId(), node.getaID(), 6);
+                                                                    loadProjectMap(node.getprojId());
+                                                                    break;
+
+                                                                }
+
+                                                                case 1: {
+
+                                                                    dbHandler.changePage(node.getprojId(), node.getaID(), 4);
+                                                                    loadProjectMap(node.getprojId());
+                                                                    break;
+
+                                                                }
+
+                                                                case 2: {
+
+                                                                    dbHandler.changePage(node.getprojId(), node.getaID(), 3);
+                                                                    loadProjectMap(node.getprojId());
+
+                                                                    break;
+
+                                                                }
+
+                                                                case 3: {
+
+
+
+                                                                    break;
+
+                                                                }
+
+
+                                                            }
+
+                                                        }
+                                                    });
+
+                                                    AlertDialog dialog1 = builder.create();
+
+                                                    dialog1.show();
+
+
                                                     break;
+                                                }
+
+                                                case 6:{
+
+                                                     break;
                                                 }
 
                                             }
@@ -1691,6 +1755,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                     "Move Tab UP",
                                     "Move Tab DOWN",
                                     "Delete Tab",
+                                    "Change page type",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1785,10 +1850,69 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         }
                                         case 4: {
 
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Change page type to: ");
+                                            String[] actions = {
+                                                    "Standard Page",
+                                                    "MultiPic 2",
+                                                    "MultiPic 4",
+                                                    "Cancel "};
+
+
+                                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    switch (which) {
+                                                        case 0:{
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 1);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 1: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 6);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 2: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 4);
+                                                            loadProjectMap(node.getprojId());
+
+                                                            break;
+
+                                                        }
+
+                                                        case 3: {
+
+
+
+                                                            break;
+
+                                                        }
+
+
+                                                    }
+
+                                                }
+                                            });
+
+                                            AlertDialog dialog1 = builder.create();
+
+                                            dialog1.show();
+
 
                                             break;
 
                                         }
+                                        case 5:
+                                        break;
 
                                     }
 
@@ -1811,6 +1935,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                     "Move Tab UP",
                                     "Move Tab DOWN",
                                     "Delete Tab",
+                                    "Change page type",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -1904,11 +2029,69 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         }
                                         case 4: {
 
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Change page type to: ");
+                                            String[] actions = {
+                                                    "Standard Page",
+                                                    "MultiPic 2",
+                                                    "MultiPic 6",
+                                                    "Cancel "};
+
+
+                                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    switch (which) {
+                                                        case 0:{
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 1);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 1: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 6);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 2: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 3);
+                                                            loadProjectMap(node.getprojId());
+
+                                                            break;
+
+                                                        }
+
+                                                        case 3: {
+
+
+
+                                                            break;
+
+                                                        }
+
+
+                                                    }
+
+                                                }
+                                            });
+
+                                            AlertDialog dialog1 = builder.create();
+
+                                            dialog1.show();
+
 
                                             break;
-
                                         }
+                                        case 5:
 
+                                            break;
                                     }
 
                                 }
@@ -2015,6 +2198,7 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                     "Move Tab UP",
                                     "Move Tab DOWN",
                                     "Delete Tab",
+                                    "Change Page Type",
                                     "Cancel "};
 
                             final String branchTitle = dbHandler.getMapBranchTitle(node.getprojId(), node.getcatId()); //get Branch head
@@ -2108,11 +2292,69 @@ public class MapListAdapter extends ArrayAdapter<MapViewNode>
                                         }
 
                                         case 4: {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Change page type to: ");
+                                            String[] actions = {
+                                                    "Standard Page",
+                                                    "MultiPic 4",
+                                                    "MultiPic 6",
+                                                    "Cancel "};
+
+
+                                            builder.setItems(actions, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    switch (which) {
+                                                        case 0:{
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 1);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 1: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 4);
+                                                            loadProjectMap(node.getprojId());
+                                                            break;
+
+                                                        }
+
+                                                        case 2: {
+
+                                                            dbHandler.changePage(node.getprojId(), node.getaID(), 3);
+                                                            loadProjectMap(node.getprojId());
+
+                                                            break;
+
+                                                        }
+
+                                                        case 3: {
+
+
+
+                                                            break;
+
+                                                        }
+
+
+                                                    }
+
+                                                }
+                                            });
+
+                                            AlertDialog dialog1 = builder.create();
+
+                                            dialog1.show();
 
 
                                             break;
 
                                         }
+                                        case 5:
+                                            break;
 
                                     }
 

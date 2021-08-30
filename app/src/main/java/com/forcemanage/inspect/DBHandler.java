@@ -1323,6 +1323,44 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void changePage(Integer projId, Integer aId, Integer type) {
+        // Open a database for reading and writing
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_STATUS, "m");
+        values.put(COLUMN_CHILD,type);
+        db.update(TABLE_MAP, values, COLUMN_PROJECT_ID + " = " + projId + " AND "+COLUMN_A_ID+ " = "+ aId , null);
+
+        ContentValues values1 = new ContentValues();
+        switch (type) {
+            case 1:
+                values1.put(COLUMN_SERVICED_BY, "STANDARD");
+                values1.put(COLUMN_ITEM_STATUS,"m");
+                break;
+            case 3:
+                values1.put(COLUMN_SERVICED_BY, "MULTIPIC6");
+                values1.put(COLUMN_ITEM_STATUS,"m");
+                break;
+            case 4:
+                values1.put(COLUMN_SERVICED_BY, "MULTIPIC4");
+                values1.put(COLUMN_ITEM_STATUS,"m");
+                break;
+            case 6:
+                values1.put(COLUMN_SERVICED_BY, "MULTIPIC2");
+                values1.put(COLUMN_ITEM_STATUS,"m");
+                break;
+
+        }
+
+        db.update(TABLE_INSPECTION_ITEM, values1, COLUMN_PROJECT_ID + " = " + projId + " AND "+COLUMN_A_ID+ " = "+ aId , null);
+
+
+        db.close();
+
+    }
+
+
     public int checkCode(String code) {
         // Open a database for reading and writing
         SQLiteDatabase db = this.getWritableDatabase();
@@ -2150,7 +2188,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                         break;
                     }
-
+                        //MultiPic2
                     case (6): {
 
                         ContentValues values = new ContentValues();
@@ -2222,6 +2260,8 @@ public class DBHandler extends SQLiteOpenHelper {
         return label;
 
     }
+
+
 
     public String getMapParentTitle(int projID, int aID) {
         // Open a database for reading and writing

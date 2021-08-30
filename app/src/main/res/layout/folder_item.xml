@@ -26,7 +26,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="2dp"
         android:clickable="true"
-        android:src="@drawable/folder2_red" />
+        android:src="@drawable/_page4" />
 
     <TextView
         android:id="@+id/text"
